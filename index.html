@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
+  <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
+  <!-- import JavaScript -->
+  <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/locale/zh-CN.min.js"></script>
+  <script src="static/js/mqttws31.js"></script>
+  <script src="static/js/src/jsoneditor.js"></script>
+  <script src="static/js/src/ace.js"></script>
+  <script src="static/js/src/ext-language_tools.js"></script>
+  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"></script>
+  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
+  <link rel="icon" href="favicon.ico" sizes="64*64">
+  <title>采集系统管理</title>
+  <style>
+    .topheader .nest-menu {
+      display: block;
+      float: none !important;
+      height: auto !important;
+    }
+
+    .topheader .el-menu--popup {
+      min-width: 150px !important;
+    }
+
+    .topheader .el-menu--horizontal {
+      border: 0 !important;
+    }
+
+    .topheader .el-scrollbar__wrap {
+      overflow: visible !important;
+    }
+
+    .topheader .el-scrollbar {
+      overflow: visible !important;
+    }
+
+    .el-table th.is-leaf {
+      background-color: #dbf0ff;
+      border-right: 1px solid #dddddd
+    }
+
+    .el-tree-node {
+      position: relative;
+      padding-left: 16px;
+    }
+
+    .el-tree-node__children {
+      padding-left: 5px;
+      /* display: block!important; */
+    }
+
+    .el-tree-node :last-child:before {
+      height: 30px;
+    }
+
+    .el-tree>.el-tree-node:before {
+      border-left: none;
+    }
+
+    .el-tree>.el-tree-node:after {
+      border-top: none;
+    }
+
+    .el-tree-node:before {
+      content: "";
+      left: -4px;
+      position: absolute;
+      right: auto;
+      border-width: 1px;
+    }
+
+    .el-tree-node:after {
+      content: "";
+      left: -5px;
+      position: absolute;
+      right: auto;
+      border-width: 1px;
+    }
+
+    .tree :first-child .el-tree-node:before {
+      border-left: none;
+    }
+
+    .el-tree-node:before {
+      border-left: 1px dashed #333333;
+      bottom: 0px;
+      height: 100%;
+      top: -10px;
+      width: 1px;
+    }
+
+    .el-tree-node:after {
+      border-top: 1px dashed #333333;
+      height: 20px;
+      top: 17px;
+      width: 20px;
+    }
+
+    .el-tree-node__content {
+      padding-left: 10px !important;
+      margin-left: -28px;
+      font-size: 14px;
+    }
+
+    .el-tree-node__content>.el-tree-node__expand-icon {
+      padding: 10px;
+      font-size: 16px;
+      position: relative;
+      left: 9px;
+      color: #1A1A1A;
+    }
+
+    .el-tree-node__expand-icon.is-leaf {
+      color: transparent
+    }
+
+    .el-tree-node>.el-tree-node__children {
+      overflow: unset !important;
+    }
+    .el-tooltip__popper.is-dark{
+    max-width:50%;
+    height:auto;
+  }
+  
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+</html>

@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+node/
+run/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+WebTopo-master/dist/spa/statics/shapes
+WebTopo-master/src/statics/shapes
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

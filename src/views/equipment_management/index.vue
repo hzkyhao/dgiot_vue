@@ -1,0 +1,1421 @@
+<template>
+  <div class="equipment">
+    <h3 style="margin:0;">{{$t('equipment.equipmentstatistics')}}</h3>
+    <div class="equ_header">
+      
+      <ul>
+        <li>
+          <p>
+             <span class="svg-container">
+                  <svg-icon icon-class="devicelist" />
+                </span>
+            {{$t('equipment.totalequipment')}}
+            <el-tooltip :content="$t('equipment.totalequipment')" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </p>
+          <span>{{devicetotal}}</span>
+        </li>
+        <li>
+          <p>
+             <span class="svg-container">
+                  <svg-icon icon-class="shuliang" />
+                </span>{{$t('equipment.activationdevice')}}
+            <el-tooltip :content="$t('equipment.totalactive')" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </p>
+          <span>{{activeall}}</span>
+        </li>
+        <li>
+          <p>
+            <span class="svg-container">
+                  <svg-icon icon-class="onlinelist" />
+                </span>{{$t('equipment.onlinedevices')}}
+            <el-tooltip :content="$t('equipment.totalonline')" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </p>
+          <span>{{onlineall}}</span>
+        </li>
+        <li>
+            <div class="block">
+            <el-image v-if="productimg" :src="productimg" style="width:250px;height:200px;position:relative;top:-55px;text-align: center;
+               line-height: 200px;">
+               <div slot="error" class="image-slot">
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </el-image>
+          </div>
+        
+        </li>
+      </ul>
+    </div>
+    <div class="equtabs">
+      <!--tabs第一个标签页-->
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane :label="$t('route.设备管理')" name="first">
+          <div>
+            <div>
+              <el-button size="small">{{$t('equipment.batchaddition')}}</el-button>
+              <el-button type="primary" @click="addDeviceForm" size="small">{{$t('equipment.adddevice')}}</el-button>
+            </div>
+          </div>
+          <div style="margin-top:20px;" class="equdevices">
+            <el-select v-model="equvalue"  class="selectdetail" @change="selectProductid" size="small" :disabled="!productenable">
+              <el-option
+                v-for="(item,index) in proTableData"
+                :label="item.name"
+                :key="index"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+            <el-select v-model="selectdevice" class="selectdetail"  size="small">
+              <el-option :value="$t('equipment.devicename')"></el-option>
+              <el-option :value="$t('equipment.devicenumber')"></el-option>
+            </el-select>
+            <el-input  size="small" v-model="deviceinput" :placeholder="$t('equipment.enterproductname')" v-if="selectdevice==$t('equipment.devicename')" class="selectdetail"></el-input>
+            <el-input  size="small" v-model="deviceinput" :placeholder="$t('equipment.enterdevicenumber')" v-else class="selectdetail"></el-input>
+            <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
+            <el-button  size="small" type="primary" @click="getDevices(0)" class="selectdetail">{{$t('developer.search')}}</el-button>
+            <el-button  size="small"  type="primary" :disabled="multipleTable.length==0" @click="deleteDevcie" class="selectdetail">{{$t('developer.delete')}}</el-button>
+            <el-button  size="small"  type="primary" :disabled="multipleTable.length==0" @click="unactiveDevice" class="selectdetail">{{$t('developer.prohibit')}}</el-button>
+            <el-button  size="small" type="primary" :disabled="multipleTable.length==0" @click="activeDevice" class="selectdetail">{{$t('developer.enable')}}</el-button>
+                       
+          </div>
+          <!--第一个表格-->
+          <div class="tabstable">
+            <el-table
+              ref="filterTable"
+              :data="tableData"
+              style="width: 100%;text-align:center;margin-top:20px;"
+              @selection-change="handleSelectionChange"
+              :row-style="rowClass"
+            >
+              <el-table-column type="selection" align="center" width="55"></el-table-column>
+              <el-table-column :label="$t('equipment.devicenumber')+'/'+$t('equipment.name')" align="center">
+                <template slot-scope="scope">
+                  <span  >{{scope.row.devaddr}}</span>
+                  <p  style="margin:0;color:green">{{scope.row.name}}</p>
+                </template>
+              </el-table-column>
+                <el-table-column :label="$t('equipment.state')" align="center">
+                <template slot-scope="scope">
+                  <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{$t('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
+                    <i class="el-icon-question"></i>
+                  </el-tooltip> -->
+                <span  class="ACTIVE" >已注册</span><el-tooltip content="设备已注册" placement="top" >
+                    <i class="el-icon-question"></i>
+                  </el-tooltip>
+                  <!-- <span  :class="scope.row.status" v-if="scope.row.status=='UNACTIVE'">{{$t('product.unactive')}}</span><el-tooltip content="设备未注册" placement="top" v-if="scope.row.status=='UNACTIVE'">
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+                  <span  :class="scope.row.status" v-if="scope.row.status=='ONLINE'">{{$t('product.online')}}</span><el-tooltip content="设备已经上线" placement="top" v-if="scope.row.status=='ONLINE'">
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+                  <span  :class="scope.row.status" v-if="scope.row.status=='OFFLINE'">{{$t('product.offline')}}</span>
+                  <el-tooltip content="设备已经离线" placement="top" v-if="scope.row.status=='OFFLINE'">
+                <i class="el-icon-question"></i>
+              </el-tooltip> -->
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('equipment.product')" align="center">
+                <template slot-scope="scope">
+                  <span type="success">{{scope.row.productName}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('equipment.nodetype')" align="center">
+                <template slot-scope="scope">
+                  <svg-icon icon-class="iot" v-if="scope.row.nodeType==0" style="width:2rem;height:2rem"/>
+                  <svg-icon icon-class="wgicon" style="width:2rem;height:2rem" v-else></svg-icon>
+                  <!-- <el-tag type="success" >设备</el-tag>
+                  <el-tag type="success" v-else>网关</el-tag> -->
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('developer.enable')+'/'+$t('developer.prohibit')" align="center">
+                <template slot-scope="scope">
+                  <!-- <span
+                    style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#cccccc;vertical-align:middle"
+                    v-if="scope.row.isEnable==false"
+                  ></span>
+                  <span v-if="scope.row.isEnable==false">已禁用</span>
+                  <span
+                    style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#5eb058;vertical-align:middle"
+                    v-if="scope.row.isEnable==true"
+                  ></span>
+                  <span v-if="scope.row.isEnable==true">已启用</span> -->
+                  <el-switch
+                    v-model="scope.row.isEnable"
+                    active-color="#5eb058"
+                    inactive-color="#cccccc"
+                   
+                    @change="handelUpdate($event,scope.row,scope.$index)"
+                  ></el-switch>
+                </template>
+              </el-table-column>
+            
+              <!-- <el-table-column :label="$t('equipment.lastonlinetime')" align="center">
+                <template slot-scope="scope">
+                  <span
+                    v-if="scope.row.lastOnlineTime"
+                  >{{timestampToTime(scope.row.lastOnlineTime)}}</span>
+                  <span v-else>—</span>
+                </template>
+              </el-table-column> -->
+              <el-table-column label="创建时间">
+                <template slot-scope="scope">
+                  <span>{{utc2beijing(scope.row.createdAt)}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('developer.operation')" align="center">
+                <template slot-scope="scope">
+                  <el-link
+                    type="primary"
+                    :underline="false"
+                    icon="el-icon-view"
+                    @click="deviceToDetail(scope.row)"
+                  >{{$t('equipment.see')}}</el-link>
+                  <el-popover placement="top" width="300" :ref="`popover-${scope.$index}`">
+                    <p>确定删除这个{{scope.row.name}}设备吗？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button
+                        size="mini"
+                        @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                      >{{$t('developer.cancel')}}</el-button>
+                      <el-button type="primary" size="mini" @click="makeSure(scope)">{{$t('developer.determine')}}</el-button>
+                    </div>
+                    <el-link
+                      slot="reference"
+                      :underline="false"
+                      icon="el-icon-delete"
+                      type="danger"
+                    >{{$t('developer.delete')}}</el-link>
+                  </el-popover>
+                  <el-link
+                    type="primary"
+                    :underline="false"
+                    icon="el-icon-s-unfold"
+                    v-if="scope.row.nodeType==1"
+                    @click="deviceToChildren(scope.row)"
+                  >{{$t('equipment.subdevice')}}</el-link>
+                  <el-link
+                    type="primary"
+                    :underline="false"
+                    icon="el-icon-edit"
+                    @click="editorDevice(scope.row)"
+                  >编辑</el-link>
+                  <el-link  type="primary"  @click="goEdit(scope.row)">视图</el-link>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="elpagination" style="margin-top:20px;">
+              <el-pagination
+                @size-change="deviceSizeChange"
+                @current-change="deviceCurrentChange"
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="devicelength"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="devicetotal"
+              ></el-pagination>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane :label="$t('equipment.batchmanagement')" name="second">
+          <el-table :data="pctableData"  style="width: 100%;text-align:center">
+            <el-table-column type="index" :label="$t('equipment.serialnumber')" align="center" width="200"></el-table-column>
+            <el-table-column :label="$t('equipment.batchname')" align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.attributes.data.batch_name}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" :label="$t('equipment.createdAt')">
+              <template slot-scope="scope">
+                <span>{{utc2beijing(scope.row.createdAt)}}</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column label="操作" align="center" width="300">
+              <template slot-scope="scope">
+                <el-button
+                  type="primary"
+                  @click="updatebatch(scope.row,scope.row.id)"
+                  size="mini"
+                >编辑</el-button>
+                <el-button type="danger" @click="deletebatch(scope.row.id)" size="mini">删除</el-button>
+                <el-button
+                  type="success"
+                  @click="selectbatch(scope.row,scope.row.id)"
+                  size="mini"
+                >选择</el-button>
+              </template>
+            </el-table-column>-->
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+      <!--添加设备弹窗-->
+      <el-dialog
+        :title="'设备'+equipmentEditor"
+        :visible.sync="devicedialogVisible"
+        width="50%"
+        :close-on-click-modal="false"
+        :before-close="handleClose"
+      >
+        <div slot="title" class="header-title">
+          <span class="title-name">
+           {{'设备'+equipmentEditor}}
+            <el-tooltip :content="$t('equipment.text')" placement="top" style="margin-left:5px">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </span>
+        </div>
+        <div class="devicecontent">
+          <el-form ref="deviceform" :model="deviceform" label-width="150px" :rules="rules">
+            <el-form-item :label="$t('equipment.devicename')" prop="name">
+              <el-input v-model="deviceform.name"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.devicenumber')" prop="devaddr">
+              <el-input v-model="deviceform.devaddr"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.batchname')" prop="batchId">
+              <el-input v-model="deviceform.batchId" disabled>
+                <i slot="suffix" class="el-icon-plus" @click="addDeviceBatch"></i>
+              </el-input>
+            </el-form-item>
+            <!-- <el-form-item label="节点类型" prop="nodeType">
+              <el-select v-model="deviceform.nodeType" placeholder="请选择节点类型">
+                <el-option label="采集器" :value="0"></el-option>
+                <el-option label="终端设备" :value="1"></el-option>
+              </el-select>
+            </el-form-item>-->
+            <!-- <el-form-item label="设备类型" prop="devType">
+                <el-input v-model="deviceform.devType" placeholder="请输入设备类型"></el-input>
+            </el-form-item>-->
+            <el-form-item :label="$t('product.productname')" prop="productName">
+              <el-select v-model="deviceform.productName" :placeholder="$t('equipment.entername')" :disabled="!productenable||!changeproduct">
+                <el-option
+                  v-for="(item,index) in proTableData1"
+                  :label="item.name"
+                  :key="index"
+                  :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.assetnumber')">
+              <el-input v-model="deviceform.assetNum"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.equipmenttype')">
+              <el-input v-model="deviceform.devModel"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.equipmentbrand')">
+              <el-input v-model="deviceform.brand"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.installationlocation')">
+              <el-input v-model="deviceform.address" @focus="updateLocation"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('developer.describe')">
+              <el-input
+                type="textarea"
+                v-model="deviceform.desc"
+                :autosize="{ minRows: 4, maxRows: 4}"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm('deviceform')">{{$t('developer.determine')}}</el-button>
+          <el-button @click="handleClose">{{$t('developer.cancel')}}</el-button>
+        </span>
+      </el-dialog>
+      <!--第二个个弹窗批次添加-->
+      <el-dialog
+        title="批次添加"
+        :visible.sync="pcdialogVisible"
+        width="50%"
+        :close-on-click-modal="false"
+        :before-close="handleClose1"
+      >
+        <div class="pccontent">
+          <el-form :inline="true" :model="pcformInline" class="demo-form-inline">
+            <el-form-item :label="$t('equipment.batchname')">
+              <el-input v-model="pcformInline.pcname" :placeholder="$t('equipment.batchname')"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('equipment.createdAt')">
+              <el-date-picker
+                v-model="pcformInline.createdtime"
+                type="datetime"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="addbatch">{{$t('equipment.addbatch')}}</el-button>
+            </el-form-item>
+          </el-form>
+          <el-table :data="pctableData" height="450" style="width: 100%;text-align:center">
+            <el-table-column type="index" :label="$t('equipment.serialnumber')" align="center" width="50"></el-table-column>
+            <el-table-column :label="$t('equipment.batchname')" align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.attributes.data.batch_name}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" :label="$t('equipment.createdAt')">
+              <template slot-scope="scope">
+                <span>{{utc2beijing(scope.row.createdAt)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column :label="$t('developer.operation')" align="center" width="300">
+              <template slot-scope="scope">
+                <el-button
+                  type="primary"
+                  @click="updatebatch(scope.row,scope.row.id)"
+                  size="mini"
+                >{{$t('developer.edit')}}</el-button>
+                <el-button type="danger" @click="deletebatch(scope.row.id)" size="mini">{{$t('developer.delete')}}</el-button>
+                <el-button
+                  type="success"
+                  @click="selectbatch(scope.row,scope.row.id)"
+                  size="mini"
+                >选择</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-dialog>
+      <el-dialog
+        title="设备安装地址"
+        :visible.sync="bmapdialogVisible"
+        width="50%"
+        v-el-drag-dialog
+        :close-on-click-modal="false"
+        :before-close="handleClosebmap">
+        <div>
+          <el-form :model="bmapform" size="small" :inline="true">
+            <!-- <el-form-item label="地址">
+              <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
+            </el-form-item> -->
+            <el-form-item label="地址名称">
+              <el-input v-model="bmapform.keyword"></el-input>
+            </el-form-item>
+            <!-- <el-form-item>
+              <el-button type="primary" @click="addressSure">搜 索</el-button>
+            </el-form-item> -->
+             <el-form-item label="选中地址">
+              <el-input v-model="bmapform.address" readonly></el-input>
+            </el-form-item>
+            
+          </el-form>
+          <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
+        <baidu-map :center="center" :zoom="zoom" :scroll-wheel-zoom="true" style="height:300px " @ready="handler" :mapClick="false" @click="mapClick" >
+      <!-- 必须给容器指高度，不然地图将显示在一个高度为0的容器中，看不到 -->
+          <!-- <bml-marker-clusterer :averageCenter="true">
+            <bm-marker :position="{lng: center.lng, lat: center.lat}"></bm-marker>
+          </bml-marker-clusterer> -->
+          <bm-local-search :keyword="bmapform.keyword" :auto-viewport="true" :location="bmapform.location" zoom="12.8" style="display: none"></bm-local-search>
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"></bm-navigation>
+            <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
+            <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"></bm-city-list>
+            <!-- <bm-marker :position="center" style="display:none">
+              <bm-info-window  @close="infoWindowClose" @open="infoWindowOpen" style="font-size: 14px">
+              <p>11111</p>
+              </bm-info-window>
+            </bm-marker> -->
+          </baidu-map>
+      </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addressSure">保 存</el-button>
+          <el-button @click="bmapdialogVisible = false">取 消</el-button>
+        </span>
+      </el-dialog>
+    </div>
+  </div>
+</template>
+<script>
+import Parse from "parse";
+import { Promise } from "q";
+import Cookies from 'js-cookie';
+import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
+import {BmlMarkerClusterer} from 'vue-baidu-map'
+import { utc2beijing } from '@/utils';
+import { returnLogin } from '@/utils/return';
+var language
+var pcdata
+export default {
+  components:{
+   elDragDialog
+  },
+  data() {
+    return {
+      productimg:'',
+      bmapdialogVisible:false,
+      onlineall:'',
+      activeall:'',
+      userId: "",
+      batchid: "",
+      pcdialogVisible: false,
+      devicedialogVisible: false,
+      equvalue: "0",
+      cities: [],
+      activeName: "first",
+      selectdevice: '',
+      deviceinput: "",
+      devicenumber: "",
+      multipleTable: [],
+      selectRow: [],
+      devicelength: 10,
+      devicestart: 0,
+      devicetotal: 0,
+      visible2: false,
+      deviceform: {
+        name: "",
+        devaddr: "",
+        batchId: "",
+        desc: "",
+        nodeType: 0,
+        devType: "",
+        netType: "",
+        assetNum: "",
+        devModel: "",
+        address: "",
+        productName: "",
+        status:'',
+        isEnable:''
+      },
+      rules: {
+        name: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
+        devaddr: [
+          { required: true, message: "请输入设备编号", trigger: "blur" }
+        ],
+        batchId: [
+          { required: true, message: "请输入设备批次", trigger: "blur" }
+        ],
+        nodeType: [
+          { required: true, message: "请输入设备类型", trigger: "blur" }
+        ],
+        netType: [
+          { required: true, message: "请选择网络格式", trigger: "change" }
+        ],
+        devType: [
+          { required: true, message: "请选择设备类型", trigger: "change" }
+        ],
+        productName: [
+          { required: true, message: "请选择产品名称", trigger: "change" }
+        ]
+      },
+      pcformInline: {
+        pcnumber: "",
+        pcname: "",
+        createdtime: ""
+      },
+      pctableData: [],
+      equipmentEditor:'添加',
+      tableData: [],
+      options: [],
+      proTableData: [],
+      proTableData1: [],
+      activelength:[],
+      onlinelength:[],
+      center: { lng: 0, lat: 0 }, //经纬度
+      zoom: 13,//地图展示级别
+      bmapform:{
+        keyword:'',
+        location:'',
+        address:''
+      },
+      deviceid:'',
+      map:null,
+      addresspointer:'',
+      productenable:true,
+      changeproduct:true,
+    };
+  },
+  watch: {
+    multipleTable(data) {
+      this.selectRow = [];
+      if (data.length > 0) {
+        data.forEach((item, index) => {
+          this.selectRow.push(this.tableData.indexOf(item));
+        });
+      }
+    }
+  },
+  mounted() {
+    this.userId = Parse.User.current().id;
+    this.getRole();
+    this.searchProduct();
+    this.addDeviceBatch(0)
+    language = Cookies.get('language')
+    this.$store.dispatch('getUserId','111')
+    if(this.$route.query.productid){
+      this.selectProductid(this.$route.query.productid)
+    }
+   
+  },
+  methods: {
+    goEdit(row){
+      window.open(`${window.location.origin}/spa/#/fullscreen?devaddr=${row.devaddr}&productid=${row.productid}`, '_blank');
+    },
+    //从产品处进来
+     selectProductid(val){
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
+      product.get(val).then(response=>{
+        this.productimg = response.attributes.icon
+      },error=>{
+        returnLogin(error)
+      })
+     },
+     addressSure(){
+        var localSearch = new BMap.LocalSearch(this.map);
+             localSearch.enableAutoViewport(); //允许自动调节窗体大小
+             var _this = this
+      //       localSearch.setSearchCompleteCallback(function (searchResult) {
+      //         console.log(searchResult)
+      // 　　　　var poi = searchResult.getPoi(0);
+      // 　　　　console.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
+      // 　　　　_this.map.centerAndZoom(poi.point, 13);
+      // 　　});
+      　　localSearch.search(this.bmapform.keyword);
+         this.bmapdialogVisible = false
+     },
+     handler({ BMap, map }) {
+      this.center.lng = 120.20000;
+      this.center.lat = 30.26667;
+      this.zoom = this.zoom;
+      this.map = map
+      console.log(BMap,map)
+    },
+    mapClick(e) {
+      this.center.lng = e.point.lng;
+      this.center.lat = e.point.lat;
+      this.addresspointer = e.point.lng.toFixed(6)+','+e.point.lat.toFixed(6)
+       let geocoder= new BMap.Geocoder();  //创建地址解析器的实例
+      //  let Marker = new BMap.Marker()
+      geocoder.getLocation(e.point,rs=>{
+        // this.add.site = rs.address;
+      //  Marker.closeInfoWindow()
+      //   console.log(rs)
+        this.bmapform.address = rs.address
+        this.deviceform.address = rs.address
+      //地址描述(string)=
+      // console.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
+      // console.log(rs.addressComponents);//结构化的地址描述(object)
+      // console.log(rs.addressComponents.province); //省
+      // console.log(rs.addressComponents.city); //城市
+      // console.log(rs.addressComponents.district); //区县
+      // console.log(rs.addressComponents.street); //街道
+      // console.log(rs.addressComponents.streetNumber); //门牌号
+      // console.log(rs.surroundingPois); //附近的POI点(array)
+      // console.log(rs.business); //商圈字段，代表此点所属的商圈(string)
+    });
+    },
+    //地图更新
+    updateLocation(){
+      this.bmapdialogVisible = true
+    },
+    handleClosebmap(){
+      this.bmapdialogVisible = false
+    },
+    //激活设备
+    getActiveDevices(){
+      var Devices = Parse.Object.extend("Devices");
+      var devices = new Parse.Query(Devices);
+      devices.equalTo('status','ACTIVE')
+      if (this.deviceinput != "") {
+        if (this.selectdevice == "设备名称"||this.selectdevice=='Device Name') {
+          devices.equalTo("name", this.deviceinput);
+        } else {
+          devices.equalTo("devaddr", this.deviceinput);
+        }
+      }
+      if (this.devicenumber != "") {
+        devices.equalTo("devaddr", this.devicenumber);
+      }
+      if (this.equvalue != 0) {
+        devices.equalTo("product", this.equvalue);
+      }
+      devices.count().then(active=>{
+        this.activeall = active
+      },error=>{
+        returnLogin(error)
+      })
+    },
+    getOnlineDevices(){
+      var Devices = Parse.Object.extend("Devices");
+      var devices = new Parse.Query(Devices);
+      devices.equalTo('status','ONLINE')
+      if (this.deviceinput != "") {
+        if (this.selectdevice == "设备名称") {
+          devices.equalTo("name", this.deviceinput);
+        } else {
+          devices.equalTo("devaddr", this.deviceinput);
+        }
+      }
+      if (this.devicenumber != "") {
+        devices.equalTo("devaddr", this.devicenumber);
+      }
+      if (this.equvalue != 0) {
+        devices.equalTo("product", this.equvalue);
+      }
+      devices.count().then(online=>{
+        this.onlineall = online
+      },error=>{
+        returnLogin(error)
+      })
+    },
+     
+    //查询产品
+    searchProduct() {
+      this.proTableData = [];
+      this.proTableData1 = [];
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
+      product.limit(10000);
+      product.find().then(
+        resultes => {
+          resultes.map(items => {
+            var obj = {};
+            obj.id = items.id;
+            obj.name = items.attributes.name;
+            this.proTableData.push(obj);
+            this.proTableData1.push(obj);
+          });
+          
+          this.proTableData.unshift({ name: language=='zh' ? '全部产品':'All Products', id: "0" });
+          if (this.$route.query.productid) {
+            this.equvalue = this.$route.query.productid;
+            this.productenable = false
+          }
+          this.getDevices();
+        },
+        error => {
+          returnLogin(error)
+        }
+      );
+    },
+    //查询设备
+    getDevices(start) {
+      if(start==0){
+        this.devicestart=0
+      }
+      this.tableData = [];
+      var Devices = Parse.Object.extend("Devices");
+      var devices = new Parse.Query(Devices);
+      if (this.deviceinput != "") {
+        if (this.selectdevice == "设备名称") {
+          devices.equalTo("name", this.deviceinput);
+        } else {
+          devices.equalTo("devaddr", this.deviceinput);
+        }
+      }
+      if (this.devicenumber != "") {
+        devices.equalTo("devaddr", this.devicenumber);
+      }
+      if (this.equvalue != 0) {
+        devices.equalTo("product", this.equvalue);
+      }
+
+      devices.limit(this.devicelength);
+      devices.skip(this.devicestart);
+      devices.ascending('-updatedAt')
+      devices.count().then(count => {
+        this.devicetotal = count;
+        devices.find().then(resultes => {
+          // console.log(resultes)
+          if (resultes) {
+            resultes.map(items => {
+              var obj = {};
+              obj.id = items.id;
+              obj.name = items.attributes.name;
+              obj.lastOnlineTime = items.attributes.lastOnlineTime;
+              obj.status = items.attributes.status;
+              obj.originstatus = items.attributes.status;
+              obj.nodeType = items.attributes.product.attributes.nodeType;
+              obj.desc = items.attributes.desc;
+              obj.productName = items.attributes.product.attributes.name;
+              obj.devaddr = items.attributes.devaddr;
+              obj.isEnable = items.attributes.isEnable;
+              obj.productid = items.attributes.product.id
+              obj.devModel = items.attributes.devModel
+              obj.brand = items.attributes.brand
+              obj.address = items.attributes.address
+              obj.assetNum = items.attributes.assetNum
+              obj.createdAt = items.createdAt
+              obj.productid = items.attributes.product.id
+              if(items.attributes.location){
+              obj.latitude = items.attributes.location._latitude
+              obj.longitude = items.attributes.location._longitude
+              }else{
+                 obj.latitude = ''
+                 obj.longitude = ''
+              }
+
+              if(items.attributes.batchId){
+                   obj.batchid = items.attributes.batchId.id
+                 
+              }else{
+                obj.batchid=''
+              }
+              obj.address = items.attributes.address
+              this.tableData.push(obj);
+            });
+            this.getActiveDevices()
+            this.getOnlineDevices()
+          }
+        });
+      },error=>{
+        returnLogin(error)
+      });
+    },
+    //状态设备编辑
+    handelUpdate(event, row, index) {
+      var newData1 = {};
+      for (var key in row) {
+        newData1[key] = row[key];
+      }
+      newData1.isEnable = newData1.isEnable == true ? false : true;
+      this.tableData[index] = newData1;
+      this.$confirm("是否修改此设备状态?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          var newData2 = {};
+          for (var key in row) {
+            newData2[key] = row[key];
+          }
+          newData2.isEnable = newData2.isEnable == true ? true : false;
+          //   this.tableData[index] = newData2
+          var Devices = Parse.Object.extend("Devices");
+          var devices = new Parse.Query(Devices);
+          devices.get(row.id).then(object => {
+            object.set("isEnable", newData2.isEnable);
+            object.save().then(resultes => {
+              this.$message({
+                type: "success",
+                message: "状态修改成功"
+              });
+            });
+            this.getDevices();
+          },error=>{
+            returnLogin(error)
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消修改"
+          });
+          let newData = row;
+          newData.isEnable = newData.isEnable == true ? false : true;
+          this.tableData[index] = newData;
+        });
+    },
+    timestampToTime(timestamp) {
+      var date = new Date(timestamp * 1000);
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D =
+        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
+        " ";
+      var h =
+        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
+        ":";
+      var m =
+        (date.getMinutes() + 1 <= 10
+          ? "0" + date.getMinutes()
+          : date.getMinutes()) + ":";
+      var s =
+        date.getSeconds() + 1 <= 10
+          ? "0" + date.getSeconds()
+          : date.getSeconds();
+      return Y + M + D + h + m + s;
+    },
+    //得到权限
+    getRole() {
+      this.options = [];
+      var roles = Parse.Object.extend("_Role");
+      var query = new Parse.Query(roles);
+      query.find().then(resultes => {
+        resultes.map(item => {
+          var obj = {};
+          obj.objectId = item.id;
+          obj.alias = item.attributes.alias;
+          obj.name = item.attributes.name;
+          this.options.push(obj);
+        });
+      },error=>{
+        returnLogin(error)
+      });
+    },
+    utc2beijing(utc_datetime) {
+      // 转为正常的时间格式 年-月-日 时:分:秒
+      var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
+        .toISOString()
+        .replace(/T/g, " ")
+        .replace(/\.[\d]{3}Z/, "");
+      return date; // 2017-03-31 16:02:06
+    },
+    filterTag(value, row) {
+      return row.tag === value;
+    },
+    /*设备列表选中 */
+    handleSelectionChange(val) {
+      this.multipleTable = val;
+      console.log(this.multipleTable)
+    },
+    //删除设备
+    deleteDevcie(val) {
+      Promise.all([
+        this.multipleTable.map(item => {
+          var Devices = Parse.Object.extend("Devices");
+          var devices = new Parse.Query(Devices);
+          devices.get(item.id).then(resultes => {
+            resultes.destroy().then(resultes => {
+
+            });
+          });
+        })
+      ]).then(data => {
+          if(data.length!=0){
+             this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+          this.getDevices()
+          }else{
+             this.$message({
+            message: "删除失败",
+            type: "error"
+          });
+          }
+         
+    
+      }).catch(error=>{
+        console.log(error)
+      });
+    },
+    //设备多个启用和禁用
+    unactiveDevice(val) {
+       Promise.all([
+        this.multipleTable.map(item => {
+           var Devices = Parse.Object.extend("Devices");
+          var devices = new Devices();
+          devices.id = item.id
+          devices.set('isEnable',false)
+          devices.save().then(resultes=>{
+
+          })
+        })
+      ]).then(data => {
+          if(data&&data.length!=0){
+             this.$message({
+            message: "禁用成功",
+            type: "success"
+          });
+          this.getDevices()
+          }else{
+             this.$message({
+            message: "禁用失败",
+            type: "error"
+          });
+          }
+      }).catch(error=>{
+        console.log(error)
+      });
+    },
+    activeDevice(val) {
+       Promise.all([
+        this.multipleTable.map(item => {
+          var Devices = Parse.Object.extend("Devices");
+          var devices = new Devices();
+          devices.id = item.id
+          devices.set('isEnable',true)
+          devices.save().then(resultes=>{
+
+          })
+        })
+      ]).then(data => {
+          if(data&&data.length!=0){
+             this.$message({
+            message: "启用成功",
+            type: "success"
+          });
+          this.getDevices()
+          }else{
+             this.$message({
+            message: "启用失败",
+            type: "error"
+          });
+          }
+      }).catch(error=>{
+        console.log(error)
+      });
+    },
+    /*@pamras 选中高亮*/
+    rowClass({ row, rowIndex }) {
+      if (this.selectRow.includes(rowIndex)) {
+        console.log(rowIndex);
+        return { "background-color": "rgba(185, 221, 249, 0.3)" };
+      }
+    },
+    /*@param deviceSizeChange 设备列表分页*/
+
+    deviceSizeChange(val) {
+      this.devicelength = val;
+      this.getDevices()
+    },
+    deviceCurrentChange(val) {
+      this.devicestart = (val - 1) * this.devicelength;
+      this.getDevices()
+    },
+    /*关闭添加设备弹窗*/
+    handleClose() {
+      this.devicedialogVisible = false;
+      this.equipmentEditor = '添加'
+    },
+    addDeviceForm(){
+      this.devicedialogVisible = true
+      this.equipmentEditor = '添加'
+      if(this.$route.query.productid){
+        this.deviceform.productName = this.$route.query.productid
+      }else{
+        if(this.equvalue!=0){
+          this.changeproduct = false
+          this.deviceform.productName = this.equvalue
+        }else{
+          this.deviceform.productName=''
+        }
+      }
+      
+      
+    },
+    /*关闭批次弹窗*/
+    handleClose1() {
+      this.pcdialogVisible = false;
+      this.batchid = "";
+      this.pcformInline = {
+        pcname: "",
+        createdtime: ""
+      };
+    },
+    /*el-popover点击关闭*/
+    makeSure(scope) {
+      // 可以在这里执行删除数据的回调操作.......删除操作.....
+      var Devices = Parse.Object.extend("Devices");
+      var devices = new Parse.Query(Devices);
+      devices.get(scope.row.id).then(resultes => {
+        resultes.destroy().then(
+          response => {
+            if (response) {
+              this.$message({
+                type: "success",
+                message: "删除成功"
+              });
+              scope._self.$refs[`popover-${scope.$index}`].doClose();
+              this.getDevices();
+            }
+          },
+          error => {
+            returnLogin(error)
+          }
+        );
+      });
+    },
+    //增加批次
+    addDeviceBatch(isdialog) {
+      if(isdialog==0){
+        this.pcdialogVisible=false
+      }else{
+         this.pcdialogVisible = true;
+      }
+      var Datas = Parse.Object.extend("Datas");
+      var datas = new Parse.Query(Datas);
+      datas.equalTo("type", "batch_number");
+      datas.ascending("-createdAt");
+      datas.find().then(
+        resultes => {
+          if (resultes) {
+            this.pctableData = resultes;
+            pcdata=resultes
+          }
+        },
+        error => {
+         returnLogin(error)
+        }
+      );
+    },
+    /*device添加表单提交*/
+    editorDevice(row){
+      
+      this.deviceid = row.id
+      this.devicedialogVisible = true
+      this.deviceform.devaddr = row.devaddr
+      this.deviceform.name = row.name
+      this.deviceform.assetNum = row.assetNum
+      this.deviceform.devModel = row.devModel
+      this.deviceform.desc = row.desc
+      this.deviceform.productid = row.productid
+      this.deviceform.brand = row.brand
+      this.deviceform.productName = row.productid
+      this.deviceform.batchId = row.batchid
+      this.deviceform.status = row.status
+      this.deviceform.isEnable = row.isEnable
+      this.bmapform.address = row.address
+      this.batchid = row.batchid
+      this.center.lat=row.latitude
+      this.center.lng =row.longitude
+      this.addresspointer = row.latitude+','+row.longitude
+      this.deviceform.address = row.address
+      this.equipmentEditor="编辑"
+     this.getBatch().then((results)=>{
+       this.pctableData.map(item=>{
+         if(item.id = row.batchid){
+           this.deviceform.batchId = item.attributes.data.batch_name
+         }
+       })
+     }).catch(error=>{
+       console.log(error)
+     })
+    },
+    getBatch(){
+     return new Promise((resolve, reject) => {
+          if(pcdata.length>0){
+             resolve(pcdata)
+          }else{
+            reject(false)
+          }
+        })
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          var Devices = Parse.Object.extend("Devices");
+          var devices = new Devices();
+          var Product = Parse.Object.extend("Product");
+          var product = new Product();
+          var Datas = Parse.Object.extend("Datas");
+          var datas = new Datas();
+          var acl = new Parse.ACL();
+          if(this.deviceid!=''){
+            devices.id = this.deviceid
+              devices.set("status", this.deviceform.status);
+              devices.set('isEnable',this.deviceform.isEnable)
+          }else{
+              devices.set("status", "OFFLINE");
+              devices.set('isEnable',false)
+          }
+          var location = new Parse.GeoPoint(
+             {latitude: this.center.lat,
+             longitude:this.center.lng}
+             )
+          datas.id = this.batchid;
+          product.id = this.deviceform.productName;
+          devices.set("product", product);
+          devices.set("batchId", datas);
+          // this.options.map(items => {
+          //   acl.setRoleReadAccess(items.name, true);
+          //   acl.setRoleWriteAccess(items.name, true);
+          // });
+          acl.setReadAccess(this.userId,true)
+          acl.setWriteAccess(this.userId,true)
+          devices.set("ACL", acl);
+          devices.set("devaddr", this.deviceform.devaddr);
+          devices.set("name", this.deviceform.name);
+          devices.set("assetNum", this.deviceform.assetNum);
+          devices.set("devModel", this.deviceform.devModel);
+          devices.set("brand", this.deviceform.brand);
+          devices.set('location',location)
+          devices.set('address',this.bmapform.address)
+          devices.set("desc", this.deviceform.desc);
+          devices.save().then(resultes => {
+            if (resultes) {
+              this.$message({
+                type: "success",
+                message: `${this.deviceid!='' ? '编辑成功':'添加成功'}`
+              });
+              this.devicedialogVisible = false;
+              this.equipmentEditor = '添加'
+              this.batchid = "";
+              this.getDevices();
+              this.deviceid=''
+              this.$refs["deviceform"].resetFields();
+              this.deviceform.assetNum = "";
+              this.deviceform.devModel = "";
+              this.deviceform.address = "";
+              this.deviceform.desc = "";
+              this.deviceform.brand = ""
+            
+            }
+          },error=>{
+            returnLogin(error)
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: "请按照要求填写参数"
+          });
+          return false;
+        }
+      });
+    },
+    /*@pamars addbatch添加批次名称 */
+    addbatch() {
+      if (this.batchid == "") {
+        var Datas = Parse.Object.extend("Datas");
+        var datas = new Datas();
+        var acl = new Parse.ACL();
+        datas.set("data", {
+          batch_name: this.pcformInline.pcname,
+          createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+        });
+        datas.set("type", "batch_number");
+        acl.setReadAccess(this.userId, true);
+        acl.setWriteAccess(this.userId, true);
+        datas.set("ACL", acl);
+        datas.save().then(
+          resultes => {
+            this.$message({
+              message: "新增成功",
+              type: "success"
+            });
+            this.addDeviceBatch();
+          },
+          error => {
+           returnLogin(error)
+          }
+        );
+      } else {
+        var Datas = Parse.Object.extend("Datas");
+        var datas = new Parse.Query(Datas);
+        datas.get(this.batchid).then(response => {
+          response.set("data", {
+            batch_name: this.pcformInline.pcname,
+            createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+          });
+          response.save().then(
+            resultes => {
+              if (resultes) {
+                this.$message({
+                  message: "修改成功",
+                  type: "success"
+                });
+                this.batchid = "";
+                this.pcformInline = {
+                  pcname: "",
+                  createdtime: ""
+                };
+                this.addDeviceBatch();
+              }
+            },
+            error => {
+              returnLogin(error)
+            }
+          );
+        });
+      }
+    },
+    //编辑批次
+    updatebatch(row, id) {
+      // this.pcdialogVisible=true
+      this.pcformInline.pcname = row.attributes.data.batch_name;
+      this.pcformInline.createdtime = row.attributes.data.createdtime * 1000;
+      this.batchid = id;
+    },
+    //删除批次
+    deletebatch(id) {
+      var Datas = Parse.Object.extend("Datas");
+      var datas = new Parse.Query(Datas);
+      datas.get(id).then(resultes => {
+        resultes.destroy().then(
+          res => {
+            if (res) {
+              this.$message({
+                type: "success",
+                message: "删除成功"
+              });
+              this.addDeviceBatch();
+            }
+          },
+          error => {
+            returnLogin(error)
+          }
+        );
+      });
+    },
+    //选择批次
+    selectbatch(row, id) {
+      this.batchid = id;
+      this.deviceform.pc = row.attributes.data.batch_name;
+      this.deviceform.batchId = row.attributes.data.batch_name;
+      this.pcdialogVisible = false;
+    },
+    //设备详情
+    deviceToDetail(row) {
+      this.$router.push({
+        path: "/roles/editdevices",
+        query: {
+          deviceid: row.id,
+          nodeType:row.nodeType,
+          ischildren:false,
+        }
+      });
+    },
+    handleClick(tab, event) {
+      if (tab.name == "second") {
+        var Datas = Parse.Object.extend("Datas");
+        var datas = new Parse.Query(Datas);
+        datas.equalTo("type", "batch_number");
+        datas.ascending("-createdAt");
+        datas.find().then(
+          resultes => {
+            if (resultes) {
+              this.pctableData = resultes;
+            }
+          },
+          error => {
+            returnLogin(error)
+          }
+        );
+      }
+    },
+    //前往子设备
+    deviceToChildren(row){
+       this.$router.push({
+        path: "/roles/editdevices",
+        query: {
+          deviceid: row.id,
+          nodeType:row.nodeType,
+          ischildren:true,    
+        }
+      });
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.equipment {
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  .equ_header {
+    height: 60px;
+    width: 100%;
+    padding-left: 40px;
+    box-sizing: border-box;
+    ul {
+      padding-left: 20px;
+      box-sizing: border-box;
+      display:flex;
+      li {
+        width:200px;
+        list-style: none;
+        height: 60px;
+        text-align: center;
+        border-right: 1px solid #cccccc;
+        // &:first-child {
+        //   width: 15%;
+        //   text-align: left;
+        //   line-height: 60px;
+        // }
+        &:last-child {
+          border: 0;
+          flex-grow:2;
+          text-align: right;
+        }
+        &:nth-child(4) {
+          border: 0;
+        }
+        p {
+          line-height: 0;
+          font-size: 14px;
+          color: #666666;
+        }
+      }
+    }
+  }
+}
+</style>
+<style>
+.equipment .el-tabs__item {
+  font-size: 16px;
+  margin-top: 20px;
+  margin: 0;
+  height: 50px;
+  line-height: 50px;
+  font-family: auto;
+}
+.equipment .el-tabs__header {
+  margin: 0;
+}
+.equipment .el-tabs__content {
+  background: #f4f4f4;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.equipment #pane-first {
+  background: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.equipment #pane-second {
+  background: #ffffff;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.equipment #pane-first .equdevices .el-input {
+  width: 200px;
+}
+ 
+.equipment .el-dialog__footer {
+  border-top: 1px solid #cccccc;
+}
+.equipment .devicecontent .el-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+.equipment .devicecontent .el-form .el-input--suffix .el-input__inner {
+  padding: 0 15px;
+}
+.equipment .devicecontent .el-form .el-icon-plus {
+  width: 40px;
+  height: 40px;
+  background: cornflowerblue;
+  line-height: inherit;
+  margin-right: -4px;
+  color: white;
+  cursor: pointer;
+}
+.equipment .devicecontent .el-form .el-form-item {
+  width: 50%;
+}
+.equipment .devicecontent .el-form .el-form-item:last-child {
+  width: 100%;
+}
+.equipment .devicecontent .el-form .el-select {
+  width: 100%;
+}.equipment .ACTIVE,.equipment .ONLINE{
+  color:green
+}
+.equipment .OFFLINE,.equipment .UNACTIVE{
+  color:red;
+}
+.equipment .selectdetail{
+  margin:10px 0;
+}
+/* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+} */
+/* .equipment .devicecontent .el-form .el-form-item__label:before{
+    content:''
+}
+.equipment .devicecontent .el-form .el-form-item__label:after{
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
+} */
+</style>
+
