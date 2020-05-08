@@ -9,7 +9,7 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
         <el-form-item style="float:left">
           <el-button type="success" v-show="appid&&appsecret" @click="lictool">
-            下载
+            下载引导脚本
             <i class="el-icon-download"></i>
           </el-button>
         </el-form-item>
@@ -27,7 +27,7 @@
           <el-select v-model="formInline.app" placeholder="应用商名称">
             <el-option
               v-for="(item,index) in applist"
-              :label="item.attributes.title"
+              :label="item.attributes.name"
               :key="index"
               :value="item.id"
             ></el-option>
@@ -61,7 +61,7 @@
         </el-table-column>
         <el-table-column label="版本" align="center" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.version}}</span>
+            <span v-if="scope.row.attributes.product">{{ scope.row.attributes.product.shuwa_iot_software}}</span>
           </template>
         </el-table-column>
         <el-table-column label="服务器IP" align="center" width="150">
@@ -108,11 +108,13 @@
             <span v-else style="color:green">部署完成</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="300">
+        <el-table-column label="操作" align="center" width="500">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleDetail(scope.$index, scope.row)" >详 情</el-button>
-            <el-button size="mini" type="primary" @click="addserver(scope.row)" icon="el-icon-s-operation">服务器部署</el-button>
-            <el-button size="mini" type="success" @click="uploadLicense1(scope.row)">下载配置</el-button>
+            <el-button size="mini" type="primary" @click="addserver(scope.row)" icon="el-icon-s-operation">在线安装</el-button>
+            <el-button size="mini" type="success" @click="uploadLicense1(scope.row)">离线安装</el-button>
+             <el-button size="mini" type="primary" @click="onlineLictool(scope.row)">在线升级</el-button>
+            <el-button size="mini" type="success" @click="offlineLictool(scope.row)">离线升级</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -165,7 +167,7 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>-->
         </el-form-item>
-          <el-form-item label="服务版本" prop="version">
+          <el-form-item label="软件版本" prop="version">
           <el-input v-model="ruleForm.version" placeholder="请输入服务版本"></el-input>
           <!-- <el-select v-model="" placeholder="请选择应用版本">
             <el-option label="区域一" value="shanghai"></el-option>
@@ -204,7 +206,7 @@
     </el-dialog>
     <!--详情信息dialog-->
 
-    <el-dialog title="详情" :visible.sync="dialogVisible" width="50%" :before-close="handleClose" :close-on-click-modal="false">
+    <el-dialog title="详情" :visible.sync="dialogVisible" width="50%" :close-on-click-modal="false">
       <div>
         <el-input type="textarea" :rows="20" v-model="licensedetail" readonly></el-input>
       </div>
@@ -220,7 +222,6 @@
       :visible.sync="serverdialogVisible"
       width="50%"
       :close-on-click-modal="false"
-      :before-close="handleClose"
     >
       <el-form
         :model="serverForm"
@@ -236,9 +237,9 @@
           <el-select v-model="serverForm.app" placeholder="应用商名称">
             <el-option
               v-for="(item,index) in applist"
-              :label="item.attributes.title"
-              :key="index"
-              :value="item.id"
+              :key="index"              
+              :label="item.attributes.desc"
+              :value="item.attributes.desc"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -288,6 +289,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="在线状态" prop="online">
+          <span v-if="serverForm.online" style="color:#13ce66">在线</span>
+          <span v-else style="color:#ff4949">离线</span>
           <el-switch v-model="serverForm.online" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
         </el-form-item>
       </el-form>
@@ -296,12 +299,24 @@
         <el-button type="primary" @click="serverOption('serverForm')">确 定</el-button>
       </span>
     </el-dialog>
+    <!--在线升级弹窗-->
+    <el-dialog title="在线升级" :visible.sync="dialogOnline">
+          <el-form :model="onlineform" :rules="onlineformrule" ref="onlineform">
+            <el-form-item label="版本号" label-width="120px" prop="name">
+              <el-input v-model="onlineform.name" placeholder="请输入版本号" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogOnline = false">取 消</el-button>
+            <el-button type="primary" @click="updateLictool('onlineform')">确 定</el-button>
+          </div>
+        </el-dialog>
   </div>
 </template>
 <script>
 import Parse from "parse";
 import { returnLogin } from "@/utils/return";
-import { uploadServer, uploadLicense } from "@/api/applicationManagement";
+import { uploadServer, uploadLicense,offlineServer } from "@/api/applicationManagement";
 var product={}
 export default {
   data() {
@@ -336,6 +351,16 @@ export default {
       serverdialogVisible: false,
       dialogFormVisible: false,
       dialogVisible: false,
+      dialogOnline:false,
+      //在线升级弹窗
+      onlineform:{
+        name:''
+      },
+      onlineformrule:{
+        name:[
+          {required:true,message:'请输入要更新的版本号',trigger:'blur'}
+        ]
+      },
       licensedetail: {},
       formInline: {
         user: "",
@@ -483,7 +508,10 @@ export default {
       },
       appid: "",
       appsecret: "",
-      isupdatedserver: ""
+      isupdatedserver: "",
+      licenseObj:{
+        id:''
+      }
     };
   },
   mounted() {
@@ -524,9 +552,11 @@ export default {
           var app = new APP();
           var acl = new Parse.ACL();
           app.id = this.serverForm.app;
-          var userId = Parse.User.current().id;
-          acl.setReadAccess(userId, true);
-          acl.setWriteAccess(userId, true);
+          // var userId = Parse.User.current().id;
+
+          acl.setRoleReadAccess(this.serverForm.app, true);
+          acl.setRoleWriteAccess(this.serverForm.app, true);
+
           license.set("key", this.serverForm.serverkey);
           license.set("private_ip", this.serverForm.serverip);
           license.set("is_online", this.serverForm.online);
@@ -619,7 +649,6 @@ export default {
     },
     //服务器部署弹窗打开
     addserver(row) {
-      console.log(row)
       this.licenseid = row.id;
       this.ruleForm.version = row.attributes.software
       if (row.attributes.license) {
@@ -677,7 +706,6 @@ export default {
     updatedLicense(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          product.software = this.ruleForm.version
           var License = Parse.Object.extend("License");
           var license = new License();
           license.id = this.licenseid;
@@ -685,7 +713,7 @@ export default {
           license.set("license", this.ruleForm.licensekey);
           license.set("status", "start_install");
           license.set("customer_name", this.ruleForm.username);
-          license.set('product',product)
+          license.set('software',this.ruleForm.version)
           license.save().then(
             resultes => {
               if (resultes) {
@@ -743,6 +771,46 @@ export default {
           "_blank"
         );
       });
+    },
+    //在线升级
+    onlineLictool(row){
+    this.licenseObj.id = row.id
+      for(var key in row.attributes.product){
+        this.licenseObj[key] = row.attributes.product[key]
+      }
+      this.dialogOnline = true
+    },
+    updateLictool(formName){
+       this.$refs[formName].validate(valid => {
+         if(valid){
+          //  this.licenseObj.shuwa_iot_software=this.onlineform.name
+            var License = Parse.Object.extend('License')
+            var license = new License()
+            license.id = this.licenseObj.id
+            license.set('status','start_update')
+            license.set('software',this.onlineform.name)
+            license.save().then(resultes=>{
+              if(resultes){
+                this.dialogOnline = false
+                this.$message.success('正在升级中')
+              }
+            },error=>{
+              returnLogin(error)
+            })
+         }
+      
+      })
+    },
+    //离线升级
+    offlineLictool(row){
+      offlineServer(row.attributes.license).then(resultes=>{
+         window.open(
+          window.location.origin +
+            "/iotapi/licsetup?license=" +
+            row.attributes.license,
+          "_blank"
+         )
+      })
     },
     //通用配置下载
     lictool() {

@@ -5,136 +5,136 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
   <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
-  <script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
-  <script src="https://cdn.bootcss.com/vue/2.6.11/vue.min.js"></script>
-  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
-  <!-- import JavaScript -->
-  <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
-  <script src="https://cdn.bootcss.com/element-ui/2.8.2/locale/zh-CN.min.js"></script>
-  <script src="static/js/mqttws31.js"></script>
-  <script src="static/js/src/jsoneditor.js"></script>
-  <script src="static/js/src/ace.js"></script>
-  <script src="static/js/src/ext-language_tools.js"></script>
-  <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"></script>
-  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"> -->
   <link rel="icon" href="favicon.ico" sizes="64*64">
   <title>采集系统管理</title>
+
   <style>
-    .topheader .nest-menu {
-      display: block;
-      float: none !important;
-      height: auto !important;
+    .app-loading {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      margin: auto;
+      -webkit-transition: all 0.2s;
+      -o-transition: all 0.2s;
+      -moz-transition: all 0.2s;
+      transition: all 0.2s;
+      background: #333;
+    }
+    .app-loading-hide {
+      left: 120%;
+      bottom: 120%;
+      opacity: 0;
     }
 
-    .topheader .el-menu--popup {
-      min-width: 150px !important;
+    .app-loading .subtitle {
+      color: #fff;
+      letter-spacing: 6px;
     }
 
-    .topheader .el-menu--horizontal {
-      border: 0 !important;
+    .app-loading .subtitle h2 {
+      margin-top: 40px;
+      line-height: 60px;
+      font-size: 36px;
+      letter-spacing: 10px;
     }
 
-    .topheader .el-scrollbar__wrap {
-      overflow: visible !important;
-    }
-
-    .topheader .el-scrollbar {
-      overflow: visible !important;
-    }
-
-    .el-table th.is-leaf {
-      background-color: #dbf0ff;
-      border-right: 1px solid #dddddd
-    }
-
-    .el-tree-node {
-      position: relative;
-      padding-left: 16px;
-    }
-
-    .el-tree-node__children {
-      padding-left: 5px;
-      /* display: block!important; */
-    }
-
-    .el-tree-node :last-child:before {
-      height: 30px;
-    }
-
-    .el-tree>.el-tree-node:before {
-      border-left: none;
-    }
-
-    .el-tree>.el-tree-node:after {
-      border-top: none;
-    }
-
-    .el-tree-node:before {
-      content: "";
-      left: -4px;
+    .app-loading .box {
+      top: 50%;
+      left: 50%;
       position: absolute;
-      right: auto;
-      border-width: 1px;
+      -webkit-transform: translateY(-50%) translateX(-50%);
+      transform: translateY(-50%) translateX(-50%);
+      z-index: 100;
+      text-align: center;
     }
 
-    .el-tree-node:after {
-      content: "";
-      left: -5px;
-      position: absolute;
-      right: auto;
-      border-width: 1px;
+    @-webkit-keyframes ball-beat {
+      50% {
+        opacity: 0.2;
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
     }
 
-    .tree :first-child .el-tree-node:before {
-      border-left: none;
+    @keyframes ball-beat {
+      50% {
+        opacity: 0.2;
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75);
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
     }
 
-    .el-tree-node:before {
-      border-left: 1px dashed #333333;
-      bottom: 0px;
-      height: 100%;
-      top: -10px;
-      width: 1px;
-    }
-
-    .el-tree-node:after {
-      border-top: 1px dashed #333333;
-      height: 20px;
-      top: 17px;
+    .ball-beat>div {
+      background-color: #279fcf;
       width: 20px;
+      height: 20px;
+      border-radius: 100% !important;
+      margin: 5px;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      display: inline-block;
+      -webkit-animation: ball-beat 0.7s 0s infinite linear;
+      animation: ball-beat 0.7s 0s infinite linear;
     }
 
-    .el-tree-node__content {
-      padding-left: 10px !important;
-      margin-left: -28px;
-      font-size: 14px;
+    .ball-beat>div:nth-child(2n-1) {
+      -webkit-animation-delay: 0.35s !important;
+      animation-delay: 0.35s !important;
+      background-color: #80bd01;
     }
-
-    .el-tree-node__content>.el-tree-node__expand-icon {
-      padding: 10px;
-      font-size: 16px;
-      position: relative;
-      left: 9px;
-      color: #1A1A1A;
-    }
-
-    .el-tree-node__expand-icon.is-leaf {
-      color: transparent
-    }
-
-    .el-tree-node>.el-tree-node__children {
-      overflow: unset !important;
-    }
-    .el-tooltip__popper.is-dark{
-    max-width:50%;
-    height:auto;
-  }
-  
   </style>
 </head>
 
 <body>
+  <!-- loading begin -->
+  <div class="app-loading">
+    <div class="box">
+      <div class="loader-inner ball-beat">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="subtitle">
+        <h2>数蛙科技</h2>
+        <p>物联网开发平台</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- loading end -->
   <div id="app"></div>
+  <script src="https://cdn.bootcss.com/vue/2.6.11/vue.js"></script>
+  <script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script src="https://cdn.bootcss.com/vue-i18n/8.7.0/vue-i18n.min.js"></script>
+  <script src="https://cdn.bootcss.com/echarts/4.2.1/echarts.min.js"></script>
+
   <!-- built files will be auto injected -->
 </body>
+
+
+<script src="https://cdn.bootcss.com/element-ui/2.8.2/locale/zh-CN.min.js"></script>
+
+<script src="static/js/mqttws31.js"></script>
+<script src="static/js/src/jsoneditor.js"></script>
+<script src="static/js/src/ace.js"></script>
+<script src="static/js/src/ext-language_tools.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"></script>
+
 </html>

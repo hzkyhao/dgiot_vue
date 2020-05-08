@@ -1,6 +1,6 @@
 //parse错误返回
 import { Message } from 'element-ui'
-
+import Cookies from 'js-cookie'
 export  function returnLogin(error){
     if (error.code == "209") {
         Message({
@@ -11,11 +11,13 @@ export  function returnLogin(error){
         sessionStorage.removeItem('roles')
         sessionStorage.removeItem('username')
         sessionStorage.removeItem('token')
-        sessionStorage.removeItem('list')
+        localStorage.removeItem('list')
+        Cookies.set('username',''-1)
+        Cookies.set('sessionToken',''-1)
         location.href = '/#/login'
       } else if (error.code == 119) {
         Message({
-            message:'没有操作权限',
+            message:'没有操作权限 e',
             type: 'warning',
             duration: 2 * 1000
           })

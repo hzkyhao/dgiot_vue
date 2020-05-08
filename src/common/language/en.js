@@ -38,7 +38,7 @@ module.exports = {
       '帮助中心':'Help',
       '文档中心':'Document',
       'API接口':'API',
-      '新增应用':'New Application',
+      '新增工程':'New Application',
       '产品详情':'ProductDetail',
       '规则引擎':'Rule Engine',
       '规则管理':'Rule Manage',
@@ -219,7 +219,9 @@ product:{
   'modeltemplate':'Model template',
   'modelstorage':'Model storage',
   'newstorage':'Newstorage',
-  'modeldataoutput':'Model data output'
+  'modeldataoutput':'Model data output',
+  'exportpro':'Export',
+  'importpro':'Import'
 },
 application:{
   'applicationmanagement':'Application Service',
@@ -229,6 +231,7 @@ application:{
   'applicationname':'Name',
   'scaleofservice':'Scale Of Service',
   'industrytype':'Industry Type',
+  'applicationtype':'Application Type',
   'createtime':'Create Time',
   'newapplication':'New Application',
   'applicationlink':'ApplicationLink',

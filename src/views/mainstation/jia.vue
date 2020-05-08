@@ -432,7 +432,6 @@ export default {
           String.fromCharCode(65 + ranNum) + Math.ceil(Math.random() * 100000);
         //eventBus事件分发
         eventBus.$on(operation, data => {
-         
           _this.gridData1 = [];
           data.data.map(items => {
             didata.map(child => {

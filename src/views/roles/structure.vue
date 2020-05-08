@@ -9,18 +9,21 @@
           :placeholder="$t('user.name')"
           style="width: 200px;"
           class="filter-item"
+          size="small"
         />
         <el-button
           class="filter-item"
           type="primary"
           icon="el-icon-search"
-          @click="userFordepartment"
+          @click="userFordepartment(0)"
+          size="small"
         >{{$t('developer.search')}}</el-button>
         <el-button
           class="filter-item"
           type="primary"
           icon="el-icon-circle-plus"
           @click="adduser"
+          size="small"
         >{{$t('user.newusers')}}</el-button>
         <el-table
           v-loading="loading"
@@ -68,7 +71,7 @@
           </el-table-column>-->
           <el-table-column :label="$t('developer.operation')" align="center" width="400">
             <template slot-scope="scope">
-               <el-button
+               <!-- <el-button
                 type="info"
                 size="small"
                 @click="changerole(scope.$index,scope.row)"
@@ -87,7 +90,7 @@
                 <div
                   style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#00cc33;margin-right:10px"
                 ></div>{{$t('developer.enable')}}
-              </el-button>
+              </el-button> -->
              
               <el-button type="success" size="small" @click="handleEditor(scope.row)">{{$t('developer.edit')}}</el-button>
               <el-button type="danger" size="small" @click="handleDetele(scope.row)">{{$t('developer.delete')}}</el-button>
@@ -360,12 +363,15 @@ export default {
       this.userFordepartment();
     },
     //初始化用户
-    userFordepartment() {
-      this.tableData = [];
+    userFordepartment(start) {
+      if(start==0){
+        this.start=0
+      }
+      this.tableData = []
       var User = Parse.Object.extend("_User");
       var query = new Parse.Query(User);
       if (this.query.value != "") {
-        query.equalTo("username", this.query.value);
+        query.matches("username", this.query.value,'i');
         this.pagesize = 10;
         this.start = 0;
       }

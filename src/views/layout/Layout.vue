@@ -10,8 +10,8 @@
     <!-- <sidebar class="sidebar-container" style="background:#004998;text-align:center"/> -->
     <div class="main-container">
      
-      <app-main/>
-      <TagsView/>
+      <app-main />
+      <TagsView />
     </div>
     
   </div>

@@ -22,14 +22,6 @@
 
         <el-form-item label="终端地址">
           <el-input v-model="formInline.deveui"></el-input>
-          <!-- <el-select v-model="formInline.devaddr" placeholder="请选择终端地址" @change="devSelect">
-            <el-option
-              v-for="(item,index) in dtudata"
-              :label="item.attributes.deveui"
-              :value="item.attributes.deveui"
-              :key="index"
-            ></el-option>
-          </el-select>-->
         </el-form-item>
         <el-form-item label="设备编号">
           <el-input v-model="formInline.addr"></el-input>

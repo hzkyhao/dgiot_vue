@@ -1,1 +1,0 @@
-(this.webpackJsonp=this.webpackJsonp||[]).push([["chunk-animate"],{"d+3G":function(n,p,s){}}]);

@@ -56,7 +56,7 @@ export default {
     getDashboard(){
       var dashboard = document.getElementById('ifream')
       
-      if(sessionStorage.getItem('dashboard')!="" && sessionStorage.getItem('dashboard')){
+      if(sessionStorage.getItem('dashboard')!="" && sessionStorage.getItem('dashboard')!='undefined'){
          this.dashboardrul=sessionStorage.getItem('dashboard')
          dashboard.setAttribute('src',this.dashboardrul)
       }else{

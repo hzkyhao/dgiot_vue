@@ -161,6 +161,7 @@ export default {
   mounted() {
     this.getDepartment();
     this.nowuserid = Parse.User.current().id;
+    console.log(this.$store.state.user.roles)
   },
   methods: {
     submitForm(formName) {
@@ -189,7 +190,11 @@ export default {
           user.set("password", this.ruleForm2.password);
           user.set("phone", this.ruleForm2.phone.toString());
           user.set("email", this.ruleForm2.email);
-          var acl = new Parse.ACL();
+          var acl = new Parse.ACL()
+          // this.$store.state.user.roles.map(item=>{
+          //   acl.setRoleReadAccess(item.name,true)
+          //   acl.setRoleWriteAccess(item.name,true)
+          // })
           acl.setReadAccess(this.nowuserid, true);
           acl.setWriteAccess(this.nowuserid, true);
           user.set("ACL", acl);

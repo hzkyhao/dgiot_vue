@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+dist/
 node/
 run/
 npm-debug.log*
@@ -15,3 +16,5 @@ WebTopo-master/src/statics/shapes
 *.ntvs*
 *.njsproj
 *.sln
+spa/
+**/*.ts

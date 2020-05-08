@@ -1,10 +1,13 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+/* import Vue from 'vue'
+import Router from 'vue-router' */
+
+// const Vue = require('vue')
+const Router = require('vue-router')
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
-Vue.use(Router)
+// Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
@@ -24,6 +27,7 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   { path: '/login',component: () => import('@/views/login/index'), hidden: true},
   { path: '/pumplogin',component: () => import('@/views/login/pumplogin'), hidden: true},
+  { path: '/resetpassword',component: () => import('@/views/login/resetpassword'), hidden: true},
   { path: '/register',component: () => import('@/views/register/register'), hidden: true},
   { path: '/phonelogin',component: () => import('@/views/login/phonesms'), hidden: true},
   { path: '/license', component: () => import('@/views/license'), hidden: true},
@@ -49,12 +53,14 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name:'首页',
-    children: [{
+    children: [
+    {
       path: '/dashboard',
-      component: () => import('@/views/dashboard/index'),
-      name:'首页',
-      meta: { title: '首页', icon: 'devicemanage' },
-    }]
+      name: '首页',
+      component: () => import('@/views/equipment_management/platform_overview'),
+      meta: { title: '首页',icon:'platform' }
+    },
+  ]
   },
   //档案管理
   {
@@ -93,18 +99,6 @@ export const constantRouterMap = [
   //     //   meta: { title: '日志查询', icon: 'log' }
   //     // },
   //     {
-  //       path: 'oneterminal',
-  //       name: '参数管理',
-  //       component: () => import('@/views/mainstation/test'),
-  //       meta: { title: '参数管理', icon: 'danzhongduan' }
-  //     },
-  //     // {
-  //     //   path: 'mainstationvalue',
-  //     //   name: '数据管理',
-  //     //   component: () => import('@/views/mainstation/jia'),
-  //     //   meta: { title: '数据管理', icon: 'danzhongduan'}
-  //     // },
-  //     {
   //       path: 'lora',
   //       name: '通讯模块控制',
   //       component: () => import('@/views/installation/lora'),
@@ -125,12 +119,6 @@ export const constantRouterMap = [
         name: '定制任务管理',
         component: () => import('@/views/tasksmanage/tasklist'),
         meta: { title: '定制任务管理', icon: 'taskslist' }
-      },
-      {
-        path: '/tasksmanage/test',
-        name: 'test',
-        component: () => import('@/views/connectmanage/test1'),
-        meta: { title: 'test', icon: 'taskslist' }
       },
       {
         path: '/tasksmanage/schedule',
@@ -178,19 +166,6 @@ export const constantRouterMap = [
         component: ()=> import('@/views/tasksmanage/long_range_control'),
         meta: {title: '远程控制', icon:'long_control'}
       },
-      // {
-      //   path:'/tasksmanage/performance_monitoring',
-      //   name:'运行监控',
-      //   component: ()=> import('@/views/tasksmanage/performance_monitoring'),
-      //   meta: {title: '运行监控', icon:'performance'}
-      // },
-      // {
-      //   path: 'allterminal',
-      //   name: '批量召测',
-      //   component: () => import('@/views/mainstation/allterminal'),
-      //   meta: { title: '批量召测', icon: 'piliang' }
-      // },
-      
     ]
   },
   {
@@ -242,12 +217,12 @@ export const constantRouterMap = [
         meta: { title: '智能电表', icon: 'smartmeter' }
       },
       
-      {
-        path: '/devicemanage/devicepump',
-        component: () => import('@/views/devicemanage/devicepump'),
-        name:'取证设备管理',
-        meta: { title: '取证设备管理', icon: 'devpump' }
-      },
+      // {
+      //   path: '/devicemanage/devicepump',
+      //   component: () => import('@/views/devicemanage/devicepump'),
+      //   name:'取证设备管理',
+      //   meta: { title: '取证设备管理', icon: 'devpump' }
+      // },
       {
         path: '/devicemanage/testbedpump',
         component: () => import('@/views/devicemanage/testbedpump'),
@@ -329,6 +304,13 @@ export const constantRouterMap = [
         component: () => import('@/views/devicemanage/u_shield'),
         meta: { title: 'U盾管理', icon: 'udun' }
       },
+      {
+        path: '/devicemanage/instruct',
+        name: '指令管理',
+        component: () => import('@/views/devicemanage/instruct_manage'),
+        hidden:true,
+        meta: { title: '指令管理', icon: 'instruct' }
+      },
     ]
   },
   {
@@ -341,9 +323,9 @@ export const constantRouterMap = [
    
     children: [
       // {
-      //   path: 'connectlist',
+      //   path: '/connectmanage/connectlist',
       //   name: '连接列表',
-      //   component: () => import('@/views/connectmanage/connectlist'),
+      //   component: () => import('@/views/connectmanage/test2'),
       //   meta: { title: '连接列表', icon: 'list' }
       // },
       {
@@ -473,15 +455,15 @@ export const constantRouterMap = [
       },
       {
         path: '/report/pump_empower',
-        name: '企业资质认证',
+        name: '企业资质审核',
         component: () => import('@/views/pump_admin/pump_admin'),
-        meta: { title: '企业资质认证',icon:'pump_admin'}
+        meta: { title: '企业资质审核',icon:'pump_admin'}
       },
       {
         path: '/report/pump_person',
-        name: '个人资质认证',
+        name: '个人资质审核',
         component: () => import('@/views/pump_admin/pump_person'),
-        meta: { title: '个人资质认证',icon:'person_empower'}
+        meta: { title: '个人资质审核',icon:'person_empower'}
       },
       {
         path: '/report/person_empower',
@@ -508,12 +490,12 @@ export const constantRouterMap = [
         component: () => import('@/views/testpumplist/pumplist/Inspection'),
         meta: { title: '检测任务', icon: 'history' }
       },
-      {
-        path: '/reportmodule/index',
-        component: () => import('@/views/reportModule/index'),
-        name:'检测标准',
-        meta: { title: '检测标准', icon: 'link' }
-      },
+      // {
+      //   path: '/reportmodule/index',
+      //   component: () => import('@/views/reportModule/index'),
+      //   name:'检测标准',
+      //   meta: { title: '检测标准', icon: 'link' }
+      // },
       {
         path: '/reportmodule/standard',
         component: () => import('@/views/reportModule/standard'),
@@ -719,6 +701,12 @@ export const constantRouterMap = [
         meta: { title: '设备管理',icon:'device' }
       },
       {
+        path: '/performance_monitoring',
+        component: () => import('@/views/dashboard/index'),
+        name:'性能监控',
+        meta: { title: '性能监控', icon: 'platform' }    
+      },
+      {
         path: '/roles/product',
         name: '产品管理',
         component: () => import('@/views/equipment_management/devproduct'),
@@ -756,20 +744,8 @@ export const constantRouterMap = [
         name: '节点管理',
         component: () => import('@/views/installation/log'),
         meta: { title: '节点管理', icon:'nodemgr'}
-       
       },
-      // {
-      //   path: '/roles/channelManage',
-      //   name: '服务通道',
-      //   component: () => import('@/views/equipment_management/channelManage'),
-      //   meta: { title: '服务通道',icon:'channelmanage' }
-      // },
-      {
-        path: '/roles/platform_overview',
-        name: '平台总览',
-        component: () => import('@/views/equipment_management/platform_overview'),
-        meta: { title: '平台总览',icon:'platform' }
-      },
+      
       {
         path: '/roles/server_control',
         name: '部署管理',
@@ -788,9 +764,6 @@ export const constantRouterMap = [
         component: () => import('@/views/equipment_management/tdengine'),
         meta: { title: '数据库管理',icon:'platform' }
       },
-     
-     
-      // 
     ]
   },
   {

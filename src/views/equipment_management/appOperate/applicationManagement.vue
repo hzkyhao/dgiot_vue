@@ -1,8 +1,8 @@
 <template>
   <div id="application">
-    <h3>工程管理</h3>
+    <h3>应用管理</h3>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="工程管理" name="app">
+      <el-tab-pane label="应用管理" name="app">
         <div class="form">
           <div class="search">
             <el-input v-model="name" :placeholder="$t('application.applicationname')" size="small"></el-input>
@@ -12,21 +12,26 @@
               size="small"
             >{{$t('application.search')}}</el-button>
           </div>
-          <el-button
+          <!-- <el-button
             type="primary"
             @click="handleClickAdd"
             size="small"
-          >{{$t('application.newapplication')}}</el-button>
+          >{{$t('application.newapplication')}}</el-button> -->
         </div>
         <el-table :data="tableData" style="width:100%;">
+          <!-- 应用标识 -->
           <el-table-column
             prop="productIdentifier"
             :label="$t('application.applicationidentification')"
           ></el-table-column>
+          <!-- 应用名称 -->
           <el-table-column prop="title" :label="$t('application.applicationname')"></el-table-column>
           <el-table-column prop="userUnit" label="应用单位"></el-table-column>
+          <!-- 服务规模 -->
           <el-table-column prop="scale" :label="$t('application.scaleofservice')" sortable></el-table-column>
+          <!-- 所属行业 -->
           <el-table-column prop="category" :label="$t('application.industrytype')"></el-table-column>
+
           <el-table-column prop="creation_time" :label="$t('application.createtime')"></el-table-column>
           <el-table-column prop="operation" :label="$t('developer.operation')" width="350">
             <template slot-scope="scope">
@@ -92,7 +97,7 @@
                <el-link
                   type="primary"
                   :underline="false"
-                  @click="serverlictool(scope.row)"
+                  @click="applicationDeployment(scope.row)"
                 >
                  部署
                 </el-link>
@@ -114,7 +119,7 @@
 </template>
 
 <script>
-import { getProject, handleZero, uploadLicense } from "@/api/applicationManagement";
+import { getProject, handleZero, uploadLicense,setUpLictool } from "@/api/applicationManagement";
 import { utc2beijing } from "@/utils";
 import Parse from "parse";
 export default {
@@ -190,7 +195,11 @@ export default {
           obj.title = r[i].title;
           obj.userUnit = r[i].userUnit
           obj.dashboard = r[i].dashboard;
-          obj.background=r[i].background
+          obj.background=r[i].background;
+          obj.acl= r[i].ACL;
+          obj.desc = r[i].desc;
+          obj.copyright = r[i].copyright;
+
           this.tableData.push(obj);
         }
       });
@@ -249,8 +258,10 @@ export default {
     },
     // 跳转修改
     handleClickUpdate(scope) {
-      console.log(row)
+    
       let row = scope.row;
+        console.log('$row',row)
+    
       this.$router.push({
         path: "/applicationManagement/addApp",
         query: {
@@ -267,7 +278,10 @@ export default {
           logo: row.logo,
           userUnit:row.userUnit,
           dashboard: row.dashboard,
-          background: row.background
+          background: row.background,
+          acl:this.$getFirstKey(row.acl),
+          desc:row.desc,
+          copyright:row.copyright
         }
       });
     },
@@ -292,35 +306,52 @@ export default {
     //删除应用
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
-      var App = Parse.Object.extend("App");
-      var app = new App();
-      app.id = scope.row.objectId;
-      //   app.get(scope.row.objectId).then(resultes=>{
-      app.destroy().then(
-        response => {
-          if (response) {
-            this.$message({
-              type: "success",
-              message: "删除成功"
-            });
-            scope._self.$refs[`popover-${scope.$index}`].doClose();
-            this.getAppMange();
-          }
-        },
-        error => {
-          this.$message({
-            type: "error",
-            message: error.message
-          });
-          //   })
-        }
-      );
+      var Project = Parse.Object.extend("Project");
+      var project = new Project();
+      project.id = scope.row.objectId;
+     var relation = project.relation('product')
+     var query = relation.query()
+     query.find().then(response=>{
+       if(response.length>0){
+         this.$message.warning('请先将应用下的产品删除')
+          scope._self.$refs[`popover-${scope.$index}`].doClose();
+       }else{
+         project.destroy().then(
+            response => {
+              if (response) {
+                this.$message({
+                  type: "success",
+                  message: "删除成功"
+                });
+                scope._self.$refs[`popover-${scope.$index}`].doClose();
+                this.getAppMange();
+              }
+            },
+            error => {
+              this.$message({
+                type: "error",
+                message: error.message
+              });
+              //   })
+            }
+          );
+       }
+     })
+      
     },
     Gotoproduct(scope) {
+    
+      var projectRoles =[]
+      for(var key in scope.row.acl){
+        console.log(key.substring(5))
+        projectRoles.push(key.substring(5))
+      }
+      this.$store.dispatch('setProjectRole',projectRoles)
+
       this.$router.push({
         path: "/roles/product",
         query: {
-          product: scope.row.productIdentifier
+          project: scope.row.objectId 
         }
       });
     },
@@ -359,6 +390,26 @@ export default {
                 appsecret:row.secret,
             }
         })
+    },
+    applicationDeployment(row){
+      setUpLictool(row.name).then(resultes=>{
+        if(resultes){
+          this.$message.success('正在部署中')
+        }
+      }).catch(error=>{
+        this.$message.error(error)
+      })
+      //this is /roles/projectManagement
+      // console.log('row.name',row.name);
+      
+        // this.$router.push({
+        //     path:'/roles/applicationManagement', //@/views/equipment_management/appOperate/application
+        //     query:{
+        //       projectName:row.name,
+        //       projectId:row.objectId
+        //     }
+        // })
+        
     }
   }
 };

@@ -50,24 +50,24 @@
                 <el-table :data="tableData1" style="width: 100%;text-align:center">
                   <el-table-column label="设备名称" align="center">
                     <template slot-scope="scope">
-                      <span v-if="scope.row.attributes.basedata.type=='PC'">控制台</span>
-                      <span v-else-if="scope.row.attributes.basedata.type=='DTU'">控制器</span>
+                      <span v-if="scope.row.product.name.indexOf('控制台')!=-1">控制台</span>
+                      <span v-else-if="scope.row.product.name.indexOf('控制器')!=-1">控制器</span>
                       <span v-else>摄像头</span>
                     </template>
                   </el-table-column>
                   <el-table-column label="设备编号" align="center">
                     <template slot-scope="scope">
-                      <span>{{scope.row.attributes.devaddr}}</span>
+                      <span>{{scope.row.devaddr}}</span>
                     </template>
                   </el-table-column>
                   <el-table-column label="运行状态" align="center">
                     <template slot-scope="scope">
                       <span
-                        v-if="scope.row.attributes.basedata.status=='offline'"
+                        v-if="scope.row.status=='OFFLINE'"
                         style="color:red"
                       >离线</span>
                       <span
-                        v-else-if="scope.row.attributes.basedata.status=='running'"
+                        v-else-if="scope.row.status=='runing'"
                         style="color:green"
                       >忙碌</span>
                       <span v-else style="color:green">在线</span>
@@ -78,27 +78,27 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="Gotodetail(scope.row.attributes.basedata.type,scope.row.id)"
+                        @click="Gotodetail(scope.row.type,scope.row.id)"
                       >详情</el-button>
                       <el-button
                         size="mini"
-                        v-if="scope.row.attributes.basedata.status=='ready'"
-                        @click="startPump(scope.row.attributes.devaddr)"
+                        v-if="scope.row.status=='ready'"
+                        @click="startPump(scope.row.devaddr)"
                         type="success"
                       >启动</el-button>
                       <el-button
                         size="mini"
-                        v-if="scope.row.attributes.basedata.status=='running'"
+                        v-if="scope.row.status=='running'"
                         type="danger"
-                        @click="stopPump(scope.row.attributes.devaddr)"
+                        @click="stopPump(scope.row.devaddr)"
                       >停止</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column prop="id" label="序号" align="center"></el-table-column>
-            <el-table-column prop="inspecting_item" label="检验项目" align="center"></el-table-column>
+            <el-table-column label="ID" align="center" type="index"></el-table-column>
+            <el-table-column prop="name" label="检验项目" align="center"></el-table-column>
             <el-table-column prop="title" label="保证值" align="center"></el-table-column>
             <el-table-column prop="value" label="测试值" align="center"></el-table-column>
             <el-table-column prop label="评定" align="center"></el-table-column>
@@ -180,6 +180,7 @@ import Parse from "parse";
 import $ from "jquery";
 import { Filedata, updateFile } from "@/api/pumpdata/pumpdata";
 import { Pumpcontrol, CloundFile } from "@/api/devicescontrol/index";
+import Cookies from 'js-cookie';
 var arr1 =[]
 var arr2=[]
 var arr3=[]
@@ -274,15 +275,17 @@ export default {
       var report = new Parse.Query(PumpClient);
       report.get(this.reportid).then(
         resultes => {
-          var reporttask = resultes.attributes.datats;
-          var tabledata = reporttask.inspecting;
+          var reporttask = resultes.attributes.datas;
+          var tabledata = reporttask.reportchildren;
           this.datafortable = [];
-          tabledata.map(item => {
-            item.guarantee_value.map(child => {
-              child.inspecting_item = item.inspecting_item;
-              child.type = "imgage";
-              this.datafortable.push(child);
-            });
+          tabledata.map((item,index) => {
+            item.id = index+1
+            this.datafortable.push(item)
+            // item.guarantee_value.map(child => {
+            //   child.inspecting_item = item.inspecting_item;
+            //   child.type = "imgage";
+            //   this.datafortable.push(child);
+            // });
             //分页总条数
             this.total1 = this.datafortable.length;
           });
@@ -662,38 +665,101 @@ export default {
       this.isreload = 1;
       this.taskdetailid = taskdetailid;
       this.taskid = taskid;
-      var Testbed = Parse.Object.extend("Testbed");
+       this.tableData1=[]
+       var Testbed = Parse.Object.extend("Testbed");
       var testbed = new Parse.Query(Testbed);
-      testbed.equalTo('name',this.testbedid)
-      testbed.find().then(
+      testbed.get(this.testbedid).then(
         resultes => {
-          var relation = resultes[0].relation("relation");
-          var query = relation.query();
-          query.ascending('-updatedAt')
-          query.equalTo("basedata.type", "PC");
-          query.find().then(res => {
-            this.tableData1 = res;
-          });
-        },
-        error => {
-          if (error.code == "209") {
-            this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
-            this.$router.push({
-              path: "/login"
-            });
-          } else if (error.code == 119) {
-            this.$message({
-              type: "error",
-              message: "没有操作权限"
-            });
-          } else {
-            this.$message.error(error.message);
+          console.log(resultes)
+          var decviceaddr = resultes.attributes.deviceaddr
+          var where={
+            key:{
+
+            }
           }
-        }
+          for(var key in where){
+            key=`"route.${decviceaddr}"`
+          }
+          where[`route.${decviceaddr}`]={
+            "$regex": ".+"
+          }
+        delete where.key
+           $.ajax({
+              type: 'GET',
+              contentType:'application/json',
+              dataType:'json',
+              headers:{
+                "sessionToken":Cookies.get('access_token')
+              },
+              data:{
+                include: "product",
+               where:JSON.stringify(where)
+              },
+              url: Cookies.get('apiserver')+'/classes/Device',
+              success:(response)=>{
+                if(response){
+                response.results.map(item=>{
+                  if(item.product.name.indexOf('控制台')!=-1){
+                    this.tableData1.push(item)
+                  }
+                })
+                }
+              },
+              fail:error => {
+                if (error.code == "209") {
+                  this.$message({
+                    type: "warning",
+                    message: "登陆权限过期，请重新登录"
+                  });
+                  this.$router.push({
+                    path: "/login"
+                  });
+                } else if (error.code == 119) {
+                  this.$message({
+                    type: "error",
+                    message: "没有操作权限"
+                  });
+                } else {
+                  this.$message.error(error.message);
+                }
+              }
+            })
+        },
+        
       );
+    
+      // var Testbed = Parse.Object.extend("Testbed");
+      // var testbed = new Parse.Query(Testbed);
+      
+      // testbed.get(this.testbedid).then(
+      //   resultes => {
+      //     var relation = resultes.relation("devices");
+      //     var query = relation.query();
+      //     query.ascending('-updatedAt')
+      //     query.equalTo("basedata.type", "PC");
+      //     query.find().then(res => {
+      //       this.tableData1 = res;
+      //     });
+      //   },
+      //   error => {
+      //     if (error.code == "209") {
+      //       this.$message({
+      //         type: "warning",
+      //         message: "登陆权限过期，请重新登录"
+      //       });
+      //       this.$router.push({
+      //         path: "/login"
+      //       });
+      //     } else if (error.code == 119) {
+      //       this.$message({
+      //         type: "error",
+      //         message: "没有操作权限"
+      //       });
+      //     } else {
+      //       this.$message.error(error.message);
+      //     }
+      //   }
+      // );
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -822,37 +888,68 @@ export default {
       this.isreload = 2;
       this.taskdetailid = taskdetailid;
       this.taskid = taskid;
+      this.tableData1=[]
       var Testbed = Parse.Object.extend("Testbed");
       var testbed = new Parse.Query(Testbed);
-      testbed.equalTo('name',this.testbedid)
-      testbed.find().then(
+      testbed.get(this.testbedid).then(
         resultes => {
-          var relation = resultes[0].relation("relation");
-          var query = relation.query();
-          query.ascending('-updatedAt')
-          query.equalTo("basedata.type", "DTU");
-          query.find().then(res => {
-            this.tableData1 = res;
-          });
-        },
-        error => {
-          if (error.code == "209") {
-            this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
-            this.$router.push({
-              path: "/login"
-            });
-          } else if (error.code == 119) {
-            this.$message({
-              type: "error",
-              message: "没有操作权限"
-            });
-          } else {
-            this.$message.error(error.message);
+         
+          var decviceaddr = resultes.attributes.deviceaddr
+          var where={
+            key:{
+
+            }
           }
-        }
+          for(var key in where){
+            key=`"route.${decviceaddr}"`
+          }
+          where[`route.${decviceaddr}`]={
+            "$regex": ".+"
+          }
+        delete where.key
+           $.ajax({
+              type: 'GET',
+              contentType:'application/json',
+              dataType:'json',
+              headers:{
+                "sessionToken":Cookies.get('access_token')
+              },
+              data:{
+                include: "product",
+               where:JSON.stringify(where)
+              },
+              url: Cookies.get('apiserver')+'/classes/Device',
+              success:(response)=>{
+                if(response){
+                response.results.map(item=>{
+                  if(item.product.name.indexOf('控制器')!=-1){
+                    this.tableData1.push(item)
+                  }
+                })
+                }
+                console.log(this.tableData1)
+              },
+              fail:error => {
+                if (error.code == "209") {
+                  this.$message({
+                    type: "warning",
+                    message: "登陆权限过期，请重新登录"
+                  });
+                  this.$router.push({
+                    path: "/login"
+                  });
+                } else if (error.code == 119) {
+                  this.$message({
+                    type: "error",
+                    message: "没有操作权限"
+                  });
+                } else {
+                  this.$message.error(error.message);
+                }
+              }
+            })
+        },
+        
       );
     },
     //视频取证
@@ -860,37 +957,99 @@ export default {
       this.isreload = 3;
       this.taskdetailid = taskdetailid;
       this.taskid = taskid;
-      var Testbed = Parse.Object.extend("Testbed");
+      this.tableData1=[]
+      // var Testbed = Parse.Object.extend("Testbed");
+      // var testbed = new Parse.Query(Testbed);
+      // //  testbed.equalTo('name',this.testbedid)
+      // testbed.get(this.testbedid).then(
+      //   resultes => {
+      //     var relation = resultes.relation("devices");
+      //     var query = relation.query();
+      //     query.ascending('-updatedAt')
+      //     query.equalTo("basedata.type", "CAMERA");
+      //     query.find().then(res => {
+      //       this.tableData1 = res;
+      //     });
+      //   },
+      //   error => {
+      //     if (error.code == "209") {
+      //       this.$message({
+      //         type: "warning",
+      //         message: "登陆权限过期，请重新登录"
+      //       });
+      //       this.$router.push({
+      //         path: "/login"
+      //       });
+      //     } else if (error.code == 119) {
+      //       this.$message({
+      //         type: "error",
+      //         message: "没有操作权限"
+      //       });
+      //     } else {
+      //       this.$message.error(error.message);
+      //     }
+      //   }
+      // );
+       var Testbed = Parse.Object.extend("Testbed");
       var testbed = new Parse.Query(Testbed);
-       testbed.equalTo('name',this.testbedid)
-      testbed.find().then(
+      testbed.get(this.testbedid).then(
         resultes => {
-          var relation = resultes[0].relation("relation");
-          var query = relation.query();
-          query.ascending('-updatedAt')
-          query.equalTo("basedata.type", "CAMERA");
-          query.find().then(res => {
-            this.tableData1 = res;
-          });
-        },
-        error => {
-          if (error.code == "209") {
-            this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
-            this.$router.push({
-              path: "/login"
-            });
-          } else if (error.code == 119) {
-            this.$message({
-              type: "error",
-              message: "没有操作权限"
-            });
-          } else {
-            this.$message.error(error.message);
+          console.log(resultes)
+          var decviceaddr = resultes.attributes.deviceaddr
+          var where={
+            key:{
+
+            }
           }
-        }
+          for(var key in where){
+            key=`"route.${decviceaddr}"`
+          }
+          where[`route.${decviceaddr}`]={
+            "$regex": ".+"
+          }
+        delete where.key
+           $.ajax({
+              type: 'GET',
+              contentType:'application/json',
+              dataType:'json',
+              headers:{
+                "sessionToken":Cookies.get('access_token')
+              },
+              data:{
+                include: "product",
+               where:JSON.stringify(where)
+              },
+              url: Cookies.get('apiserver')+'/classes/Device',
+              success:(response)=>{
+                if(response){
+                response.results.map(item=>{
+                  if(item.product.name.indexOf('摄像头')!=-1){
+                    this.tableData1.push(item)
+                  }
+                })
+                }
+              },
+              fail:error => {
+                if (error.code == "209") {
+                  this.$message({
+                    type: "warning",
+                    message: "登陆权限过期，请重新登录"
+                  });
+                  this.$router.push({
+                    path: "/login"
+                  });
+                } else if (error.code == 119) {
+                  this.$message({
+                    type: "error",
+                    message: "没有操作权限"
+                  });
+                } else {
+                  this.$message.error(error.message);
+                }
+              }
+            })
+        },
+        
       );
     },
     Gotodetail(type, taskid) {

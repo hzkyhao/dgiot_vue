@@ -15,7 +15,7 @@
     data() {
       return {
        host: location.hostname,
-        port: 8083,
+        port: 5080,
         clientId: 'C_' + new Date().getTime(),
         userName: "test",
         password: "test123",

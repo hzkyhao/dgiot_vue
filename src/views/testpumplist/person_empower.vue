@@ -18,36 +18,35 @@
               <el-form-item label="出生日期" prop="birthday">
                 <el-date-picker v-model="powerform.birthday" type="date" placeholder="选择出生日期"  value-format="timestamp"></el-date-picker>
               </el-form-item>
-              <el-form-item label="最高学历">
-                <el-select v-model="powerform.education" placeholder="请选择最高学历">
-                  <el-option v-for="(item,index) in positional" :label="item" :value="item" :key="index"></el-option>
-                </el-select>
+               <el-form-item label="毕业院校">
+                <el-input v-model="powerform.graduate_institutions" placeholder="请输入毕业院校"></el-input>
               </el-form-item>
                <el-form-item label="身份证编号" prop="identity">
                 <el-input v-model="powerform.identity" placeholder="请输入身份证编号"></el-input>
               </el-form-item>
               <el-form-item label="身份证正反面" required>
                 <el-col :span="11">
-                  <el-upload
-                    class="avatar-uploader"
-                    action="/iotapi/upload"
-                    :show-file-list="false"
-                    :on-success="handleFrontSuccess"
-                    :before-upload="beforeAvatarUpload"
-                  >
-                    <img
-                      v-if="powerform.frontimageUrl"
-                      :src="powerform.frontimageUrl"
-                      class="avatar"
-                    />
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                 <img v-if="powerform.frontimageUrl" :src="powerform.frontimageUrl" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'front')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
                     <div
                       class="el-upload__text"
                       style="position:absolute;top:90px;color:#8c939d;
                       left:110px;"
                       v-show="powerform.frontimageUrl==''"
                     >正面</div>
-                  </el-upload>
+                
                   <el-button
                     size="small"
                     type="danger"
@@ -58,26 +57,27 @@
                 </el-col>
                 <el-col class="line" :span="2"></el-col>
                 <el-col :span="11" style="position:relative">
-                  <el-upload
-                    class="avatar-uploader"
-                    action="/iotapi/upload"
-                    :show-file-list="false"
-                    :on-success="handleContrarySuccess"
-                    :before-upload="beforeAvatarUpload"
-                  >
-                    <img
-                      v-if="powerform.contraryimageUrl"
-                      :src="powerform.contraryimageUrl"
-                      class="avatar"
-                    />
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-if="powerform.contraryimageUrl" :src="powerform.contraryimageUrl" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'contrary')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
                     <div
                       class="el-upload__text"
                       style="position:absolute;top:90px;color:#8c939d;
                       left:110px;"
                       v-show="powerform.contraryimageUrl==''"
                     >反面</div>
-                  </el-upload>
+                  
                   <el-button
                     size="small"
                     type="danger"
@@ -100,9 +100,12 @@
                   <el-option label="群众" value="群众"></el-option>
                 </el-select>
               </el-form-item> -->
-              <el-form-item label="毕业院校">
-                <el-input v-model="powerform.graduate_institutions" placeholder="请输入毕业院校"></el-input>
+              <el-form-item label="最高学历">
+                <el-select v-model="powerform.education" placeholder="请选择最高学历">
+                  <el-option v-for="(item,index) in positional" :label="item" :value="item" :key="index"></el-option>
+                </el-select>
               </el-form-item>
+             
               <el-form-item label="主修专业">
                   <el-input v-model="powerform.professional" placeholder="请输入主修专业"></el-input>
                 
@@ -112,26 +115,27 @@
               </el-form-item>
              
               <el-form-item label="职业资质" required>
-                <el-upload
-                  class="avatar-uploader"
-                  action="/iotapi/upload"
-                  :show-file-list="false"
-                  :on-success="handleJobSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
-                  <img v-if="powerform.joblicense" :src="powerform.joblicense" class="avatar" />
-                  <i
-                    v-else
-                    class="el-icon-plus avatar-uploader-icon"
-                    style="width:300px;height:200px"
-                  ></i>
+               <img v-if="powerform.joblicense" :src="powerform.joblicense" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'joblicense')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
                   <div
                     class="el-upload__text"
                     style="position:absolute;top:90px;color:#8c939d;
                       left:120px;"
                     v-show="powerform.joblicense==''"
                   >职业资质</div>
-                </el-upload>
+                <!-- </el-upload> -->
                 <el-button
                   size="small"
                   type="danger"
@@ -217,6 +221,7 @@
 <script>
 import { regionData, CodeToText } from "element-china-area-data";
 import Parse from "parse";
+import Cookies from 'js-cookie'
 export default {
   data() {
     const idrules = function(rule, value, callback) {
@@ -299,37 +304,88 @@ export default {
           }
         ],
       },
-      regionData: regionData
+      regionData: regionData,
+      imgtype:''
     };
   },
   mounted() {},
   methods: {
-    beforeAvatarUpload(file) {
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
+    upload(event,type) {
+      this.imgtype=type
+      if (event) {
+        var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
+        var name = file.name;
+        var testmsg = event.target.files[0].type
+        var type = file.type.split("/")[0];
+        var extension =
+        testmsg === "image/jpeg" ||
+        testmsg === "image/JPEG" ||
+        testmsg === "image/png" ||
+        testmsg === "image/PNG" ||
+        testmsg === "image/bpm" ||
+        testmsg === "image/BPM";
+        if (!extension) {
+          //将图片img转化为base64
+            this.$message({
+            message: "请上传图片",
+            type: "error"
+          });
+          return false; //必须加上return false; 才能阻止
+        }else{
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          var that = this;
+          reader.onloadend = function() {
+            var dataURL = reader.result;
+            var blob = that.dataURItoBlob(dataURL);
+            that.uploadFile(blob, name); //执行上传接口
+          };
+        }
       }
-      console.log(file);
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
-        });
-        return false;
+    },
+    dataURItoBlob(dataURI) {
+      // base64 解码
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
       }
-      return extension || isLt50M;
+      return new Blob([ab], { type: mimeString });
+    },
+    uploadFile(imgUrl, name) {
+      var formdata = new FormData();
+      formdata.append("file", imgUrl, name);
+      formdata.append("output", 'json')
+      formdata.append("path",Parse.User.current().id)
+      formdata.append("auth_token", Cookies.get('sessionToken')) //下面是要传递的参数
+      //此处必须设置为  multipart/form-data
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
+        }
+      };
+      this.$http
+        .post(Cookies.get('fileserver'),formdata)
+        .then(res => { 
+          if(res){
+            if(this.imgtype=='front'){
+              this.powerform.frontimageUrl= res.body.url
+            }else if(this.imgtype=='contrary'){
+              this.powerform.contraryimageUrl = res.body.url
+            }else if(this.imgtype=='joblicense'){
+              this.powerform.joblicense = res.body.url
+            }
+            
+          }
+        }).catch(error=>{
+          
+          this.$message.error(error.bodyText)
+        });
     },
     //身份证正面上传
     handleFrontSuccess(response, file, fileList) {
@@ -373,19 +429,22 @@ export default {
                 var PersonAuthtication = Parse.Object.extend('PersonAuthtication')
                 var personauthtication = new PersonAuthtication()
                 var acl = new Parse.ACL()
+                var Department = Parse.Object.extend('Department')
+                var department = new Department()
+                department.id = Parse.User.current().attributes.department.id
                 if(this.personempowerid!=''){
                   personauthtication.id = this.personempowerid
                 }
                 var userId = Parse.User.current().id
                 acl.setReadAccess(userId,true)
                 acl.setWriteAccess(userId,true)
-                acl.setRoleWriteAccess('pump_admin',true)
-                acl.setRoleReadAccess('pump_admin',true)
+                acl.setRoleWriteAccess('Auditor',true)
+                acl.setRoleReadAccess('Auditor',true)
+                personauthtication.set('department',department)
                 personauthtication.set("ACL",acl)
                 personauthtication.set('name',this.powerform.name)
                 personauthtication.set('birthday',this.powerform.birthday/1000)
                 personauthtication.set('job',this.powerform.job)
-                // personauthtication.set('politic_status',this.powerform.politic_status)
                 personauthtication.set('education',this.powerform.education)
                 personauthtication.set('positional_titles',this.powerform.positional_titles)
                 personauthtication.set('identity',this.powerform.identity)
@@ -472,6 +531,7 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+  border:1px dashed #cccccc
 }
 .person_empower .avatar {
   width: 250px;

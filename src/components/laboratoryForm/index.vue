@@ -42,16 +42,20 @@
                 <el-input v-model="laboratoryForm.linkname"></el-input>
               </el-form-item>
               <el-form-item label="实验室照片" required>
-                    <el-upload
-                      class="avatar-uploader"
-                      action="/iotapi/upload"
-                      :show-file-list="false"
-                      :on-success="handleAvatarlaboratory"
-                      :before-upload="beforeAvatarlaboratory"
-                    >
-                      <img v-if="laboratoryForm.imgsrc" :src="laboratoryForm.imgsrc" class="avatar" />
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                <img v-if="laboratoryForm.imgsrc" :src="laboratoryForm.imgsrc" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                  <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    ref="uploadform"
+                    style="position: absolute"
+                  >
+                    <input
+                      type="file"
+                      @change="upload($event)"
+                      style="position:relative;top:-100px; opacity:0;z-index:5;height:100px;width:100px;cursor:pointer"
+                    />
+                </form>
                   </el-form-item>
                   </div></el-col>
                   <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -142,16 +146,20 @@
                     <el-date-picker placeholder="选择时间" v-model="laboratoryForm.updatedDate"  type="date" value-format="timestamp"></el-date-picker>
               </el-form-item>
                <el-form-item label="证书电子文件" required>
-                    <el-upload
-                      class="avatar-uploader"
-                      action="/iotapi/upload"
-                      :show-file-list="false"
-                      :on-success="handleAvatarlaboratory1"
-                      :before-upload="beforeAvatarlaboratory1"
-                    >
-                      <img v-if="laboratoryForm.imgsrc1" :src="laboratoryForm.imgsrc1" class="avatar" />
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                   <img v-if="laboratoryForm.imgsrc1" :src="laboratoryForm.imgsrc1" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                  <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    ref="uploadform"
+                    style="position: absolute"
+                  >
+                    <input
+                      type="file"
+                      @change="upload($event,'other')"
+                      style="position:relative;top:-100px; opacity:0;z-index:5;height:100px;width:100px;cursor:pointer"
+                    />
+                </form>
                   </el-form-item>
               </div>
             </el-col>
@@ -249,7 +257,26 @@
                     ></el-date-picker>
                   </el-form-item>
                   <el-form-item label="证书电子文件" required>
-                    <el-upload
+                     <img v-if="addotherform.imgsrc" :src="addotherform.imgsrc" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'otherform')"
+                            style="position:relative;top:-100px; opacity:0;z-index:5;height:100px;width:100px;cursor:pointer"
+                          />
+                      </form>
+                        <div
+                        class="el-upload__text"
+                        style="position:absolute;top:90px;color:#8c939d;
+                      left:50px;"
+                      >证书电子文件</div>
+                    <!-- <el-upload
                       class="avatar-uploader"
                       action="/iotapi/upload"
                       :show-file-list="false"
@@ -258,12 +285,8 @@
                     >
                       <img v-if="addotherform.imgsrc" :src="addotherform.imgsrc" class="avatar" />
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                      <div
-                        class="el-upload__text"
-                        style="position:absolute;top:90px;color:#8c939d;
-                      left:50px;"
-                      >证书电子文件</div>
-                    </el-upload>
+                    
+                    </el-upload> -->
                     <el-button
                       size="small"
                       type="danger"
@@ -288,6 +311,7 @@
 <script>
 import {returnLogin} from '@/utils/return'
 import Parse from 'parse'
+import Cookies from 'js-cookie'
 export default {
   name: "LaboratoryForm",
   props: {
@@ -528,65 +552,87 @@ export default {
   },
   mounted() {},
   methods: {
-    beforeAvatarlaboratory(file) {
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
+    upload(event,type) {
+      if(type=='other'){
+        this.type='other'
+      }else if(type=='otherform'){
+        this.type='otherform'
       }
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
-        });
-        return false;
+      if (event) {
+        var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
+        var name = file.name;
+        var testmsg = event.target.files[0].type
+        var type = file.type.split("/")[0];
+        var extension =
+        testmsg === "image/jpeg" ||
+        testmsg === "image/JPEG" ||
+        testmsg === "image/png" ||
+        testmsg === "image/PNG" ||
+        testmsg === "image/bpm" ||
+        testmsg === "image/BPM";
+        if (!extension) {
+          //将图片img转化为base64
+            this.$message({
+            message: "请上传图片",
+            type: "error"
+          });
+          return false; //必须加上return false; 才能阻止
+        }else{
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          var that = this;
+          reader.onloadend = function() {
+            var dataURL = reader.result;
+            var blob = that.dataURItoBlob(dataURL);
+            that.uploadFile(blob, name); //执行上传接口
+          };
+        }
       }
-      return extension || isLt50M;
     },
-    handleAvatarlaboratory(response, file, fileList) {
-      this.laboratoryForm.imgsrc = response.path;
-      this.$message.success("上传成功");
-    },
-    beforeAvatarlaboratory1(file) {
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
+    dataURItoBlob(dataURI) {
+      // base64 解码
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
       }
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
-        });
-        return false;
-      }
-      return extension || isLt50M;
+      return new Blob([ab], { type: mimeString });
     },
-    handleAvatarlaboratory1(response, file, fileList) {
-      this.laboratoryForm.imgsrc1 = response.path;
-      this.$message.success("上传成功");
+    uploadFile(imgUrl, name) {
+      var formdata = new FormData();
+      formdata.append("file", imgUrl, name);
+      formdata.append("output", 'json')
+      formdata.append("path",Cookies.get('appids'))
+      formdata.append("scene",Cookies.get('appids'))
+      formdata.append("auth_token", Cookies.get('access_token')) //下面是要传递的参数
+      //此处必须设置为  multipart/form-data
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
+        }
+      };
+      this.$http
+        .post(Cookies.get('fileserver'),formdata)
+        .then(res => { 
+          if(res){
+            if(this.type=='other'){
+              this.laboratoryForm.imgsrc1= res.body.url
+            }else if(this.type=='otherform'){
+              this.addotherform.imgsrc = res.body.url
+            }else{
+              this.laboratoryForm.imgsrc = res.body.url
+            }
+            
+          }
+        }).catch(error=>{
+          
+          this.$message.error(error.bodyText)
+        });
     },
     //其他资质添加
     addOther() {
@@ -631,11 +677,11 @@ export default {
     addLaboratory(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if(this.addotherform.imgsrc==''){
+          if(this.laboratoryForm.imgsrc==''){
              this.$message.error('请上传实验室照片')
              return
           }
-           if(this.addotherform.imgsrc1==''){
+           if(this.laboratoryForm.imgsrc==''){
              this.$message.error('请上传资质照片')
              return
           }
@@ -728,6 +774,7 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+   border: 1px dashed #cccccc
 }
 .empower .avatar {
   width: 250px;

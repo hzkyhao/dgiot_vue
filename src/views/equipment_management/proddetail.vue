@@ -8,8 +8,8 @@
       <div class="product">
         <ul>
           <li>
-            <span>ProductId:</span>
-            <span>{{productId}}</span>
+            <span>产品名称:</span>
+            <span>{{productName}}</span>
           </li>
           <li>
             <span>ProductSecret:</span>
@@ -49,8 +49,7 @@
               <el-image
                 v-if="productimg"
                 :src="productimg"
-                style="width:250px;height:200px;position:relative;top:-55px;text-align: center;
-               line-height: 200px;"
+                style="max-width:200px;height:auto;position:relative;top:-40px;"
               >
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"></i>
@@ -66,6 +65,14 @@
         <!--产品信息-->
         <el-tab-pane :label="$t('product.productinformation')" name="first">
           <div style="background:#ffffff;padding:10px;box-sizing:border-box;">
+        <!-- 导出 -->
+              <div class="addtopic" style="text-align:right;margin-bottom:10px;">
+              <el-button
+                type="primary"
+                size="small"
+                @click="exportProduct"  >{{$t('product.exportpro')}}</el-button>
+            </div>
+
             <div>
               <table
                 class="mailtable"
@@ -123,6 +130,7 @@
               </table>
             </div>
           </div>
+      
         </el-tab-pane>
         <!--topic列表-->
         <el-tab-pane :label="'Topic'+$t('product.list')" name="second">
@@ -194,7 +202,7 @@
           </div>
           <!--topic弹窗-->
           <el-dialog
-            :title="$t('proudct.definetopicclass')"
+            :title="$t('product.definetopicclass')"
             :visible.sync="topicdialogVisible"
             width="40%"
             :close-on-click-modal="false"
@@ -469,6 +477,7 @@
                         <el-input
                           v-model.number="sizeForm.startnumber"
                           type="number"
+                          
                           :placeholder="$t('product.minimumvalue')"
                         ></el-input>
                       </el-form-item>
@@ -480,22 +489,25 @@
                           @input="changeValue('sizeForm')"
                           v-model.number="sizeForm.endnumber"
                           type="number"
+                         
                           :placeholder="$t('product.maximumvalue')"
                         ></el-input>
                       </el-form-item>
                     </el-col>
                   </el-form-item>
                   <el-form-item label="步长" prop="step">
-                    <el-input
-                      v-model.number="sizeForm.step"
+                    <el-input-number v-model="sizeForm.step" controls-position="right"   :precision="2" :min="0"
+                      :step="0.01"></el-input-number>
+                    <!-- <el-input
+                      v-model.number=""
                       type="number"
                       class="inputnumber"
                       :precision="2"
-                      :step="0.1"
-                    ></el-input>
+                      :step="0.01"
+                    ></el-input> -->
                   </el-form-item>
                   <el-form-item :label="$t('product.unit')">
-                    <el-select v-model="sizeForm.unit" :placeholder="$t('product.unit')">
+                    <el-select v-model="sizeForm.unit" :placeholder="$t('product.unit')" filterable>
                       <el-option
                         v-for="(item,index) in allunit"
                         :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
@@ -718,6 +730,7 @@
                           @input="changeStructValue('structform')"
                           v-model.number="structform.startnumber"
                           type="number"
+                          
                           :placeholder="$t('product.minimumvalue')"
                         ></el-input>
                       </el-form-item>
@@ -728,22 +741,24 @@
                         <el-input
                           v-model.number="structform.endnumber"
                           type="number"
+                        
                           :placeholder="$t('product.maximumvalue')"
                         ></el-input>
                       </el-form-item>
                     </el-col>
                   </el-form-item>
                   <el-form-item label="步长" prop="step">
-                    <el-input
-                      v-model.number="structform.step"
+                     <el-input-number v-model="structform.step" controls-position="right"   :precision="2" :step="0.01" :min="0"></el-input-number>
+                    <!-- <el-input
+                      v-model.number=""
                       type="number"
                       class="inputnumber"
                       :precision="2"
                       :step="0.1"
-                    ></el-input>
+                    ></el-input> -->
                   </el-form-item>
                   <el-form-item :label="$t('product.unit')">
-                    <el-select v-model="structform.unit" :placeholder="$t('product.unit')">
+                    <el-select v-model="structform.unit" :placeholder="$t('product.unit')" filterable>
                       <el-option
                         v-for="(item,index) in allunit"
                         :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
@@ -1058,7 +1073,7 @@
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
                   <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-                  <span v-else>{{$t('developer.resourcechannel')}}</span>
+                  <span v-else-if="scope.row.attributes.type==3">任务通道</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.servicetype')">
@@ -1304,7 +1319,8 @@
           <el-table-column :label="$t('developer.channeltype')">
             <template slot-scope="scope">
               <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-              <span v-else>{{$t('developer.resourcechannel')}}</span>
+              <span v-else-if="scope.row.attributes.type==2">{{$t('developer.resourcechannel')}}</span>
+               <span v-else>任务通道</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.servicetype')">
@@ -1396,11 +1412,34 @@
         <el-button type="primary" @click="addData">保 存</el-button>
       </div>
     </el-dialog>
+
+
+     
+      <el-dialog title="导出" :visible.sync="exportDialogShow" width="25%" >
+
+
+        <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
+      
+     
+        <div slot="footer" class="dialog-footer">
+          <el-button size="small" class="btn-right" @click="exportDialogShow = false">关闭</el-button>
+        </div>
+      </el-dialog>
+  
+
   </div>
+
+
+
+
+
+
+  
 </template>
 <script>
 import Parse from "parse";
 import { getRule, ruleDelete } from "@/api/rules";
+import Cookies from 'js-cookie';
 var editor;
 var editor1;
 var editor2;
@@ -1421,6 +1460,7 @@ import { Compile, subupadte } from "@/api/systemmanage/system";
 import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
 import gql from "graphql-tag";
+import {postFile} from '@/api/appcontrol'
 import {
   Websocket,
   sendInfo,
@@ -1431,6 +1471,7 @@ import {
 // import TaskCollection1 from "./task_collection1";
 import { returnLogin } from "@/utils/return";
 import { error } from "util";
+import $ from 'jquery'
 export default {
   // components: {
   //   TaskCollection1
@@ -1445,61 +1486,91 @@ export default {
       }
     };
     var validminnumber = (rule, value, callback) => {
-      if (value == "") {
-        callback(new Error("最小值不能为空"));
-      } else {
-        if (this.sizeForm.endnumber != "" && value >= this.sizeForm.endnumber) {
-          callback(new Error("最小值小于最大值"));
-        } else {
-          callback();
+      console.log(value)
+        if(value===''){
+          callback(new Error("最小值不能为空"))
+        }else{
+        //   if(value<0){
+        //   callback(new Error('最小值不能小于0'))
+        // }else{
+          if(this.sizeForm.endnumber!==''){
+            if (value >= this.sizeForm.endnumber) {
+              callback(new Error("最小值小于最大值"));
+            } else {
+              callback();
+            }
+          }
+        // }
         }
-      }
+          
+      
     };
     var validmaxnumber = (rule, value, callback) => {
-      if (value == "") {
-        callback(new Error("最大值不能为空"));
-      } else {
-        if (value <= this.sizeForm.startnumber) {
-          callback(new Error("最大值必须大于最小值"));
-        } else {
-          callback();
+     
+      if(value===''){
+        callback(new Error("最大值不能为空"))
+      }else{
+        if(this.sizeForm.startnumber!==''){
+            if (value <= this.sizeForm.startnumber) {
+              callback(new Error("最大值必须大于最小值"));
+            } else {
+              callback();
+            }
         }
+      // }
       }
+      
     };
     var vailspecs = (rule, value, callback) => {
-      if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
+      if(value<0){
+        callback(new Error('步长大于0'))
+      }else if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
         callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
         callback();
       }
     };
     var validstructminnumber = (rule, value, callback) => {
-      if (value == "") {
-        callback(new Error("请输入最小值"));
-      } else {
-        if (
-          this.structform.endnumber != "" &&
-          value >= this.structform.endnumber
-        ) {
-          callback(new Error("最小值应小于最大值"));
-        } else {
-          callback();
+      if(value===''){
+          callback(new Error("最小值不能为空"))
+        }else{
+        //   if(value<0){
+        //   callback(new Error('最小值不能小于0'))
+        // }else{
+          if(this.structform.endnumber!==''){
+            if (value >= this.structform.endnumber) {
+              callback(new Error("最小值小于最大值"));
+            } else {
+              callback();
+            }
+          // }
         }
-      }
+            
+        }
     };
     var validstructmaxnumber = (rule, value, callback) => {
-      if (value == "") {
-        callback(new Error("请输入最大值"));
-      } else {
-        if (value <= this.structform.startnumber) {
-          callback(new Error("最大值必须大于最小值"));
-        } else {
-          callback();
+       if(value===''){
+        callback(new Error("最大值不能为空"))
+      }
+      else{
+        // if(value<0){
+        //   callback(new Error('最大值不能小于0'))
+        // }else{
+          if(this.structform.startnumber!==''){
+            if (value <= this.structform.startnumber) {
+              callback(new Error("最大值必须大于最小值"));
+            } else {
+              callback();
+            }
         }
+        // }
+        
       }
     };
     var vailstructspecs = (rule, value, callback) => {
-      if (value >= this.structform.endnumber - this.structform.startnumber) {
+      if(value<0){
+        callback(new Error("步长大于0"));
+      }else if (value >= this.structform.endnumber - this.structform.startnumber) {
         callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
         callback();
@@ -1518,6 +1589,9 @@ export default {
         desc: "",
         isupdated: -1
       },
+      exportDialogShow:false,
+      exportUrl:'',
+      exportName:'',
       decodertotal: 0,
       decoderstart: 0,
       decoderlength: 10,
@@ -1668,6 +1742,7 @@ export default {
       ProductSecret: "",
       dynamicReg: false,
       productId: "",
+      productName:'',
       productdetail: {},
       topicData: [],
       topic: [
@@ -1779,19 +1854,21 @@ export default {
     }
   },
   methods: {
-    changeValue(formName) {
-      this.$refs[formName].validateField("startnumber", validminnumber => {
-        if (!validminnumber) {
+    changeValue(formName){
+      this.$refs[formName].validateField("startnumber", errMsg => {
+        if (errMsg) {
+          return false
         } else {
-          return false;
+         
         }
       });
     },
-     changeStructValue(formName) {
-      this.$refs[formName].validateField("startnumber", validstructmaxnumber => {
-        if (!validstructmaxnumber) {
+    changeStructValue(formName){
+      this.$refs[formName].validateField("startnumber", errMsg => {
+        if (errMsg) {
+          return false
         } else {
-          return false;
+         
         }
       });
     },
@@ -1827,8 +1904,8 @@ export default {
     },
     getAllunit() {
       this.allunit = [];
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       var arr = [{}];
       datas.equalTo("type", "unit");
       datas.limit(1000);
@@ -1862,6 +1939,72 @@ export default {
           returnLogin(error);
         }
       );
+    },
+    exportProduct(){
+
+      var _this = this;
+      /*
+      postFile (_this.productName).then(response=>{
+        if(response){
+           window.location.origin = "/iotapi/product?name="+_this.productName
+              
+        }
+      })
+      .catch(function (error) {       
+       _this.$message({message: error,type: "error"});
+      }); 
+      */
+
+      // let url = Cookies.get('apiserver') + '/product?name=' + _this.productName;
+
+
+       let url = '/product?name=' + _this.productName;
+      _this.$axios.get(url)
+      .then(function (response) {
+        /*      let content = response;               
+                _this.exportNameDownload = _this.productName + '.json'; 
+                var blob = new Blob([content]);
+                _this.exportUrl = URL.createObjectURL(blob);
+                _this.exportDialogShow = true;  
+                */ 
+                if(response){
+                  window.open(
+                    window.location.origin +
+                      "/iotapi/product?name=" +
+                      _this.productName,
+                      "_blank"
+                  );
+                }
+
+          // window.location.origin = "/iotapi/product?name="+_this.productName;                    
+
+      })
+      .catch(function (error) {       
+         _this.$message({message: error,type: "error"});
+      }); 
+
+      
+
+
+
+      // $.ajax({
+      //   type: 'GET',
+      //   contentType:'application/json',
+      //   dataType:'json',
+      //   headers:{
+      //     "sessionToken":Cookies.get('access_token')
+      //   },
+      //   data:{},
+      //   url: Cookies.get('apiserver') + '/product?name=' + _this.productName,
+      //   success:(response)=>{
+      //     if(response){
+
+      //    this.exportDialogShow = true;
+      //   _this.exportUrl = ''
+      //   _this.exportName = ''
+      //     }
+      //   }
+      // })
     },
     //热加载弹窗
     updatesubdialog(){
@@ -1932,7 +2075,7 @@ export default {
       var product = new Product();
       product.id = this.productId;
       query.equalTo("product", product);
-      query.equalTo("type", "1");
+      query.containedIn("type", ['1','3']);
       query.skip(this.channelstart);
       query.limit(this.channellength);
       query.ascending("-updatedAt");
@@ -2070,7 +2213,7 @@ export default {
       product.id = this.productId;
       query.skip(this.allChannelstart);
       query.limit(this.allChannellength);
-      query.equalTo("type", "1");
+      query.containedIn("type", ['1','3']);
       query.ascending("-updatedAt");
       if (!isallchannel) {
         query.notEqualTo("product", product);
@@ -2699,6 +2842,7 @@ export default {
                 type: "success",
                 message: "保存成功"
               });
+              this.schemadialogVisible = false
             }
           },
           error => {
@@ -2712,8 +2856,8 @@ export default {
     },
     Industry() {
       this.option = [];
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.equalTo("data.key", "category");
       datas.limit(1000);
       datas.find().then(
@@ -2748,8 +2892,8 @@ export default {
         this.productstart = 0;
       }
       this.CategoryKey = this.$route.query.CategoryKey;
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.limit(this.productlength);
       datas.skip(this.productstart);
       if (this.category.length != 0) {
@@ -2817,6 +2961,7 @@ export default {
       product.get(this.productId).then(
         response => {
           if (response) {
+            this.productName = response.attributes.name
             for (var key in response.attributes) {
               this.productdetail[key] = response.attributes[key];
             }
@@ -2832,7 +2977,8 @@ export default {
             this.form.Productname = response.attributes.name;
             this.ProductSecret = response.attributes.productSecret;
             this.form.Productkey = this.productId;
-            this.productimg = window.location.origin + response.attributes.icon;
+            // window.location.origin
+            this.productimg = response.attributes.icon;
             if (response.attributes.decoder) {
               setdata = response.attributes.decoder.code;
               this.formInline.name = response.attributes.decoder.name;
@@ -2853,8 +2999,8 @@ export default {
             editor.setValue(Base64.decode(setdata));
             editor.gotoLine(editor.session.getLength());
             // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-            var Devices = Parse.Object.extend("Devices");
-            var devices = new Parse.Query(Devices);
+            var Device = Parse.Object.extend("Device");
+            var devices = new Parse.Query(Device);
 
             devices.equalTo("product", this.productId);
             devices.skip(0);
@@ -2943,8 +3089,8 @@ export default {
       this.chaxun();
     },
     deletedata(id) {
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Datas();
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Dict();
       datas.id = id;
       datas.destroy().then(
         resultes => {
@@ -3011,8 +3157,8 @@ export default {
             desc: this.formInline.desc
           };
 
-          var Datas = Parse.Object.extend("Datas");
-          var datas1 = new Parse.Query(Datas);
+          var Dict = Parse.Object.extend("Dict");
+          var datas1 = new Parse.Query(Dict);
           datas1.equalTo("data.name", obj.name);
           datas1.equalTo("data.version", obj.version);
 
@@ -3023,7 +3169,7 @@ export default {
                   this.$message.warnings("此协议版本已存在");
                   return;
                 } else {
-                  var datas = new Datas();
+                  var datas = new Dict();
                   var acl = new Parse.ACL();
                   acl.setReadAccess(userid, true);
                   acl.setWriteAccess(userid, true);
@@ -3070,8 +3216,8 @@ export default {
     },
     
     chaxun() {
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.skip(this.decoderstart);
       datas.limit(this.decoderlength);
       datas.equalTo("type", "decoder");
@@ -3233,8 +3379,8 @@ export default {
     addProCategory(row) {
       var Product = Parse.Object.extend("Product");
       var product = new Parse.Query(Product);
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.equalTo("type", row.attributes.type);
       datas.equalTo("data.key", "detail");
       datas.find().then(
@@ -3768,5 +3914,9 @@ export default {
 /deep/ .firstcolumn {
   color: #34c388;
   cursor: pointer;
+}
+
+.export-p {
+text-align:center;
 }
 </style>

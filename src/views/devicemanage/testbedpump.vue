@@ -30,7 +30,7 @@
         </el-form>
       </div>
       <div class="addbed" style="text-align:right">
-        <el-button type="success" size="small" @click="disposeTestbed">检测台配置</el-button>
+        <!-- <el-button type="success" size="small" @click="disposeTestbed">检测台配置</el-button> -->
         <el-button type="primary" @click="testBedAdd" size="small">新增检测台</el-button>
         <el-button type="danger" size="small" @click="deleteTestBed">删除检测台</el-button>
       </div>
@@ -87,7 +87,7 @@
           </el-table-column>
           <el-table-column label="编辑" align="center" width="300">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">配 置</el-button>
+              <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">配 置</el-button> -->
               <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">撤 销</el-button>
               <el-button size="mini" type="success" @click="devicesDetail(scope.row)">查看设备</el-button>
             </template>
@@ -199,9 +199,7 @@
                 
                 <el-table-column label="设备类别" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.attributes.basedata.type=='DTU'">控制器</span>
-                    <span v-else-if="scope.row.attributes.basedata.type=='PC'">控制台</span>
-                    <span v-else>摄像头</span>
+                    <span>{{scope.row.attributes.name}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column label="网络设备编号" align="center">
@@ -264,9 +262,8 @@
                 </el-table-column>
                 <el-table-column label="传感器名称" align="center">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.attributes.basedata.type=='DTU'">控制器</span>
-                    <span v-else-if="scope.row.attributes.basedata.type=='PC'">控制台</span>
-                    <span v-else>摄像头</span>
+                    <span>{{scope.row.attributes.name}}</span>
+                    
                   </template>
                 </el-table-column>
                 <el-table-column label="传感器编码" align="center">
@@ -326,22 +323,32 @@
                     <el-input v-model="addbedForm.factory"></el-input>
                   </el-form-item>
                    <el-form-item label="控制台信息" required>
-                    <el-upload
-                      class="avatar-uploader"
-                      action="/iotapi/upload"
-                      :show-file-list="false"
-                      :on-success="handleAvatarSuccessBusiness2"
-                      :before-upload="beforeAvatarUpload2"
-                    >
                       <img v-if="addbedForm.imgsrc" :src="addbedForm.imgsrc" class="avatar" />
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    ref="uploadform"
+                    style="position: absolute"
+                  >
+                    <input
+                      type="file"
+                      @change="upload($event)"
+                      style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                    />
+                  </form>
                   </el-form-item>
                   
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="grid-content bg-purple-light">
+                   <el-form-item label="网关选择" prop="product">
+                    <el-select v-model="addbedForm.product" placeholder="请选择台体所属网关">
+                      <el-option v-for="(item,index) in productlist" :label="item.name" :key="index" :value="item.objectId"></el-option>
+                    </el-select>
+                  </el-form-item>
                   <el-form-item label="所属实验室" prop="laboratory">
                     <el-select v-model="addbedForm.laboratory" placeholder="请选择所属实验室">
                       <el-option v-for="(item,index) in departmentList" :label="item.attributes.name" :key="index" :value="item.id"></el-option>
@@ -358,7 +365,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="备注信息">
-                    <el-input type="textarea" v-model="addbedForm.desc" :rows="8"></el-input>
+                    <el-input type="textarea" v-model="addbedForm.desc" :rows="4"></el-input>
                   </el-form-item>
                 </div>
               </el-col>
@@ -450,6 +457,8 @@
 import Parse from "parse";
 import Pumpdepartment from "@/components/resource/pumpdepartment";
 import {returnLogin} from '@/utils/return'
+import Cookies from 'js-cookie';
+import $ from 'jquery'
 export default {
   components: {
     Pumpdepartment
@@ -466,6 +475,7 @@ export default {
           number:'', //编号
           imgsrc:'',
           desc:'',
+          product:'',//网关
           computername:'',//计算机名称
           computerkey:'',//计算机key
           model:''//测试台型号
@@ -479,6 +489,9 @@ export default {
         ],
         state: [
           { required: true, message: '请选择测试台状况', trigger: 'change' }
+        ],
+         product: [
+          { required: true, message: '请选择测试台网关', trigger: 'change' }
         ],
       },
       addbeddialog1:false,
@@ -520,23 +533,33 @@ export default {
       checkdevice:[],//选择设备
       bedForm:{
         name:''
-      }
+      },
+      productlist:[]
     };
   },
   mounted() {
     this.getBedtable();
     this.getDepartmentList()
     this.getAllBed()
-    this.getAllPumpDevice()
+    this.getProduct()
   },
   methods: {
-    // searchBed(){
-    //   if(this.bedForm.name!=''){
-    //      var Testbed = Parse.Object.extend("Testbed");
-    //      var testbed = new Parse.Query(Testbed);
-    //      testbed.matches('name',this.bedForm)
-    //   }
-    // },
+    getProduct(){
+      $.ajax({
+        type: 'GET',
+        contentType:'application/json',
+        dataType:'json',
+        headers:{
+          "sessionToken":Cookies.get('access_token')
+        },
+        url: Cookies.get('apiserver')+'/classes/Device',
+        success:(response)=>{
+          if(response){
+           this.productlist = response.results
+          }
+        }
+      })
+    },
     getAllBed(){
        var Testbed = Parse.Object.extend("Testbed");
        var testbed = new Parse.Query(Testbed);
@@ -552,9 +575,9 @@ export default {
        })
     },
     getAllPumpDevice(){
-       var Devices = Parse.Object.extend("Devices");
-       var devices = new Parse.Query(Devices);
-        devices.equalTo("basedata.type", "PUMP");
+       var PumpDevice = Parse.Object.extend("PumpDevice");
+       var devices = new Parse.Query(PumpDevice);
+        devices.equalTo("basedata.type", "PUMP_DTU");
         devices.ascending("createdAt");
        devices.limit(1000)
        devices.find().then(resultes=>{
@@ -590,7 +613,7 @@ export default {
     addTestRelation(){
        var Testbed = Parse.Object.extend("Testbed");
        var testbed = new Testbed();
-       var Dev = Parse.Object.extend("Devices");
+       var Dev = Parse.Object.extend("PumpDevice");
        var devices = new Dev();
        if(this.updatedId!=''){
          testbed.id = this.updatedId
@@ -614,7 +637,7 @@ export default {
     },
     //得到组织树
     getDepartmentList(){
-      var Department = Parse.Object.extend('Department')
+      var Department = Parse.Object.extend('PumpDepartment')
       var department = new Parse.Query(Department)
       department.equalTo('org_type','实验室')
       department.find().then(response=>{
@@ -633,7 +656,7 @@ export default {
             }
             var Testbed = Parse.Object.extend("Testbed");
             var testbed = new Testbed();
-            var Department = Parse.Object.extend("Department");
+            var Department = Parse.Object.extend("PumpDepartment");
             var department = new Department();
             department.id = this.addbedForm.laboratory;
             testbed.set("department", department);
@@ -644,6 +667,7 @@ export default {
             testbed.set('factory',this.addbedForm.factory)
             testbed.set('state',this.addbedForm.state)
             testbed.set('imgsrc',this.addbedForm.imgsrc)
+            testbed.set('deviceaddr',this.addbedForm.product)
             testbed.save().then(resultes=>{
               if(resultes){
                 this.$message.success('测试台体新增成功')
@@ -662,36 +686,74 @@ export default {
         });
       },
     //测试台图片
-     handleAvatarSuccessBusiness2(response,file,fileList){
-      this.addbedForm.imgsrc = response.path
-      this.$message.success('上传成功')
+     upload(event) {
+      if (event) {
+        var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
+        var name = file.name;
+        var testmsg = event.target.files[0].type;
+        var type = file.type.split("/")[0];
+        var extension =   testmsg === "image/jpeg" ||
+        testmsg === "image/JPEG" ||
+        testmsg === "image/png" ||
+        testmsg === "image/PNG" ||
+        testmsg === "image/bpm" ||
+        testmsg === "image/BPM";
+        if (!extension) {
+          //将图片img转化为base64
+          this.$message({
+            message: "只能上传图片文件",
+            type: "error"
+          });
+          return false; //必须加上return false; 才能阻止
+        } else {
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          var that = this;
+          reader.onloadend = function() {
+            var dataURL = reader.result;
+            var blob = that.dataURItoBlob(dataURL);
+            that.uploadFile(blob, name); //执行上传接口
+          };
+        }
+      }
     },
-    beforeAvatarUpload2(file){
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
+    dataURItoBlob(dataURI) {
+      // base64 解码
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
       }
-      console.log(file);
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
+      return new Blob([ab], { type: mimeString });
+    },
+    uploadFile(imgUrl, name) {
+      var formdata = new FormData();
+      formdata.append("file", imgUrl, name);
+      formdata.append("output", 'json')
+      formdata.append("path",Cookies.get('appids'))
+       formdata.append("scene",Cookies.get('appids'))
+      formdata.append("auth_token", Cookies.get('access_token')) //下面是要传递的参数
+      //此处必须设置为  multipart/form-data
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
+        }
+      };
+      this.$http
+        .post(Cookies.get('fileserver'), formdata)
+        .then(res => {
+          if (res) {
+            this.addbedForm.imgsrc = res.body.url;
+          }
+        })
+        .catch(error => {
+          this.$message.error(error);
         });
-        return false;
-      }
-      return extension || isLt50M;
     },
     getPumpNode(val) {
       
@@ -708,6 +770,7 @@ export default {
       var relation = testbed.relation("devices");
       var query = relation.query()
       query.find().then(resultes=>{
+        console.log(resultes)
         this.bedDevicesData=resultes
       })        
     },
@@ -782,13 +845,13 @@ export default {
       this.disposeVisible = true
       var Testbed = Parse.Object.extend("Testbed");
       var query = new Parse.Query(Testbed);
-      var Devices = Parse.Object.extend("Devices");
+      var Devices = Parse.Object.extend("PumpDevice");
       var devices = new Parse.Query(Devices);
       this.updatedId = id
       query.get(id).then(results => {
         var relation = results.relation("devices");
         var query = relation.query();
-        devices.equalTo("basedata.type", "PUMP");
+        devices.equalTo("basedata.type", "PUMP_DTU");
         devices.ascending("createdAt");
         this.devicesData = devices;
         query.find().then(beddevices => {
@@ -804,7 +867,7 @@ export default {
     //检测单位选择
     selectCompany(value){
       this.devicelist.testbedid = ''
-       var Department = Parse.Object.extend('Department')
+       var Department = Parse.Object.extend('PumpDepartment')
        var department = new Parse.Query(Department)
        department.equalTo('ParentId',value)
        department.find().then(resultes=>{
@@ -890,9 +953,9 @@ export default {
     addTest() {
       this.testbedid = ''
       this.beddialog = true;
-      var Devices= Parse.Object.extend("Devices");
+      var Devices= Parse.Object.extend("PumpDevice");
       var devices = new Parse.Query(Devices);
-      devices.equalTo("basedat.type", "PUMP");
+      devices.equalTo("basedat.type", "PUMP_DTU");
       devices.skip(this.devicestart)
       devices.limit(this.devicepagesize)
       devices.count().then(count=>{
@@ -904,7 +967,7 @@ export default {
               console.log(error);
           })
         })
-        var Department = Parse.Object.extend('Department')
+        var Department = Parse.Object.extend('PumpDepartment')
         var department = new Parse.Query(Department)
         department.equalTo('org_type','泵单位')
         department.find().then(resultes=>{
@@ -981,9 +1044,9 @@ export default {
         testbed.set("name", this.testbedname);
         testbed.set("status", "init");
         var relation = testbed.relation("devices");
-        var Dev = Parse.Object.extend("Devices");
+        var Dev = Parse.Object.extend("PumpDevice");
         var devices = new Dev();
-        var Department = Parse.Object.extend('Department')
+        var Department = Parse.Object.extend('PumpDepartment')
         var department = new Department()
         department.id = this.devicelist.testbedid
         testbed.set('department',department)
@@ -1006,9 +1069,9 @@ export default {
         testbed.get(id).then(resultes => {
           resultes.set("name", this.testbedname);
           var relation = resultes.relation("devices");
-          var Dev = Parse.Object.extend("Devices");
+          var Dev = Parse.Object.extend("PumpDevice");
           var devices = new Dev();
-           var Department = Parse.Object.extend('Department')
+           var Department = Parse.Object.extend('PumpDepartment')
         var department = new Department()
         department.id = this.devicelist.testbedid
         testbed.set('department',department)
@@ -1148,6 +1211,7 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+  border:1px dashed #cccccc;
 }
 .testbedpump .avatar {
   width:250px;
@@ -1183,5 +1247,9 @@ export default {
 .testbedpump .el-divider__text.is-left{
   font-size:16px;
 }
-
+@media screen and (max-width: 1350px) {
+  .testbedpump .el-col {
+  width: 100%;
+  }
+}
 </style>

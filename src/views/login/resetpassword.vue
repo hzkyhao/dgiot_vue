@@ -9,70 +9,99 @@
         label-width="100px"
         class="login-form"
       >
-       <div class="logo">
-          <img :src="logosrc" alt="logo" style="width:80px;height:80px;">
-          <p>{{title}}</p>
+        <div class="logo">
+          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" />
+          <p>重置密码</p>
         </div>
-      
-        <el-form-item prop="phone">
-          <span class="svg-container">
-            <svg-icon icon-class="user"/>
+
+        <el-form-item style="border-radius:0" prop="phone">
+          <span
+            class="svg-container"
+            style=" color: black;padding:0
+    vertical-align: middle;
+    width: 150px;
+    display: inline-block;"
+          >
+            <el-select v-model="ruleForm2.value" placeholder="请选择手机区域" style="border:0">
+              <el-option
+                v-for="item in ruleForm2.diqu"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </span>
           <el-input
             v-model="ruleForm2.phone"
+            ref="phonerole"
             name="phone"
             type="text"
             auto-complete="on"
             :maxlength="11"
-            clearable
             placeholder="请输入手机号"
+            style="width:250px"
           />
         </el-form-item>
+        <div class="yzm" style="height:50px;margin-left:20px;margin-bottom:20px;">
+          <el-input
+            type="text"
+            placeholder="请输入验证码"
+            class="yzm"
+            v-model="code"
+            auto-complete="off"
+            style="width:75%;float:left;border:1px solid #cccccc;border-radius:0;"
+          ></el-input>
+          <el-button
+            @click="send"
+            :disabled="sendMsgDisabled"
+            style="float:right;padding:12px 15px 12px 15px;width:25%;border-radius:0;height:47px;"
+            type="primary"
+          >
+            <span v-if="sendMsgDisabled">{{time+'秒后获取'}}</span>
+            <span v-if="!sendMsgDisabled">发送验证码</span>
+          </el-button>
+        </div>
+        <!-- <el-input
+            type="text"
+            v-model="password"
+            auto-complete="off"
+            style="wdith:0;height:0;"
+        ></el-input>-->
         <el-form-item prop="password" required>
           <span class="svg-container">
-            <svg-icon icon-class="password"/>
+            <svg-icon icon-class="password" />
           </span>
           <el-input
             v-model="ruleForm2.password"
             name="password"
-            auto-complete="on"
-            placeholder="请输入密码"
+            auto-complete="new-password"
+            placeholder="请输入6-10位数字字母组合"
             :type="pwdType"
-            
+            :maxlength="10"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon icon-class="eye"/>
+            <svg-icon icon-class="eye" />
           </span>
         </el-form-item>
 
         <el-form-item prop="checkPass" required>
           <span class="svg-container">
-            <svg-icon icon-class="password"/>
+            <svg-icon icon-class="password" />
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
-            auto-complete="on"
+            auto-complete="new-password"
             placeholder="请再次输入密码"
             :type="pwdType"
-            
+            :maxlength="10"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon icon-class="eye"/>
+            <svg-icon icon-class="eye" />
           </span>
         </el-form-item>
-        <el-form-item style="margin-top:50px;">
-          <el-button
-            type="primary"
-            style="width:100%;letter-spacing:10px;"
-            @click="submitForm('ruleForm2')"
-            element-loading-text="正在初始化环境,请稍后"
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(0, 0, 0, 0.5)"
-            v-loading.fullscreen.lock="fullscreenLoading"
-          >立即注册</el-button>
-        </el-form-item>
-        <div class="hasuser">
-          <span style="color:#409EFF;font-size:14px;cursor:pointer" @click="login">已有账号登陆</span>
+        <div class="hasuser" style="padding-left:22px;box-sizing:border-box">
+          <!-- <span style="color:#409EFF;font-size:14px;cursor:pointer" @click="login">已有账号登陆</span> -->
+          <el-button type="primary" @click="resetPassword('ruleForm2')" style="width:100%;">确 定</el-button>
         </div>
       </el-form>
     </div>
@@ -80,16 +109,17 @@
 </template>
 <script>
 import Parse from "parse";
-import Cookies from 'js-cookie';
-let Base64 = require('js-base64').Base64;
+import Cookies from "js-cookie";
+let Base64 = require("js-base64").Base64;
+import { passwordreset,Phonelogin } from "@/api/login";
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (!/^\w{8,20}/.test(value)) {
-          callback(new Error("密码长度为8-20位"));
+        if (!/^\w{6,10}$/.test(value)) {
+          callback(new Error("密码格式不正确"));
         }
         callback();
       }
@@ -104,22 +134,23 @@ export default {
       }
     };
     return {
-      fullscreenLoading: false,
+      password: "",
       time: 60, // 发送验证码倒计时
       sendMsgDisabled: false,
-      logosrc:'',
-      title:'',
+      logosrc: "",
+      title: "",
+      phonesms: "",
+      code: "",
       ruleForm2: {
         account: "",
         phone: "",
-        username: "",
         password: "",
-        email: "",
         checkPass: "",
-        roles:'',
+        roles: "",
+        diqu: [],
+        value: '+86/中国'
       },
-      pwdType:'password',
-      protype:'',
+      protype: "",
       rules2: {
         account: [
           { required: true, message: "请输入账号", trigger: "blur" },
@@ -157,16 +188,56 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        roles: [
-            { required: true, message: '请选择平台', trigger: 'change' }
-          ],
-      }
+        roles: [{ required: true, message: "请选择平台", trigger: "change" }]
+      },
+      pwdType: "password",
+      origin: [
+        "+86/中国",
+        "+886/中国台湾",
+        "+852/中国香港",
+        "+91/India",
+        "+244/Angola",
+        "+54/Argentina",
+        "+1/American Samoa",
+        "+880/Bangladesh",
+        "+56/Chile",
+        "+855/Cambodia",
+        "+20/Egypt",
+        "+33/France",
+        "+49/Germany",
+        "+62/Indonesia",
+        "+353/Ireland",
+        "+972/Israel",
+        "+39/Italy",
+        "+81/Japan",
+        "+60/Malaysia",
+        "+63/Philippines",
+        "+92/Pakistan",
+        "+82/South Korea",
+        "+46/Sweden",
+        "+65/Singapore",
+        "+27/South Africa",
+        "+66/Thailand",
+        "+971/United Arab Emirates",
+        "+44/United Kingdom",
+        "+1/United States",
+        "+84/Vietnam",
+        "+967/Yemen",
+        "+260/Zambia"
+      ]
     };
   },
   mounted() {
-    this.protype = sessionStorage.getItem('roletype')
-    this.title = sessionStorage.getItem('product_title')
-    this.logosrc =  sessionStorage.getItem('imgsrc')
+    this.protype = sessionStorage.getItem("roletype");
+    this.title = sessionStorage.getItem("product_title");
+    this.logosrc = sessionStorage.getItem("imgsrc");
+    this.ruleForm2.diqu = [];
+    this.origin.map(items => {
+      this.ruleForm2.diqu.push({
+        label: items,
+        value: items.toString()
+      });
+    });
   },
   methods: {
     showPwd() {
@@ -181,69 +252,65 @@ export default {
         path: "/login"
       });
     },
-    submitForm(formName) {
-      var MobileRegex = /^1[3-9]\d{9}$/;
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          
-          var user = new Parse.User();
-          user.set("username", this.ruleForm2.phone.toString());
-          user.set("password", this.ruleForm2.password);
-          if(MobileRegex.test(this.ruleForm2.phone)){
-             user.set("phone", this.ruleForm2.phone.toString());
-          }else{
-             user.set("phone", '');
-          }
-         this.fullscreenLoading = true;
-          user.set('productId',this.protype)
-          let acl = new Parse.ACL();
-          user
-            .save()
-            .then(resultes => {
-              console.log(resultes.attributes.sessionToken)
-              Cookies.set('sessionToken',resultes.attributes.sessionToken)
-              this.$router.push({
-                path: "/phonelogin",
-                query:{
-                  phone:Base64.encode(this.ruleForm2.phone),
-                  action:'register'
-                }
-              });
-              this.fullscreenLoading = false
-            })
-            .catch(error=>{
-              if(error.code==202){
-                this.$message({
-                message: '用户名已存在',
-                type: "error"
-              });
-              }else{
-                this.$message({
-                message: error.message,
-                type: "error"
-              });
-              }
-              this.fullscreenLoading = false
-            });
+    send() {
+      this.$refs.ruleForm2.validateField("phone", errMsg => {
+        if (errMsg) {
+          this.$message.error("请输入手机号");
         } else {
-          this.$message({
-            message: "信息错误",
-            type: "error"
+          let _this = this;
+    
+        
+        Phonelogin(
+          _this.ruleForm2.phone,
+          encodeURIComponent(_this.ruleForm2.value)
+        )
+          .then(res => {
+              if(res){
+                   this.$message({
+                    message: "发送成功",
+                    type: "success"
+                    });
+                    _this.sendMsgDisabled = true;
+                    this.time = res.expire
+                    let interval = window.setInterval(function() {
+                    if (_this.time-- <= 0) {
+                        _this.time = this.time*60;
+                        _this.sendMsgDisabled = false;
+                        window.clearInterval(interval);
+                    }
+                    }, 1000);
+              }
+           
+          })
+          .catch(error => {
+            this.$message.error(error.error)
           });
-          return false;
+            
         }
       });
     },
-    send() {
-      let _this = this;
-      _this.sendMsgDisabled = true;
-      let interval = window.setInterval(function() {
-        if (_this.time-- <= 0) {
-          _this.time = 60;
-          _this.sendMsgDisabled = false;
-          window.clearInterval(interval);
+    resetPassword(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if (this.code == "") {
+            this.$message.warning("请输入手机验证码");
+          } else {
+            passwordreset(
+              this.ruleForm2.phone,
+              this.code,
+              this.ruleForm2.password
+            ).then(resultes => {
+              if (resultes) {
+                  this.$router.push({
+                      path:'/login'
+                  })
+              }
+            }).catch(error=>{
+                this.$message.error(error.error)
+            })
+          }
         }
-      }, 1000);
+      });
     }
   }
 };
@@ -255,7 +322,7 @@ $light_gray: rgba(0, 0, 0, 0.247058823529412);
   background: url("../../imgages/loginbanner.jpg") no-repeat;
   height: 100%;
   background-size: cover;
-//   opacity: 0.8;
+  //   opacity: 0.8;
   .loginbanner {
     background: transparent;
     padding: 16px;
@@ -288,15 +355,15 @@ $light_gray: rgba(0, 0, 0, 0.247058823529412);
       color: #454545;
     }
     .logo {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-    p {
-      font-size: 30px;
-      font-weight: bold;
-      margin: 25px 0;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      p {
+        font-size: 30px;
+        font-weight: bold;
+        margin: 25px 0;
+      }
     }
-  }
   }
 }
 </style>
@@ -324,7 +391,7 @@ $light_gray: #eee;
     border-radius: 5px;
   }
   .login_bottom {
-    position: absolute; 
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 20px;

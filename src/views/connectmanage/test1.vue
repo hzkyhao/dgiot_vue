@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import jsondata from './scan_result.json'
 export default {
   name: '',
   data() {

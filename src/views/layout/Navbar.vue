@@ -115,7 +115,9 @@ export default {
     getTitle(){
      this.title=sessionStorage.getItem('product_title')
      this.imgsrc=sessionStorage.getItem('imgsrc')
-     this.usernameid = Parse.User.current().id
+     if(Parse.User.current() && Parse.User.current().id){
+        this.usernameid = Parse.User.current().id
+     }
     },
     getsccreen(){
       eventBus.$on('isshow',data=>{
@@ -126,19 +128,47 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-     Parse.User.logOut(this.username).then(res=>{
-        this.$router.push('/login')
-        sessionStorage.removeItem('username')
-        sessionStorage.removeItem('token')
-        sessionStorage.removeItem('list')
-        this.$store.dispatch('delAllViews')
-      },(error=>{
-         this.$router.push('/login')
-        sessionStorage.removeItem('username')
-        sessionStorage.removeItem('token')
-        sessionStorage.removeItem('list')
-        this.$store.dispatch('delAllViews')
-      }))
+      localStorage.removeItem('list')
+      Cookies.remove('dashboard_url')
+      Cookies.remove('username')
+      Cookies.remove('sessionToken')
+      try {
+
+          Parse.User.logOut(this.username).then(res=>{
+        
+          this.$router.push('/login')
+          sessionStorage.removeItem('username')
+          sessionStorage.removeItem('token')
+          localStorage.removeItem('list')
+         
+          this.$store.dispatch('delAllViews')
+        }
+  /*      (error=>{
+          this.$router.push('/login')
+          sessionStorage.removeItem('username')
+          sessionStorage.removeItem('token')
+          Cookies.set('username',''-1)
+          Cookies.set('sessionToken',''-1)
+          localStorage.removeItem('list')
+          this.$store.dispatch('delAllViews')
+        }) */
+      
+      )
+        
+      } catch (error) {
+
+        console.log('logout err',error);       
+
+           this.$router.push('/login')
+          sessionStorage.removeItem('username')
+          sessionStorage.removeItem('token')
+          Cookies.set('username',''-1)
+          Cookies.set('sessionToken',''-1)
+          localStorage.removeItem('list')
+          this.$store.dispatch('delAllViews')
+        
+      }
+
     },
     userDetail(){
       this.$router.push({

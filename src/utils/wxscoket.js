@@ -58,7 +58,7 @@ var Websocket = {
   connState: false,
   cInfo: {
     host: location.hostname,
-    port: 8083,
+    port: 5080,
     clientId: 'C_' + new Date().getTime(),
     userName: 'test',
     password: 'test123',
@@ -96,7 +96,7 @@ var Websocket = {
     if (useSSL) {
       _this.cInfo.port = 8084
     } else {
-      _this.cInfo.port = 8083
+      _this.cInfo.port = 5080
     }
   },
   recive: function (msg) {

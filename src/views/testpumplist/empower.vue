@@ -34,7 +34,27 @@
                 </el-form-item>
                 <el-form-item label="法人代表身份证" required>
                   <el-col :span="11">
-                    <el-upload
+                     <img v-if="form.frontimageUrl" :src="form.frontimageUrl" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'front')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
+                       <div
+                        class="el-upload__text"
+                        style="position:absolute;top:90px;color:#8c939d;
+                      left:110px;"
+                      v-show="form.frontimageUrl==''"
+                      >正面</div>
+                    <!-- <el-upload
                       class="avatar-uploader"
                       action="/iotapi/upload"
                       :show-file-list="false"
@@ -43,13 +63,8 @@
                     >
                       <img v-if="form.frontimageUrl" :src="form.frontimageUrl" class="avatar" />
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                      <div
-                        class="el-upload__text"
-                        style="position:absolute;top:90px;color:#8c939d;
-                      left:110px;"
-                      v-show="form.frontimageUrl==''"
-                      >正面</div>
-                    </el-upload>
+                     
+                    </el-upload> -->
                     <el-button
                       size="small"
                       type="danger"
@@ -60,22 +75,27 @@
                   </el-col>
                   <el-col class="line" :span="2">-</el-col>
                   <el-col :span="11" style="position:relative">
-                    <el-upload
-                      class="avatar-uploader"
-                      action="/iotapi/upload"
-                      :show-file-list="false"
-                      :on-success="handleAvatarSuccessContrary"
-                      :before-upload="beforeAvatarUpload"
-                    >
-                      <img v-if="form.contraryimageUrl" :src="form.contraryimageUrl" class="avatar" />
-                      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <img v-if="form.contraryimageUrl" :src="form.contraryimageUrl" class="avatar" />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" ></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'contrary')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
                       <div
                         class="el-upload__text"
                         style="position:absolute;top:90px;color:#8c939d;
                       left:110px;"
                       v-show="form.contraryimageUrl==''"
                       >反面</div>
-                    </el-upload>
+                    <!-- </el-upload> -->
                     <el-button
                       size="small"
                       type="danger"
@@ -130,28 +150,32 @@
                   <el-input v-model="form.identity" placeholder="请输入法人身份证号码（18位）"></el-input>
                 </el-form-item>
                 <el-form-item label="企业营业执照" required>
-                  <el-upload
-                    class="avatar-uploader"
-                    action="/iotapi/upload"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccessBusiness"
-                    :before-upload="beforeAvatarUpload"
-                  >
-                    <img v-if="form.businesslicense" :src="form.businesslicense" class="avatar" />
-                    <i v-else class="el-icon-plus avatar-uploader-icon" style="width:300px;height:200px"></i>
-                    <div
+                   <img v-if="form.businesslicense" :src="form.businesslicense" class="avatar" />
+                       <i v-else class="el-icon-plus avatar-uploader-icon" style="width:300px;height:200px"></i>
+                        <form
+                          method="POST"
+                          enctype="multipart/form-data"
+                          ref="uploadform"
+                          style="position: absolute"
+                        >
+                          <input
+                            type="file"
+                            @change="upload($event,'business')"
+                            style="position:relative;top:-200px; opacity:0;z-index:5;height:200px;width:200px;cursor:pointer"
+                          />
+                      </form>
+                       <div
                       class="el-upload__text"
                       style="position:absolute;top:90px;color:#8c939d;
-                      left:80px;"
+                      left:100px;"
                       v-show="form.businesslicense==''"
                     >企业营业执照</div>
-                  </el-upload>
                   <el-button
                     size="small"
                     type="danger"
                     style="position: absolute;left: 200px;top:150px;margin-left:0"
                     v-show="form.businesslicense!=''"
-                    @click="form.bussnesslicense=''"
+                    @click="form.businesslicense=''"
                   >删除</el-button>
                 </el-form-item>
                 <el-form-item label="街道地址" prop="roadress">
@@ -955,6 +979,7 @@ import { setTimeout } from 'timers';
 import Parse from 'parse'
 import {returnLogin} from '@/utils/return'
 import LaboratoryForm from '@/components/laboratoryForm'
+import Cookies from 'js-cookie'
 import Preview from '@/components/laboratoryForm/preview'
 var otherEmpowerlist=[]
 export default {
@@ -1308,6 +1333,7 @@ export default {
       },
       ewpowerid:'',
       laboratorylist:[],
+      imgtype:''
     };
   },
   mounted() {
@@ -1315,6 +1341,84 @@ export default {
   },
 
   methods: {
+    upload(event,type) {
+      this.imgtype=type
+      if (event) {
+        var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
+        var name = file.name;
+        var testmsg = event.target.files[0].type
+        var type = file.type.split("/")[0];
+        var extension =
+        testmsg === "image/jpeg" ||
+        testmsg === "image/JPEG" ||
+        testmsg === "image/png" ||
+        testmsg === "image/PNG" ||
+        testmsg === "image/bpm" ||
+        testmsg === "image/BPM";
+        if (!extension) {
+          //将图片img转化为base64
+            this.$message({
+            message: "请上传图片",
+            type: "error"
+          });
+          return false; //必须加上return false; 才能阻止
+        }else{
+          var reader = new FileReader();
+          reader.readAsDataURL(file);
+          var that = this;
+          reader.onloadend = function() {
+            var dataURL = reader.result;
+            var blob = that.dataURItoBlob(dataURL);
+            that.uploadFile(blob, name); //执行上传接口
+          };
+        }
+      }
+    },
+    dataURItoBlob(dataURI) {
+      // base64 解码
+      var byteString = atob(dataURI.split(",")[1]);
+      var mimeString = dataURI
+        .split(",")[0]
+        .split(":")[1]
+        .split(";")[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    },
+    uploadFile(imgUrl, name) {
+      var formdata = new FormData();
+     formdata.append("file", imgUrl, name);
+      formdata.append("output", 'json')
+      formdata.append("path",Cookies.get('appids'))
+       formdata.append("scene",Cookies.get('appids'))
+      formdata.append("auth_token", Cookies.get('access_token')) //下面是要传递的参数
+      //此处必须设置为  multipart/form-data
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
+        }
+      };
+      this.$http
+        .post(Cookies.get('fileserver'),formdata)
+        .then(res => { 
+          if(res){
+            if(this.imgtype=='front'){
+              this.form.frontimageUrl= res.body.url
+            }else if(this.imgtype=='contrary'){
+              this.form.contraryimageUrl = res.body.url
+            }else if(this.imgtype=='business'){
+              this.form.businesslicense = res.body.url
+            }
+            
+          }
+        }).catch(error=>{
+          
+          this.$message.error(error.bodyText)
+        });
+    },
     addTab(targetName) {
         let newTabName = ++this.tabIndex + '';
         this.editableTabs.push({
@@ -1446,14 +1550,17 @@ export default {
             businessscope: this.form.businessscope, //经营范围
             registeredcapital: this.form.registeredcapital //注册资金
           })
-          acl.setRoleWriteAccess('pump_admin',true)
-          acl.setRoleReadAccess('pump_admin',true)
+          acl.setRoleWriteAccess('Auditor',true)
+          acl.setRoleReadAccess('Auditor',true)
+          acl.setRoleWriteAccess('Labadmin',true)
+          acl.setRoleReadAccess('Labadmin',true)
+          acl.setRoleWriteAccess('Inspector',true)
+          acl.setRoleReadAccess('Inspector',true)
           acl.setReadAccess(userid,true)
           acl.setWriteAccess(userid,true)
           authentication.set("ACL",acl)
          authentication.save().then(resultes=>{
            if(resultes){
-             console.log(resultes)
              this.$message.success('企业认证成功')
               this.active++;
               this.form1 = this.form
@@ -1468,7 +1575,7 @@ export default {
                 
            }
          },error=>{
-           this.$message.error(error.error)
+           returnLogin(error)
          })
         } else {
           this.$message.error("有必填项未填写");
@@ -1493,7 +1600,6 @@ export default {
         });
         return false; //必须加上return false; 才能阻止
       }
-      console.log(file);
       if (!isLt50M) {
         this.$message({
           message: "上传文件大小不能超过 10MB!",
@@ -1520,7 +1626,6 @@ export default {
         });
         return false; //必须加上return false; 才能阻止
       }
-      console.log(file);
       if (!isLt50M) {
         this.$message({
           message: "上传文件大小不能超过 10MB!",
@@ -1532,96 +1637,6 @@ export default {
     },
     handleClose(){
       this.dialogVisible = false
-    },
-    beforeAvatarUpload(file){
-      var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
-      }
-      console.log(file);
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
-        });
-        return false;
-      }
-      return extension || isLt50M;
-
-    },
-    beforeAvatarUploadOther(file){
-       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
-      var extension =
-        testmsg === "jpg" ||
-        testmsg === "JPG" ||
-        testmsg === "png" ||
-        testmsg === "PNG" ||
-        testmsg === "bpm" ||
-        testmsg === "BPM";
-      const isLt50M = file.size / 1024 / 1024 < 10;
-      if (!extension) {
-        this.$message({
-          message: "上传图片只能是jpg / png / bpm格式!",
-          type: "error"
-        });
-        return false; //必须加上return false; 才能阻止
-      }
-      console.log(file);
-      if (!isLt50M) {
-        this.$message({
-          message: "上传文件大小不能超过 10MB!",
-          type: "error"
-        });
-        return false;
-      }
-      return extension || isLt50M;
-    },
-    
-    //身份证正面上传
-    handleAvatarSuccessFront(response, file, fileList) {
-      this.form.frontimageUrl = response.path;
-      this.$message({
-        message: "上传成功！",
-        type: "success"
-      });
-    },
-    //身份证背面上传
-    handleAvatarSuccessContrary(response, file, fileList) {
-      this.form.contraryimageUrl = response.path;
-      this.$message({
-        message: "上传成功！",
-        type: "success"
-      });
-    },
-    //企业营业执照
-    handleAvatarSuccessBusiness(response, file, fileList) {
-      this.form.businesslicense = response.path;
-      this.$message.success("上传成功!");
-    },
-    handleAvatarSuccessBusiness1(response,file,fileList){
-      this.ruleForm.cnasimgsrc = response.path
-      this.$message.success('上传成功')
-    },
-    handleAvatarSuccessBusiness2(response,file,fileList){
-      this.ruleformcma.cmaimgsrc = response.path
-      this.$message.success('上传成功')
-    },
-    //其他资质上传
-    handleAvatarSuccessOther(response,file,fileList){
-      this.addotherform.imgsrc = response.path
-      this.$message.success('上传成功')
     },
    
     nextTo(formName1,formName2){
@@ -1650,7 +1665,6 @@ export default {
                   return
               }
             }
-          console.log(this.ewpowerid)
              var Authentication = Parse.Object.extend('Authentication')
              var authentication = new Authentication()
              authentication.id = this.ewpowerid
@@ -1683,7 +1697,7 @@ export default {
                  this.previewother.otherform = otherEmpowerlist
                }
             },error=>{
-              this.$message.error(error.error)
+              returnLogin(error)
             })
          }
     },
@@ -1707,7 +1721,6 @@ export default {
               desc:this.addotherform.desc
             }
             otherEmpowerlist.push(obj)
-            console.log(otherEmpowerlist)
             this.$refs[formName].resetFields()
             this.addotherform.imgsrc=''
             this.dialogVisible=false
@@ -1754,11 +1767,10 @@ export default {
       this.active=1
     },
     getLaboratory(value){
-      console.log(value)
+     
       this.laboratorylist.push(value)
     },
     previewLaboratory(){
-      console.log(this.laboratorylist)
       if(this.laboratorylist.length==0){
         this.$message.error('请至少提交一个实验室认证')
         return
@@ -1782,7 +1794,7 @@ export default {
     .el-form {
       .el-col-12 {
         padding: 20px;
-        @media screen and (max-width: 1100px) {
+        @media screen and (max-width: 1300px) {
           width: 100%;
         }
         /deep/ .el-select {
@@ -1800,7 +1812,7 @@ export default {
     .el-form {
       .el-col-12 {
         padding: 20px;
-        @media screen and (max-width: 1100px) {
+        @media screen and (max-width: 1300px) {
           width: 100%;
         }
         /deep/ .el-select {
@@ -1819,7 +1831,7 @@ export default {
       .el-col-12 {
         padding: 20px;
         
-        @media screen and (max-width: 1100px) {
+        @media screen and (max-width: 1300px) {
           width: 100%;
         }
         /deep/ .el-select {
@@ -1863,6 +1875,7 @@ export default {
   height: 178px;
   line-height: 178px;
   text-align: center;
+  border:1px solid #cccccc;
 }
 .empower .avatar {
   width:250px;

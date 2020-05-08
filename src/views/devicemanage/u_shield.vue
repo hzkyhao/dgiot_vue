@@ -291,12 +291,12 @@ export default {
       this.ushieldid = "";
       getCert().then(response => {
         if (response) {
-          this.ushieldform.unumber = response.result.data.SerialNumber;
-          this.ushieldform.name = response.result.data.Subject;
-          this.ushieldform.startdate = response.result.data.beforeDate;
-          this.ushieldform.enddate = response.result.data.afterDate;
-          this.ushieldform.bidunit = response.result.data.Issuer;
-          this.ushieldform.ukey = response.result.data.bstrCertB64;
+          this.ushieldform.unumber = response.SerialNumber;
+          this.ushieldform.name = response.Subject;
+          this.ushieldform.startdate = response.beforeDate;
+          this.ushieldform.enddate = response.afterDate;
+          this.ushieldform.bidunit = response.Issuer;
+          this.ushieldform.ukey = response.bstrCertB64;
         }
       }).catch(error=>{
         this.$message.error(error.error)

@@ -83,7 +83,7 @@ export default {
      getOrgList(node,resolve) {
                if (node.level === 0) {
                  this.data=[]
-                var Department = Parse.Object.extend("Department");
+                var Department = Parse.Object.extend("PumpDepartment");
                 var department = new Parse.Query(Department);
                 department.equalTo('ParentId','0')
                 department.find().then(
@@ -125,7 +125,7 @@ export default {
                
                 }else if(node.level !== 0&&node.data.icon!=='实验台'&&node.data.isvcon==false){
                   this.data=[]
-                var Department = Parse.Object.extend("Department");
+                var Department = Parse.Object.extend("PumpDepartment");
                 var department = new Parse.Query(Department);
                 department.equalTo('ParentId',node.data.objectId)
                 department.ascending('org_type')

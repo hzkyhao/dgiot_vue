@@ -123,8 +123,6 @@
 import treeTable from "@/components/TreeTable";
 import data from "./data";
 import { Parse } from "parse";
-import { setTimeout } from "timers";
-import { resolve } from "q";
 import { utc2beijing } from "@/utils";
 export default {
   name: "TreeTableDemo",

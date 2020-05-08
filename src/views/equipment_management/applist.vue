@@ -24,7 +24,7 @@
             :label="$t('application.applicationidentification')"
           ></el-table-column>
           <el-table-column prop="title" :label="$t('application.applicationname')"></el-table-column>
-          <el-table-column prop="productIdentifier" label="应用单位"></el-table-column>
+          <el-table-column prop="productIdentifier" label="工程单位"></el-table-column>
           <el-table-column prop="scale" :label="$t('application.scaleofservice')" sortable></el-table-column>
           <el-table-column prop="category" :label="$t('application.industrytype')"></el-table-column>
           <el-table-column prop="creation_time" :label="$t('application.createtime')"></el-table-column>
@@ -435,7 +435,7 @@ export default {
         path: "/applicationManagement/addApp",
         query: {
           page: "update",
-          title: "修改应用",
+          title: "修改工程",
           name: row.name,
           scale: row.scale,
           creation_time: row.creation_time,

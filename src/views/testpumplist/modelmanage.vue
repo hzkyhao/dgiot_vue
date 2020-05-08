@@ -2,7 +2,7 @@
   <div class="modelmanamge">
     <div class="mdoeltop">
       <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
-        <el-form-item label="检验项目">
+        <el-form-item label="质检项目">
           <el-input v-model="formInline.name" placeholder="请输入项目名称"></el-input>
         </el-form-item>
         <el-form-item>
@@ -11,7 +11,7 @@
         </el-form-item>
       </el-form>
       <div class="adddevices">
-        <el-button type="primary" size="small" @click="addStandard">新增检测标准</el-button>
+        <el-button type="primary" size="small" @click="addStandard">新增质检项目</el-button>
       </div>
     </div>
     <!--表格-->
@@ -23,16 +23,16 @@
             <span>{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="检验项目名称" align="center" >
+        <el-table-column label="检验项目名称" align="center">
           <template slot-scope="scope">{{ scope.row.attributes.name }}</template>
         </el-table-column>
-        <el-table-column label="标准类型" width="250" align="center">
+        <!-- <el-table-column label="标准类型" width="250" align="center">
           <template slot-scope="scope">{{ scope.row.attributes.model }}</template>
+        </el-table-column>-->
+        <el-table-column label="适用产品" align="center" show-overflow-tooltip>
+          <template slot-scope="scope">{{ scope.row.attributes.client }}</template>
         </el-table-column>
-        <el-table-column label="适用产品" width="200" align="center" show-overflow-tooltip>
-          <template slot-scope="scope">{{ scope.row.attributes.product }}</template>
-        </el-table-column>
-        <el-table-column label="检测类别" width="200" align="center">
+        <!-- <el-table-column label="检测类别" width="200" align="center">
           <template slot-scope="scope">{{ getBz(scope.row.attributes.standard) }}</template>
         </el-table-column>
         <el-table-column label="标准发行单位" width="250" align="center">
@@ -40,12 +40,12 @@
         </el-table-column>
         <el-table-column label="标准发行时间" align="center" width="200">
           <template slot-scope="scope">{{ timestampToTime(scope.row.attributes.start_time) }}</template>
-        </el-table-column>
+        </el-table-column>-->
         <el-table-column label="检测标准管理" align="center" width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="addReportChildren(scope.row.id)">新增子项</el-button>
+            <el-button type="primary" size="small" @click="addReportChildren(scope.row)">新增子项</el-button>
             <el-button type="danger" size="small" @click="deleteReport(scope.row.id)">删 除</el-button>
-            <el-button type="primary" size="small" @click="detailReportChildren(scope.row.id)">子项管理</el-button>
+            <el-button type="primary" size="small" @click="detailReportChildren(scope.row)">子项管理</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,14 +60,22 @@
         :total="total"
       ></el-pagination>
     </div>
-    <el-dialog title="检验标准新增" :visible.sync="dialogVisible" width="60%">
+    <el-dialog title="检验质检项目" :visible.sync="dialogVisible" width="60%">
       <div class="addContent">
         <el-form :model="form">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="检验标准名称" :label-width="formLabelWidth">
-                <el-input v-model="form.name" autocomplete="off" placeholder="检验标准名称"></el-input>
+              <el-form-item label="质检项目名称" :label-width="formLabelWidth">
+                <el-input v-model="form.name" autocomplete="off" placeholder="质检项目名称"></el-input>
               </el-form-item>
+
+              <!-- <el-form-item label="标准类型" :label-width="formLabelWidth">
+                <el-select v-model="form.model" placeholder="选择标准类型">
+                  <el-option label="性能检测" value="性能检测"></el-option>
+                </el-select>
+              </el-form-item>-->
+            </el-col>
+            <el-col :span="12">
               <el-form-item label="适用产品" :label-width="formLabelWidth">
                 <el-select v-model="form.product" placeholder="选择适用产品">
                   <el-option
@@ -78,18 +86,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="标准类型" :label-width="formLabelWidth">
-                <el-select v-model="form.model" placeholder="选择标准类型">
-                  <el-option label="性能检测" value="性能检测"></el-option>
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="备注信息" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="form.desc" :rows="4" placeholder="请输入标准备注信息"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="检测标准文号" :label-width="formLabelWidth">
+              <!-- <el-form-item label="检测标准文号" :label-width="formLabelWidth">
                 <el-input
                   v-model="form.inspection_number"
                   autocomplete="off"
@@ -116,22 +113,9 @@
                   value-format="timestamp"
                   placeholder="选择日期"
                 ></el-date-picker>
-              </el-form-item>
-              <!-- <el-form-item label="标准源文件" :label-width="formLabelWidth">
-                   <el-input placeholder="请输入内容" v-model="form.filesrc">
-                        <template slot="append">
-                            <el-upload
-                                class="upload-demo"
-                                action="https://jsonplaceholder.typicode.com/posts/"
-                                :limit="1"
-                                accept=".PDF"
-                                :before-upload="beforeUpload"
-                                :on-success="successUpload"
-                                >
-                                <el-button size="small" type="primary">点击上传</el-button>
-                            </el-upload>
-                        </template>
-                    </el-input>
+              </el-form-item>-->
+              <!-- <el-form-item label="备注信息" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="form.desc" :rows="4" placeholder="请输入标准备注信息"></el-input>
               </el-form-item>-->
             </el-col>
           </el-row>
@@ -149,10 +133,10 @@
           <el-input v-model="childrenform.name" autocomplete="off"></el-input>
         </el-form-item>
 
-         <el-form-item label="子项模型" :label-width="formLabelWidth">
-            <img v-if="childrenform.imageUrl" :src="childrenform.imageUrl" class="avatar" />
+        <el-form-item label="子项模型" :label-width="formLabelWidth">
+          <img v-if="childrenform.imageUrl" :src="childrenform.imageUrl" class="avatar" />
 
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           <form
             method="POST"
             enctype="multipart/form-data"
@@ -172,7 +156,7 @@
             size="mini"
             style="vertical-align:text-bottom"
             v-if="childrenform.imageUrl"
-          >删除</el-button> -->
+          >删除</el-button>-->
         </el-form-item>
         <el-form-item label="排序" :label-width="formLabelWidth">
           <el-input-number v-model="childrenform.index" autocomplete="off" :min="1"></el-input-number>
@@ -184,36 +168,36 @@
       </div>
     </el-dialog>
     <!--子项管理-->
-    <el-dialog title="子项" :visible.sync="dialogTableVisible">
+    <el-dialog title="子项" :visible.sync="dialogTableVisible" top="5vh">
       <el-table :data="producttable" style="width:100%;text-align:center">
-        <el-table-column  label="序号" type="index" align="center" width="100"></el-table-column>
-        <el-table-column  label="名称"  align="center" width="100">
+        <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
+        <el-table-column label="名称" align="center" width="100">
           <template slot-scope="scope">
-           <span>{{scope.row.attributes.name}}</span>
+            <span>{{scope.row.name}}</span>
           </template>
         </el-table-column>
-        <el-table-column  label="类容" align="center">
+        <el-table-column label="类容" align="center">
           <template slot-scope="scope">
-            <img :src="scope.row.attributes.icon" alt="" class="el-upload-list__item-thumbnail">
+            <img :src="scope.row.icon" alt class="el-upload-list__item-thumbnail" />
           </template>
         </el-table-column>
-        <el-table-column  label="子项管理" align="center">
+        <el-table-column label="子项管理" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="productView(scope.row.id)">绘图</el-button>
-            <el-button type="删除" size="small" @click="deleteProduct(scope.row.id)">删除</el-button>
+            <el-button type="primary" size="small" @click="productView(scope.row.objectId)">绘图</el-button>
+            <el-button type="删除" size="small" @click="deleteProduct(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="pageblock">
-      <el-pagination
-        @size-change="handleProductSize"
-        @current-change="handleProductChange"
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="productpagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="producttotal"
-      ></el-pagination>
-    </div>
+        <el-pagination
+          @size-change="handleProductSize"
+          @current-change="handleProductChange"
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="productpagesize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="producttotal"
+        ></el-pagination>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -222,12 +206,13 @@ import Parse from "parse";
 import { returnLogin } from "@/utils/return";
 import { error } from "util";
 import { timestampToTime } from "@/api/login";
-import Cookies from 'js-cookie';
-import axios from 'axios'
+import Cookies from "js-cookie";
+import ajax from "@/utils/$ajax";
+import $ from "jquery";
 export default {
   data() {
     return {
-      action:'http://file.iotn2n.com/shapes/upload',
+      action: "http://file.iotn2n.com/shapes/upload",
       pumpmodel: [
         "离心泵",
         "潜水泵",
@@ -292,12 +277,14 @@ export default {
         index: 1
       },
       //子项管理
-      dialogTableVisible:false,
-      producttable:[],
-      productpagesize:10,
-      producttotal:0,
-      productstart:0,
-      file:''
+      dialogTableVisible: false,
+      producttable: [],
+      productpagesize: 10,
+      producttotal: 0,
+      productstart: 0,
+      file: "",
+      productlist: [],
+      productrow: {}
     };
   },
   mounted() {
@@ -345,14 +332,14 @@ export default {
         }
       );
     },
-    getBz(val){
-      var string=''
-      this.standard.map(item=>{
-        if(item.value==val){
-          string= item.label
+    getBz(val) {
+      var string = "";
+      this.standard.map(item => {
+        if (item.value == val) {
+          string = item.label;
         }
-      })
-      return string
+      });
+      return string;
     },
     handleSizeChange(val) {
       this.pagesize = val;
@@ -364,11 +351,11 @@ export default {
     },
     handleProductSize(val) {
       this.productpagesize = val;
-      this.detailReportChildren(this.reportid);
+      this.detailReportChildren(this.productrow);
     },
     handleProductChange(val) {
       this.start = (val - 1) * this.pagesize;
-      this.detailReportChildren(this.reportid)
+      this.detailReportChildren(this.productrow);
     },
     //增加设备弹窗
     addStandard() {
@@ -378,14 +365,8 @@ export default {
       var Report = Parse.Object.extend("Report");
       var report = new Report();
       report.set("name", this.form.name);
-      report.set("product", this.form.product);
-      report.set("inspection_number", this.form.inspection_number);
-      report.set("standard", this.form.standard);
-      report.set("client", this.form.client);
-      if (this.form.start_time) {
-        report.set("start_time", this.form.start_time);
-      }
-      report.set("model", this.form.model);
+      report.set("client", this.form.product);
+      report.set("product", []);
       report.save().then(
         response => {
           if (response) {
@@ -401,27 +382,26 @@ export default {
     },
     //图片上传
     upload(event) {
-      console.log(event)
       if (event) {
         var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
         var name = file.name;
-        var testmsg = event.target.files[0].type
+        var testmsg = event.target.files[0].type;
         var type = file.type.split("/")[0];
         var extension =
-        testmsg === "image/jpeg" ||
-        testmsg === "image/JPEG" ||
-        testmsg === "image/png" ||
-        testmsg === "image/PNG" ||
-        testmsg === "image/bpm" ||
-        testmsg === "image/BPM";
+          testmsg === "image/jpeg" ||
+          testmsg === "image/JPEG" ||
+          testmsg === "image/png" ||
+          testmsg === "image/PNG" ||
+          testmsg === "image/bpm" ||
+          testmsg === "image/BPM";
         if (!extension) {
           //将图片img转化为base64
-            this.$message({
+          this.$message({
             message: "请上传图片",
             type: "error"
           });
           return false; //必须加上return false; 才能阻止
-        }else{
+        } else {
           var reader = new FileReader();
           reader.readAsDataURL(file);
           var that = this;
@@ -450,61 +430,81 @@ export default {
     uploadFile(imgUrl, name) {
       var formdata = new FormData();
       formdata.append("file", imgUrl, name);
-      formdata.append("output", 'json')
-      formdata.append("path",Parse.User.current().id)
-      formdata.append("auth_token", Cookies.get('sessionToken')) //下面是要传递的参数
+      formdata.append("output", "json");
+      formdata.append("path", Cookies.get("appids"));
+      formdata.append("scene", Cookies.get("appids"));
+      formdata.append("auth_token", Cookies.get("access_token")); //下面是要传递的参数
       //此处必须设置为  multipart/form-data
       let config = {
         headers: {
           "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
         }
       };
-      this.$http
-        .post("http://file.iotn2n.com/shapes/upload",formdata)
-        .then(res => { 
-          if(res){
-            this.childrenform.imageUrl = res.body.url
-          }
-        });
+      this.$http.post(Cookies.get("fileserver"), formdata).then(res => {
+        if (res) {
+          this.childrenform.imageUrl = res.body.url;
+        }
+      });
     },
-    addReportChildren(id) {
-      this.reportid = id;
+    addReportChildren(row) {
+      this.productlist = [];
+      this.reportid = row.id;
+      this.productlist = this.productlist.concat(row.attributes.product);
       this.dialogForm = true;
     },
     deleteReport(id) {
-      var Report = Parse.Object.extend("Report");
-      var report = new Report();
-      report.id = id;
-      
-      report.destroy().then(
-        response => {
-          if (response) {
-            this.$message.success("删除成功");
-            this.getReport();
-          }
-        },
-        error => {
-          returnLogin(error);
-        }
-      );
-    },
-    detailReportChildren(id) {
-      this.reportid = id
-       this.dialogTableVisible = true
-      var Report = Parse.Object.extend("Report");
-      var report = new Report();
-      report.id = id
-      var relation = report.relation('report')
-      var query = relation.query()
-      query.skip(this.productstart)
-      query.limit(this.productpagesize)
-      query.count().then(count=>{
-        this.producttotal = count
-        query.find().then(resultes=>{
-          this.producttable = resultes
-         
+      this.$confirm("此操作将永久删除该检测标准, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          var Report = Parse.Object.extend("Report");
+          var report = new Report();
+          report.id = id;
+
+          report.destroy().then(
+            response => {
+              if (response) {
+                this.$message({
+                  type: "success",
+                  message: "删除成功!"
+                });
+                this.getReport();
+              }
+            },
+            error => {
+              returnLogin(error);
+            }
+          );
         })
-      }) 
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    detailReportChildren(row) {
+      this.productrow = row;
+      var where = {
+        objectId: { $in: row.attributes.product }
+      };
+      var datas = {
+        limit: this.productpagesize,
+        skip: this.productstart,
+        keys: "count(*)",
+        where: JSON.stringify(where)
+      };
+      ajax("/classes/Product", "GET", datas)
+        .then(response => {
+          this.dialogTableVisible = true;
+          this.producttable = response.results;
+          this.producttotal = response.count;
+        })
+        .catch(error => {
+          this.$message.error(error)
+        });
     },
     //增加产品以及设备
     addStandardChildren() {
@@ -512,71 +512,65 @@ export default {
         this.$message.error("请上传子项图片");
         return;
       }
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      var userId = Parse.User.current().id;
-      var acl = new Parse.ACL();
-      product.set("name", this.childrenform.name);
-      acl.setReadAccess(userId, true);
-      acl.setWriteAccess(userId, true);
-      acl.setRoleReadAccess("pump", true);
-      acl.setRoleWriteAccess("pump", true);
-      product.set("config", {
-        name: "图层",
-        layer: {
-          width: 800,
-          height: 600,
-          backColor: "#eee",
-          backgroundImage: this.childrenform.imageUrl,
-          widthHeightRatio: ""
+      var appid = Cookies.get("appids");
+      var ACL = {
+        key: {}
+      };
+      for (var key in ACL) {
+        key = "role:" + Cookies.get("appids");
+        ACL[key] = {
+          read: true,
+          write: true
+        };
+      }
+      delete ACL.key;
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        headers: {
+          sessionToken: Cookies.get("access_token")
         },
-        deviceid: "",
-        components: [],
-        index: this.childrenform.index
-      });
-      product.set("icon", this.childrenform.imageUrl);
-      product.set("nodeType", 1);
-      product.set("devType", "report");
-      product.set("ACL", acl);
-      product.save().then(response => {
-        if (response) {
-          var Product2 = Parse.Object.extend("Product");
-          var product2 = new Product2();
+        data: JSON.stringify({
+          ACL: ACL,
+          config: {
+            name: "图层",
+            layer: {
+              width: 800,
+              height: 600,
+              backColor: "#eee",
+              backgroundImage: this.childrenform.imageUrl,
+              widthHeightRatio: ""
+            },
+            deviceid: "",
+            components: [],
+            index: this.childrenform.index
+          },
+          icon: this.childrenform.imageUrl,
+          nodeType: 1,
+          devType: "report",
+          name: this.childrenform.name
+        }),
+        url: Cookies.get("apiserver") + "/classes/Product",
+        success: response => {
+          var _this = this;
           var Report = Parse.Object.extend("Report");
           var report = new Report();
-          report.id = this.reportid
-          var relation = report.relation('report')
-            product2.set('objectId',response.id)
-            relation.add(product2)
-            report.save().then(res=>{
-              // var Devices = Parse.Object.extend("Devices");
-              // var devices = new Devices();
-              // var Product1 = Parse.Object.extend("Product");
-              // var product1 = new Product1();
-              // var acl1 = new Parse.ACL();
-              // acl1.setReadAccess(userId, true);
-              // acl1.setWriteAccess(userId, true);
-              // acl1.setRoleReadAccess("pump", true);
-              // acl1.setRoleWriteAccess("pump", true);
-              // product1.id = response.id;
-              // devices.set("product", product1);
-              // devices.set('ACL',acl1)
-              // devices.set("devaddr", this.childrenform.index.toString());
-              // devices.save().then(resultes=>{
-              //   if(resultes){
-              //     this.$message.success('创建成功')
-              //     this.childrenform.name=''
-              //     this.childrenform.imageUrl=''
-              //     this.childrenform.index++
-              //     this.dialogForm = false
-              //   }
-              // })
-                  this.$message.success('创建成功')
-                  this.childrenform.name=''
-                  this.childrenform.imageUrl=''
-                  this.childrenform.index++
-                  this.dialogForm = false
-            })    
+          report.id = _this.reportid;
+          var product = _this.productlist.concat([response.objectId]);
+          report.set("product", product);
+          report.save().then(
+            res => {
+              _this.$message.success("创建成功");
+              _this.childrenform.name = "";
+              _this.childrenform.imageUrl = "";
+              _this.childrenform.index++;
+              _this.dialogForm = false;
+            },
+            error => {
+              returnLogin(error);
+            }
+          );
         }
       });
     },
@@ -584,20 +578,42 @@ export default {
       event.stopPropagation();
       this.childrenform.imageUrl = "";
     },
-     productView(id){
-      var url= `${window.location.origin}/spa/?proudctid=${id}`;
+    productView(id) {
+      var url = `${window.location.origin}/spa/?proudctid=${id}`;
       window.open(url, "__blank");
-      //  window.open(`localhost:8888/?proudctid=${id}#/`, '_blank');
     },
     // 删除产品
-    deleteProduct(id){
-      console.log(id)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = id
-      product.destroy().then(resultes=>{
-        this.$message.success('删除成功')
-        this.detailReportChildren(this.reportid)
+    deleteProduct(row){
+       var arr =this.productrow.attributes.product
+            arr.map((item,index)=>{
+              if(item==row.objectId){
+                console.log(index)
+                arr.splice(index,1)
+              }
+            })
+      $.ajax({
+        type: 'DELETE',
+        contentType:'application/json',
+        dataType:'json',
+        headers:{
+          "sessionToken":Cookies.get('access_token')
+        },
+        url: Cookies.get('apiserver')+'/classes/Product/'+row.objectId,
+        success:(response)=>{
+          if(response){
+            var Report = Parse.Object.extend('Report')
+            var report = new Report()
+            report.id = this.productrow.id
+            report.set('product',arr)
+            report.save().then(response=>{
+              this.$message.success('删除成功')
+              this.detailReportChildren(this.productrow)
+            },error=>{
+              returnLogin(error)
+            })          
+           
+          }
+        }
       })
     }
   }
@@ -622,8 +638,8 @@ export default {
   .tableblock {
     margin-top: 20px;
   }
-  .pageblock{
-    margin-top:20px;
+  .pageblock {
+    margin-top: 20px;
   }
 }
 </style>
@@ -656,13 +672,18 @@ export default {
   display: block;
 }
 .el-upload-list__item-thumbnail {
-    vertical-align: middle;
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    position: relative;
-    z-index: 1;
-    margin-left: -80px;
-    background-color: #fff;
+  vertical-align: middle;
+  display: inline-block;
+  width: 70px;
+  height: 70px;
+  position: relative;
+  z-index: 1;
+  margin-left: -80px;
+  background-color: #fff;
+}
+@media screen and (max-width: 1350px) {
+  .modelmanamge .el-col {
+    width: 100%;
+  }
 }
 </style>

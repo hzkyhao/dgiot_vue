@@ -16,6 +16,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
+import Cookies from 'js-cookie';
  
 export default {
   components: { SidebarItem },
@@ -30,7 +31,8 @@ export default {
         routes3:[],
         username:'',
         token:'',
-        type:''
+        type:'',
+        dashboard:''
     }
   },
   computed: {
@@ -38,20 +40,30 @@ export default {
       'sidebar'
     ]),
     routes() {
-      this.username=sessionStorage.getItem('username')
-      this.token = sessionStorage.getItem('token')
+      this.username=Cookies.get('username')
+      this.token = Cookies.get('sessionToken')
+      this.dashboard = Cookies.get('dashboard_url')
       // this.type = sessionStorage.getItem('type')
-      if(!this.username||!this.token){
+      if(!this.token||this.token==-1){
         this.$router.push('/login')
       }else{
       // this.originroute = this.$router.options.routes
        
       let cloneData = JSON.parse(JSON.stringify(this.routes1)); // 对源数据深度克隆
+      if(this.dashboard!=''&&this.dashboard){
         cloneData.unshift({
+          name:'首页',
+          icon:'dashboard',
+          url:this.dashboard
+        })
+      }else{
+         cloneData.unshift({
           name:'首页',
           icon:'dashboard',
           url:'/dashboard'
         })
+      }
+       
       // cloneData.map(items=>{
       //   if(items.url=='/swagger/'){
       //     items.url='http://'+location.host+'/swagger/'
@@ -116,7 +128,7 @@ export default {
    
   },
   mounted(){
-   this.routes1= JSON.parse(sessionStorage.getItem('list'))
+   this.routes1= JSON.parse(localStorage.getItem('list'))
   },
 }
 </script>

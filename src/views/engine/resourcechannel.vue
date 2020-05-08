@@ -30,7 +30,8 @@
             <el-table-column :label="$t('developer.channeltype')">
               <template slot-scope="scope">
                 <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-                <span v-else>{{$t('developer.resourcechannel')}}</span>
+                <span v-else-if="scope.row.attributes.type==2">{{$t('developer.resourcechannel')}}</span>
+                 <span v-else>任务通道</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.servicetype')">
@@ -56,14 +57,16 @@
                 <span>{{scope.row.attributes.desc}}</span>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('developer.operation')" width="300">
+            <el-table-column :label="$t('developer.operation')" width="350">
               <template slot-scope="scope">
+                <el-button type="primary" size="mini" slot="reference" @click="editorChannel(scope.row)">编辑</el-button>
                 <el-button
                   type="success"
                   v-if="scope.row.attributes.isEnable==false"
                   size="mini"
                   @click="qyChannel(scope.row,'enable')"
                 >{{$t('developer.enable')}}</el-button>
+                
                 <el-button
                   type="danger"
                   v-else
@@ -87,7 +90,18 @@
                   <el-button type="danger" size="mini" slot="reference">{{$t('developer.delete')}}</el-button>
                   
                 </el-popover>
-                <el-button type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
+                <!-- <el-popover
+                placement="top-start"
+                title="标题"
+                width="200"
+                trigger="hover"
+                content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+                <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
+              </el-popover> -->
+                <el-tooltip class="item" effect="dark" content="请先启用通道" placement="top" :disabled="scope.row.attributes.status!='OFFLINE'">
+                  <el-button type="primary" size="mini" @click="subProTopic(scope.row)" style="width:100px;height:10px;opacity:0;position:absolute"></el-button>
+                 </el-tooltip>
+                <el-button type="primary" size="mini" @click="subProTopic(scope.row)" :disabled="scope.row.attributes.status=='OFFLINE'">订阅日志</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -115,9 +129,10 @@
         <el-form :model="addchannel" label-width="120px" ref="addchannel" :rules="addrules">
           <el-form-item label="通道类型" prop="region">
             <el-select
-              v-model="addchannel['region']"
+              v-model="addchannel.region"
               placeholder="通道类型"
               @change="removeauto"
+              :disabled="resourceid!=''"
             >
               <el-option
                 v-for="(item,index) in channelregion"
@@ -134,23 +149,41 @@
               :placeholder="$t('developer.channelname')"
             ></el-input>
           </el-form-item>
-          <el-col :span="12" v-for="(value, key, index) in selectregion.params" :key="index">
+
+           <!-- 所属应用(角色) app -->
+              <el-form-item
+                :label="$t('application.applicationtype')"               
+                :rules="[
+                    { required: true, message: '请选择所属应用',trigger: 'blur'},
+                ]"
+              >    
+          <el-select  v-model="addchannel.applicationtText" :placeholder="$t('application.applicationtype')">
+            <el-option
+              v-for="item in applicationList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name">
+            </el-option>
+          </el-select>          
+          </el-form-item>
+
+          <el-col :span="12" v-for="(item,index) in arrlist" :key="index">
             <el-form-item
-              :label="selectregion.params[key].title.zh"
-              :required="selectregion.params[key].required"
-              :prop="key"
+              :label="item.title.zh"
+              :required="item.required"
+              :prop="item.showname"
             >
               <el-input
-                v-model="addchannel[key]"
-                v-if="selectregion.params[key].type=='string'"
+                v-model="addchannel[item.showname]"
+                v-if="item.type=='string'"
               ></el-input>
                <el-input
-                v-model.number="addchannel[key]"
-                v-if="selectregion.params[key].type=='integer'"
+                v-model.number="addchannel[item.showname]"
+                v-else-if="item.type=='integer'"
               ></el-input>
               <el-select
-                v-model="addchannel[key]"
-                v-else-if="selectregion.params[key].type=='boolean'"
+                v-model="addchannel[item.showname]"
+                v-else-if="item.type=='boolean'"
                 class="notauto"
                 readonly
               >
@@ -195,9 +228,9 @@
             <el-col :span="12">{{description}}</el-col>
           </el-row>
 
-          <el-row v-for="(key,value,index) in detailchannel" :key="index">
-            <el-col :span="12">{{key}}</el-col>
+          <el-row v-for="(key,value) in detailchannel" :key="key">
             <el-col :span="12">{{value}}</el-col>
+            <el-col :span="12">{{key}}</el-col>
           </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -246,6 +279,7 @@ import {
   DISCONNECT_MSG
 } from "@/utils/wxscoket.js";
 export default {
+  inject:['reload'],
   data() {
     return {
       dialogVisible: false,
@@ -262,8 +296,10 @@ export default {
       channelregion: [],
       addchannel: {
         region: "",
-        desc: ""
+        desc: "",
+        applicationtText:''
       },
+      applicationList:[],
       addrules: {
         name: [{ required: true, message: "请输入通道名称", trigger: "blur" }],
         region: [
@@ -283,12 +319,16 @@ export default {
       value4:'',
       subdialogid:'',
       subdialogtimer:null,
-      channelname:''
+      channelname:'',
+      arrlist:[],
+      channelId:'',
+      channelrow:[]
     };
   },
   mounted() {
     this.Get_Re_Channel(0);
     this.dialogType();
+    this.getApplication();
   },
   methods: {
     inputChange(val) {
@@ -347,9 +387,37 @@ export default {
                 message: "没有操作权限"
               });
             }
+          },error=>{
+            returnLogin(error)
           }
         );
+      },error=>{
+        returnLogin(error)
       });
+    },
+    // 获取应用列表
+    getApplication() {
+      var App = Parse.Object.extend("App");
+      var query = new Parse.Query(App);
+      var _this = this;
+      query.limit(100);
+      query.find().then(
+        response => {
+          console.log("### response", response);
+          // this.$objGet
+          if (response) {
+            response.map(item => {
+              var obj = {};
+              obj.id = item.id;
+              obj.name = item.attributes.desc;
+              _this.applicationList.push(obj);
+            });
+          }
+        },
+        error => {
+          this.$message.error(error.message);
+        }
+      );
     },
     //初始化弹框数据
     dialogType() {
@@ -375,6 +443,7 @@ export default {
     },
     //编辑设备
     updateChannel(row) {
+      console.log(row)
       this.dialogVisible = true;
       this.resourceid = row.id;
       this.detailchannel = row.attributes.config;
@@ -392,12 +461,15 @@ export default {
           delete obj.desc
           delete obj.type
           delete obj.isEnable
+          delete obj.name
           var Channel = Parse.Object.extend("Channel");
           var channel = new Channel();
-          var userid = Parse.User.current().id;
+          // var userid = Parse.User.current().id;
           var acl = new Parse.ACL();
-          acl.setReadAccess(userid, true);
-          acl.setWriteAccess(userid, true);
+          // 设置权限控制列表
+          acl.setRoleReadAccess(this.addchannel.applicationtText, true);
+          acl.setRoleWriteAccess(this.addchannel.applicationtText, true);
+
           if (this.resourceid != "") {
             channel.id = this.resourceid;
           }
@@ -406,7 +478,9 @@ export default {
           channel.set("name", this.addchannel.name);
           channel.set("cType", this.addchannel.region);
           channel.set("desc", this.addchannel.desc);
-          channel.set("type", this.addchannel.type.toString());
+          if(this.addchannel.type){
+              channel.set("type", this.addchannel.type.toString());
+          }
           channel.set("isEnable", this.addchannel.isEnable);
           channel.save().then(resultes => {
             if (resultes) {
@@ -415,7 +489,11 @@ export default {
                 message: this.channelupdated == "编辑" ? "编辑成功" : "创建成功"
               });
               this.$refs["addchannel"].resetFields();
+              this.addchannel={}
+              // this.reload()
               this.channelForm = false;
+              
+              this.resourceid=''
               this.Get_Re_Channel(0);
             }
           });
@@ -454,7 +532,7 @@ export default {
     handleClose() {
       this.addchannel = {};
       this.channelForm = false;
-      // this.$refs["addchannel"].resetFields();
+      this.$refs["addchannel"].resetFields();
       this.resourceid = "";
     },
     getChannelEnable(row, rowIndex) {
@@ -473,6 +551,33 @@ export default {
       this.start = (val - 1) * this.length;
       this.Get_Re_Channel()
     },
+    arrSort(a,b){
+      var val1 = a.order;
+      var val2 = b.order;
+      if (val1 < val2) {
+      return -1;
+      } else if (val1 > val2) {
+      return 1;
+      } else {
+      return 0;
+      }  
+    },
+    orderObject(object){
+      var arr=[]
+      var obj = {};
+      var obj1 = {
+        name: [{ required: true, message: "请输入通道名称", trigger: "blur" }],
+        region: [
+          { required: true, message: "请选择服务类型", trigger: "change" }
+        ]
+      };
+      for(var key in object){
+        object[key].showname = key
+        arr.push(object[key])
+      }
+       return arr.sort(this.arrSort)
+     
+    },
     removeauto(val) {
       var obj = {};
       var obj1 = {
@@ -481,37 +586,76 @@ export default {
           { required: true, message: "请选择服务类型", trigger: "change" }
         ]
       };
-      this.channelregion.map(item => {
-        if (item.cType == val) {
-          this.selectregion = item;
-          for (var key in this.selectregion.params) {
-            if (this.selectregion.params[key].default) {
-              obj[key] = this.selectregion.params[key].default;
-            } else {
-              obj[key] = "";
-            }
-            if (this.selectregion.params[key].reqiured) {
-              if (
-                this.selectregion.params[key].type == "string" ||
-                this.selectregion.params[key].type == "integer"
-              ) {
-                obj1[key] = [{ required: true, trigger: "blur" }];
-              } else {
-                obj1[key] = [{ required: true, trigger: "change" }];
+        if(this.resourceid==''){
+          this.channelregion.map(item => {
+              if (item.cType == val) {
+                this.selectregion = item;
+                  this.arrlist=this.orderObject(this.selectregion.params)
+                this.arrlist.map(item=>{
+                  if(item.default){
+                    obj[item.showname]=item.default
+                  }else{
+                    obj[item.showname]=''
+                  }
+                  if(item.required){
+                    if(item.type=='string'||item.type=='integer'){
+                      obj1[item.showname] = [{ required: true, trigger: "blur" }]
+                    }else{
+                      obj1[item.showname] = [{ required: true, trigger: "change" }];
+                    }
+                  }
+                })
+                obj.region = val;
+                obj.desc = "";
+                obj.name = "";
+                obj.type = this.selectregion.type
+                obj.isEnable = false;
               }
+            });
+        }else{
+          this.channelregion.map(item => {
+            if(item.cType==val){
+              this.selectregion = item
+              this.arrlist = this.orderObject(this.selectregion.params)
+              this.arrlist.map(item=>{
+                for(var key in this.channelrow.attributes.config){
+                  if(item.showname==key){
+                   obj[item.showname]=this.channelrow.attributes.config[key]
+                  }
+                  if(item.required){
+                    if(item.type=='string'||item.type=='integer'){
+                      obj1[item.showname] = [{ required: true, trigger: "blur" }]
+                    }else{
+                      obj1[item.showname] = [{ required: true, trigger: "change" }];
+                    }
+                  }
+                   obj.region = val;
+                    obj.desc = this.channelrow.attributes.desc;
+                    obj.name = this.channelrow.attributes.name;
+                    obj.type = this.selectregion.type
+                    obj.isEnable = this.channelrow.attributes.isEnable;
+                }
+              })
             }
-          }
-          obj.region = val;
-          obj.desc = "";
-          obj.name = "";
-          obj.type = this.selectregion.type
-          obj.isEnable = false;
+          })
         }
-      });
+      //读取acl列表,获取所属应用名称
+      if(this.channelrow && this.channelrow.attributes){
+          for (var key in this.channelrow.attributes.ACL.permissionsById) {
+          obj.applicationtText = key?key.substr(5):'';
+        }
+      }
+    
       this.addchannel = obj;
       this.addchannel.region = val;
       this.addrules = obj1;
-    
+    },
+    editorChannel(row){
+      this.channelrow = row
+      this.resourceid = row.id
+      this.channelForm = true;
+      this.channelupdated = "编辑";
+      this.removeauto(row.attributes.cType)
     },
     //弹窗订阅日志
     nowtime() {
@@ -636,6 +780,7 @@ export default {
   }
   /deep/ .el-button + .el-button {
     margin-left: 0;
+    
   }
   /deep/ .el-tabs__item {
     font-size: 16px;

@@ -3,6 +3,7 @@ import { Message } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import { promised } from 'q';
+import Cookies from 'js-cookie'
 // 创建axios实例
 axios.defaults.withCredentials =true
 
@@ -15,9 +16,9 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   config.headers["Content-Type"]='application/json'
   config.headers["Accept"]='application/json'
-  if (sessionStorage.getItem('token')) {
-    config.headers['token'] = sessionStorage.getItem('token') // 让每个请求携带自定义token 请根据实际情况自行修改
-  }
+  // if (Cookies.get('sessionToken')) {
+  //   config.headers['sessionToken'] = Cookies.get('sessionToken') // 让每个请求携带自定义token 请根据实际情况自行修改
+  // }
   return config
 }, error => {
   // Do something with request error
@@ -57,15 +58,18 @@ service.interceptors.response.use(
      sessionStorage.removeItem('roles')
      sessionStorage.removeItem('username')
      sessionStorage.removeItem('token')
-     sessionStorage.removeItem('list')
+     Cookies.set('username',''-1)
+    Cookies.set('sessionToken',''-1)
+     localStorage.removeItem('list')
      location.href = '/#/login'
     }
     else if(error.response.status===403){
       Message({
-        message: '没有操作权限',
+        message: '没有操作权限 r',
         type: 'error',
         duration: 2 * 1000
       })
+      return Promise.reject(error.response.data)
     }
     else{
       return Promise.reject(error.response.data)

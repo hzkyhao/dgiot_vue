@@ -33,7 +33,7 @@
                     
                      <dd v-if="item.isshow">{{item.attributes.secret}}</dd>
                      <dd v-else>{{item.attributes.secret.substr(0,4)+'********************'+item.attributes.secret.substr(24)}}<el-button @click="xianshi(item.id)" size="samll" style="margin-left:10px;position:absolute;top:30px" round>完整密钥</el-button></dd>
-                     <dt>应用描述</dt>
+                     <dt>应用名称</dt>
                      <dd v-if="item.attributes.desc">{{item.attributes.desc}}</dd>
                       <dd v-else>-</dd>
                   </dl>
@@ -44,10 +44,16 @@
                  <strong>操作:</strong>
               </p>
               <p class="editor">
-                 <el-link type="primary" @click="updateapp(item.id)">修改应用信息</el-link>
+                 <el-link type="primary" @click="updateapp(item.id)">修改应用</el-link>
               </p>
               <p class="editor">
-                 <el-link type="primary" @click="deleteapp(item.id)">删除应用信息</el-link>
+                 <el-link type="primary" @click="deleteapp(item.id)">删除应用</el-link>
+              </p>
+               <p class="editor">
+                 <el-link type="primary" @click="nodeDeployment(item)">节点部署</el-link>
+              </p>
+              <p class="editor">
+                 <el-link type="primary" @click="applicationDeployment(item)">应用部署</el-link>
               </p>
                </div></el-col>
          </el-row>
@@ -63,20 +69,43 @@
    </div>
     
     <!--新建弹框-->
-    <el-dialog title="添加新应用" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" :close-on-click-modal="false">
-      <div class="block">
+    <el-dialog title="添加应用" :visible.sync="dialogVisible" width="55%" :close-on-click-modal="false">
+      <div class="block" v-loading="loading"  element-loading-text="正在等待返回" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
         <el-form ref="form" :model="form" label-width="120px">
             <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                   <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                </el-select>
           </el-form-item> -->
-          <el-form-item label="应用描述">
+          <el-form-item label="应用名称">
             <el-input v-model="form.desc"  style="width:80%" placheholder="请输入应用名称"></el-input>
           </el-form-item>
           <el-form-item label="Token有效时间">
             <el-input type="number" v-model="form.time" style="width:80%" placheholder="请输入应用时间"></el-input><span style="margin-left:5px;">秒</span>
           </el-form-item>
+
+           <el-form-item label="文件资源">
+            <el-input v-model="form.file"  style="width:80%" placheholder="请输入url"></el-input>
+          </el-form-item>
+
+          <el-form-item label="组态资源">
+            <el-input v-model="form.topo"  style="width:80%" placheholder="请输入url"></el-input>
+          </el-form-item>
+
+           <el-form-item label="Graphql API">
+            <el-input v-model="form.graphql"  style="width:80%"  placheholder="请输入url"></el-input>
+          </el-form-item>
+
+           <el-form-item label="Restful API">
+            <el-input v-model="form.rest" style="width:80%"  placheholder="请输入url"></el-input>
+          </el-form-item>
+
+          
+           
+
+
+          
+
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -84,19 +113,44 @@
         <el-button type="primary" @click="Define">确 定</el-button>
       </span>
     </el-dialog>
+
+
     <!--修改应用信息-->
-    <el-dialog title="修改应用信息" :visible.sync="update" width="40%" :before-close="handleClose" :close-on-click-modal="false">
+    <el-dialog title="修改应用信息" :visible.sync="update" width="55%" :close-on-click-modal="false" >
       <div class="block">
         <el-form ref="form" :model="form1" label-width="120px">
-          <el-form-item label="应用描述">
+          <el-form-item label="应用名称">
             <el-input v-model="form1.desc"  style="width:80%"></el-input>
           </el-form-item>
-           <el-form-item label="Token">
-            <el-input v-model="form1.secret"  style="width:80%"></el-input>
+           <el-form-item label="访问密钥" >
+            <el-input v-model="form1.secret"  style="width:80%" readonly>
+               <el-button slot="append" icon="el-icon-refresh-right" @click="handleClickRefresh"></el-button>
+            </el-input>
           </el-form-item>
            <el-form-item label="Token有效时间">
             <el-input type="number" v-model="form1.time"  style="width:80%"  placheholder="请输入应用时间"></el-input><span style="margin-left:5px;">秒</span>
           </el-form-item>
+
+         <el-form-item label="文件资源">
+            <el-input v-model="form1.file"  style="width:80%" placheholder="请输入url"></el-input>
+          </el-form-item>
+
+          <el-form-item label="组态资源">
+            <el-input v-model="form1.topo"  style="width:80%" placheholder="请输入url"></el-input>
+          </el-form-item>
+
+           <el-form-item label="Graphql API">
+            <el-input v-model="form1.graphql"  style="width:80%"  placheholder="请输入url"></el-input>
+          </el-form-item>
+
+           <el-form-item label="Restful API">
+            <el-input v-model="form1.rest" style="width:80%"  placheholder="请输入url"></el-input>
+          </el-form-item>
+
+          
+           
+
+
         </el-form>
          </div>
       <span slot="footer" class="dialog-footer">
@@ -108,7 +162,7 @@
 </template>
 <script>
 let Base64 = require("js-base64").Base64;
-import {Addapp} from '@/api/appcontrol'
+import {Addapp,createRole} from '@/api/appcontrol'
 import Parse from 'parse'
 export default {
    inject:['reload'],
@@ -122,20 +176,30 @@ export default {
           name:'',
           product:'',
           time:'',
-          secret:''
+          file:'',
+          graphql:'',
+          rest:'',
+          topo:'',
+          secret:'',
+          desc:''
        },
       dialogVisible: false,
       form:{
          name:'',
          product:'',
-         time:'',
+         time:'18000',
+          file:'http://file.iotn2n.com/shapes/upload',
+          graphql:'http://cad.iotn2n.com:5080/iotapi/graphql',
+          rest:'http://cad.iotn2n.com:5080/iotapi',
+          topo:'http://shapes.iotn2n.com/',
          secret:''
          
       },
       appdata:[],
       objectid:'',
       selectapp:[],
-      arr:[]
+      arr:[],
+      loading:false,
     };
   },
   created() {
@@ -151,20 +215,46 @@ export default {
     
 //   },
   mounted() {
-       this.getAppdetail(this.pagesize,this.start)
-      //  this.getSelect()
+      this.getAppdetail(this.pagesize,this.start)
+
+      console.log('this.$route.query',this.$route.query);     
+
+      if(this.$route.query && this.$route.query.projectName){
+         this.dialogVisible = true
+         this.form.desc = this.$route.query.projectName
+      }
   },
   methods: {
      Define(){
+        this.loading = true
         var ranNum = Math.ceil(Math.random() * 25)
         var session = Base64.encode(String.fromCharCode(65+ranNum)+Math.ceil(Math.random()*10000000)+Number(new Date()))
-        Addapp(Number(this.form.time),this.form.desc,session).then(resultes=>{
-            this.$message({
-            type: "success",
-            message: "应用创建成功"
-         })
-         this.dialogVisible=false
-         this.getAppdetail(this.pagesize,this.start)
+        
+        let formParam = {
+           file:this.form.file,
+           graphql:this.form.graphql,
+           rest:this.form.rest,
+           topo:this.form.topo
+        }
+
+        Addapp(Number(this.form.time),this.form.desc,session,formParam).then(resultes=>{
+           if(resultes){
+              createRole(resultes.objectId,session,this.form.desc).then(response=>{
+                 if(response){
+                    this.$message({
+                        type: "success",
+                        message: "应用创建成功"
+                     })
+                     this.loading = false
+                     this.dialogVisible=false
+                     this.getAppdetail(this.pagesize,this.start)
+                 }
+              }).catch(error=>{
+                 this.loading = false
+                 this.$message.error(error.error)
+              })
+           }
+            
         }).catch(error=>{
            console.log(error)
         })
@@ -192,14 +282,19 @@ export default {
       })
    })
      },
-   //   getSelect(){
-   //       var Product =  Parse.Object.extend('_Product')
-   //          var product = new Parse.Query(Product)
-   //          product.find().then(res=>{
-   //             this.selectapp = res
-   //             this.form.product=res[0].id
-   //          })
-   //   },
+      handleClickRefresh() {
+      this.randomSecret();
+    },
+    
+    // 产生随机secrets
+    randomSecret() {
+      let ranNum = Math.ceil(Math.random() * 25);
+      this.form1.secret = Base64.encode(
+        String.fromCharCode(65 + ranNum) +
+          Math.ceil(Math.random() * 10000000) +
+          Number(new Date())
+      );
+    },
      handleSizeChange(val) {
       this.pagesize = val;
       this.getAppdetail(this.pagesize,this.start)
@@ -212,9 +307,15 @@ export default {
         this.objectid = id
          var App = Parse.Object.extend('App')
          var app = new Parse.Query(App)
+         //更新前获取数据
          app.get(id).then(res=>{
             this.update = true
             this.form1.time = res.attributes.config.expires
+            this.form1.file = res.attributes.config.file
+            this.form1.rest = res.attributes.config.rest
+            this.form1.topo = res.attributes.config.topo
+            this.form1.graphql = res.attributes.config.graphql
+
             this.form1.secret = res.attributes.secret
             this.form1.desc = res.attributes.desc
          },error=>{
@@ -224,10 +325,20 @@ export default {
      updatedDefine(){
          var App = Parse.Object.extend('App')
          var app = new Parse.Query(App)
+         // 修改
          app.get(this.objectid).then((object)=>{
-            object.set('config',{expires:this.form1.time})
+               
+            let formParam = {
+               expires:this.form1.time,
+               file:this.form1.file,
+               graphql:this.form1.graphql,
+               rest:this.form1.rest,
+               topo:this.form1.topo
+            }
+            object.set('config',formParam)
             object.set('secret',this.form1.secret)
             object.set('desc',this.form1.desc)
+            object.set('name',this.form1.desc)
             object.save().then(resultes=>{
              this.$message({
                type: "success",
@@ -267,6 +378,22 @@ export default {
           });          
         });
      },
+   // 跳转新增
+    nodeDeployment(row) {
+        this.$router.push({
+            path:'/roles/server_control',
+            query:{
+                appid:row.id,
+                appsecret:row.attributes.secret,
+            }
+        })
+    },
+   applicationDeployment(row){
+            this.$router.push({
+        path: "/applicationManagement/addApp",
+        query: { page: "add", title: "新增应用",appid:row.id}
+      });
+    },
      //显示，隐藏
      xianshi(id){
       var obj

@@ -47,16 +47,19 @@ export default {
     }
   },
   mounted() {
+   
     //websocket更新方法  
       if(!(window.location.pathname.indexOf('suke')!=-1)){
       //  Websocket.cInfo.host='115.159.59.185' 
-      // Websocket.cInfo.host='118.24.99.108'
-      // Websocket.cInfo.host='ci.iotn2n.com';                                
+      // Websocket.cInfo.host='111.231.219.51'
+      // Websocket.cInfo.host='ci.iotn2n.com';                               
       // Websocket.cInfo.host="cad.iotn2n.com"
-      //  Websocket.cInfo.host="192.168.2.13"
+      //  Websocket.cInfo.host="192.168.2.26"
       // Websocket.cInfo.host='132.232.121.164'
-      // Websocket.cInfo.host='148.70.105.65'
-      Websocket.cInfo.host = location.hostname;
+      // Websocket.cInfo.host='192.168.2.13'
+      // Websocket.cInfo.host = location.hostname;
+      Websocket.cInfo.host = this.$globalConfig.hostname
+
       Websocket.subInfo = {
         topic: "web/"+sessionStorage.getItem('token'), 
         qos: 2,
@@ -65,7 +68,6 @@ export default {
       Websocket.connect();
       Websocket.add_hook(/web\/.+/, function(Msg){
         this.datasource = JSON.parse(Msg)
-        console.log(Msg)
          if(this.datasource){
           eventBus.$emit(this.datasource.type, this.datasource);
          }

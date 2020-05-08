@@ -51,7 +51,7 @@
             type="text"
             placeholder="请输入验证码"
             class="yzm"
-            v-model="code"
+            v-model.number="code"
             style="width:50%;float:left;border:1px solid #cccccc;border-radius:0;"
           ></el-input>
           <el-button
@@ -245,10 +245,11 @@ export default {
             .then(result => {
               // Parse.User.become(result.sessionToken)
              this.postToken(result.sessionToken)
-          },function(error) {
-           _this.$message.error(error.error)
+          
                   // The token could not be validated.
-        });    
+        }).catch(error=>{
+          _this.$message.error(error)
+        })    
         } else {
           _this.$message({
             message: "信息错误",
@@ -275,7 +276,7 @@ export default {
             this.time = res.expire
           })
           .catch(error => {
-            console.log(error);
+            this.$message.error(error)
           });
         let interval = window.setInterval(function() {
           if (_this.time-- <= 0) {
@@ -309,8 +310,10 @@ export default {
                   type: "success"
                 });
                 sessionStorage.setItem("username",user.attributes.username);
-                sessionStorage.setItem("list", JSON.stringify(_this.routes));
+                localStorage.setItem("list", JSON.stringify(_this.routes));
                 sessionStorage.setItem("token", sessionToken);
+                Cookies.set("sessionToken", sessionToken)
+                Cookies.set('username',user.attributes.username)
                 _this.$router.push({ path: _this.redirect || "/dashboard" });
               });
             })      // The current user is now set to user.

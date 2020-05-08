@@ -5,7 +5,7 @@
         <el-breadcrumb-item
           :to="{ path: '/roles/applicationManagement' }"
         >{{$t('application.applicationmanagement')}}</el-breadcrumb-item>
-        <el-breadcrumb-item>{{$t('route.新增应用')}}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{page=='update'? '编辑应用':'新增应用'}}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-button
         type="primary"
@@ -21,41 +21,51 @@
       </div>
 
       <el-form ref="form" :model="form" label-width="180px">
-        <!-- 应用名称 -->
+        <!-- 工程名称 -->
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
               <el-form-item
-                label="应用单位"
+                label="工程单位"
                 prop="department"
                 :rules="[
-                    { required: true, message: '应用单位不能为空'},
+                    { required: true, message: '工程单位不能为空'},
                 ]"
               >
-                <el-input v-model="form.department" placeholder="应用单位"></el-input>
+                <el-input v-model="form.department" placeholder="工程单位"></el-input>
               </el-form-item>
               <el-form-item
                 :label="$t('application.applicationname')"
                 prop="name"
                 :rules="[
-                    { required: true, message: '应用名称不能为空'},
+                    { required: true, message: '工程名称不能为空'},
                 ]"
               >
-                <el-input v-model="form.name" :placeholder="$t('application.applicationname')"></el-input>
+                <el-input v-model="form.name" :placeholder="$t('application.applicationname')" readonly></el-input>
               </el-form-item>
-              <!-- 应用链接 -->
+              <!-- 工程链接 -->
               <el-form-item
                 :label="$t('application.applicationlink')"
                 prop="productIdentifier"
                 :rules="[
-                    { required: true, message: '应用链接不能为空'},
+                    { required: true, message: '工程链接不能为空'},
                 ]"
               >
-                <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
+        <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
                   <template slot="prepend">{{host}}</template>
                 </el-input>
-                <!-- 所属行业 -->
+ -->
+                  <el-select v-model="form.productIdentifier" placeholder="请选择" disabled>
+                  <el-option
+                    v-for="item in applicationList"
+                    :key="item.id"
+                    :label="host + item.attributes.desc"
+                    :value="item.attributes.desc">
+                  </el-option>
+                </el-select>
+      
               </el-form-item>
+          <!-- 所属行业 -->
               <el-form-item
                 :label="$t('application.industrytype')"
                 prop="category"
@@ -63,26 +73,48 @@
                     { required: true, message: '请选择所属行业',trigger: 'blur'},
                 ]"
               >
-                <el-cascader
+
+               <el-cascader
                   ref="category"
                   :options="treeData"
                   v-model="form.category"
                   :placeholder="$t('application.industrytype')"
                   clearable
-                ></el-cascader>
+                ></el-cascader> 
+
+                 
+
               </el-form-item>
-              <!--应用产品、-->
-              <el-form-item label="应用产品">
+
+              <!-- 所属应用(角色) app -->
+              <el-form-item
+                :label="$t('application.applicationtype')"
+                :rules="[
+                    { required: true, message: '请选择所属应用',trigger: 'blur'},
+                ]"
+              >    
+          <el-select @change="onApplicationchange" v-model="form.relationApp" :placeholder="$t('application.applicationtype')" disabled>
+            <el-option
+              v-for="item in applicationList"
+              :key="item.id"
+              :label="item.attributes.desc"
+              :value="item.attributes.desc">
+            </el-option>
+          </el-select>          
+          </el-form-item>
+
+              <!--工程产品、-->
+              <!-- <el-form-item label="工程产品">
                 <el-select v-model="form.product" multiple placeholder="请选择">
                   <el-option
                     v-for="(item,index) in productlist"
                     :key="index"
                     :label="item.attributes.name"
-                    :value="item.id">
-                  </el-option>
+                    :value="item.id"
+                  ></el-option>
                 </el-select>
-              </el-form-item>
-              <!-- 应用描述 -->
+              </el-form-item> -->
+              <!-- 工程描述 -->
               <el-form-item :label="$t('application.applicationdescription')">
                 <el-input
                   type="textarea"
@@ -97,7 +129,7 @@
           </el-col>
           <el-col :span="12">
             <div class="grid-content bg-purple-light">
-              <!-- 应用图片 -->
+              <!-- 工程图片 -->
               <el-form-item :label="$t('application.applicationpictures')">
                 <el-upload
                   class="upload-demo"
@@ -195,7 +227,7 @@
                 :label="$t('application.applicationaccessscale')"
                 prop="scale"
                 :rules="[
-                    { required: true, message: '请选择应用接入规模',trigger: 'change'},
+                    { required: true, message: '请选择工程接入规模',trigger: 'change'},
                 ]"
               >
                 <el-select v-model.number="form.scale" clearable>
@@ -227,11 +259,11 @@
                 <el-input v-model="form.secret">
                   <el-button slot="append" icon="el-icon-refresh-right" @click="handleClickRefresh"></el-button>
                 </el-input>
-              </el-form-item> -->
+              </el-form-item>-->
             </div>
           </el-col>
         </el-row>
-        <!-- 应用接入规模 -->
+        <!-- 工程接入规模 -->
 
         <!-- App Secret -->
       </el-form>
@@ -261,22 +293,26 @@ import {
   updateApp
 } from "@/api/applicationManagement";
 import Parse from "parse";
+import { resolve } from 'url';
+import { returnLogin } from '@/utils/return';
 export default {
   data() {
     return {
       imageUrl: false,
       host: window.location.origin + "/lot/",
+      applicationList: [], //所属行业
       // 表单
       form: {
-        name: "", //应用名称
+        name: "", //工程名称
         options: [], //所属行业
-        category: "", //中文所属行业
-        number: "", //应用编号
-        code: "", //应用授权码
-        scale: "", //应用接入规模
+        category: [], //中文所属行业
+        relationApp: "", //
+        number: "", //工程编号
+        code: "", //工程授权码
+        scale: "", //工程接入规模
         dashboard: "",
-        product:[],
-        department:'',//应用单位
+        product: [],
+        department: "", //工程单位
         scaleDate: [
           { id: 0, value: 100, label: "100" },
           { id: 1, value: 1000, label: "1000" },
@@ -285,14 +321,14 @@ export default {
           { id: 4, value: 1000000, label: "100万" },
           { id: 5, value: 10000000, label: "1000万" },
           { id: 6, value: 100000000, label: "1亿" }
-        ],
-        productIdentifier: "", //应用链接
+        ],        
+        productIdentifier: "", //工程链接
         fileList: [], //上传列表，
         fileList1: [], //上传列表
         img: "", //上传图片路径
         img1: "", //背景图片
         copyright: "", //版权信息
-        desc: "", //应用描述
+        desc: "", //工程描述
         time: 7200, //Token有效时间
         secret: "" //App Secret
       },
@@ -307,7 +343,7 @@ export default {
       // 参数
       argu: {},
       Notification: "",
-      productlist:[]//产品合级
+      productlist: [], //产品合级
     };
   },
   computed: {
@@ -318,31 +354,36 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : ""; //如果存在子级，则给父级添加一个children属性，并赋值
         return father.parentid == 0; //返回第一层
       });
+    },
+    applicationData() {
+      return [];
     }
   },
   created() {
     this.Industry();
     this.randomSecret();
-    this.getProductList()
+    this.getProductList();
     this.sessionToken = sessionStorage.getItem("token");
+     
   },
   mounted() {
-    this.estiPage();
+   this.estiPage();
   },
   methods: {
     // 刷新secret
     handleClickRefresh() {
       this.randomSecret();
     },
-    
-    getProductList(){
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.find().then(response=>{
-        if(response){
-          this.productlist = response
+    onApplicationchange(val){
+    },
+    getProductList(relAppid) {
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
+      product.find().then(response => {
+        if (response) {
+          this.productlist = response;
         }
-      })
+      });
     },
     // 产生随机secrets
     randomSecret() {
@@ -355,18 +396,25 @@ export default {
     },
     // 判断页面
     estiPage() {
-      this.argu = this.$route.query;
-      console.log(this.argu);
+      this.argu = this.$route.query;     
       this.content.title = this.argu.title;
       this.page = this.argu.page;
-      if (this.page == "update") {
+      
+        this.getApplication().then(response=>{
+          this.applicationList = response
+        if (this.page == "update") {
         this.form.name = this.argu.name;
         this.form.scale = Number(handleZero(this.argu.scale));
         this.form.secret = this.argu.secret;
         this.form.productIdentifier = this.argu.productIdentifier;
         this.content.objectId = this.argu.objectId;
-        this.form.department = this.argu.userUnit
-        this.form.category = this.argu.category.split("/");
+        this.form.department = this.argu.userUnit;
+        this.form.desc = this.argu.desc;
+        this.form.copyright = this.argu.copyright;
+
+        if(this.argu.category){
+          this.form.category = this.argu.category.split("/");
+        }
         if (this.argu.dashboard) {
           this.form.dashboard = this.argu.dashboard.substr(7);
         } else {
@@ -380,14 +428,35 @@ export default {
             url: this.argu.logo
           });
         }
-        if (this.argu.background != "") {
-          this.form.img1 = this.argu.background;
-          this.form.fileList1.push({
-            name: "background.png",
-            url: this.argu.background
-          });
+          if (this.argu.background != "") {
+            this.form.img1 = this.argu.background;
+            this.form.fileList1.push({
+              name: "background.png",
+              url: this.argu.background
+            });
+          }
+
+        this.form.relationApp = this.argu.acl;
+        }else{
+          var appid = this.$route.query.appid
+          var App = Parse.Object.extend('App')
+          var app = new Parse.Query(App)
+          app.get(appid).then(resultes=>{
+            if(resultes){
+              this.form.relationApp = resultes.attributes.desc
+              this.form.productIdentifier = resultes.attributes.desc
+              this.form.name = resultes.attributes.desc
+              
+            }
+          })
         }
-      }
+        }).catch(error=>{
+          returnLogin(error)
+        })
+        
+      
+         
+    
     },
     // 返回
     handleClickBack() {
@@ -461,103 +530,127 @@ export default {
       if (!this.isSubmit()) {
         return;
       }
-      var Project = Parse.Object.extend('Project')
-      var project = new Project()
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      // var User = Parse.Object.extend("_User");
-      // var user = new User();
-      // user.id = Parse.User.current().id
-      var acl = new Parse.ACL()
-      acl.setReadAccess(Parse.User.current().id,true)
-      acl.setWriteAccess(Parse.User.current().id,true)
-      project.set('ACL',acl)
-      var relation = project.relation('product')
-      this.form.product.map(item=>{
-        product.set('objectId',item)
-        relation.add(product)
-      })
-      project.set('title',this.form.name)
-      project.set('category',this.form.category.join("/"))
-      project.set('scale',this.form.scale)
-      project.set('productIdentifier',this.form.productIdentifier)
-      project.set('copyright',this.form.copyright)
-      project.set('desc',this.form.desc)
-      project.set('logo',this.form.img)
-      // project.set('secret',this.form.secret)
-      // project.set('config',{'expires':this.form.time})
-      project.set('background',this.form.img1)
-      project.set('userUnit',this.form.department)
-      // project.set('user',user)
+      var Project = Parse.Object.extend("Project");
+      var project = new Project();
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      var acl = new Parse.ACL();
+      acl.setRoleReadAccess(this.form.relationApp, true);
+      acl.setRoleWriteAccess(this.form.relationApp, true);
+      project.set("ACL", acl);
+      // var relation = project.relation("product");
+      // this.form.product.map(item => {
+      //   product.set("objectId", item);
+      //   relation.add(product);
+      // });
+      project.set("title", this.form.name);
+      project.set("category", this.form.category.join("/"));
+      project.set("scale", this.form.scale);
+      project.set("productIdentifier", this.form.productIdentifier);
+      project.set("copyright", this.form.copyright);
+      project.set("desc", this.form.desc);
+      project.set("logo", this.form.img);
+      project.set("background", this.form.img1);
+      project.set("userUnit", this.form.department);
       if (this.form.dashboard != "") {
-        project.set('dashboard',"http://" + this.form.dashboard)
+        project.set("dashboard", "http://" + this.form.dashboard);
       } else {
-        project.set('dashboard','')
+        project.set("dashboard", "");
       }
-      project.save().then(resultes=>{
-        if(resultes){
-                 this.$message({
-              message: "添加成功！",
-              type: "success"
-            });
-             this.$router.push({ path: "/roles/projectManagement" });
+      project.save().then(resultes => {
+        if (resultes) {
+          this.$message({
+            message: "添加成功！",
+            type: "success"
+          });
+          this.$router.push({ path: "/roles/projectManagement" });
+
+          var sorceId = resultes.id
+          var destId = this.form.relationApp
+
+          //添加关联
+          this.addRelation(sorceId,destId);
+ 
+
         }
-      })
+      });
+    },
+    addRelation(relColumName,relTableRowByObjectId){
+
+       this.$axiosWen.put('/classes/Project/' + relColumName, {
+            "app": {
+              "__op": "AddRelation",
+              "objects": [{
+                "__type": "Pointer",
+                "className": "App",
+                "objectId": relTableRowByObjectId //被关联的应用记录
+              }]
+            }
+          }
+          )
+          .then(function (response) {
+            console.log('addRelation',response);
+          })
+          .catch(function (error) {
+            console.log('addRelation',error);
+          });
+
+
     },
     // 修改
     handleClickUpdate() {
       if (!this.isSubmit()) {
         return;
       }
-      var Project = Parse.Object.extend('Project')
-      var project = new Project()
+      var Project = Parse.Object.extend("Project");
+      var project = new Project();
       project.id = this.argu.objectId;
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      // var User = Parse.Object.extend("_User");
-      // var user = new User();
-      // user.id = Parse.User.current().id
-      var acl = new Parse.ACL()
-      acl.setReadAccess(Parse.User.current().id,true)
-      acl.setWriteAccess(Parse.User.current().id,true)
-      project.set('ACL',acl)
-      var relation = project.relation('product')
-      this.form.product.map(item=>{
-        product.set('objectId',item)
-        relation.add(product)
-      })
-      project.set('title',this.form.name)
-      project.set('category',this.form.category.join("/"))
-      project.set('scale',this.form.scale)
-      project.set('productIdentifier',this.form.productIdentifier)
-      project.set('copyright',this.form.copyright)
-      project.set('desc',this.form.desc)
-      project.set('logo',this.form.img)
-      // project.set('secret',this.form.secret)
-      // project.set('config',{'expires':this.form.time})
-      project.set('background',this.form.img1)
-      project.set('userUnit',this.form.department)
+
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      var acl = new Parse.ACL();
+
+
+      acl.setRoleReadAccess(this.form.relationApp, true);
+      acl.setRoleWriteAccess(this.form.relationApp, true)
+
+      project.set("ACL", acl);
+      // var relation = project.relation("product");
+      // this.form.product.map(item => {
+      //   product.set("objectId", item);
+      //   relation.add(product);
+      // });
+      project.set("title", this.form.name);
+      project.set("category", this.form.category.join("/"));
+      project.set("scale", this.form.scale);
+      project.set("productIdentifier", this.form.productIdentifier);
+      project.set("copyright", this.form.copyright);
+      project.set("desc", this.form.desc);
+      project.set("logo", this.form.img);
+
+      project.set("background", this.form.img1);
+      project.set("userUnit", this.form.department);
       // project.set('user',user)
       if (this.form.dashboard != "") {
-        project.set('dashboard',"http://" + this.form.dashboard)
+        project.set("dashboard", "http://" + this.form.dashboard);
       } else {
-        project.set('dashboard','')
+        project.set("dashboard", "");
       }
-      project.save().then(resultes=>{
-        if(resultes){
-                 this.$message({
-              message: "修改成功！",
-              type: "success"
-            });
-             this.$router.push({ path: "/roles/projectManagement" });
+      project.save().then(resultes => {
+        if (resultes) {
+          this.$message({
+            message: "修改成功！",
+            type: "success"
+          });
+          this.$router.push({ path: "/roles/projectManagement" });
         }
-      })
+      });
     },
     // 获取行业信息
     Industry() {
       this.form.options = [];
-      var Datas = Parse.Object.extend("Datas");
-      var datas = new Parse.Query(Datas);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.equalTo("data.key", "category");
       datas.limit(1000);
       datas.find().then(
@@ -577,6 +670,25 @@ export default {
           this.$message.error(error.message);
         }
       );
+    },
+    // 获取应用列表
+    getApplication() {
+      return new Promise((resolve,reject)=>{
+        var App = Parse.Object.extend("App");
+          var query = new Parse.Query(App);
+          var _this = this;
+          query.limit(100);
+          query.find().then(
+            response => {
+              if (response) {
+                resolve(response)
+              }
+            },
+            error => {
+              reject(error)
+            }
+          );
+      })
     },
     open12() {
       this.Notification = this.$notify({

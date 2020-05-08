@@ -67,10 +67,10 @@ export function Compile(code) {
 }
 export function getDev(addr,productId) {
   return request({
-    url: `/dev/${addr}`,
+    url: `/device/${productId}/${addr}?keys=last_row(*)`,
     method: 'get',
     params: {
-      productId
+      
     }
   })
 }

@@ -78,7 +78,7 @@ export function addApp(body) {
   })
 }
 
-// 修改应用信息
+// 修改工程信息
 export function updateApp(id,body) {
   return request({
     url: `/classes/App/${id}`,
@@ -143,6 +143,24 @@ export function uploadServer(license) {
     method: 'get',
     params:{
       license:license
+    }
+  })
+}
+export function offlineServer(license) {
+  return request({
+    url: `/licupdate`,
+    method: 'get',
+    params:{
+      license:license
+    }
+  })
+}
+export function setUpLictool(appname)  {
+  return request({
+    url: '/iotapp',
+    method: 'post',
+    data:{
+      appname:appname
     }
   })
 }

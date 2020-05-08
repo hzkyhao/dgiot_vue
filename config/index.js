@@ -4,17 +4,24 @@
 
 const path = require('path')
 const os = require('os')
-function ip() {
-  let network = os.networkInterfaces();
-  let i = 0
-  let inter = network.WLAN || network['以太网'] || network['en0']
-  if (!inter) return 'localhost'
-  for (let i = 0, len = inter.length; i < len ; i++) {
-    if (inter[i].family == 'IPv4') {
-      return inter[i].address
-    }
+
+const globalConfig = require('../src/config/index')
+
+function getIPAdress() {
+  var interfaces = os.networkInterfaces();
+  
+  for (var devName in interfaces) {
+      var iface = interfaces[devName];
+      for (var i = 0; i < iface.length; i++) {
+          var alias = iface[i];
+          if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+              return alias.address;
+          }
+      }
   }
 }
+
+const ipAdress = getIPAdress();
 // const projectconfig = require('../config/projectconfig')
 module.exports = {
   dev: {
@@ -24,13 +31,14 @@ module.exports = {
       '/api': {
         // target: 'http://115.159.59.185:5080/iotapi',
         // target: 'http://192.168.2.13:5080/iotapi',
-        target: 'http://ci.iotn2n.com:5080/iotapi',
+        // target: 'http://ci.iotn2n.com:5080/iotapi',
         // target:'http://132.232.121.164:5080/iotapi',
-        // target: 'http://192.168.2.113:5080/iotapi',
+        // target: 'http://192.168.2.26:5080/iotapi',
         // target: 'http://148.70.50.192:5080/iotapi',
         // target:'http://148.70.105.65:5080/iotapi',
-        // target:'http://118.24.99.108:5080/iotapi',
+        // target:'http://111.231.219.51:5080/iotapi',
         // target:'http://cad.iotn2n.com:5080/iotapi',
+        target:globalConfig.serverURL,
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
@@ -39,7 +47,7 @@ module.exports = {
     },
     // https: true,
     // Various Dev Server settings
-    host: ip(), // can be overwritten by process.env.HOST
+    host: ipAdress, // can be overwritten by process.env.HOST
     port: 9527, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,

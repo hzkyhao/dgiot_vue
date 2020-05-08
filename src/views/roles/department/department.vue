@@ -27,10 +27,14 @@
         </el-form-item>
           <el-form-item :label="$t('department.category')">
             <el-select v-model="form.type" :placeholder="$t('department.category')" style="width:100%;">
-              <el-option :label="$t('department.ProvincialElectricPower')" value="省电力公司"></el-option>
-              <el-option :label="$t('department.powersupplybureau')" value="供电局"></el-option>
+              <!-- <el-option label="$t('department.ProvincialElectricPower')" value="省电力公司"></el-option>
+              <el-option label="$t('department.powersupplybureau')" value="供电局"></el-option>
               <el-option :label="$t('department.concertation')" value="集中器"></el-option>
-              <el-option :label="$t('department.meter')" value="电表"></el-option>
+              <el-option :label="$t('department.meter')" value="电表"></el-option> -->
+              <!-- <el-option label="质检中心" value="质检中心"></el-option>
+              <el-option label="泵单位" value="泵单位"></el-option>
+              <el-option label="实验室" value="实验室"></el-option> -->
+              <el-option label="数蛙科技" value="SW"></el-option>
             </el-select>
           </el-form-item>
       </el-form>
@@ -209,11 +213,17 @@ export default {
   mounted() {
     this.getDepartment();
     // console.log(this.treeData)
+    console.log(this.$store.state.user.roles)
   },
   methods: {
     standardName() {
       var Department = Parse.Object.extend("Department");
       var department = new Department();
+      var acl = new Parse.ACL()
+      this.$store.state.user.roles.map(item=>{
+        acl.setRoleReadAccess(item.name,true)
+        acl.setRoleWriteAccess(item.name,true)
+      })
       if (this.form.departmentid.length == 0) {
         department.set("ParentId", "0");
       } else {
@@ -222,6 +232,7 @@ export default {
           this.form.departmentid[this.form.departmentid.length - 1]
         );
       }
+      department.set('ACL',acl)
       department.set("name", this.form.name);
       department.set("org_type", this.form.type);
       department.set("leafnode", false);

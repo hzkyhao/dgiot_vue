@@ -12,7 +12,7 @@
         <el-input v-model="ruleForm2.account" placeholder="请输入账号"></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
-        <el-input v-model.number="ruleForm2.phone" placeholder="请输入手机号" :maxlength="11"></el-input>
+        <el-input v-model="ruleForm2.phone" placeholder="请输入手机号" :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="ruleForm2.email" placeholder="请输入邮箱"></el-input>
@@ -20,9 +20,9 @@
       <el-form-item label="姓名" prop="username">
         <el-input v-model="ruleForm2.username" placeholder="2-5个文字" :maxlength="5"></el-input>
       </el-form-item>
-       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm2.password" :maxlength="5"></el-input>
-      </el-form-item>
+       <!-- <el-form-item label="密码" prop="password">
+        <el-input v-model="ruleForm2.password"></el-input>
+      </el-form-item> -->
       <el-form-item label="部门选择">
           <el-cascader
             style="width:600px"
@@ -92,7 +92,7 @@ export default {
           this.ruleForm2.phone = resultes.attributes.phone
           this.ruleForm2.account = resultes.attributes.username
           this.ruleForm2.email = resultes.attributes.email
-          this.ruleForm2.password = resultes.attributes.password
+          // this.ruleForm2.password = resultes.attributes.password
           // this.ruleForm2.departmentid.push(resultes.attributes.department.id)
           this.getDepartment()
         })
@@ -113,9 +113,9 @@ export default {
           res.set("nick", this.ruleForm2.username);
           res.set("phone", this.ruleForm2.phone);
           res.set("email", this.ruleForm2.email);
-          if(this.ruleForm2.password!=''){
-             res.set("password", this.ruleForm2.password);
-          }
+          // if(this.ruleForm2.password!=''){
+          //    res.set("password", this.ruleForm2.password);
+          // }
           res.save().then(resultes => {
               this.$message({
                 message: "更改成功",

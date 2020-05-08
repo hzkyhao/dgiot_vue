@@ -39,7 +39,7 @@ module.exports = {
         '帮助中心':'帮助中心',
         '文档中心':'文档中心',
         'API接口':'API接口',
-        '新增应用':'新增应用',
+        '新增工程':'新增应用',
         '产品详情':'产品详情',
         '规则引擎':'规则引擎',
         '规则管理':'规则管理',
@@ -267,7 +267,9 @@ module.exports = {
          'newstorage':'物存储',
          'modeltemplate':'物模型模板',
          'modelstorage':'物模型存储',
-         'modeldataoutput':'物模型数据输出'
+         'modeldataoutput':'物模型数据输出',
+         'exportpro':'导出产品',
+         'importpro':'导入产品'
       },
       application:{
         'applicationmanagement':'应用（项目）服务',
@@ -277,6 +279,7 @@ module.exports = {
         'applicationname':'应用名称',
         'scaleofservice':'服务规模',
         'industrytype':'所属行业',
+        'applicationtype':'所属应用',
         'createtime':'创建时间',
         'newapplication':'新建应用',
         'secretkey':'密钥',

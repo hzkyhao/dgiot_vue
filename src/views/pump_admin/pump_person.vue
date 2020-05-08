@@ -42,7 +42,11 @@
       <div class="block_table">
         <el-table :data="tableData" stripe style="width: 100%;text-align:center" border>
           <el-table-column label="序号" width="50" type="index" align="center"></el-table-column>
-          <el-table-column label="企业名称" width="180" align="center"></el-table-column>
+          <el-table-column label="企业名称" width="180" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.attributes.department.attributes.name}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" width="180" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.attributes.name}}</span>
@@ -525,6 +529,7 @@ export default {
       if (this.formInline.status != "all") {
         personauthtication.equalTo("status", this.formInline.status);
       }
+      personauthtication.include('department')
       personauthtication.ascending('- createdAt')
       personauthtication.skip(this.start);
       personauthtication.limit(this.pagesize);
@@ -534,6 +539,7 @@ export default {
           personauthtication.find().then(
             response => {
               if (response) {
+                console.log(response)
                 this.tableData = response;
               }
             },

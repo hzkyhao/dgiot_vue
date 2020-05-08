@@ -83,7 +83,7 @@
               <div class="editorheader">
                 <el-form :model="editor1" :inline="true" label-width="80px" size="mini">
                   <el-form-item label="调试功能">
-                    <el-select v-model="editor1.function" :clear="clearEditor1" @change="selectMessage">
+                    <el-select v-model="editor1.function"  @change="selectMessage">
                       <el-option v-for="(item,index) in dataslist" :key="index" :value="item.id" :label="item.attributes.data.name"></el-option>
                     </el-select>
                   </el-form-item>
@@ -241,7 +241,7 @@
       :visible.sync="messageDialogVisible"
       width="50%"
       :close-on-click-modal="false"
-      :before-close="handleCloseMessage">
+      >
       <el-form :model="messageform" :inline="true" size="small">
         <el-form-item label="功能名称">
           <el-input type="text" v-model="messageform.name"></el-input>
@@ -524,8 +524,8 @@ export default {
            datasobj.type= response.attributes.devType
            datasobj.productid=response.id 
            datasobj.commond = obj
-           var Datas = Parse.Object.extend('Datas')
-           var datas = new Datas()
+           var Dict = Parse.Object.extend('Dict')
+           var datas = new Dict()
            var acl = new Parse.ACL()
            var userid= Parse.User.current().id
            acl.setReadAccess(userid,true)
@@ -537,7 +537,7 @@ export default {
              if(resultes){
                this.$message.success('创建成功')
               this.messageDialogVisible = false
-              this.getDatas()
+              this.getDict()
              }
            },error=>{
              returnLogin(error)
@@ -547,9 +547,9 @@ export default {
       
     },
     //dataslist初始化数据
-    getDatas(){
-    var Datas = Parse.Object.extend('Datas')
-    var datas = new Parse.Query(Datas)
+    getDict(){
+    var Dict = Parse.Object.extend('Dict')
+    var datas = new Parse.Query(Dict)
     datas.equalTo('type','CMD')
     datas.equalTo('data.productid',this.devices.productid)
     datas.find().then(resultes=>{
@@ -610,13 +610,13 @@ export default {
     },
     //删除datas
     deleteMessage(){
-      var Datas = Parse.Object.extend('Datas')
-      var datas = new Datas
+      var Dict = Parse.Object.extend('Dict')
+      var datas = new Dict
       datas.id = this.editor1.function
       datas.destroy().then(deleteresponse=>{
         if(deleteresponse){
           this.$message.success('删除成功')
-          this.getDatas()
+          this.getDict()
           this.editor1.function=''
           editor1.setValue('')
         }
@@ -625,14 +625,14 @@ export default {
       })
     },
     editorMessage(){
-      var Datas = Parse.Object.extend('Datas')
-      var datas = new Datas
+      var Dict = Parse.Object.extend('Dict')
+      var datas = new Dict
       datas.id = this.editor1.function
       this.detaildatas.commond = JSON.parse(editor1.getValue())
       datas.save().then(resultes=>{
         if(resultes){
           this.$message.success('编辑成功')
-          this.getDatas()
+          this.getDict()
         }
       },error=>{
         returnLogin(error)
@@ -647,7 +647,7 @@ export default {
         this.devices.productid = this.$route.query.productid;
         this.getDevices(this.productid, true);
         this.getChannel(this.devices.productid);
-        this.getDatas()
+        this.getDict()
       },error=>{
         returnLogin(error)
       });
@@ -669,7 +669,7 @@ export default {
     },
     //设备
     getDevices(productid, isfirst) {
-      var Devices = Parse.Object.extend("Devices");
+      var Devices = Parse.Object.extend("Device");
       var devices = new Parse.Query(Devices);
       devices.equalTo("product", productid);
       devices.skip((this.formData.pageIndex - 1) * this.formData.pageSize);

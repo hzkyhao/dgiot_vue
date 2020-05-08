@@ -183,6 +183,19 @@ export function addcon(config) {
     }
   })
 }
+export function passwordreset(account,code,password) {
+  return request({
+    url: '/verify_code/passwordreset',
+    method: 'post',
+    params:{
+      account:account,
+      code:code,
+    },
+    data:{
+      password:password
+    }
+  })
+}
 export function timestampToTime(timestamp) {
   var date = new Date(timestamp * 1000) 
 	var Y = date.getFullYear() + '-';

@@ -1,3 +1,4 @@
+
 <template>
   <div class="evidence_detail">
     <div class="evidence_left">
@@ -5,33 +6,33 @@
         <p
           style="border-bottom:1px solid #cccccc;color:#409EFF;font-size:14px;height:40px;margin:0"
         >取证产品信息</p>
-        <el-form ref="productform" :model="productform" label-width="120px" size="small">
+        <el-form ref="productform" :model="productform" label-width="120px" size="small" class="productform">
           <el-row>
             <el-col :span="8">
-              <el-form-item label="检验编号">
+              <el-form-item label="检验编号:">
+                <span>{{taskform.pump_id}}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="水泵名称:">
                 <span></span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="水泵名称">
-                <span></span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="水泵型号">
-                <span></span>
+              <el-form-item label="水泵型号:">
+                <span>{{taskform.pump_use}}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="水泵类型">
-                <span></span>
+              <el-form-item label="水泵类型:">
+                <span>{{taskform.pump_model}}</span>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="检验标准">
-                <span></span>
+              <el-form-item label="检验标准:">
+                <span>{{taskform.datas.name}}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -41,8 +42,9 @@
         <p
           style="border-bottom:1px solid #cccccc;color:#409EFF;font-size:14px;height:40px;margin:0"
         >取证设备信息</p>
-        <el-form :model="devicesform" label-position="top">
-          <div class="devices1" style="padding:10px;">
+       
+          <div class="devices1" style="padding:10px;" v-for="item in tableData" :key="item.id">
+             <el-form :model="item" label-position="top">
             <el-row style="border-bottom:1px solid #dddddd">
               <el-col :span="2" style="text-align:right">
                 <span class="svg-container">
@@ -50,132 +52,45 @@
                 </span>
               </el-col>
               <el-col :span="3">
-                <el-form-item label="摄像头">
-                  <span>中央一号摄像头</span>
+                <el-form-item label="设备名称">
+                  <span>{{item.name}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="4">
                 <el-form-item label="设备统一编号">
-                  <span>中央一号摄像头</span>
+                  <span>{{item.devaddr}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="取证用途">
-                  <span>中央一号摄像头</span>
+                  <span v-if="item.basedata.evidenceuse">{{item.basedata.evidenceuse}}</span>
+                  <span></span>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="IP">
-                  <span>中央一号摄像头</span>
+                  <span>{{item.basedata.ip}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="MAC地址">
-                  <span>中央一号摄像头</span>
+                  <span>{{item.basedata.mac}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="生产厂家">
-                  <span>中央一号摄像头</span>
+                  <span>{{item.basedata.factory}}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="3">
                 <el-form-item label="投运时间">
-                  <span>中央一号摄像头</span>
+                  <span>{{utc2beijing(item.createdAt)}}</span>
                 </el-form-item>
               </el-col>
             </el-row>
-          </div>
-          <div class="devices1" style="padding:10px;">
-            <el-row style="border-bottom:1px solid #dddddd">
-              <el-col :span="2" style="text-align:right">
-                <span class="svg-container">
-                  <svg-icon icon-class="erciyuanjian" style="width:4rem;height:4rem;" />
-                </span>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="二次软件取证终端">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item label="设备统一编号">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="取证用途">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="IP">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="MAC地址">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="生产厂家">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="投运时间">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="devices1" style="padding:10px;">
-            <el-row style="border-bottom:1px solid #dddddd">
-              <el-col :span="2" style="text-align:right">
-                <span class="svg-container">
-                  <svg-icon icon-class="pingban" style="width:3rem;height:3rem;" />
-                </span>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="平板取证终端">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="4">
-                <el-form-item label="设备统一编号">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="取证用途">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="IP">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="MAC地址">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="生产厂家">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-              <el-col :span="3">
-                <el-form-item label="投运时间">
-                  <span>中央一号摄像头</span>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-        </el-form>
-      </div>
+           </el-form>
+        </div>
+      </div> 
       <div class="left3">
         <p
           style="border-bottom:1px solid #cccccc;color:#409EFF;font-size:14px;height:40px;margin:0"
@@ -384,8 +299,6 @@
                   action="https://jsonplaceholder.typicode.com/posts/"
                   :limit="1"
                   accept=".PDF"
-                  :before-upload="beforeUpload"
-                  :on-success="successUpload"
                 >
                   <el-button size="small" type="primary">选  择</el-button>
                 </el-upload>
@@ -414,34 +327,34 @@
               label-position="left"
             >
               <el-form-item label="检验编号">
-                <span>{{}}</span>
+                <span>{{taskform.pump_id}}</span>
               </el-form-item>
               <el-form-item label="委托方">
-                <span>{{}}</span>
+                <span>{{taskform.factory}}</span>
               </el-form-item>
               <el-form-item label="委托方联系人">
                 <span>{{}}</span>
               </el-form-item>
               <el-form-item label="联系方式">
-                <span>{{}}</span>
+                <span>{{taskform.entrust_phone}}</span>
               </el-form-item>
               <el-form-item label="检测单位">
-                <span>{{}}</span>
+                <span>{{taskform.detection_unit}}</span>
               </el-form-item>
               <el-form-item label="检测实验室">
-                <span>{{}}</span>
+                <span>{{taskform.lab}}</span>
               </el-form-item>
               <el-form-item label="检测台">
-                <span>{{}}</span>
+                <span>{{taskform.internal_num}}</span>
               </el-form-item>
               <el-form-item label="检测人员">
-                <span>{{}}</span>
+                <span>{{taskform.detection_unit}}</span>
               </el-form-item>
               <el-form-item label="U盾序列号">
                 <span>{{}}</span>
               </el-form-item>
               <el-form-item label="检测时间">
-                <span>{{}}</span>
+                <span>{{taskform.test_time}}</span>
               </el-form-item>
             </el-form>
           </div>
@@ -451,20 +364,78 @@
   </div>
 </template>
 <script>
+import { returnLogin } from '@/utils/return';
+import Parse from 'parse'
+import deepClone from '@/utils/deepClone';
+import ajax from '@/utils/$ajax'
 export default {
   data() {
     return {
       form: {},
-      productform: {},
-      devicesform: {},
-      evidenceform: {},
+      productform: {
+        
+      },
+      devicesform: {
+
+      },
+      evidenceform: {
+
+      },
       reportform: {
         filesrc: ""
-      }
+      },
+      taskform:{
+
+      },
+      //取证设备信息
+      tableData:[]
     };
   },
-  mounted() {},
-  methods: {}
+  mounted() {
+    this.evidenceDetail()
+  },
+  methods: {
+    utc2beijing(utc_datetime) {
+	// 转为正常的时间格式 年-月-日 时:分:秒
+      var date = new Date(utc_datetime);  
+      var Y = date.getFullYear() + '-';
+      var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+      var D = (date.getDate()+1 <= 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
+      var h = (date.getHours()+1 <= 10 ? '0'+(date.getHours()) : date.getHours())  + ':';
+      var m = (date.getMinutes()+1 <= 10 ? '0'+(date.getMinutes()) : date.getMinutes())  + ':';
+      var s = (date.getSeconds()+1 <= 10 ? '0'+(date.getSeconds()) : date.getSeconds());
+      return Y+M+D+h+m+s; 
+    },
+    evidenceDetail(){
+      var taskid = this.$route.query.taskid
+      var PumpClient = Parse.Object.extend('PumpClient')
+      var pumpclient = new Parse.Query(PumpClient)
+      pumpclient.get(taskid).then(resultes=>{
+        if(resultes){
+          this.taskform = deepClone(resultes.attributes)
+          this.evidenceDevice()
+        }
+      },error=>{
+        returnLogin(error)
+        
+      })
+    },
+    evidenceDevice(){
+      var where={}     
+      where["basedata.laboratoryid"] = this.taskform.laboratory.id;
+        var devicesQuery={
+            where:JSON.stringify(where)
+        }
+        ajax('/classes/Device','GET',devicesQuery).then(resDevice=>{
+          if(resDevice){
+              this.tableData = deepClone(resDevice.results);
+              
+          }
+        }).catch(error=>{
+          console.log(error)
+        })
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -532,6 +503,11 @@ export default {
     }
     /deep/ .el-input-group{
         width:300px;
+    }
+  }
+  /deep/ .productform{
+    /deep/ span{
+      color:#67C23A;
     }
   }
 }

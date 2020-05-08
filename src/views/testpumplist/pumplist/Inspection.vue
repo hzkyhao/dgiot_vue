@@ -16,12 +16,6 @@
             </el-form-item>
             <el-form-item label="检验标准">
               <el-select v-model="formInline.standard" placeholder="检验标准">
-                <!-- <el-option
-                  v-for="(item,key) in form.standard"
-                  :label="item.data.inspection_standard"
-                  :value="item.data.inspection_standard"
-                  :key="key"
-                ></el-option>-->
                 <el-option
                   v-for="(item,key) in form.standard"
                   :label="item.attributes.name"
@@ -33,12 +27,12 @@
             <el-form-item label="委托单位">
               <el-input v-model="formInline.factory" placeholder="请输入委托单位"></el-input>
             </el-form-item>
-            <el-form-item label="检测人员">
+            <!-- <el-form-item label="检测人员">
               <el-select v-model="formInline.region" placeholder="检测人员">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="检测任务编号">
               <el-input v-model="formInline.name" placeholder="检测任务编号"></el-input>
             </el-form-item>
@@ -76,7 +70,7 @@
             </el-form-item>
           </div>
         </el-form>
-
+ 
         <div class="tasklist">
           <el-table :data="taskData" stripe border style="width:100%;text-align:center">
             <el-table-column type="index" label="id"></el-table-column>
@@ -102,12 +96,12 @@
             </el-table-column>
             <el-table-column label="水泵类型" align="center" width="150">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.pump_model}}</span>
+                <span>{{scope.row.attributes.pump_use}}</span>
               </template>
             </el-table-column>
             <el-table-column label="水泵型号" align="center" width="150">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.pump_type}}</span>
+                <span>{{scope.row.attributes.pump_model}}</span>
               </template>
             </el-table-column>
             <el-table-column label="检验单位" align="center" width="200">
@@ -115,9 +109,9 @@
                 <span>{{scope.row.attributes.detection_unit}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="检验标准" align="center" width="100">
+            <el-table-column label="检验标准" align="center" width="200">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.standard}}</span>
+                <span>{{scope.row.attributes.datas.name}}</span>
               </template>
             </el-table-column>
             <el-table-column label="检验实验室" align="center" width="200">
@@ -130,7 +124,7 @@
                 <span>{{scope.row.attributes.internal_num}}</span>
               </template>
             </el-table-column>
-
+ 
             <el-table-column label="创建日期" align="center" width="150">
               <template slot-scope="scope">
                 <span>{{new Date(scope.row.createdAt).toLocaleDateString()}}</span>
@@ -141,7 +135,7 @@
                 <span>{{timestampToTime(scope.row.attributes.test_time)}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="检测人员" align="center" width="100">
+            <!-- <el-table-column label="检测人员" align="center" width="100">
               <template slot-scope="scope"></template>
             </el-table-column>
             <el-table-column label="任务状态" align="center" width="100">
@@ -149,7 +143,7 @@
             </el-table-column>
             <el-table-column label="审核状态" align="center" width="100">
               <template slot-scope="scope"></template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column width="300" label="查看" align="center">
               <template slot-scope="scope">
                 <el-button
@@ -166,10 +160,11 @@
                 ></el-button>
                 <el-button
                   type="primary"
-                  @click="taskDetail(scope.row.id,scope.row.attributes.internal_num)"
+                  @click="taskDetail(scope.row.id,scope.row.attributes.test_bed.id)"
                   size="mini"
                 >详情</el-button>
-                <el-button type="primary" size="mini" @click="clientView(scope.row)">取证</el-button>
+                <el-button type="primary" size="mini" @click="clientView(scope.row,scope.$index)">取证</el-button>
+                <el-button type="primary" size="mini" @click="evidenceView(scope.row)">查证</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -315,7 +310,7 @@
               <span>{{scope.row.attributes.internal_num}}</span>
             </template>
           </el-table-column>
-
+ 
           <el-table-column label="创建日期" align="center" width="150">
             <template slot-scope="scope">
               <span>{{new Date(scope.row.createdAt).toLocaleDateString()}}</span>
@@ -326,7 +321,7 @@
               <span>{{timestampToTime(scope.row.attributes.test_time)}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="检测人员" align="center" width="100">
+          <!-- <el-table-column label="检测人员" align="center" width="100">
             <template slot-scope="scope"></template>
           </el-table-column>
           <el-table-column label="任务状态" align="center" width="100">
@@ -334,7 +329,7 @@
           </el-table-column>
           <el-table-column label="审核状态" align="center" width="100">
             <template slot-scope="scope"></template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column width="300" label="查看" align="center">
             <template slot-scope="scope">
               <el-button
@@ -413,8 +408,8 @@
                     ></el-option>
                   </el-select>
                 </el-form-item>-->
-                <el-form-item label="检验标准" prop="region">
-                  <el-select v-model="form.region" placeholder="请选择检验标准" @change="changeStandard">
+                <el-form-item label="质检项目" prop="region">
+                  <el-select v-model="form.region" placeholder="质检项目" @change="changeStandard">
                     <el-option
                       v-for="(item,key) in form.standard"
                       :label="item.attributes.name"
@@ -452,6 +447,21 @@
                     :picker-options="pickerOptionsEnd"
                     value-format="timestamp"
                   ></el-date-picker>
+                </el-form-item>
+                <el-form-item label="检测标准" prop="reportmodule">
+                  <el-select
+                    v-model="form.reportmodule"
+                    value-key="name"
+                    placeholder="请选择检验标准"
+                    @change="changeReport"
+                  >
+                    <el-option
+                      v-for="item in modulelist"
+                      :label="item.attributes.data.name"
+                      :value="item.attributes.data"
+                      :key="item.id"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
             </el-col>
@@ -527,6 +537,8 @@ import Parse from "parse";
 import { getModule, deriveReport } from "@/api/reportmodule/reportmodule";
 import { returnLogin } from "@/utils/return";
 import { gettables } from "@/api/login";
+import Cookies from "js-cookie";
+import $ from "jquery";
 var province, city, discrict;
 export default {
   data() {
@@ -619,7 +631,8 @@ export default {
         entrustphone: "", //委托人联系方式
         laboratory: "", //实验室,
         checktype: "性能检测", //水泵检测类型
-        usetype: "" //水泵用途
+        usetype: "", //水泵用途
+        reportmodule: "" //检测标准
       },
       options: [
         {
@@ -649,6 +662,9 @@ export default {
           { required: true, message: "请选择检测单位", trigger: "change" }
         ],
         region: [
+          { required: true, message: "请选择质检项目", trigger: "change" }
+        ],
+        reportmodule: [
           { required: true, message: "请选择检验标准", trigger: "change" }
         ],
         produt: [
@@ -710,6 +726,7 @@ export default {
         starttime: "",
         endtime: ""
       },
+      modulelist: [], //检测标准列表
       pumpclientid: "", //编辑时的任务ID
       departmentname: "", //单位名称
       laboratoryname: "", //实验室名称
@@ -729,7 +746,7 @@ export default {
   methods: {
     //初始化实验室
     getDepartmentLaboratory(val, laboratoryid, testbedid) {
-      var Department = Parse.Object.extend("Department");
+      var Department = Parse.Object.extend("PumpDepartment");
       var department = new Parse.Query(Department);
       department.equalTo("org_type", "实验室");
       department.equalTo("ParentId", val);
@@ -746,19 +763,32 @@ export default {
       );
     },
     getStandard() {
+      var InspectionStandard = Parse.Object.extend("InspectionStandard");
+      var inspectionstandard = new Parse.Query(InspectionStandard);
+      inspectionstandard.find().then(
+        resultes => {
+          if (resultes) {
+            console.log(resultes);
+            this.modulelist = resultes;
+          }
+        },
+        error => {
+          returnLogin(error);
+        }
+      );
       //  getModule()
       //   .then(resultes => {
       //     if (resultes) {
-      //       this.form.standard = resultes.data;
-      //       console.log(this.form.standard)
+ 
+      //       console.log(this.modulelist)
       //     }
       //   })
       //   .catch(error => {
-
+ 
       //   });
       var Report = Parse.Object.extend("Report");
       var report = new Parse.Query(Report);
-
+ 
       report.find().then(
         resultes => {
           this.form.standard = resultes;
@@ -770,7 +800,7 @@ export default {
     },
     //得到泵单位
     getDepartmentPump() {
-      var Department = Parse.Object.extend("Department");
+      var Department = Parse.Object.extend("PumpDepartment");
       var department = new Parse.Query(Department);
       department.equalTo("org_type", "泵单位");
       department.find().then(
@@ -957,7 +987,7 @@ export default {
         this.form.region = "";
       });
     },
-
+ 
     handleSizeChange1(val) {
       this.pagesize1 = val;
       this.getTasktable1();
@@ -1018,11 +1048,11 @@ export default {
           } else {
             this.dialogtext = "新增";
           }
-          var Department = Parse.Object.extend("Department");
+          var Department = Parse.Object.extend("PumpDepartment");
           var department = new Department();
           department.id = this.form.client;
           pumpclient.set("department", department);
-          var Department1 = Parse.Object.extend("Department");
+          var Department1 = Parse.Object.extend("PumpDepartment");
           var department1 = new Department1();
           department1.id = this.form.laboratory;
           pumpclient.set("laboratory", department1);
@@ -1036,8 +1066,7 @@ export default {
           pumpclient.set("pump_id", this.form.inspection_number);
           pumpclient.set("province", province);
           pumpclient.set("city", city);
-          // pumpclient.set('datats',JSON.parse(this.form.region))
-          pumpclient.set("datats", {});
+          pumpclient.set("datas", this.form.reportmodule);
           pumpclient.set("district", discrict);
           pumpclient.set("test_time", this.form.endtime / 1000);
           pumpclient.set("internal_num", this.testbedname);
@@ -1049,57 +1078,80 @@ export default {
           pumpclient.set("pump_use", this.form.usetype);
           pumpclient.save().then(
             resultes => {
-              this.$message({
-                message: `${this.dialogtext}成功`,
-                type: "success"
-              });
               if (this.pumpclientid == "") {
                 var Report = Parse.Object.extend("Report");
-                var report = new Report();
+                var report = new Parse.Query(Report);
                 report.id = this.standard;
-                var relation = report.relation("report");
-                var query = relation.query();
-                query.find().then(responseproduct => {
+                report.get(this.standard).then(res => {
                   var userId = Parse.User.current().id;
                   var arr = [];
-                  responseproduct.map(item => {
+                  res.attributes.product.map(item => {
                     arr.push(
                       new Promise((resolve, reject) => {
-                        var Devices = Parse.Object.extend("Devices");
-                        var devices = new Devices();
-                        var acl1 = new Parse.ACL();
-                        acl1.setReadAccess(userId, true);
-                        acl1.setWriteAccess(userId, true);
-                        acl1.setRoleReadAccess("pump", true);
-                        acl1.setRoleWriteAccess("pump", true);
-                        devices.set("ACL", acl1);
-                        devices.set("basedata", item.attributes.config);
-                        //添加任务号
-                        devices.set("brand", resultes.id);
-                        //添加测试台体id
-                        devices.set("devaddr", this.form.bedname);
-                        //添加报告id
-                        devices.set("name", this.standard);
-                        return devices.save().then(
-                          resultes => {
-                            resolve(resultes);
+                        return $.ajax({
+                          type: "GET",
+                          contentType: "application/json",
+                          dataType: "json",
+                          headers: {
+                            sessionToken: Cookies.get("access_token")
                           },
-                          error => {
-                            reject(error.message);
+                          url:
+                            Cookies.get("apiserver") +
+                            "/classes/Product/" +
+                            item,
+                          success: response => {
+                            if (response) {
+                              var _this = this;
+                              var appid = Cookies.get("appids");
+                              var ACL = {
+                                key: {}
+                              };
+                              for (var key in ACL) {
+                                key = "role:" + Cookies.get("appids");
+                                ACL[key] = {
+                                  read: true,
+                                  write: true
+                                };
+                              }
+                              delete ACL.key;
+                              $.ajax({
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json",
+                                headers: {
+                                  sessionToken: Cookies.get("access_token")
+                                },
+                                data: JSON.stringify({
+                                  ACL: ACL,
+                                  basedata: response.config,
+                                  status: resultes.id,
+                                  devaddr: _this.form.bedname,
+                                  name: _this.standard
+                                }),
+                                url:
+                                  Cookies.get("apiserver") + "/classes/Device",
+                                success: result => {
+                                  resolve(result);
+                                },
+                                fail: error => {
+                                  reject(error);
+                                }
+                              });
+                            }
                           }
-                        );
+                        });
                       })
                     );
                     Promise.all(arr)
                       .then(data => {
-                        if (data.length == responseproduct.length) {
+                        if (data.length == res.attributes.product.length) {
                           this.$message({
                             message: "添加成功",
                             type: "success"
                           });
                           this.pumpclientid = "";
                           this.taskdialog = false;
-                          this.getTasktable(this.pagesize, this.start);
+                          this.getTasktable();
                         }
                       })
                       .catch(error => {
@@ -1113,7 +1165,7 @@ export default {
               } else {
                 this.pumpclientid = "";
                 this.taskdialog = false;
-                this.getTasktable(this.pagesize, this.start);
+                this.getTasktable();
               }
             },
             error => {
@@ -1123,6 +1175,8 @@ export default {
         }
       });
     },
+    //检验标准选择事件
+    changeReport(val) {},
     //编辑任务
     editorClient(id) {
       this.$nextTick(() => {
@@ -1145,11 +1199,7 @@ export default {
       pumpclient.get(id).then(
         response => {
           this.taskdialog = true;
-          //  this.form.standard.map(item=>{
-          //    if(response.attributes.standard==item.data.inspection_standard){
-          //      this.form.region = JSON.stringify(item.data)
-          //    }
-          //  })
+          this.form.reportmodule = response.attributes.datas;
           this.form.region = response.attributes.standard;
           this.standard = response.attributes.standard;
           this.form.usetype = response.attributes.pump_use;
@@ -1204,64 +1254,149 @@ export default {
       }
     },
     deleteClient(id) {
-      var PumpClient = Parse.Object.extend("PumpClient");
-      var pumpclient = new PumpClient();
-      pumpclient.id = id;
-      pumpclient.destroy().then(resultes => {
-        if (resultes) {
-          var arr = [];
-          var Devices = Parse.Object.extend("Devices");
-          var devices = new Parse.Query(Devices);
-          devices.equalTo("brand", id);
-          devices.find().then(response => {
-            response.map(item => {
-              arr.push(
-                new Promise((resolve, reject) => {
-                  var Devices = Parse.Object.extend("Devices");
-                  var devices = new Devices();
-                  devices.id = item.id;
-                  return devices.destroy().then(
-                    deletedevices => {
-                      if (deletedevices) {
-                        resolve(deletedevices);
-                      }
-                    },
-                    error => {
-                      reject(error);
-                    }
-                  );
-                })
-              );
-              Promise.all(arr)
-                .then(data => {
-                  if (data.length == response.length) {
-                    this.$message.success("删除成功");
-                    this.getTasktable();
+      this.$confirm("此操作将永久删除该测试任务, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          var PumpClient = Parse.Object.extend("PumpClient");
+          var pumpclient = new PumpClient();
+          pumpclient.id = id;
+          pumpclient.destroy().then(resultes => {
+            if (resultes) {
+              var arr = [];
+              var where = {
+                  status:id
+                }
+              $.ajax({
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                headers: {
+                  sessionToken: Cookies.get("access_token")
+                },
+                data: {
+                  where:JSON.stringify(where)
+                },
+                url: Cookies.get("apiserver") + "/classes/Device",
+                success: response => {
+                  if (response) {
+                    console.log(response)
+                    response.results.map(item => {
+                      arr.push(
+                        new Promise((resolve, reject) => {
+                          return $.ajax({
+                            type: "DELETE",
+                            contentType: "application/json",
+                            dataType: "json",
+                            headers: {
+                              sessionToken: Cookies.get("access_token")
+                            },
+                            url:
+                              Cookies.get("apiserver") +
+                              "/classes/Device/" +
+                              item.objectId,
+                            success: response => {
+                              if (response) {
+                                resolve(response);
+                              }
+                            },
+                            fail: error => {
+                              reject(error);
+                            }
+                          });
+                        })
+                      );
+                      Promise.all(arr)
+                        .then(data => {
+                          if (data.length == response.results.length) {
+                            this.$message.success("删除成功");
+                            this.getTasktable();
+                          }
+                        })
+                        .catch(error => {
+                          this.$message({
+                            message: error,
+                            type: "error"
+                          });
+                        });
+                    });
                   }
-                })
-                .catch(error => {
-                  this.$message({
-                    message: error,
-                    type: "error"
-                  });
-                });
-            });
+                }
+              })
+            }
           });
-        }
-      });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
-    clientView(row) {
-      var Devices = Parse.Object.extend("Devices");
-      var devices = new Parse.Query(Devices);
-      devices.equalTo('brand',row.id)
-      devices.ascending("basedata.index");
-      devices.find().then(reusltes => {
-        window.open(
-          `${window.location.origin}/spa/#/fullscreen?standard=${row.attributes.standard}&testbed=${row.id}&devicesid=${reusltes[0].id}`,
-          "_blank"
-        );
-        // window.open(`localhost:8888/#/fullscreen?standard=${row.attributes.standard}&taskid=${row.id}&devicesid=${reusltes[0].id}&testbed=${row.attributes.test_bed.id}`, '_blank');
-      });
+    clientView(row,index) {
+      var vm = this;
+
+/*       $.ajax({
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json",
+            headers: {
+              sessionToken: Cookies.get("access_token")
+            },
+            data: {
+            order:'basedata.index',
+            where:JSON.stringify(where)
+            },
+            url:Cookies.get("apiserver") + "/classes/Device",
+            success: resultes => {
+              console.log(resultes)
+              window.open(
+                `${window.location.origin}/spa/#/fullscreen?standard=${row.attributes.standard}&pumpclient=${row.id}&devicesid=${resultes.results[0].objectId}`,
+                "_blank"
+              );
+            },
+            fail: error => {
+              
+            }
+          });
+ */
+
+      let url = '/classes/Device/'
+      let where= {
+        status:row.id
+      }
+      // #### 临时url,注意删除
+      // let topoUrl= 'http://192.168.2.18:8888'
+      let topoUrl= window.location.origin + '/spa'
+
+      vm.$axiosWen.get(url,{
+          params:{                
+            order:'basedata.index',
+            where:JSON.stringify(where)
+              }})
+            .then(function (response) {
+                  if(response){
+                  window.open(
+                    `${topoUrl}/#/fullscreen?standard=${row.attributes.standard}&pumpclient=${row.id}&devicesid=${response.results[0].objectId}&index=${index}`,
+                    "_blank"
+                  );
+              }               
+            })
+            .catch(function (error) {
+              console.log('Device err',error);
+            })
+
+
+    },
+    evidenceView(row){
+      this.$router.push({
+        path:'/inspection/evidence_detail',
+        query:{
+          taskid:row.id
+        }
+      })
     }
   }
 };
@@ -1306,5 +1441,11 @@ export default {
 .inspection .el-divider__text.is-left {
   color: blue;
   font-size: 16px;
+}
+ 
+@media screen and (max-width: 1350px) {
+  .inspection .el-col {
+    width: 100%;
+  }
 }
 </style>

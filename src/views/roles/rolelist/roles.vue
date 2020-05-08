@@ -6,7 +6,7 @@
         type="primary"
         icon="el-icon-search"
         style="margin-left:20px;"
-        @click="searchvalue"
+        @click="gettable(0)"
       >{{$t('developer.search')}}</el-button>
       <el-button type="primary" icon="el-icon-plus" @click="add">{{$t('developer.add')}}</el-button>
     </div>
@@ -15,7 +15,8 @@
         :data="tableData"
         style="width: 100%;text-align:center"
         @row-click="getDetailmenu"
-        highlight-current-row
+        :row-class-name="tableRowClassName"
+        :row-style="selectedHighlight"
       >
         <el-table-column :label="$t('user.name')" align="center">
           <template slot-scope="scope">
@@ -189,6 +190,7 @@
 <script>
 import { page,UpdatedMenu,UpdatedRole } from "@/api/login";
 import { Parse } from "parse";
+import { returnLogin } from '@/utils/return';
 export default {
   data() {
     return {
@@ -224,7 +226,8 @@ export default {
       roledata: [],
       rolecontroldata: [],
       data1: [],
-      editroleid: ""
+      editroleid: "",
+      getIndex:''
     };
   },
   computed: {
@@ -250,7 +253,7 @@ export default {
     }
   },
   mounted() {
-    this.gettable(this.pagesize, this.start);
+    this.gettable();
     this.getMenu();
     this.getRoleschema();
   },
@@ -358,7 +361,7 @@ export default {
               message: "添加成功!"
             });
             this.centerDialogVisible = false;
-            this.gettable(this.pagesize, this.start);
+            this.gettable();
           },
           error => {
             console.log(error);
@@ -372,18 +375,35 @@ export default {
     },
     //删除角色
     handleDelete(row) {
-      var roles = Parse.Object.extend("_Role");
-      var query = new Parse.Query(roles);
-      query.get(row).then(object => {
-        object.destroy().then(
-          response => {
-            this.gettable(this.pagesize, this.start);
-          },
+      this.$confirm('此操作将永久删除此权限, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          
+          var roles = Parse.Object.extend("_Role");
+          var query = new Parse.Query(roles);
+          query.get(row).then(object => {
+            object.destroy().then(
+            response => {
+              this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+              this.gettable();
+            },
           error => {
-            console.error("Error while deleting User", error);
+            returnLogin(error)
           }
         );
       });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      
     },
     //增加菜单
     addmenu(row) {
@@ -393,7 +413,23 @@ export default {
       // this.dialogVisible = true;
       this.getMenu();
     },
+     tableRowClassName ({row, rowIndex}) {
+        //把每一行的索引放进row
+         
+      row.index = rowIndex;
+      },
+    selectedHighlight({row, rowIndex}) {
+     
+         if (this.getIndex === rowIndex) {
+            return {
+          "background-color": "#999999",
+          "border":"5px solid black"
+       };
+     }
+    },
     getDetailmenu(row) {
+     
+      this.getIndex=row.index
       this.rolecontrol = false;
       this.rolemenuname = row.attributes.name;
       this.rolemenu = [];
@@ -498,13 +534,23 @@ export default {
       //   });
       // });
     },
+     
+    // rowClick (row) {
+    //     this.getIndex=row.index
+    // },
     //初始化权限列表
-    gettable(pagesize, start) {
+    gettable(start) {
+      if(start==0){
+        this.start=0
+      }
       this.tableData = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
-      query.limit(pagesize);
-      query.skip(start);
+      query.limit(this.pagesize);
+      query.skip(this.start);
+      if(this.searchvalue!=''){
+        query.equalTo('name',this.searchvalue)
+      }
       query.count().then(count => {
         if (count) {
           this.total = count;
@@ -530,11 +576,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pagesize = val;
-      this.gettable(this.pagesize, this.start);
+      this.gettable();
     },
     handleCurrentChange(val) {
       this.start = Number(val - 1) * Number(this.pagesize);
-      this.gettable(this.pagesize, this.start);
+      this.gettable();
     },
     handleCheckChange(data, checked) {
       console.log(data, checked);
@@ -602,7 +648,7 @@ export default {
           });
         });
         this.roleEdit = false;
-        this.gettable(this.pagesize, this.start);
+        this.gettable();
       });
     }
   }
