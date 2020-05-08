@@ -2,7 +2,7 @@
  * @description 系统全局配置
  */
 
-var serverURL = "/"  //构建用
+// var serverURL = "/"  //构建用
 // var serverURL = "http://148.70.107.251:5080/iotapi";
  //var serverURL = "http://ci.iotn2n.com:5080/iotapi";
 //  var serverURL = "http://192.168.2.13:5080/iotapi";//莫易的库
@@ -10,31 +10,34 @@ var serverURL = "/"  //构建用
 //  var serverURL = "http://148.70.50.192:5080/iotapi"
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
 //  var serverURL = "http://111.231.219.51:5080/iotapi";//建辉环境
-//  var serverURL = "http://192.168.2.9:5080/iotapi"
+ var serverURL = "http://192.168.2.9:5080/iotapi"
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
 //  var serverURL = "http://192.168.2.26:5080/iotapi"
 //  var serverURL = "http://pump.iotn2n.com:5080/iotapi"
 
 
-
-if (serverURL == '/') {
+console.log('process ###',process.env );
+// process.env.NODE_ENV === "development"
 
   try {
-    // 注意通过window对象,判断是否为浏览器环境, + try catch    
-    var hostname = location.hostname
+      // 判断是否为生产环境
+      if (process.env.NODE_ENV === "production" || serverURL == '/') {    
+        var hostname = null
+        var serverURL = '/iotapi'
+      } else {          
+        var reg = /^http(s)?:\/\/(.*?)\//
+        var hval = reg.exec(serverURL)[2];
+        var i = hval.lastIndexOf("\:");
+        var hostname = hval.substr(0, i);
+      }
 
     } catch (error) {
-      var hostname = 'localhost'
-    }    
+      var hostname = null
+      var serverURL = '/iotapi'
+      console.log('process ###',error);      
+    }   
 
-    var serverURL = '/iotapi'
-  }
-  else {
-    var reg = /^http(s)?:\/\/(.*?)\//
-    var hval = reg.exec(serverURL)[2];
-    var i = hval.lastIndexOf("\:");
-    var hostname = hval.substr(0, i);
-  }
+
 
 // 导出es6模块
 /* export default {

@@ -58,7 +58,11 @@ export default {
       // Websocket.cInfo.host='132.232.121.164'
       // Websocket.cInfo.host='192.168.2.13'
       // Websocket.cInfo.host = location.hostname;
-      Websocket.cInfo.host = this.$globalConfig.hostname
+      if(this.$globalConfig.hostname){        
+        Websocket.cInfo.host = this.$globalConfig.hostname
+      } else {
+        Websocket.cInfo.host = location.hostname
+      }
 
       Websocket.subInfo = {
         topic: "web/"+sessionStorage.getItem('token'), 
