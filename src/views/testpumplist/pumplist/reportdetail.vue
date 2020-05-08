@@ -1074,7 +1074,7 @@ export default {
           }
         });
       } else {
-        this.$router.push({
+        console.log('### live_evidence ###',{
           path: "live_evidence",
           query: {
             type: type,
@@ -1083,6 +1083,16 @@ export default {
             tasknameid: this.tasknameid
           }
         });
+        
+ /*        this.$router.push({
+          path: "live_evidence",
+          query: {
+            type: type,
+            taskid: taskid,
+            reportId: this.reportid,
+            tasknameid: this.tasknameid
+          }
+        }); */
       }
     }
   }
