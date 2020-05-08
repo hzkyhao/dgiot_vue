@@ -418,13 +418,13 @@ export const constantRouterMap = [
         meta: { title: '控制器取证'},
         hidden:true
       },
-      {
+ /*      {
         path: '/inspection/live_evidence',
         name: '摄像头取证',
         component: () => import('@/views/testpumplist/pumplist/nowlive'),
         meta: { title: '摄像头取证'},
         hidden:true
-      },
+      }, */
       {
         path: '/inspection/report_model',
         name: '质检项目',
