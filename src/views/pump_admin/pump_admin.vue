@@ -848,7 +848,7 @@ export default {
     },
     //得到初始化审核列表
     getEmpower() {
-      var Authentication = Parse.Object.extend("Authentication");
+/*       var Authentication = Parse.Object.extend("Authentication");
       var authentication = new Parse.Query(Authentication);
       authentication.limit(this.pagesize);
       authentication.skip(this.start);
@@ -862,7 +862,32 @@ export default {
         });
       },error=>{
         returnLogin(error)
-      });
+      }); */
+
+      // classes/Authentication
+
+      let where = {}
+
+      if(this.formInline.region!='all'){
+        where['status'] = this.formInline.region
+      }
+
+/*       {
+      params:{
+            limit: 200,
+            where: where,
+            keys: "count(*)",
+          }} */
+
+      this.$axiosWen.get('/classes/Authentication'
+          )
+        .then(response => {
+
+          console.log(response);
+          
+        })
+
+
     },
     timestampToTime(timestamp) {
       var date = new Date(timestamp);

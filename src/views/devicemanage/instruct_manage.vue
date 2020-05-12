@@ -47,9 +47,9 @@
         <el-table-column label="超时时长" align="center" >
           <template slot-scope="scope">{{ scope.row.attributes.duration+'秒'}}</template>
         </el-table-column>
-        <el-table-column label="下发网关" align="center" width="200">
+    <!--     <el-table-column label="下发网关" align="center" width="200">
           <template slot-scope="scope">{{ scope.row.attributes.devaddr }}</template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="子网编号" align="center" width="200">
           <template slot-scope="scope">{{ scope.row.attributes.pn }}</template>
         </el-table-column>
@@ -101,8 +101,8 @@
             </el-form-item>
             <el-form-item label="操作类型" :label-width="formLabelWidth" prop="type">
               <el-select v-model="form.type" placeholder="请选择操作类型">
-                <el-option label="读" value="Read"></el-option>
-                <el-option label="写" value="Write"></el-option>
+                <el-option label="读" value="r"></el-option>
+                <el-option label="写" value="w"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="是否启用" :label-width="formLabelWidth" prop="enable">
@@ -117,7 +117,7 @@
               <el-input v-model="form.pointer" autocomplete="off" placeholder="请输入指令指标"></el-input>
             </el-form-item>
             <el-form-item label="指令序号" :label-width="formLabelWidth" prop="order">
-              <el-input v-model.number="form.order" autocomplete="off" placeholder="请输入指令序号"></el-input>
+              <el-input v-model="form.order" autocomplete="off" placeholder="请输入指令序号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -133,9 +133,9 @@
         >指令下发策略</p>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="下发网关" :label-width="formLabelWidth" prop="lowerhair">
+   <!--          <el-form-item label="下发网关" :label-width="formLabelWidth" prop="lowerhair">
               <el-input v-model="form.lowerhair" autocomplete="off" placeholder="请输入下发网关"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="超时时长" :label-width="formLabelWidth" prop="duration">
               <el-input v-model.number="form.duration" autocomplete="off" placeholder="请输入超时时长">
                 <template slot="append">秒</template>
@@ -164,7 +164,7 @@
           </el-col>
           <el-col :span="12 ">
             <el-form-item label="子网编号" :label-width="formLabelWidth" prop="subnet">
-              <el-input v-model.number="form.subnet" autocomplete="off" placeholder="请输入子网编号"></el-input>
+              <el-input v-model="form.subnet" autocomplete="off" placeholder="请输入子网编号"></el-input>
             </el-form-item>
             <el-form-item label="发送间隔" :label-width="formLabelWidth" prop="interval">
               <el-input v-model.number="form.interval" autocomplete="off" placeholder="请输入发送间隔">
@@ -238,13 +238,13 @@ export default {
       if (!value) {
         return callback(new Error("子网编号不能为空"));
       }
-      setTimeout(() => {
+ /*      setTimeout(() => {
         if (!Number.isInteger(value)) {
           callback(new Error("请输入数字值"));
         } else {
           callback();
         }
-      }, 1000);
+      }, 1000); */
     };
     var isValidMask = (rule, value, callback) => {
       var regx = /^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/;
@@ -278,7 +278,7 @@ export default {
         duration: "",
         order: "",
         interval: "",
-        lowerhair: "",
+        // lowerhair: "",
         rotation: "",
         subnet: ""
       },
@@ -299,12 +299,11 @@ export default {
           { required: true, message: "指标是否启用不能为空", trigger: "change" }
         ],
         order: [
-          { required: true, message: "指标序号不能为空", trigger: "blur" },
-          { validator: checkIndex }
+          { required: true, message: "指标序号不能为空", trigger: "blur" } //指令序号     
         ],
-        lowerhair: [
+  /*       lowerhair: [
           { required: true, message: "下发网关不能为空", trigger: "blur" }
-        ],
+        ], */
         rotation: [
           { required: true, message: "生效轮次不能为空", trigger: "change" }
         ],

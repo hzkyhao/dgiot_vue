@@ -363,7 +363,7 @@ export default {
     this.Industry();
     this.randomSecret();
     this.getProductList();
-    this.sessionToken = sessionStorage.getItem("token");
+    // this.sessionToken = sessionStorage.getItem("token");
      
   },
   mounted() {

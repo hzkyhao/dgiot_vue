@@ -36,6 +36,8 @@
         <el-button type="primary" size="small" @click="adddevices">新增取证设备</el-button>
         <el-button type="danger" size="small" @click="deleteDevices">删除</el-button>
       </div>
+
+    <!--设备表格-->
       <div class="tableblock">
         <el-table
           ref="multipleTable"
@@ -46,38 +48,19 @@
         >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column type="index" label="序号" align="center" width="50"></el-table-column>
-          <el-table-column label="取证设备名称" align="center" width="200">
-            <template slot-scope="scope">{{ scope.row.name}}</template>
+          <el-table-column label="取证设备名称" prop="name" align="center" width="200">
           </el-table-column>
           <el-table-column label="取证设备编号" prop="devaddr" width="250" align="center">
           </el-table-column>
 
-          <el-table-column label="应用实验室" width="200" align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.basedata">{{scope.row.basedata.laboratory}}</span>
-              <span v-else></span>
-            </template>
+          <el-table-column prop="scope.row.basedata.laboratory" label="应用实验室" width="200" align="center">
           </el-table-column>
-          <el-table-column label="是否动态IP" width="100" align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.basedata">
-                <el-tag type="success" v-if="scope.row.basedata.trendsip==true">是</el-tag>
-                <el-tag type="danger" v-else>否</el-tag>
-              </span>
-              <span v-else></span>
-            </template>
+  <!--         <el-table-column  prop="basedata.ip" label="设备IP" align="center" width="200">     
+          </el-table-column> -->
+
+          <el-table-column prop="basedata.mac" label="设备MAC地址" width="250" align="center">      
           </el-table-column>
-          <el-table-column label="设备IP" align="center" width="200">
-            <template slot-scope="scope">
-              <span v-if="scope.row.basedata">{{scope.row.basedata.ip}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="设备MAC地址" width="250" align="center">
-            <template slot-scope="scope">
-              <span v-if="scope.row.basedata">{{scope.row.basedata.mac}}</span>
-              <span v-else></span>
-            </template>
-          </el-table-column>
+
           <el-table-column label="取证设备用途" width="150" align="center">
             <template slot-scope="scope">
               <span v-if="scope.row.basedata">{{scope.row.basedata.evidenceuse}}</span>
@@ -90,23 +73,17 @@
               <span v-else></span>
             </template>
           </el-table-column>
+
           <el-table-column label="取证设备状态" width="150" align="center">
-            <template slot-scope="scope" slot="header">
-              <span class="ACTIVE">设备状态</span>
-              <el-tooltip content="ACTIVE设备已注册,UNACTIVE设备未注册" placement="top">
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            </template>
             <template slot-scope="scope">
-              <span :style="{'color':scope.row.status=='ACTIVE'?'green':'red'}">{{scope.row.status}}</span>
-            </template>
+              <span v-if="scope.row.status=='init'" style="color:green">运行中</span>
+              <span v-if="scope.row.status=='ONLINE'" style="color:green">在线</span>
+            </template>            
           </el-table-column>
-          <el-table-column label="备注" width="200" align="center" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <span v-if="scope.row.basedata">{{scope.row.desc}}</span>
-              <span v-else></span>
-            </template>
+
+          <el-table-column label="备注" prop="basedata.desc" width="200" align="center" show-overflow-tooltip>
           </el-table-column>
+
           <el-table-column label="取证设备管理" align="center" width="300">
             <template slot-scope="scope">
               <el-button
@@ -136,7 +113,8 @@
         ></el-pagination>
       </div>
     </div>
-    <!--新增涉设备弹窗-->
+
+    <!--新增设备弹窗-->
     <el-dialog title="取证设备新增" :visible.sync="dialogVisible" width="60%">
       <div class="addContent">
         <el-form :model="form" ref="evidenceform" :rules="formrules">
@@ -264,173 +242,7 @@ export default {
       },
       //取证设备表格
       tableData: [],
-      properties: [
-        {
-          name: "效率",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 100,
-              min: 0,
-              step: 0.1,
-              unit: "%"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "effect"
-        },
-        {
-          name: "转速",
-          dataType: {
-            type: "int",
-            specs: {
-              max: 10000,
-              min: 0,
-              step: 0.2,
-              unit: "r/min"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "speed"
-        },
-        {
-          name: "扬程",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 1000,
-              min: 0,
-              step: 0.1,
-              unit: "m"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "head"
-        },
-        {
-          name: "出口压力",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 10000,
-              min: 0,
-              step: 0.1,
-              unit: "Mpa"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "pressure_out"
-        },
-        {
-          name: "进口压力",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 10000,
-              min: 0,
-              step: 0.1,
-              unit: "Mpa"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "pressure_in"
-        },
-        {
-          name: "功率因数",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 1,
-              min: 0,
-              step: 0.1,
-              unit: ""
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "power_factor"
-        },
-        {
-          name: "功率",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 10000,
-              min: 0,
-              step: 0.1,
-              unit: "kW"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "power"
-        },
-        {
-          name: "电压",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 380,
-              min: 0,
-              step: 0.1,
-              unit: "V"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "vol"
-        },
-        {
-          name: "电流",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 1000,
-              min: 0,
-              step: 0.1,
-              unit: "A"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "current"
-        },
-        {
-          name: "流量",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 10000,
-              min: 0,
-              step: 0.1,
-              unit: "m³/h"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "flow"
-        },
-        {
-          name: "温度",
-          dataType: {
-            type: "float",
-            specs: {
-              max: 1000,
-              min: -100,
-              step: 1,
-              unit: "°C"
-            }
-          },
-          required: true,
-          accessMode: "r",
-          identifier: "temperature"
-        }
-      ],
+    properties:[{name:"效率",dataType:{type:"float",specs:{max:100,min:0,step:0.1,unit:"%"}},required:true,accessMode:"r",identifier:"effect"},{name:"转速",dataType:{type:"int",specs:{max:10000,min:0,step:0.2,unit:"r/min"}},required:true,accessMode:"r",identifier:"speed"},{name:"扬程",dataType:{type:"float",specs:{max:1000,min:0,step:0.1,unit:"m"}},required:true,accessMode:"r",identifier:"head"},{name:"出口压力",dataType:{type:"float",specs:{max:10000,min:0,step:0.1,unit:"Mpa"}},required:true,accessMode:"r",identifier:"pressure_out"},{name:"进口压力",dataType:{type:"float",specs:{max:10000,min:0,step:0.1,unit:"Mpa"}},required:true,accessMode:"r",identifier:"pressure_in"},{name:"功率因数",dataType:{type:"float",specs:{max:1,min:0,step:0.1,unit:""}},required:true,accessMode:"r",identifier:"power_factor"},{name:"功率",dataType:{type:"float",specs:{max:10000,min:0,step:0.1,unit:"kW"}},required:true,accessMode:"r",identifier:"power"},{name:"电压",dataType:{type:"float",specs:{max:380,min:0,step:0.1,unit:"V"}},required:true,accessMode:"r",identifier:"vol"},{name:"电流",dataType:{type:"float",specs:{max:1000,min:0,step:0.1,unit:"A"}},required:true,accessMode:"r",identifier:"current"},{name:"流量",dataType:{type:"float",specs:{max:10000,min:0,step:0.1,unit:"m³/h"}},required:true,accessMode:"r",identifier:"flow"},{name:"温度",dataType:{type:"float",specs:{max:1000,min:-100,step:1,unit:"°C"}},required:true,accessMode:"r",identifier:"temperature"}],
       multipleSelection: [],
       pagesize: 10,
       start: 0,
@@ -490,14 +302,62 @@ export default {
     };
   },
   mounted() {
-    this.getPumpDevices();
+    // this.getPumpDevices();
+    this.getChildDevices()
     this.getDepartmentLaboratory();
     this.getProductList();
 
     // this.getEvidenceDevices();
   },
   methods: {
+    getChildDevices(){
+
+      var vm = this
+
+        // devices.matches(`route.${this.devicedetail.devaddr}`, ".+")
+            if(!this.$route.query.devaddr){              
+              return
+            }
+            
+            var tempKey = 'route.' + this.$route.query.devaddr
+            
+            var where = {
+              // product:{"$in":arr}
+              // tempKey:'{"$regex":".+"}'
+            }
+
+            where[tempKey] =  {
+              '$regex' : ".+"
+              }
+
+            if (this.formInline.laboratory != "") {
+              where["basedata.laboratoryid"] = this.formInline.laboratory;
+            }
+            if (this.formInline.name) {
+              where["name"] = this.formInline.name;
+            }
+        
+            vm.$axiosWen.get('/classes/Device',{
+              params:{
+                skip: this.start,
+                limit: this.pagesize,
+                keys: "count(*)",
+                where:JSON.stringify(where)
+            }}
+            ).then(resDevice=>{
+              if(resDevice){
+                  this.total = resDevice.count;
+                  this.tableData = resDevice.results;
+              }
+            }).catch(error=>{
+              console.log(error)
+            })
+
+
+    },
     getPumpDevices(start, department) {
+
+      var vm = this;
       if (start == 0) {
         this.start = 0;
       }
@@ -513,22 +373,34 @@ export default {
           response.results.map(item=>{
             arr.push(item.objectId)
           })
-          var where={
-            product:{"$in":arr}
-          }
-              if (this.formInline.laboratory != "") {
+
+            // devices.matches(`route.${this.devicedetail.devaddr}`, ".+");
+            
+            var tempKey = 'route.' + this.devicedetail.devaddr
+            var where = {
+              // product:{"$in":arr}
+              // tempKey:'{"$regex":".+"}'
+            }
+
+            where[tempKey] = '{"$regex":".+"}' 
+
+            if (this.formInline.laboratory != "") {
               where["basedata.laboratoryid"] = this.formInline.laboratory;
             }
             if (this.formInline.name) {
               where["name"] = this.formInline.name;
             }
-            var devicesQuery={
+
+
+        
+            vm.$axiosWen.get('/classes/Device',{
+              params:{
                 skip: this.start,
                 limit: this.pagesize,
                 keys: "count(*)",
                 where:JSON.stringify(where)
-            }
-            ajax('/classes/Device','GET',devicesQuery).then(resDevice=>{
+            }}
+            ).then(resDevice=>{
               if(resDevice){
                   this.total = resDevice.count;
                   this.tableData = resDevice.results;
@@ -540,55 +412,7 @@ export default {
       }).catch(error=>{
         console.log(error)
       })
-      // $.ajax({
-      //   type: "GET",
-      //   dataType: "json",
-      //   contentType: "application/json",
-      //   headers: {
-      //     sessionToken: Cookies.get("access_token")
-      //   },
-      //   data: {
-      //     where: JSON.stringify(whereProduct)
-      //   },
-      //   url: Cookies.get("apiserver") + "/classes/Product",
-      //   success: response => {
-      //     if (response) {
-      //       var where = {
-      //         product: response.results[0].objectId
-      //       };
-      //       if (this.formInline.laboratory != "") {
-      //         where["basedata.laboratoryid"] = this.formInline.laboratory;
-      //       }
-      //       if (this.formInline.name) {
-      //         where["name"] = this.formInline.name;
-      //       }
-      //       $.ajax({
-      //         type: "GET",
-      //         dataType: "json",
-      //         contentType: "application/json",
-      //         headers: {
-      //           sessionToken: Cookies.get("access_token")
-      //         },
-      //         data: {
-      //           skip: this.start,
-      //           limit: this.pagesize,
-      //           keys: "count(*)",
-      //           where: JSON.stringify(where)
-      //         },
-      //         url: Cookies.get("apiserver") + "/classes/Device",
-      //         success: result => {
-      //           if (result) {
-      //             this.total = result.count;
-      //             this.tableData = result.results;
-      //           }
-      //         },
-      //         fail: error => {
-      //           this.$message.error(error);
-      //         }
-      //       });
-      //     }
-      //   }
-      // });
+
     },
     // getEvidenceDevices(start, departmentId){
     //   var vm = this;
@@ -797,41 +621,7 @@ export default {
               }
             });
           }
-          // acl.setReadAccess(objectId, true);
-          // acl.setWriteAccess(objectId, true);
-          // pumpdevice.set("ACL", acl);
-          // pumpdevice.set('name',this.form.name)
-          // pumpdevice.set('devaddr',this.form.devaddr)
-          // pumpdevice.set('desc',this.form.desc)
-          // // pumpdevice.set('product',product)
-          // pumpdevice.set('ip',this.form.ip)
-          // pumpdevice.set('devtype','PUMP')
-          // pumpdevice.set('basedata',{
-          //      laboratoryid:this.form.laboratory,
-          //      laboratory:this.laboratoryname,
-          //      mac:this.form.mac,
-          //      target:this.form.target,
-          //      factory:this.form.factory,
-          //      trendsip:this.form.trendsip,
-          //      evidenceuse:this.form.evidenceuse,
-          //      evidencetype:this.form.evidencetype,
-          //      type:'PC'
-          // })
-          // pumpdevice.save().then(response=>{
-          //     if(response){
-          //         this.devicesid=''
-          //         this.$message.success('创建成功')
-          //         this.$refs[formName].resetFields()
-          //         this.form.desc=''
-          //         this.form.mac=''
-          //         this.form.factory=''
-          //         this.form.evidenceuse=''
-          //         this.form.trendsip = ''
-          //         this.dialogVisible = false
-          //         this.getPumpDevices(1,this.departmentid)
-          //   }
-
-          // })
+      
         } else {
           this.$message.error("有必填项未填写");
           return false;

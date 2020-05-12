@@ -31,64 +31,50 @@
       </div>
       <div class="addbed" style="text-align:right">
         <!-- <el-button type="success" size="small" @click="disposeTestbed">检测台配置</el-button> -->
-        <el-button type="primary" @click="testBedAdd" size="small">新增检测台</el-button>
-        <el-button type="danger" size="small" @click="deleteTestBed">删除检测台</el-button>
+        <!-- <el-button type="primary" @click="testBedAdd" size="small">新增检测台</el-button> -->
+        <!-- <el-button type="danger" size="small" @click="deleteTestBed">删除检测台</el-button> -->
       </div>
+
+      <!-- 检测台体表格 ### -->
       <div class="bedtable">
         <el-table :data="bedData" style="width: 100%;text-align:center" border ref="multipleTable" @selection-change="handleSelectionBed">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-          <el-table-column prop="id" label="设备组编号" align="center" width="150"></el-table-column>
-          <el-table-column label="检测台名称" align="center" width="200">
-            <template slot-scope="scope">
-              <span>{{scope.row.attributes.name}}</span>
-            </template>
+          <el-table-column type="index" prop="index" label="序号" width="50" align="center"></el-table-column>
+       
+          <el-table-column label="检测台名称" prop="basedata.name" align="center" width="200">
+        
           </el-table-column>
-          <el-table-column label="企业名称" align="center" width="150">
-           
+           <el-table-column label="所属实验室"  prop="basedata.laboratory"  align="center" width="150">
+       
           </el-table-column>
-           <el-table-column label="所属实验室" align="center" width="150">
-           <template slot-scope="scope">
-             <span v-if="scope.row.attributes.department">{{scope.row.attributes.department.attributes.name}}</span>
-           </template>
+          <el-table-column label="检测台编号" prop="basedata.number"  align="center" width="150">
+         
           </el-table-column>
-          <el-table-column label="检测台编号" align="center" width="150">
-           <template slot-scope="scope">
-             <span v-if="scope.row.attributes.number">{{scope.row.attributes.number}}</span>
-             <span v-else></span>
-           </template>
+          <el-table-column label="检测台型号" prop="basedata.model"  align="center" width="150">
+        
           </el-table-column>
-          <el-table-column label="检测台型号" align="center" width="150">
-            <template slot-scope="scope">
-             <span v-if="scope.row.attributes.model">{{scope.row.attributes.model}}</span>
-             <span v-else></span>
-           </template>
-          </el-table-column>
-          <el-table-column label="生产厂家" align="center" width="200">
-            <template slot-scope="scope">
-             <span v-if="scope.row.attributes.factory">{{scope.row.attributes.factory}}</span>
-             <span v-else></span>
-           </template>
+          <el-table-column label="生产厂家" prop="basedata.factory"  align="center" width="200">
+          
           </el-table-column>
           <el-table-column label="健康状况" align="center">
             <template slot-scope="scope">
-             <span v-if="scope.row.attributes.state=='healthy'">健康</span>
-             <span v-else-if="scope.row.attributes.state=='fine'">良好</span>
-             <span v-else-if="scope.row.attributes.state=='commonly'">一般</span>
+             <span v-if="scope.row.basedata.state=='healthy'">健康</span>
+             <span v-else-if="scope.row.basedata.state=='fine'">良好</span>
+             <span v-else-if="scope.row.basedata.state=='commonly'">一般</span>
            </template>
           </el-table-column>
-          <el-table-column label="关联实验仪器" align="center" width="200">
-           
-          </el-table-column>
+        
           <el-table-column label="状态" align="center">
             <template slot-scope="scope">
-              <span v-if="scope.row.attributes.status=='init'" style="color:green">运行中</span>
+              <span v-if="scope.row.status=='init'" style="color:green">运行中</span>
+              <span v-if="scope.row.status=='ONLINE'" style="color:green">在线</span>
             </template>
           </el-table-column>
           <el-table-column label="编辑" align="center" width="300">
             <template slot-scope="scope">
+              <el-button size="mini" type="primary" @click="showUpdateDeviceForm(scope.$index)">编辑</el-button>
               <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">配 置</el-button> -->
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">撤 销</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
               <el-button size="mini" type="success" @click="devicesDetail(scope.row)">查看设备</el-button>
             </template>
           </el-table-column>
@@ -105,9 +91,11 @@
           :total="total"
         ></el-pagination>
       </div>
-      <!--新增，编辑测试台体弹窗-->
+
+
+      <!--新增，编辑测试台体弹窗 old -->
       <div class="addbeddialog">
-        <el-dialog title="新增测试台体" :visible.sync="beddialog">
+        <el-dialog :title="'测试台体' + actionTypeMap[actionType]" :visible.sync="beddialog">
           <div style="margin-bottom:20px;">
             <label for>测试台名称:</label>
             <el-input style="width:200px" v-model="testbedname"></el-input>
@@ -302,21 +290,23 @@
             <el-button type="primary" @click="bedDevicedialog = false">确 定</el-button>
           </span>
         </el-dialog>
-      <!--新增检测台体弹窗-->
+
+      <!--新增/修改 检测台体弹窗 form -->
+
       <el-dialog
-        title="测试台新增"
-        :visible.sync="addbeddialog1"
-        width="50%"
+       :title="'检测台' + actionTypeMap[actionType]" 
+        :visible.sync="addbeddialogNew"
+        width="50%" @open="diologShow"
         >
         <div>
           <el-form :model="addbedForm" :rules="addbedFormrule" ref="addbedForm" label-width="100px" class="demo-ruleForm">
             <el-row>
               <el-col :span="12">
                 <div class="grid-content bg-purple">
-                   <el-form-item label="测试台名称" prop="name">
+                   <el-form-item label="检测台名称" prop="name">
                     <el-input v-model="addbedForm.name"></el-input>
                   </el-form-item>
-                   <el-form-item label="测试台编号">
+                   <el-form-item label="检测台编号">
                     <el-input v-model="addbedForm.number"></el-input>
                   </el-form-item>
                    <el-form-item label="生产厂家">
@@ -351,6 +341,9 @@
                   </el-form-item>
                   <el-form-item label="所属实验室" prop="laboratory">
                     <el-select v-model="addbedForm.laboratory" placeholder="请选择所属实验室">
+                      
+               <el-option label="大江实验室" key="99" :value="99"></el-option> 
+
                       <el-option v-for="(item,index) in departmentList" :label="item.attributes.name" :key="index" :value="item.id"></el-option>
                     </el-select>
                   </el-form-item>
@@ -392,8 +385,9 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="addbeddialog1 = false">取 消</el-button>
-          <el-button type="primary" @click="Determine('addbedForm')">确 定</el-button>
+          <el-button @click="addbeddialogNew = false">取 消</el-button>
+          <el-button v-show="actionType == 'update'" type="primary" @click="doUpdateDevice">确 定</el-button>
+          <el-button  v-show="actionType == 'add'"  type="primary" @click="Determine('addbedForm')">确 定</el-button>
         </span>
       </el-dialog>
       <!--检测台配置-->
@@ -494,7 +488,7 @@ export default {
           { required: true, message: '请选择测试台网关', trigger: 'change' }
         ],
       },
-      addbeddialog1:false,
+      addbeddialogNew:false,
       formInline:{
         laboratory:'',
         name:'',
@@ -534,18 +528,26 @@ export default {
       bedForm:{
         name:''
       },
-      productlist:[]
+      productlist:[],
+      actionTypeMap:{
+        add:'新增',
+        update:'更新'
+      },
+      actionType:'',
+      curDeviceId:''
+
     };
   },
   mounted() {
-    this.getBedtable();
+    // this.getBedtable();
     this.getDepartmentList()
-    this.getAllBed()
+    // this.getAllBed()
     this.getProduct()
+    this.getDevices()
   },
   methods: {
     getProduct(){
-      $.ajax({
+       $.ajax({
         type: 'GET',
         contentType:'application/json',
         dataType:'json',
@@ -558,7 +560,51 @@ export default {
            this.productlist = response.results
           }
         }
-      })
+      }) 
+
+
+
+    },
+    getDevices(){
+
+      /*        var device = Parse.Object.extend("Device");
+       var query = new Parse.Query(device);
+
+       query.include("product")
+
+        // 执行查询
+        query.find({
+          success: function(results){
+
+            // results contains all of the User objects, and their associated Weapon objects, too
+          }
+        });
+  */
+
+
+      var vm = this;
+      
+      this.$axiosWen.get('/classes/Device',{
+          params:{               
+            include: "product",
+            order: "-createdAt",
+            // key:'',
+            where:{},
+            // where:{product: {__type: "Pointer", className: "Product", devType: "shuwa_iot_hub"}}
+              }})
+            .then(function (response) {
+                  if(response && response.results){
+                    vm.bedData  = response.results.filter((item) => {
+                      return item.product.devType == 'shuwa_iot_hub'                     
+                    })
+              }               
+            })
+            .catch(function (error) {
+              console.log('Device err',error);
+            })
+
+
+
     },
     getAllBed(){
        var Testbed = Parse.Object.extend("Testbed");
@@ -603,7 +649,21 @@ export default {
       },
     //打开新增测试台弹窗
     testBedAdd(){
-      this.addbeddialog1 = true
+      this.actionType = 'add'
+      // this.$refs['addbedForm'].resetFields();
+
+      this.addbedForm = {}
+
+      this.addbeddialogNew = true
+    },
+    diologShow(){
+
+      // alert(444);
+        this.$refs['addbedForm'].resetFields();
+
+        console.log('this.$refs',this.$refs);
+        
+
     },
     //清空全部选择设备
     clearUpDevice(){
@@ -672,12 +732,92 @@ export default {
               if(resultes){
                 this.$message.success('测试台体新增成功')
                 this.$refs[formName].resetFields();
-                this.addbeddialog1 = false
+                this.addbeddialogNew = false
                 this.getBedtable(this.departmentid)
               }
             },error=>{
               returnLogin(error)
             })
+            
+          } else {
+            this.$message.error('有必填项未填写')
+            return false;
+          }
+        });
+      },
+      showUpdateDeviceForm(index){
+
+        this.actionType = 'update'
+        
+
+        var rowBaseData =  this.bedData[index]['basedata']
+
+        
+        if(this.bedData[index]['objectId']){
+          
+          this.curDeviceId = this.bedData[index]['objectId']
+
+
+        } else {
+            this.curDeviceId = ''; 
+
+        }
+
+        this.addbedForm = {
+            name: rowBaseData.name,//名称
+            state: rowBaseData.state,//测试台状况
+            laboratory: rowBaseData.laboratory,//所属实验室
+            factory: rowBaseData.factory,//生产厂家
+            number: rowBaseData.number, //编号
+            imgsrc: rowBaseData.imgsrc, //图片
+            desc: rowBaseData.desc, //备注
+            product: rowBaseData.product,//网关
+            computername: rowBaseData.computername,//计算机名称
+            computerkey: rowBaseData.computerkey,//计算机key
+            model: rowBaseData.model     //测试台型号     
+           }       
+
+        this.addbeddialogNew = true
+
+      },
+    //更新台体
+      doUpdateDevice(){
+
+        if(!this.curDeviceId){
+          this.$message.error('curDeviceId null')
+          return
+
+        }
+        this.$refs['addbedForm'].validate((valid) => {
+          if (valid) {
+            if(this.addbedForm.imgsrc==''){
+              this.$message.error('请上传测试台信息')
+               return
+            }
+          
+
+          this.$axiosWen.put('classes/Device/' + this.curDeviceId, {
+            basedata: this.addbedForm
+          }
+          )
+          .then(function (response) {
+
+            this.addbeddialogNew = false
+
+            this.$message({
+                type: "success",
+                message: "更新成功!"
+              });
+
+          })
+          .catch(function (error) {
+            console.log('更新失败',error);
+          });
+
+
+
+            
+        
             
           } else {
             this.$message.error('有必填项未填写')
@@ -761,7 +901,8 @@ export default {
       this.getBedtable(this.departmentid)
     },
     devicesDetail(row){
-      this.testbedid =row.id
+
+/*       this.testbedid =row.id
       this.bedDevicedialog=true
       this.testbedname = row.attributes.name
       var Testbed = Parse.Object.extend("Testbed");
@@ -772,68 +913,18 @@ export default {
       query.find().then(resultes=>{
         console.log(resultes)
         this.bedDevicesData=resultes
-      })        
+      }) 
+         }
+*/
+
+      let devaddr = row['devaddr']
+      this.$router.push({
+        path: "/devicemanage/evidence_devices",
+        query: {devaddr:devaddr}
+      });
+ 
     },
-    // addrelation1() {
-    //   var arr1 = [];
-    //   var arr = this.bedData.slice(0, 5);
-    //   arr.map(item => {
-    //     arr1.push(
-    //       new Promise((resolve, reject) => {
-    //         var Testbed = Parse.Object.extend("Testbed");
-    //         var testbed = new Testbed();
-    //         var Department = Parse.Object.extend("Department");
-    //         var department = new Department();
-    //         department.id = this.departmentid;
-    //         testbed.id = item.id;
-    //         testbed.set("department", department);
-    //         return testbed.save().then(
-    //           resultes => {
-    //             if (resultes) {
-    //               resolve(resultes);
-    //             }
-    //           },
-    //           error => {
-    //             reject(resultes);
-    //           }
-    //         );
-    //       })
-    //     );
-    //   });
-    //   Promise.all(arr1)
-    //     .then(data => {})
-    //     .catch(error => {});
-    // },
-    // addrelation2() {
-    //   var arr1 = [];
-    //   var arr = this.bedData.slice(5, 10);
-    //   arr.map(item => {
-    //     arr1.push(
-    //       new Promise((resolve, reject) => {
-    //         var Testbed = Parse.Object.extend("Testbed");
-    //         var testbed = new Testbed();
-    //         var Department = Parse.Object.extend("Department");
-    //         var department = new Department();
-    //         department.id = this.departmentid;
-    //         testbed.id = item.id;
-    //         testbed.set("department", department);
-    //         return testbed.save().then(
-    //           resultes => {
-    //             if (resultes) {
-    //               resolve(resultes);
-    //             }
-    //           },
-    //           error => {
-    //             reject(resultes);
-    //           }
-    //         );
-    //       })
-    //     );
-    //   });
-    //   Promise.all(arr1)
-    //     .then(data => {})
-    //     .catch(error => {});
-    // },
+   
      disposeTestbed(){
       this.disposeVisible = true
      
@@ -1114,12 +1205,8 @@ export default {
 .testbedpump {
   width: 100%;
   min-height: 875px;
-  /* padding: 20px; */
   box-sizing: border-box;
-  /* background: url("../../imgages/echartbanner1.png") no-repeat; */
-  /* background-size: cover; */
   display: flex;
-  /* overflow: scroll; */
       .bedtable {
       margin-top: 20px;
     }

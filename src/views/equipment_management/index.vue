@@ -683,21 +683,8 @@ export default {
     if (this.$route.query.productid) {
       this.selectProductid(this.$route.query.productid);
     }
-    // this.test()
-    console.log(this.$store.state)
   },
   methods: {
-    // test(){
-    //   var Device = Parse.Object.extend('Device')
-    //   var device = new Parse.Query(Device)
-    //   device.include('product')
-    //   device.matches('route.SWTESTBED0001','.+')
-    //   device.find().then(res=>{
-    //     console.log(res)
-    //   })
-    // },
-
-
     rolesSelect(val){
       this.productroleslist = []
       var Product = Parse.Object.extend('Product')
@@ -909,7 +896,7 @@ export default {
       devices.ascending("-updatedAt");
       devices.include("tag");
       devices.include("product");
-      devices.doesNotExist('basedata')
+      // devices.doesNotExist('basedata')
       devices.count().then(
         count => {
           this.devicetotal = count;

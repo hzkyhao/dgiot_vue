@@ -970,10 +970,15 @@ export default {
     },
     proudctView(row) {
 
-      // #### 临时url,注意删除
-      // let topoUrl= 'http://192.168.2.18:8888'
-      let topoUrl= window.location.origin + '/spa'
+      if(this.$globalConfig.serverURL.substr(0,1) == '/'){    
+      
+        var topoUrl= window.location.origin + '/spa'
 
+      } else {
+            
+        var topoUrl= 'http://192.168.2.18:8888'
+        
+      }
       // var url = `${window.location.origin}/spa/?proudctid=${row.id}`;
       var url = `${topoUrl}/#?proudctid=${row.id}`;
       window.open(url, "__blank");

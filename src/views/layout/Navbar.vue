@@ -3,8 +3,8 @@
     <!-- <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/> -->
     <!-- <breadcrumb  class="breadcrumb-container"/> -->
      <div class="systitle">
-      <img :src="imgsrc">
-      <h2>{{title}}</h2>
+      <img v-if="imgsrc" :src="imgsrc">
+      <h2>{{title||'水泵检测平台'}}</h2>
       <!-- <h2 v-if="type=='pump'">水泵智能检测大数据平台</h2> -->
     </div>
     <sidebar/>
@@ -12,11 +12,6 @@
           <screenfull class="screenfull right-menu-item"/>
          
     </el-tooltip>
-    <!-- <el-tooltip :content="isscreenfull" effect="dark" placement="bottom" style="height:20px" v-else>
-            <span class="screenfull right-menu-item">
-            <svg-icon icon-class="out"/>
-          </span>
-    </el-tooltip> -->
     <!--中英文切换-->
     <div class="language">
       <lang-select class="international right-menu-item"/>
@@ -33,27 +28,6 @@
       <p style="height:40px">{{$t('navbar.logOut')}}</p>
     </div>
     
-    <!-- <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img :src="imgsrc" class="user-avatar">
-        <i class="el-icon-caret-bottom"/>
-      </div>
-      <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              {{ $t('navbar.Home') }}
-            </el-dropdown-item>
-          </router-link>
-            <router-link to="/userinfo">
-            <el-dropdown-item>
-              个人中心
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-    </el-dropdown> -->
   </el-menu>
 </template>
  
@@ -113,8 +87,8 @@ export default {
   },
   methods: {
     getTitle(){
-     this.title=sessionStorage.getItem('product_title')
-     this.imgsrc=sessionStorage.getItem('imgsrc')
+     this.title = sessionStorage.getItem('product_title')
+     this.imgsrc = sessionStorage.getItem('imgsrc')
      if(Parse.User.current() && Parse.User.current().id){
         this.usernameid = Parse.User.current().id
      }

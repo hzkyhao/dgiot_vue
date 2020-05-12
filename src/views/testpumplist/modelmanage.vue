@@ -43,9 +43,9 @@
         </el-table-column>-->
         <el-table-column label="检测标准管理" align="center" width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="addReportChildren(scope.row)">新增子项</el-button>
+            <el-button type="primary" size="small" @click="addReportChildren(scope.row)">新增模版</el-button>
             <el-button type="danger" size="small" @click="deleteReport(scope.row.id)">删 除</el-button>
-            <el-button type="primary" size="small" @click="detailReportChildren(scope.row)">子项管理</el-button>
+            <el-button type="primary" size="small" @click="detailReportChildren(scope.row)">模版管理</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,14 +126,14 @@
         <el-button type="primary" @click="addReport">确 定</el-button>
       </span>
     </el-dialog>
-    <!--标准子项添加-->
-    <el-dialog title="新增标准子项" :visible.sync="dialogForm" width="30%">
+    <!--标准模版添加-->
+    <el-dialog title="新增标准模版" :visible.sync="dialogForm" width="30%">
       <el-form :model="childrenform">
-        <el-form-item label="子项名称" :label-width="formLabelWidth">
+        <el-form-item label="模版名称" :label-width="formLabelWidth">
           <el-input v-model="childrenform.name" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="子项模型" :label-width="formLabelWidth">
+        <el-form-item label="模版模型" :label-width="formLabelWidth">
           <img v-if="childrenform.imageUrl" :src="childrenform.imageUrl" class="avatar" />
 
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -167,8 +167,8 @@
         <el-button type="primary" @click="addStandardChildren">确 定</el-button>
       </div>
     </el-dialog>
-    <!--子项管理-->
-    <el-dialog title="子项" :visible.sync="dialogTableVisible" top="5vh">
+    <!--模版管理-->
+    <el-dialog title="模版" :visible.sync="dialogTableVisible" top="5vh">
       <el-table :data="producttable" style="width:100%;text-align:center">
         <el-table-column label="序号" type="index" align="center" width="100"></el-table-column>
         <el-table-column label="名称" align="center" width="100">
@@ -181,7 +181,7 @@
             <img :src="scope.row.icon" alt class="el-upload-list__item-thumbnail" />
           </template>
         </el-table-column>
-        <el-table-column label="子项管理" align="center">
+        <el-table-column label="模版管理" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="small" @click="productView(scope.row.objectId)">绘图</el-button>
             <el-button type="删除" size="small" @click="deleteProduct(scope.row)">删除</el-button>
@@ -276,7 +276,7 @@ export default {
         components: [],
         index: 1
       },
-      //子项管理
+      //模版管理
       dialogTableVisible: false,
       producttable: [],
       productpagesize: 10,
@@ -509,7 +509,7 @@ export default {
     //增加产品以及设备
     addStandardChildren() {
       if (this.childrenform.imageUrl == "") {
-        this.$message.error("请上传子项图片");
+        this.$message.error("请上传模版图片");
         return;
       }
       var appid = Cookies.get("appids");

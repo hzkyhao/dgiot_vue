@@ -2,6 +2,7 @@
   <div v-if="!item.hidden" class="menu-wrapper" style="height:40px;">
     <!--根据取回来菜单生成-->
      <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&(!item.children)" >
+       <!-- 一级菜单 -->
       <app-link v-if="onlyOneChild.name" :to="resolvePath(onlyOneChild.url)" >
         <el-menu-item :index="resolvePath(onlyOneChild.url)" :class="{'submenu-title-noDropdown':!isNest}" @click.native="reloadnow(onlyOneChild.url,onlyOneChild.name)">
           <item :icon="onlyOneChild.icon||(item.name&&item.icon)" :title="generateTitle(onlyOneChild.name)"/>
@@ -10,9 +11,12 @@
     </template>
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.url)" :key="item.id" popper-append-to-body>
+        
       <template slot="title">
+        <!-- 多级菜单 -->
         <item v-if="item.name" :icon="item.name && item.icon" :title="generateTitle(item.name)" />
       </template>
+      <!-- 子菜单 -->
       <sidebar-item
         v-for="child in item.children"
         :key="child.id"
@@ -23,28 +27,6 @@
         @click.native="reloadnow(child.url,child.name)"
       />
     </el-submenu>
-   <!--根据和路由比较生成-->
-    <!-- <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&(!item.children)">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="generateTitle(onlyOneChild.meta.title)" style="background-color:white"/>
-        </el-menu-item>
-      </app-link>
-    </template>
-
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-      <template slot="title">
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="generateTitle(item.meta.title)" style="background-color:white"/>
-      </template>
-      <sidebar-item
-        v-for="child in item.children"
-        :key="child.path"
-        :is-nest="true"
-        :item="child"
-        :base-path="resolvePath(child.path)"
-        class="nest-menu"
-      />
-    </el-submenu> -->
 
   </div>
 </template>

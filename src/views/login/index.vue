@@ -13,10 +13,13 @@
         label-position="left"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" />
+          <img :src="logosrc || index_logo" alt="logo" style="width:80px;height:80px;" />
           <p>{{title}}</p>
         </div>
-
+<div style="margin: 20px">
+  <el-radio v-model="roleType" label="pump">水泵登录</el-radio>
+  <el-radio v-model="roleType" label="default">平台登录</el-radio>
+</div>
         <!-- <h5 style="text-align:center;font-size:20px;color:rgba(0, 0, 0, 0.647058823529412);margin:20px 0;">账号密码登录</h5> -->
         <el-form-item prop="username">
           <span class="svg-container">
@@ -85,7 +88,7 @@ import { Sitepro } from "@/api/login";
 import { license } from "@/api/license";
 import { getServer, pumpToken } from "@/api/appcontrol";
 import $ from "jquery";
-var pro;
+
 export default {
   name: "Login",
   beforeRouteEnter(to, from, next) {
@@ -113,6 +116,7 @@ export default {
     return {
       reset: false,
       title: "",
+      roleType:'pump',
       loginForm: {
         username: "",
         password: ""
@@ -128,6 +132,7 @@ export default {
       redirect: undefined,
       checked: false,
       imgsrc: require("../../imgages/u50.png"),
+      index_logo: require("../../imgages/index_logo.png"),
       logosrc: "",
       backgroundsrc: require("../../imgages/loginbanner.jpg"),
       redirect: undefined,
@@ -151,15 +156,11 @@ export default {
     },
     // 获取标题
     getTitle() {
-      pro = window.location.pathname;
-      pro = pro.slice(5, pro.length);
-
-      pro = pro == "" ? "default" : pro;
 
       Parse.User.logOut();
-      Sitepro(pro).then(resultes => {
+      Sitepro(this.roleType).then(resultes => {
         this.title = resultes.title;
-        document.title = this.title;
+        document.title = this.title ? this.title :'采集管理系统';
         this.logosrc = resultes.logo;
         Cookies.set("appid", resultes.objectId);
         if (resultes.background != "" && resultes.background) {
@@ -167,12 +168,12 @@ export default {
         } else {
           this.loginbannersrc = false;
         }
-        sessionStorage.setItem("product_title", resultes.title);
-        sessionStorage.setItem("dashboard", resultes.dashboard);
-        sessionStorage.setItem("imgsrc", resultes.logo);
-        sessionStorage.setItem("copyright", resultes.copyright);
-        sessionStorage.setItem("roletype", pro);
-        Cookies.set("application", pro);
+        sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
+        sessionStorage.setItem("dashboard", resultes.dashboard?resultes.dashboard:'#');
+        sessionStorage.setItem("imgsrc", resultes.logo?resultes.logo:'');
+        sessionStorage.setItem("copyright", resultes.copyright?resultes.copyright:'');
+        sessionStorage.setItem("roletype", this.roleType);
+        Cookies.set("application", this.roleType);
       });
     },
     showPwd() {
@@ -206,18 +207,18 @@ export default {
                 sessionStorage.setItem("username", user.attributes.username);
                 sessionStorage.setItem("roles", user.attributes.roles[0].alias);
                 localStorage.setItem("list", JSON.stringify(this.routes));
-                sessionStorage.setItem("token", user.attributes.sessionToken);
-                sessionStorage.setItem("type", "vcon");
-                if (pro.indexOf("pump") != -1) {
+                
+                // 如果存在该字符串
+                if (this.roleType.indexOf("pump") != -1) {
                   pumpToken().then(response => {
                     if (response) {
                       Cookies.set("access_token", response.access_token);
-                      getServer(pro)
+                      getServer(this.roleType)
                         .then(resultes => {
                           Cookies.set("appids", resultes.appid);
                           Cookies.set("fileserver", resultes.file);
                           Cookies.set("apiserver", resultes.rest);
-                          Cookies.set("dashboard_url", resultes.dashboard);
+                          Cookies.set("dashboard_url", resultes.dashboard ? resultes.dashboard : "/dashboard");
                           Cookies.set("graphql", resultes.graphql);
                           Cookies.set("topo", resultes.topo);
                           Cookies.set("appdesc", resultes.desc);
