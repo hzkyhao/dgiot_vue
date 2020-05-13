@@ -97,8 +97,8 @@
             <el-option
               v-for="item in applicationList"
               :key="item.id"
-              :label="item.attributes.desc"
-              :value="item.attributes.desc">
+              :label="item.attributes.name"
+              :value="item.attributes.name" >
             </el-option>
           </el-select>          
           </el-form-item>
@@ -443,7 +443,8 @@ export default {
           var app = new Parse.Query(App)
           app.get(appid).then(resultes=>{
             if(resultes){
-              this.form.relationApp = resultes.attributes.desc
+              // this.form.relationApp = resultes.id
+              this.form.relationApp = resultes.attributes.name
               this.form.productIdentifier = resultes.attributes.desc
               this.form.name = resultes.attributes.desc
               
@@ -535,8 +536,10 @@ export default {
       var Product = Parse.Object.extend("Product");
       var product = new Product();
       var acl = new Parse.ACL();
+
       acl.setRoleReadAccess(this.form.relationApp, true);
       acl.setRoleWriteAccess(this.form.relationApp, true);
+
       project.set("ACL", acl);
       // var relation = project.relation("product");
       // this.form.product.map(item => {
@@ -583,7 +586,7 @@ export default {
               "objects": [{
                 "__type": "Pointer",
                 "className": "App",
-                "objectId": relTableRowByObjectId //被关联的应用记录
+                "objectId": relTableRowByObjectId //被关联的应用记录的id
               }]
             }
           }
