@@ -133,28 +133,14 @@ export default {
     };
   },
   methods: {
-    getlicense() {
-      license().then(resultes => {
-        if (resultes.result == false) {
-          this.$router.push({
-            path: "/license"
-          });
-        } else {
-          this.$router.push("/login");
-          this.getTitle();
-          localStorage.setItem("list", "[]");
-        }
-      });
-    },
     // 获取标题
     getTitle() {
 
-      Parse.User.logOut();
+      // Parse.User.logOut();
       Sitepro(this.roleType).then(resultes => {
         if(!resultes){
                     resultes = {}
            }
-
         this.title = resultes.title;
         document.title = this.title ? this.title :'采集管理系统';
 
@@ -166,11 +152,11 @@ export default {
         this.$Cookies.set("application", this.roleType);
       
 
-/*      sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
+        sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
         sessionStorage.setItem("dashboard", resultes.dashboard?resultes.dashboard:'#');
         sessionStorage.setItem("imgsrc", resultes.logo?resultes.logo:'');
         sessionStorage.setItem("copyright", resultes.copyright?resultes.copyright:'');
-        sessionStorage.setItem("roletype", this.roleType) */
+        sessionStorage.setItem("roletype", this.roleType)
 
       });
     },
@@ -256,7 +242,6 @@ export default {
     }
   },
   created() {
-    //  this.getlicense()
     this.getTitle();
   },
   mounted() {}
