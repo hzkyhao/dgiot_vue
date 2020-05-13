@@ -16,8 +16,8 @@
           <img :src="logosrc || index_logo" alt="logo" style="width:80px;height:80px;" />
           <p>{{title}}</p>
         </div>
-<div style="margin: 20px">
-  <el-radio v-model="roleType" label="pump">水泵登录</el-radio>
+<div style="margin: 20px" >
+  <el-radio  disabled v-model="roleType" label="pump">水泵登录</el-radio>
   <el-radio v-model="roleType" label="default">平台登录</el-radio>
 </div>
         <!-- <h5 style="text-align:center;font-size:20px;color:rgba(0, 0, 0, 0.647058823529412);margin:20px 0;">账号密码登录</h5> -->
@@ -79,16 +79,10 @@
  
 <script>
 import { isvalidUsername } from "@/utils/validate";
-import { login } from "@/api/login";
-import Cookies from "js-cookie";
 import { Parse } from "parse";
-import Config from "@/config";
 import { getsession } from "@/utils/wxscoket.js";
 import { Sitepro } from "@/api/login";
 import { license } from "@/api/license";
-import { getServer, pumpToken } from "@/api/appcontrol";
-import $ from "jquery";
-
 export default {
   name: "Login",
   beforeRouteEnter(to, from, next) {
@@ -116,7 +110,7 @@ export default {
     return {
       reset: false,
       title: "",
-      roleType:'pump',
+      roleType:'default',
       loginForm: {
         username: "",
         password: ""
@@ -129,13 +123,11 @@ export default {
       },
       loading: false,
       pwdType: "password",
-      redirect: undefined,
       checked: false,
       imgsrc: require("../../imgages/u50.png"),
       index_logo: require("../../imgages/index_logo.png"),
       logosrc: "",
       backgroundsrc: require("../../imgages/loginbanner.jpg"),
-      redirect: undefined,
       routes: [],
       loginbannersrc: false
     };
@@ -159,21 +151,27 @@ export default {
 
       Parse.User.logOut();
       Sitepro(this.roleType).then(resultes => {
+        if(!resultes){
+                    resultes = {}
+           }
+
         this.title = resultes.title;
         document.title = this.title ? this.title :'采集管理系统';
-        this.logosrc = resultes.logo;
-        Cookies.set("appid", resultes.objectId);
-        if (resultes.background != "" && resultes.background) {
-          this.loginbannersrc = resultes.background;
-        } else {
-          this.loginbannersrc = false;
-        }
-        sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
+
+        this.logosrc = resultes.logo;        
+        this.loginbannersrc = resultes.background;
+
+        this.$Cookies.set("appid", resultes.objectId);
+        this.$Cookies.set("roletype", this.roleType);
+        this.$Cookies.set("application", this.roleType);
+      
+
+/*      sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
         sessionStorage.setItem("dashboard", resultes.dashboard?resultes.dashboard:'#');
         sessionStorage.setItem("imgsrc", resultes.logo?resultes.logo:'');
         sessionStorage.setItem("copyright", resultes.copyright?resultes.copyright:'');
-        sessionStorage.setItem("roletype", this.roleType);
-        Cookies.set("application", this.roleType);
+        sessionStorage.setItem("roletype", this.roleType) */
+
       });
     },
     showPwd() {
@@ -192,8 +190,8 @@ export default {
             .then(user => {
               getsession(user.attributes.sessionToken);
 
-              Cookies.set("sessionToken", user.attributes.sessionToken);
-              Cookies.set("username", user.attributes.username);
+              this.$Cookies.set("sessionToken", user.attributes.sessionToken);
+              this.$Cookies.set("username", user.attributes.username);
               this.$store.dispatch("setRoles", user.attributes.roles);
               var Menu = Parse.Object.extend("Navigation");
               var menu = new Parse.Query(Menu);
@@ -207,43 +205,9 @@ export default {
                 sessionStorage.setItem("username", user.attributes.username);
                 sessionStorage.setItem("roles", user.attributes.roles[0].alias);
                 localStorage.setItem("list", JSON.stringify(this.routes));
-                
-                // 如果存在该字符串
-                if (this.roleType.indexOf("pump") != -1) {
-                  pumpToken().then(response => {
-                    if (response) {
-                      Cookies.set("access_token", response.access_token);
-                      getServer(this.roleType)
-                        .then(resultes => {
-                          Cookies.set("appids", resultes.appid);
-                          Cookies.set("fileserver", resultes.file);
-                          Cookies.set("apiserver", resultes.rest);
-                          Cookies.set("dashboard_url", resultes.dashboard ? resultes.dashboard : "/dashboard");
-                          Cookies.set("graphql", resultes.graphql);
-                          Cookies.set("topo", resultes.topo);
-                          Cookies.set("appdesc", resultes.desc);
-                          this.$store.commit(
-                            "SET_NAME",
-                            this.loginForm.username
-                          );
-                          if (resultes.dashboard) {
-                            this.$router.push({
-                              path: this.redirect || resultes.dashboard
-                            });
-                          } else {
-                            this.$router.push({
-                              path: this.redirect || "/dashboard"
-                            });
-                          }
-                        })
-                        .catch(error => {
-                          this.$message.error(error.error);
-                        });
-                    }
-                  });
-                } else {
-                  this.$router.push({ path: this.redirect || "/dashboard" });
-                }
+      
+                this.$router.push({ path:"/dashboard" });
+        
               });
             })
             .catch(error => {
@@ -436,8 +400,6 @@ $light_gray: #eee;
     margin: 25px 0;
   }
 }
-</style>
-<style>
 .login-container .el-form-item__content {
   border: 1px solid #cccccc;
   border-radius: 5px;

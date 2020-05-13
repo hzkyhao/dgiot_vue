@@ -29,7 +29,7 @@ import './assets/iconfont/iconfont.css'
 // import animate from "animate.css"
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 // import lang from '@/common/lang' // 中英文翻译
 import BaiduMap from 'vue-baidu-map'
 import 'echarts-liquidfill'
@@ -115,6 +115,7 @@ Vue.prototype.$axios = service
 // Vue.prototype.$api = api
 Vue.prototype.$NProgress = NProgress
 Vue.prototype.$globalConfig = globalConfig
+Vue.prototype.$Cookies = Cookies
 
 Vue.use(VueResource)
 
