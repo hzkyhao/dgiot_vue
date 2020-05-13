@@ -15,9 +15,9 @@ const serviceWen = axios.create({
 serviceWen.interceptors.request.use(config => {
   config.headers["Content-Type"]='application/json'
   config.headers["Accept"]='application/json'
-  if (Cookies.get("access_token")) {
-    config.headers['sessionToken'] = Cookies.get("access_token");
-  }
+
+  config.headers['sessionToken'] = Cookies.get("sessionToken");
+
 
   return config
 }, error => {

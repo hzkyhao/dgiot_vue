@@ -16,7 +16,7 @@
           <img :src="logosrc || index_logo" alt="logo" style="width:80px;height:80px;" />
           <p>{{title}}</p>
         </div>
-<div style="margin: 20px" >
+<div style="margin: 20px" v-show="false">
   <el-radio  disabled v-model="roleType" label="pump">水泵登录</el-radio>
   <el-radio v-model="roleType" label="default">平台登录</el-radio>
 </div>
