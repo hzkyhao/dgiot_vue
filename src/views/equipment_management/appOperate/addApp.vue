@@ -5,7 +5,7 @@
         <el-breadcrumb-item
           :to="{ path: '/roles/applicationManagement' }"
         >{{$t('application.applicationmanagement')}}</el-breadcrumb-item>
-        <el-breadcrumb-item>{{page=='update'? '编辑应用':'新增应用'}}</el-breadcrumb-item>
+        <el-breadcrumb-item>{{actionType == 'update'? '编辑应用':'新增应用'}}</el-breadcrumb-item>
       </el-breadcrumb>
       <el-button
         type="primary"
@@ -41,7 +41,11 @@
                     { required: true, message: '工程名称不能为空'},
                 ]"
               >
-                <el-input v-model="form.name" :placeholder="$t('application.applicationname')" readonly></el-input>
+                <el-input
+                  v-model="form.name"
+                  :placeholder="$t('application.applicationname')"
+                  readonly
+                ></el-input>
               </el-form-item>
               <!-- 工程链接 -->
               <el-form-item
@@ -51,21 +55,20 @@
                     { required: true, message: '工程链接不能为空'},
                 ]"
               >
-        <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
+                <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
                   <template slot="prepend">{{host}}</template>
                 </el-input>
- -->
-                  <el-select v-model="form.productIdentifier" placeholder="请选择" disabled>
+                -->
+                <el-select v-model="form.productIdentifier" placeholder="请选择" disabled>
                   <el-option
                     v-for="item in applicationList"
                     :key="item.id"
                     :label="host + item.attributes.desc"
-                    :value="item.attributes.desc">
-                  </el-option>
+                    :value="item.attributes.desc"
+                  ></el-option>
                 </el-select>
-      
               </el-form-item>
-          <!-- 所属行业 -->
+              <!-- 所属行业 -->
               <el-form-item
                 :label="$t('application.industrytype')"
                 prop="category"
@@ -73,17 +76,13 @@
                     { required: true, message: '请选择所属行业',trigger: 'blur'},
                 ]"
               >
-
-               <el-cascader
+                <el-cascader
                   ref="category"
                   :options="treeData"
                   v-model="form.category"
                   :placeholder="$t('application.industrytype')"
                   clearable
-                ></el-cascader> 
-
-                 
-
+                ></el-cascader>
               </el-form-item>
 
               <!-- 所属应用(角色) app -->
@@ -92,17 +91,18 @@
                 :rules="[
                     { required: true, message: '请选择所属应用',trigger: 'blur'},
                 ]"
-              >    
-          <el-select @change="onApplicationchange" v-model="form.relationApp" :placeholder="$t('application.applicationtype')" disabled>
-            <el-option
-              v-for="item in applicationList"
-              :key="item.id"
-              :label="item.attributes.name"
-              :value="item.attributes.name" >
-            </el-option>
-          </el-select>          
-          </el-form-item>
+              >
+              <el-input v-model="form.relationApp" :disabled="true">  </el-input>
+              <!--
+                  <el-option
+                    v-for="item in applicationList"
+                    :key="item.id"
+                    :label="item.attributes.name"
+                    :value="item.attributes.name"
+                  ></el-option>                            
+              -->
 
+              </el-form-item>
               <!--工程产品、-->
               <!-- <el-form-item label="工程产品">
                 <el-select v-model="form.product" multiple placeholder="请选择">
@@ -113,7 +113,8 @@
                     :value="item.id"
                   ></el-option>
                 </el-select>
-              </el-form-item> -->
+              </el-form-item>-->
+
               <!-- 工程描述 -->
               <el-form-item :label="$t('application.applicationdescription')">
                 <el-input
@@ -269,15 +270,15 @@
       </el-form>
       <div class="btns">
         <el-button
-          v-show="page=='add'"
+          v-show="actionType == 'add'"
           type="primary"
           @click="handleClickSubmit"
         >{{$t('application.submission')}}</el-button>
         <el-button
-          v-show="page=='update'"
+          v-show="actionType =='update'"
           type="primary"
           @click="handleClickUpdate"
-        >{{$t('application.submission')}}</el-button>
+        >更新</el-button>
       </div>
     </div>
   </div>
@@ -293,8 +294,8 @@ import {
   updateApp
 } from "@/api/applicationManagement";
 import Parse from "parse";
-import { resolve } from 'url';
-import { returnLogin } from '@/utils/return';
+import { resolve } from "url";
+import { returnLogin } from "@/utils/return";
 export default {
   data() {
     return {
@@ -321,7 +322,7 @@ export default {
           { id: 4, value: 1000000, label: "100万" },
           { id: 5, value: 10000000, label: "1000万" },
           { id: 6, value: 100000000, label: "1亿" }
-        ],        
+        ],
         productIdentifier: "", //工程链接
         fileList: [], //上传列表，
         fileList1: [], //上传列表
@@ -334,7 +335,8 @@ export default {
       },
       sessionToken: "",
       file: "",
-      page: "",
+      actionType: "",
+      relationAppObjectId:'',
       // 页面内容，传值变化
       content: {
         title: "",
@@ -343,7 +345,7 @@ export default {
       // 参数
       argu: {},
       Notification: "",
-      productlist: [], //产品合级
+      productlist: [] //产品合级
     };
   },
   computed: {
@@ -364,18 +366,16 @@ export default {
     this.randomSecret();
     this.getProductList();
     // this.sessionToken = sessionStorage.getItem("token");
-     
   },
   mounted() {
-   this.estiPage();
+    this.initData();
   },
   methods: {
     // 刷新secret
     handleClickRefresh() {
       this.randomSecret();
     },
-    onApplicationchange(val){
-    },
+    onApplicationchange(val) {},
     getProductList(relAppid) {
       var Product = Parse.Object.extend("Product");
       var product = new Parse.Query(Product);
@@ -395,69 +395,75 @@ export default {
       );
     },
     // 判断页面
-    estiPage() {
-      this.argu = this.$route.query;     
+    initData() {
+      this.argu = this.$route.query;
       this.content.title = this.argu.title;
-      this.page = this.argu.page;
-      
-        this.getApplication().then(response=>{
-          this.applicationList = response
-        if (this.page == "update") {
-        this.form.name = this.argu.name;
-        this.form.scale = Number(handleZero(this.argu.scale));
-        this.form.secret = this.argu.secret;
-        this.form.productIdentifier = this.argu.productIdentifier;
-        this.content.objectId = this.argu.objectId;
-        this.form.department = this.argu.userUnit;
-        this.form.desc = this.argu.desc;
-        this.form.copyright = this.argu.copyright;
+      this.actionType = this.argu.actionType;
 
-        if(this.argu.category){
-          this.form.category = this.argu.category.split("/");
-        }
-        if (this.argu.dashboard) {
-          this.form.dashboard = this.argu.dashboard.substr(7);
-        } else {
-          this.form.dashboard = "";
-        }
+      this.getApplication()
+        .then(response => {
+          this.applicationList = response;
 
-        if (this.argu.logo != "") {
-          this.form.img = this.argu.logo;
-          this.form.fileList.push({
-            name: "logo.png",
-            url: this.argu.logo
-          });
-        }
-          if (this.argu.background != "") {
-            this.form.img1 = this.argu.background;
-            this.form.fileList1.push({
-              name: "background.png",
-              url: this.argu.background
-            });
-          }
+          //从工程管理列表,的修改按钮 跳转过来的
+          if (this.actionType == "update") {
+            this.form.name = this.argu.name;
+            this.form.scale = Number(handleZero(this.argu.scale));
+            this.form.secret = this.argu.secret;
+            this.form.productIdentifier = this.argu.productIdentifier;
+            this.content.objectId = this.argu.objectId;
+            this.form.department = this.argu.userUnit;
+            this.form.desc = this.argu.desc;
+            this.form.copyright = this.argu.copyright;
 
-        this.form.relationApp = this.argu.acl;
-        }else{
-          var appid = this.$route.query.appid
-          var App = Parse.Object.extend('App')
-          var app = new Parse.Query(App)
-          app.get(appid).then(resultes=>{
-            if(resultes){
-              // this.form.relationApp = resultes.id
-              this.form.relationApp = resultes.attributes.name
-              this.form.productIdentifier = resultes.attributes.desc
-              this.form.name = resultes.attributes.desc
-              
+            if (this.argu.category) {
+              this.form.category = this.argu.category.split("/");
             }
-          })
-        }
-        }).catch(error=>{
-          returnLogin(error)
+            if (this.argu.dashboard) {
+              this.form.dashboard = this.argu.dashboard.substr(7);
+            } else {
+              this.form.dashboard = "";
+            }
+
+            if (this.argu.logo != "") {
+              this.form.img = this.argu.logo;
+              this.form.fileList.push({
+                name: "logo.png",
+                url: this.argu.logo
+              });
+            }
+            if (this.argu.background != "") {
+              this.form.img1 = this.argu.background;
+              this.form.fileList1.push({
+                name: "background.png",
+                url: this.argu.background
+              });
+            }
+
+            this.form.relationApp = this.argu.name;
+          } else {
+            //从应用管理的应用部署跳转过来的
+            this.relationAppObjectId = this.$route.query.appObjectId;
+            
+            this.form.relationApp = this.$route.query.name;
+            this.form.productIdentifier = this.$route.query.desc;
+            this.form.name = this.$route.query.desc;
+
+
+    /*         var App = Parse.Object.extend("App");
+            var app = new Parse.Query(App);
+            app.get(appid).then(resultes => {
+              if (resultes) {
+                // this.form.relationApp = resultes.id
+                this.form.relationApp = resultes.attributes.name;
+                this.form.productIdentifier = resultes.attributes.desc;
+                this.form.name = resultes.attributes.desc;
+              }
+            }); */
+          }
         })
-        
-      
-         
-    
+        .catch(error => {
+          returnLogin(error);
+        });
     },
     // 返回
     handleClickBack() {
@@ -526,7 +532,7 @@ export default {
     submitUpload1() {
       this.$refs.upload1.submit();
     },
-    // 提交
+    // 新增
     handleClickSubmit() {
       if (!this.isSubmit()) {
         return;
@@ -563,42 +569,43 @@ export default {
       project.save().then(resultes => {
         if (resultes) {
           this.$message({
-            message: "添加成功！",
+            message: "添加部署成功！",
             type: "success"
           });
           this.$router.push({ path: "/roles/projectManagement" });
 
-          var sorceId = resultes.id
-          var destId = this.form.relationApp
+          var sorceId = resultes.id;
+          var destId = this.relationAppObjectId;
 
           //添加关联
-          this.addRelation(sorceId,destId);
- 
-
+          this.addRelation(sorceId, destId);
         }
+      }).catch(error =>{
+        // Maybe it's title重复
+        this.$message(JSON.stringify(error))
+
       });
     },
-    addRelation(relColumName,relTableRowByObjectId){
-
-       this.$axiosWen.put('/classes/Project/' + relColumName, {
-            "app": {
-              "__op": "AddRelation",
-              "objects": [{
-                "__type": "Pointer",
-                "className": "App",
-                "objectId": relTableRowByObjectId //被关联的应用记录的id
-              }]
-            }
+    addRelation(relColumName, relTableRowByObjectId) {
+      this.$axiosWen
+        .put("/classes/Project/" + relColumName, {
+          app: {
+            __op: "AddRelation",
+            objects: [
+              {
+                __type: "Pointer",
+                className: "App",
+                objectId: relTableRowByObjectId //被关联的应用记录的id
+              }
+            ]
           }
-          )
-          .then(function (response) {
-            console.log('addRelation',response);
-          })
-          .catch(function (error) {
-            console.log('addRelation',error);
-          });
-
-
+        })
+        .then(function(response) {
+          console.log("addRelation", response);
+        })
+        .catch(function(error) {
+          console.log("addRelation", error);
+        });
     },
     // 修改
     handleClickUpdate() {
@@ -613,9 +620,8 @@ export default {
       var product = new Product();
       var acl = new Parse.ACL();
 
-
       acl.setRoleReadAccess(this.form.relationApp, true);
-      acl.setRoleWriteAccess(this.form.relationApp, true)
+      acl.setRoleWriteAccess(this.form.relationApp, true);
 
       project.set("ACL", acl);
       // var relation = project.relation("product");
@@ -676,22 +682,22 @@ export default {
     },
     // 获取应用列表
     getApplication() {
-      return new Promise((resolve,reject)=>{
+      return new Promise((resolve, reject) => {
         var App = Parse.Object.extend("App");
-          var query = new Parse.Query(App);
-          var _this = this;
-          query.limit(100);
-          query.find().then(
-            response => {
-              if (response) {
-                resolve(response)
-              }
-            },
-            error => {
-              reject(error)
+        var query = new Parse.Query(App);
+        var _this = this;
+        query.limit(100);
+        query.find().then(
+          response => {
+            if (response) {
+              resolve(response);
             }
-          );
-      })
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
     },
     open12() {
       this.Notification = this.$notify({

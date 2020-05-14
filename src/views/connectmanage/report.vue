@@ -104,9 +104,9 @@
 </template>
 <script>
 import {connectlist} from '@/api/connectlist/connectlist'
-import meterdetailVue from '../tasksmanage/meterdetail.vue';
+// import meterdetailVue from '../tasksmanage/meterdetail.vue';
 import Parse from 'parse'
-import smartmeterVue from '../devicemanage/smartmeter.vue';
+// import smartmeterVue from '../devicemanage/smartmeter.vue';
 import { QueryVcon} from "@/api/meterMonitoring"
 export default {
    data() {

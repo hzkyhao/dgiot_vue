@@ -391,7 +391,13 @@ export default {
    applicationDeployment(row){
             this.$router.push({
         path: "/applicationManagement/addApp",
-        query: { page: "add", title: "新增应用",appid:row.id}
+        query: { 
+           actionType: "add",
+           title: "新增应用",
+           appObjectId: row.id,
+           desc:row.attributes.desc,
+           name:row.attributes.name
+           }
       });
     },
      //显示，隐藏

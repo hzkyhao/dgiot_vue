@@ -265,7 +265,7 @@ export default {
       this.$router.push({
         path: "/applicationManagement/addApp",
         query: {
-          page: "update",
+          actionType: "update",
           title: "修改应用",
           name: row.name,
           scale: row.scale,
@@ -279,7 +279,7 @@ export default {
           userUnit:row.userUnit,
           dashboard: row.dashboard,
           background: row.background,
-          acl:this.$getFirstKey(row.acl),
+          // acl:this.$getFirstKey(row.acl),
           desc:row.desc,
           copyright:row.copyright
         }

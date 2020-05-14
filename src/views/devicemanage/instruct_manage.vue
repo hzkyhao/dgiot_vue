@@ -262,9 +262,7 @@ export default {
       formInline: {
         name: ""
       },
-      options:[        
-        {value:'all',label:'all'}
-      ],
+      options:[{value:'first',label:'第一轮'},{value:'last',label:'最后一轮'},{value:'all',label:'全部'},],
       instructData: [],
       multipleTable: [],
       pagesize: 10,
@@ -307,7 +305,7 @@ export default {
           { required: true, message: "下发网关不能为空", trigger: "blur" }
         ], */
         rotation: [
-          { required: true, message: "生效轮次不能为空", trigger: "blur" }
+          { required: true, message: "生效轮次不能为空", trigger: "change" }
         ],
         subnet: [
           { required: true, message: "子网编号不能为空", trigger: "blur" },
