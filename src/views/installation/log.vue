@@ -204,7 +204,7 @@ export default {
                 this.Getinformation()
             }
         }).catch(error=>{
-            this.$message.error(error.error)
+            this.$message(error.error)
         })
     },
     removeNode(row){
@@ -217,7 +217,7 @@ export default {
                 this.Getinformation()
             }
         }).catch(error=>{
-            this.$message.error(error.error)
+            this.$message(error.error)
         })
     },
       install(){

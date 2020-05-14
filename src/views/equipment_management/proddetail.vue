@@ -2475,7 +2475,7 @@ export default {
       channel.save().then(
         response => {
           if (response) {
-            this.$message.success("添加成功");
+            this.$message("添加成功");
           }
         },
         error => {
@@ -2875,7 +2875,7 @@ export default {
           }
         },
         error => {
-          this.$message.error(error.message);
+          this.$message(error.message);
         }
       );
     },
@@ -3095,7 +3095,7 @@ export default {
       datas.destroy().then(
         resultes => {
           if (resultes) {
-            this.$message.success("成功删除");
+            this.$message("成功删除");
             this.chaxun();
           }
         },
@@ -3166,7 +3166,7 @@ export default {
             response => {
               if (response) {
                 if (response.length >= 1) {
-                  this.$message.warnings("此协议版本已存在");
+                  this.$messages("此协议版本已存在");
                   return;
                 } else {
                   var datas = new Dict();
@@ -3180,11 +3180,11 @@ export default {
                   datas.save().then(
                     resultes => {
                       if (resultes) {
-                        this.$message.success("保存到公共协议库成功");
+                        this.$message("保存到公共协议库成功");
                       }
                     },
                     error => {
-                      this.$message.error(error.message);
+                      this.$message(error.message);
                     }
                   );
                 }
@@ -3207,11 +3207,11 @@ export default {
       subupadte(row.id, "update")
         .then(resultes => {
           if (resultes) {
-            this.$message.success("重载成功");
+            this.$message("重载成功");
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     
@@ -3664,7 +3664,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-          this.$message.error(error);
+          this.$message(error);
         });
     },
     //规则tab显示
@@ -3676,7 +3676,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     //分页
@@ -3714,12 +3714,12 @@ export default {
       ruleDelete(id)
         .then(resultes => {
           if (resultes) {
-            this.$message.success("删除成功");
+            this.$message("删除成功");
             this.orginRule();
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     }
   },

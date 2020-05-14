@@ -415,7 +415,7 @@ export default {
           }
         },
         error => {
-          this.$message.error(error.message);
+          this.$message(error.message);
         }
       );
     },
@@ -438,7 +438,7 @@ export default {
           this.Get_Re_Channel(0);
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     //编辑设备

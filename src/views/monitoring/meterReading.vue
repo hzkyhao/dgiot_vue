@@ -264,7 +264,7 @@ export default {
         }
       
       }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
       }else{
         if(this.form.addr_web!=''){
@@ -276,7 +276,7 @@ export default {
                this.loading=false;
           }
         }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
         }else{
            getMeterListDate1((this.pager.page-1)*this.pager.rows, this.pager.rows,this.form.vcaddr_web,this.form.startTime, this.form.endTime,this.form.res,this.form.data_type_value).then(res=>{
@@ -287,7 +287,7 @@ export default {
                this.loading=false;
           }
         }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
         }
        
@@ -384,7 +384,7 @@ export default {
             this.loading=false;
         }
       }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
       }else{
         
@@ -397,7 +397,7 @@ export default {
                this.loading=false;
           }
         }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
         }else{
            getMeterListDate1((this.pager.page-1)*this.pager.rows, this.pager.rows,this.form.vcaddr_web,this.form.startTime, this.form.endTime,this.form.res,this.form.data_type_value).then(res=>{
@@ -408,7 +408,7 @@ export default {
                this.loading=false;
           }
         }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
         }
       }
@@ -506,7 +506,7 @@ export default {
          
         })
         .catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
     },
     // 分页导出
@@ -522,7 +522,7 @@ export default {
           }
           
         }).catch(error=>{
-        this.$message.error(error.error)
+        this.$message(error.error)
       });
     },
     // 分页懒加载

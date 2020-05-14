@@ -795,11 +795,11 @@ export default {
     //结束时间判断
     enddata() {
       if (this.taskform.endtime <= this.taskform.starttime) {
-        this.$message.warning("采集结束时间要小于开始时间");
+        this.$message("采集结束时间要小于开始时间");
         this.taskform.endtime = "";
       }
       if (this.taskform.endtime < Date.now() - 2000) {
-        this.$message.warning("采集结束时间要大于当前时间");
+        this.$message("采集结束时间要大于当前时间");
         this.taskform.endtime = "";
       }
     },
@@ -810,11 +810,11 @@ export default {
         this.taskform.endtime != "" &&
         this.taskform.endtime != null
       ) {
-        this.$message.warning("采集结束时间要小于开始时间");
+        this.$message("采集结束时间要小于开始时间");
         this.taskform.starttime = "";
       }
       if (this.taskform.starttime < Date.now() - 2000) {
-        this.$message.warning("采集开始时间要大于当前时间");
+        this.$message("采集开始时间要大于当前时间");
         this.taskform.starttime = "";
       }
     },
@@ -838,7 +838,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.diselect.length == 0) {
-            this.$message.error("请选择数据项标识");
+            this.$message("请选择数据项标识");
           } else {
             var meter = [];
             var vcaddr = "";
@@ -1075,7 +1075,7 @@ export default {
             });
         });
       } else {
-        this.$message.warning("请勾选要删除的任务");
+        this.$message("请勾选要删除的任务");
       }
     }
   }

@@ -555,7 +555,7 @@ export default {
               path: "/login"
             });
           } else {
-            this.$message.error(error.message);
+            this.$message(error.message);
           }
         }
       );

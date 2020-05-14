@@ -183,11 +183,11 @@ export default {
     },
     enddata() {
       if (this.form3.endtime <= this.form3.starttime) {
-        this.$message.warning("结束时间要小于开始时间");
+        this.$message("结束时间要小于开始时间");
         this.form3.endtime = "";
       }
       if (this.form3.endtime < Date.now() - 2000) {
-        this.$message.warning("结束时间要大于当前时间");
+        this.$message("结束时间要大于当前时间");
         this.form3.endtime = "";
       }
     },
@@ -197,11 +197,11 @@ export default {
         this.form3.endtime != "" &&
         this.form3.endtime != null
       ) {
-        this.$message.warning("结束时间要小于开始时间");
+        this.$message("结束时间要小于开始时间");
         this.form3.starttime = "";
       }
       if (this.form3.starttime < Date.now() - 2000) {
-        this.$message.warning("开始时间要大于当前时间");
+        this.$message("开始时间要大于当前时间");
         this.form3.starttime = "";
       }
     },

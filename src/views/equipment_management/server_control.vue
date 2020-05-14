@@ -572,7 +572,7 @@ export default {
           license.save().then(
             resultes => {
               if (resultes) {
-                this.$message.success("添加成功");
+                this.$message("添加成功");
                 this.$refs[formName].resetFields();
                 this.getOrigin(0);
                 this.serverdialogVisible = false;
@@ -717,7 +717,7 @@ export default {
           license.save().then(
             resultes => {
               if (resultes) {
-                this.$message.success("正在部署中");
+                this.$message("正在部署中");
                 this.dialogFormVisible = false;
                 this.getOrigin(1);
               }
@@ -743,21 +743,21 @@ export default {
         this.ruleForm.date2 != "" &&
         this.ruleForm.date2 != null
       ) {
-        this.$message.warning("采集结束时间要小于开始时间");
+        this.$message("采集结束时间要小于开始时间");
         this.ruleForm.date1 = "";
       }
       if (this.ruleForm.date1 < Date.now() - 2000) {
-        this.$message.warning("采集开始时间要大于当前时间");
+        this.$message("采集开始时间要大于当前时间");
         this.ruleForm.date1 = "";
       }
     },
     endDate() {
       if (this.ruleForm.date2 <= this.ruleForm.date1) {
-        this.$message.warning("采集结束时间要小于开始时间");
+        this.$message("采集结束时间要小于开始时间");
         this.ruleForm.date2 = "";
       }
       if (this.ruleForm.date2 < Date.now() - 2000) {
-        this.$message.warning("采集结束时间要大于当前时间");
+        this.$message("采集结束时间要大于当前时间");
         this.ruleForm.date2 = "";
       }
     },
@@ -792,7 +792,7 @@ export default {
             license.save().then(resultes=>{
               if(resultes){
                 this.dialogOnline = false
-                this.$message.success('正在升级中')
+                this.$message('正在升级中')
               }
             },error=>{
               returnLogin(error)
@@ -828,7 +828,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     }
   }

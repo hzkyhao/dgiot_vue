@@ -1500,7 +1500,7 @@ export default {
           });
         },
         error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         }
       );
     },
@@ -1847,7 +1847,7 @@ export default {
             this.total = response.count;
           })
           .catch(error => {
-            this.$message.error(error.error);
+            this.$message(error.error);
           });
         // this.total=30000000
       }
@@ -1889,7 +1889,7 @@ export default {
               message: "没有操作权限"
             });
           } else {
-            this.$message.error(error.error);
+            this.$message(error.error);
           }
         }
       );

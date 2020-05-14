@@ -552,7 +552,7 @@ export default {
           // channel.save().then(
           //   response => {
           //     if (response) {
-          //       this.$message.success("添加成功");
+          //       this.$message("添加成功");
           //       this.dialogFormVisible = false;
           //     }
           //   },
@@ -626,7 +626,7 @@ export default {
               this.formInline.result = JSON.stringify(response, null, 4);
             })
             .catch(error => {
-              this.$message.error(error.error);
+              this.$message(error.error);
             });
         }
       });
@@ -637,7 +637,7 @@ export default {
       this.$refs[forName].validate(valid => {
         if (valid) {
           if (this.actionData.length == 0) {
-            this.$message.error("动作不能为空");
+            this.$message("动作不能为空");
             return;
           }
           var ctx = {
@@ -657,7 +657,7 @@ export default {
           )
             .then(resultes => {
               if (resultes) {
-                this.$message.success("创建成功");
+                this.$message("创建成功");
                 this.$router.push({
                   path: "/rules_engine/engine",
                   // query: {
@@ -668,10 +668,10 @@ export default {
               }
             })
             .catch(error => {
-              this.$message.error(error);
+              this.$message(error);
             });
         } else {
-          this.$message.error("有必填项未填写");
+          this.$message("有必填项未填写");
         }
       });
     },
@@ -686,7 +686,7 @@ export default {
           if (valid) {
            postResource({channel:this.resourceform.objectId},this.resourceform.desc,'','data_resource').then(response=>{
              if(response){
-               this.$message.success('创建成功')
+               this.$message('创建成功')
                this.$refs[formName].resetFields();
                this.dialogVisible = false
                 // getResource().then(response=>{
@@ -694,7 +694,7 @@ export default {
                 //       this.resourcelist = response;
                 //   }
                 // }).catch(error=>{
-                //   this.$message.error(error)
+                //   this.$message(error)
                 // })
              }
            })

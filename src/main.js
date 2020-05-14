@@ -117,15 +117,27 @@ Vue.prototype.$NProgress = NProgress
 Vue.prototype.$globalConfig = globalConfig
 Vue.prototype.$Cookies = Cookies
 
-// 全局重写 element 的message 弹框事件
-/*  Vue.prototype.$message = function(msg){
-  
-  msg.duration= msg.duration ? msg.duration:800;
-  msg.showClose= msg.showClose ? msg.showClose:true;
-
-  ElementUI.Message(msg)
+// 全局重写 element 的$message 弹框事件
+Vue.prototype.$message = function(msg) {
+    if(!msg){
+        return
+    }
+    if(typeof msg == 'object'){
+      var param = {
+        message:msg.message,
+        duration:msg.duration ? msg.duration:800,
+        showClose:msg.showClose ? msg.showClose:true
+      }
+    } else {
+      var param = {
+        message:msg,
+        duration:800,
+        showClose:true
+      }
+    }
+  ElementUI.Message(param)
 }
- */
+ 
 Vue.use(VueResource)
 
 /* Vue.use(ElementUI,{

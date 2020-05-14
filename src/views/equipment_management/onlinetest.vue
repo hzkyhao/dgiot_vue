@@ -481,7 +481,7 @@ export default {
     //发送指令
     sendMessage1(){
       if(this.editor1.function==''){
-        this.$message.warning('请挑选调试功能')
+        this.$message('请挑选调试功能')
         return
       }
       if(this.sendindex==0){
@@ -503,11 +503,11 @@ export default {
     //新增datasCMD
     addCmd(){
       if(this.messageform.name==''){
-        this.$message.error('请输入功能名称')
+        this.$message('请输入功能名称')
         return
       }
       if(messageEditor.getValue()==''){
-        this.$message.error('请输入功能')
+        this.$message('请输入功能')
         return
       }
       var Product = Parse.Object.extend('Product')
@@ -535,7 +535,7 @@ export default {
            datas.set('type','CMD')
            datas.save().then(resultes=>{
              if(resultes){
-               this.$message.success('创建成功')
+               this.$message('创建成功')
               this.messageDialogVisible = false
               this.getDict()
              }
@@ -615,7 +615,7 @@ export default {
       datas.id = this.editor1.function
       datas.destroy().then(deleteresponse=>{
         if(deleteresponse){
-          this.$message.success('删除成功')
+          this.$message('删除成功')
           this.getDict()
           this.editor1.function=''
           editor1.setValue('')
@@ -631,7 +631,7 @@ export default {
       this.detaildatas.commond = JSON.parse(editor1.getValue())
       datas.save().then(resultes=>{
         if(resultes){
-          this.$message.success('编辑成功')
+          this.$message('编辑成功')
           this.getDict()
         }
       },error=>{

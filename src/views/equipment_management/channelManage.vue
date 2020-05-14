@@ -1282,7 +1282,7 @@ export default {
           });
         },
         error => {
-          this.$message.error(error.message);
+          this.$message(error.message);
         }
       );
     },
@@ -1433,13 +1433,13 @@ export default {
                     });
                    }
                  }).catch(error=>{
-                   this.$message.error(error.error)
+                   this.$message(error.error)
                  })
     
              }
            
            }else{
-             this.$message.error('有必填项未填写')
+             this.$message('有必填项未填写')
              return false
            }
         })
@@ -1487,7 +1487,7 @@ export default {
           this.getChannel()
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     //编辑

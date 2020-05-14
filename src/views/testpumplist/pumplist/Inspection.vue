@@ -1231,11 +1231,11 @@ export default {
     //时间校验
     enddata() {
       if (this.formInline.endtime <= this.formInline.starttime) {
-        this.$message.warning("任务结束时间要小于开始时间");
+        this.$message("任务结束时间要小于开始时间");
         this.formInline.endtime = "";
       }
       if (this.formInline.endtime < Date.now() - 2000) {
-        this.$message.warning("任务结束时间要大于当前时间");
+        this.$message("任务结束时间要大于当前时间");
         this.formInline.endtime = "";
       }
     },
@@ -1245,11 +1245,11 @@ export default {
         this.formInline.endtime != "" &&
         this.formInline.endtime != null
       ) {
-        this.$message.warning("任务开始时间要小于结束时间");
+        this.$message("任务开始时间要小于结束时间");
         this.formInline.starttime = "";
       }
       if (this.formInline.starttime < Date.now() - 2000) {
-        this.$message.warning("任务开始时间要大于当前时间");
+        this.$message("任务开始时间要大于当前时间");
         this.formInline.starttime = "";
       }
     },
@@ -1311,7 +1311,7 @@ export default {
                       Promise.all(arr)
                         .then(data => {
                           if (data.length == response.results.length) {
-                            this.$message.success("删除成功");
+                            this.$message("删除成功");
                             this.getTasktable();
                           }
                         })

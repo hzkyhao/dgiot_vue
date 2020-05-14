@@ -427,7 +427,7 @@ export default {
       //       this.noData = true;
       //     })
       //     .catch(error => {
-      //       this.$message.error(error.error);
+      //       this.$message(error.error);
       //     });
       // } else {
       //   let Mtype = "all";
@@ -466,7 +466,7 @@ export default {
       //       this.noData = true;
       //     })
       //     .catch(error => {
-      //       this.$message.error(error.error);
+      //       this.$message(error.error);
       //     });
       // }
       if (this.form.terminal_type == 1) {
@@ -752,7 +752,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     // 获取电表信息
@@ -802,7 +802,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     // 获取集中器信息
@@ -850,7 +850,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     // 清除定时器

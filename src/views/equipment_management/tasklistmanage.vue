@@ -390,7 +390,7 @@ export default {
               message: "没有操作权限"
             });
           } else {
-            this.$message.error(error.message);
+            this.$message(error.message);
           }
         }
       );
@@ -406,7 +406,7 @@ export default {
     },
     testdata() {
       if (this.form.starttime < Date.now() - 2000) {
-        this.$message.warning("开始执行时间要大于当前时间");
+        this.$message("开始执行时间要大于当前时间");
         this.form.starttime = "";
       }
     },
@@ -478,7 +478,7 @@ export default {
               //   }else{
                  crond.save().then(resultes => {
                     if (resultes) {
-                    this.$message.success("添加成功");
+                    this.$message("添加成功");
                     this.$refs[formName].resetFields();
                     this.form={
                         name: "",
@@ -507,7 +507,7 @@ export default {
         }else{
             crond.save().then(resultes => {
                         if (resultes) {
-                        this.$message.success("编辑成功");
+                        this.$message("编辑成功");
                         this.$refs[formName].resetFields();
                         this.form={
                             name: "",
@@ -568,7 +568,7 @@ export default {
               message: "没有操作权限"
             });
           } else {
-            this.$message.error(error.message);
+            this.$message(error.message);
           } 
          })
     },
@@ -600,7 +600,7 @@ export default {
                     message: "没有操作权限"
                     });
                 } else {
-                    this.$message.error(error.message);
+                    this.$message(error.message);
             } 
          })
 

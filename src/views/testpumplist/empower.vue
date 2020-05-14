@@ -1416,7 +1416,7 @@ export default {
           }
         }).catch(error=>{
           
-          this.$message.error(error.bodyText)
+          this.$message(error.bodyText)
         });
     },
     addTab(targetName) {
@@ -1512,15 +1512,15 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if(this.form.frontimageUrl==''){
-            this.$message.error('请上传身份证正面照')
+            this.$message('请上传身份证正面照')
             return
           }
           if(this.form.contraryimageUrl==''){
-            this.$message.error('请上传身份证背面照')
+            this.$message('请上传身份证背面照')
             return
           }
           if(this.form.businesslicense==''){
-            this.$message.error('请上传企业营业执照')
+            this.$message('请上传企业营业执照')
             return
           }
           var userid = Parse.User.current().id
@@ -1561,7 +1561,7 @@ export default {
           authentication.set("ACL",acl)
          authentication.save().then(resultes=>{
            if(resultes){
-             this.$message.success('企业认证成功')
+             this.$message('企业认证成功')
               this.active++;
               this.form1 = this.form
               if(this.ewpowerid==''){
@@ -1578,7 +1578,7 @@ export default {
            returnLogin(error)
          })
         } else {
-          this.$message.error("有必填项未填写");
+          this.$message("有必填项未填写");
           return false;
         }
       });
@@ -1655,13 +1655,13 @@ export default {
          if(valid1||valid2){
            if(valid1){
               if(this.ruleForm.cnasimgsrc==''){
-               this.$message.error('请上传CNAS证件照片')
+               this.$message('请上传CNAS证件照片')
                 return
             }
            }
            if(valid2){
               if(this.ruleformcma.cmaimgsrc==''){
-                  this.$message.error('请上传CMA证件照片')
+                  this.$message('请上传CMA证件照片')
                   return
               }
             }
@@ -1689,7 +1689,7 @@ export default {
              authentication.set('status','Pending')
              authentication.save().then(response=>{
                if(response){
-                this.$message.success('添加成功')
+                this.$message('添加成功')
                  this.active++
                  this.form1 = this.form
                  this.ruleForm1 = this.ruleForm
@@ -1706,7 +1706,7 @@ export default {
          this.$refs[formName].validate(valid => {
           if (valid) {
             if(this.addotherform.imgsrc==''){
-              this.$message.error('请上传资质照片')
+              this.$message('请上传资质照片')
               return
             }
             var obj = {
@@ -1730,7 +1730,7 @@ export default {
     //确定
     addOther(){
       if(this.otherForm.other==''){
-        this.$message.warning('请填写其他资质名称')
+        this.$message('请填写其他资质名称')
       }else{
         this.dialogVisible = true
       }
@@ -1757,7 +1757,7 @@ export default {
      authentication.set('other',otherEmpowerlist)
      authentication.save().then(resultes=>{
        if(resultes){
-           this.$message.success('提交成功')    
+           this.$message('提交成功')    
            this.allactive++
        }
      })
@@ -1772,7 +1772,7 @@ export default {
     },
     previewLaboratory(){
       if(this.laboratorylist.length==0){
-        this.$message.error('请至少提交一个实验室认证')
+        this.$message('请至少提交一个实验室认证')
         return
       }
       this.laboratoryFormvalue = this.laboratorylist[0].laboratoryForm.name

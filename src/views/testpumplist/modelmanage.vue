@@ -370,7 +370,7 @@ export default {
       report.save().then(
         response => {
           if (response) {
-            this.$message.success("创建成功");
+            this.$message("创建成功");
             this.dialogVisible = false;
             this.getReport();
           }
@@ -503,13 +503,13 @@ export default {
           this.producttotal = response.count;
         })
         .catch(error => {
-          this.$message.error(error)
+          this.$message(error)
         });
     },
     //增加产品以及设备
     addStandardChildren() {
       if (this.childrenform.imageUrl == "") {
-        this.$message.error("请上传模版图片");
+        this.$message("请上传模版图片");
         return;
       }
       var appid = Cookies.get("appids");
@@ -561,7 +561,7 @@ export default {
           report.set("product", product);
           report.save().then(
             res => {
-              _this.$message.success("创建成功");
+              _this.$message("创建成功");
               _this.childrenform.name = "";
               _this.childrenform.imageUrl = "";
               _this.childrenform.index++;
@@ -606,7 +606,7 @@ export default {
             report.id = this.productrow.id
             report.set('product',arr)
             report.save().then(response=>{
-              this.$message.success('删除成功')
+              this.$message('删除成功')
               this.detailReportChildren(this.productrow)
             },error=>{
               returnLogin(error)

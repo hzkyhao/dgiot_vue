@@ -1388,7 +1388,7 @@ export default {
             devices1.equalTo("name", this.deviceform.name);
             devices1.find().then(resultes => {
               if (resultes.length > 0) {
-                this.$message.error("此设备已被创建");
+                this.$message("此设备已被创建");
                 return;
               } else {
                 new Promise((reslove, reject) => {

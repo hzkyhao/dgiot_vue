@@ -384,7 +384,7 @@ export default {
           }
         }).catch(error=>{
           
-          this.$message.error(error.bodyText)
+          this.$message(error.bodyText)
         });
     },
     //身份证正面上传
@@ -415,15 +415,15 @@ export default {
         this.$refs[formName].validate((valid) => {
             if (valid) {
                 if(this.powerform.frontimageUrl==''){
-                    this.$message.error('请上传身份证正面照') 
+                    this.$message('请上传身份证正面照') 
                     return
                 }
                 if(this.powerform.contraryimageUrl==''){
-                    this.$message.error('请上传身份证贝面照')
+                    this.$message('请上传身份证贝面照')
                     return
                 }
                 if(this.powerform.joblicense==''){
-                    this.$message.error('请上传资质资历图片')
+                    this.$message('请上传资质资历图片')
                     return
                 }
                 var PersonAuthtication = Parse.Object.extend('PersonAuthtication')
@@ -463,12 +463,12 @@ export default {
                 personauthtication.save().then(resultes=>{
                     if(resultes){
                       this.personempowerid = resultes.id
-                        this.$message.success('审核提交成功')
+                        this.$message('审核提交成功')
                         this.active=2
                     }
                 })
             } else {
-            this.$message.error('有必填项未填写')
+            this.$message('有必填项未填写')
             return false;
             }
         });

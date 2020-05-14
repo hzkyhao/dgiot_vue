@@ -305,7 +305,7 @@ export default {
               message: "没有操作权限"
             });
           } else {
-            this.$message.error(error.message);
+            this.$message(error.message);
           }
         }
       );
@@ -466,7 +466,7 @@ export default {
           }
         })
         .catch(error => {
-          // this.$message.error(error.error);
+          // this.$message(error.error);
         });
     },
     stopPump(devaddr) {
@@ -486,7 +486,7 @@ export default {
           }
         })
         .catch(error => {
-          // this.$message.error(error.error);
+          // this.$message(error.error);
         });
     },
     rowExpand(row, expandedRows) {
@@ -572,7 +572,7 @@ export default {
                 message: "没有操作权限"
               });
             } else {
-              this.$message.error(error.message);
+              this.$message(error.message);
             }
           }
         );
@@ -612,7 +612,7 @@ export default {
       //           message: "没有操作权限"
       //         });
       //       } else {
-      //         this.$message.error(error.message);
+      //         this.$message(error.message);
       //       }
       //     });
       // },
@@ -651,7 +651,7 @@ export default {
                 message: "没有操作权限"
               });
             } else {
-              this.$message.error(error.message);
+              this.$message(error.message);
             }
           }
         );
@@ -720,7 +720,7 @@ export default {
                     message: "没有操作权限"
                   });
                 } else {
-                  this.$message.error(error.message);
+                  this.$message(error.message);
                 }
               }
             })
@@ -756,7 +756,7 @@ export default {
       //         message: "没有操作权限"
       //       });
       //     } else {
-      //       this.$message.error(error.message);
+      //       this.$message(error.message);
       //     }
       //   }
       // );
@@ -858,7 +858,7 @@ export default {
                   message: "没有操作权限"
                 });
               } else {
-                this.$message.error(error.message);
+                this.$message(error.message);
               }
             }
           );
@@ -878,7 +878,7 @@ export default {
               message: "没有操作权限"
             });
           } else {
-            this.$message.error(error.message);
+            this.$message(error.message);
           }
         }
       );
@@ -944,7 +944,7 @@ export default {
                     message: "没有操作权限"
                   });
                 } else {
-                  this.$message.error(error.message);
+                  this.$message(error.message);
                 }
               }
             })
@@ -986,7 +986,7 @@ export default {
       //         message: "没有操作权限"
       //       });
       //     } else {
-      //       this.$message.error(error.message);
+      //       this.$message(error.message);
       //     }
       //   }
       // );
@@ -1044,7 +1044,7 @@ export default {
                     message: "没有操作权限"
                   });
                 } else {
-                  this.$message.error(error.message);
+                  this.$message(error.message);
                 }
               }
             })

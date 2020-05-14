@@ -394,7 +394,7 @@ export default {
     },
     enddata() {
       if (this.formInline.endtime <= this.formInline.starttime) {
-        this.$message.warning("采集结束时间要大于开始时间");
+        this.$message("采集结束时间要大于开始时间");
         this.formInline.endtime = "";
       }
      
@@ -409,7 +409,7 @@ export default {
         this.formInline.endtime != "" &&
         this.formInline.endtime != null
       ) {
-        this.$message.warning("采集结束时间要大于开始时间");
+        this.$message("采集结束时间要大于开始时间");
         this.formInline.starttime = "";
       }
     },

@@ -538,7 +538,7 @@ export default {
         })
         .catch(error => {
           this.loading = false;
-          this.$message.error(error.bodyText);
+          this.$message(error.bodyText);
         });
     },
     submitUpload() {
@@ -580,7 +580,7 @@ export default {
       this.searchProduct();
     },
     handleUploadError(err, file, fileList) {
-      this.$message.error({
+      this.$message({
         showClose: true,
         message: err
       });
@@ -805,7 +805,7 @@ export default {
             product1.equalTo("name", this.form.name);
             product1.count().then(count => {
               if (count != 0) {
-                this.$message.warning("产品名称已存在");
+                this.$message("产品名称已存在");
                 return false;
               } else {
                 product.set("productSecret", productSecret);
@@ -936,7 +936,7 @@ export default {
       devices.equalTo("product", scope.row.id);
       devices.find().then(resultes => {
         if (resultes.length > 0) {
-          this.$message.error("请先删除该产品下设备");
+          this.$message("请先删除该产品下设备");
           return;
         } else {
           product.get(scope.row.id).then(

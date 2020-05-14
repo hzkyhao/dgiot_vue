@@ -239,11 +239,11 @@ export default {
     },
     uploadHub(){
       if(this.configdata.infomation==''){
-        this.$message.error('请填写数据中心地址')
+        this.$message('请填写数据中心地址')
         return
       }
       if(this.configdata.authorizenumber==''){
-        this.$message.error('请填写授权码')
+        this.$message('请填写授权码')
         return
       }
       
@@ -253,14 +253,14 @@ export default {
           this.$router.push('/login')
         }else{
           if(resultes.status=='license_failed'){
-            this.$message.error('授权码错误，请重新填写')
+            this.$message('授权码错误，请重新填写')
             return 
           }else if(resultes.status=='server_disconnected'){
-            this.$message.error('服务器未连接')
+            this.$message('服务器未连接')
             return
           }else if(resultes.status=='database_uninstalled'){
              this.active=2
-            this.$message.success('服务器部署完成，请完成下一步数据库部署')
+            this.$message('服务器部署完成，请完成下一步数据库部署')
             this.dbinstall=false
             Cookies.set('authorizenumber',this.configdata.authorizenumber)
           }
@@ -274,11 +274,11 @@ export default {
       // })
       iotApp(this.configdata.authorizenumber).then(response=>{
         if(response.result==true){
-          this.$message.success('数据库部署完成')
+          this.$message('数据库部署完成')
            this.active=3
           this.$router.push('/login')
         }else{
-            this.$message.error('部署失败')
+            this.$message('部署失败')
         }
       }).catch(error=>{
         this.$messge.error(error)

@@ -255,7 +255,7 @@ export default {
     send() {
       this.$refs.ruleForm2.validateField("phone", errMsg => {
         if (errMsg) {
-          this.$message.error("请输入手机号");
+          this.$message("请输入手机号");
         } else {
           let _this = this;
     
@@ -283,7 +283,7 @@ export default {
            
           })
           .catch(error => {
-            this.$message.error(error.error)
+            this.$message(error.error)
           });
             
         }
@@ -293,7 +293,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.code == "") {
-            this.$message.warning("请输入手机验证码");
+            this.$message("请输入手机验证码");
           } else {
             passwordreset(
               this.ruleForm2.phone,
@@ -306,7 +306,7 @@ export default {
                   })
               }
             }).catch(error=>{
-                this.$message.error(error.error)
+                this.$message(error.error)
             })
           }
         }

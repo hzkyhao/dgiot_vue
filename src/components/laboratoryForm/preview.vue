@@ -524,19 +524,19 @@ export default {
     },
     handleAvatarlaboratory(response, file, fileList) {
       this.laboratoryForm.imgsrc = response.path;
-      this.$message.success("上传成功");
+      this.$message("上传成功");
     },
     //其他资质添加
     addOther() {
       if (this.otherForm.other == "") {
-        this.$message.warning("请填写其他资质名称");
+        this.$message("请填写其他资质名称");
       } else {
         this.dialogVisible = true;
       }
     },
     handleAvatarSuccessOther(response, file, fileList) {
       this.addotherform.imgsrc = response.path;
-      this.$message.success("上传成功");
+      this.$message("上传成功");
     },
     beforeAvatarUploadOther(file) {
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);

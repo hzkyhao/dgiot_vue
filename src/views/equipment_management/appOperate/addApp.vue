@@ -478,9 +478,9 @@ export default {
       let file = e.target.files[0];
       let type = file.name.substr(-3);
       if (file.size / 1024 > 500) {
-        this.$message.error("上传图片大小不能超过500KB!");
+        this.$message("上传图片大小不能超过500KB!");
       } else if (type != "png" && type != "jpg") {
-        this.$message.error("上传图片格式不正确，必须是png或jpg格式！");
+        this.$message("上传图片格式不正确，必须是png或jpg格式！");
       } else {
         this.file = file;
       }
@@ -512,7 +512,7 @@ export default {
         this.form.scale == "" ||
         this.form.productIdentifier == ""
       ) {
-        this.$message.error("有必填项没有填写，无法提交！");
+        this.$message("有必填项没有填写，无法提交！");
         return false;
       } else {
         return true;
@@ -676,7 +676,7 @@ export default {
           }
         },
         error => {
-          this.$message.error(error.message);
+          this.$message(error.message);
         }
       );
     },

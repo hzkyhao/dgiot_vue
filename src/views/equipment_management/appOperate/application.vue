@@ -251,7 +251,7 @@ export default {
                  }
               }).catch(error=>{
                  this.loading = false
-                 this.$message.error(error.error)
+                 this.$message(error.error)
               })
            }
             

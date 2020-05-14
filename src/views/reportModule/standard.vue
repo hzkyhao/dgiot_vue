@@ -602,14 +602,14 @@ export default {
         })
         .catch(error => {
           this.loading = false
-          this.$message.error(error);
+          this.$message(error);
         });
     },
     addReportModule(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.form.filesrc == "") {
-            this.$message.error("请上传检验标准PDF文件");
+            this.$message("请上传检验标准PDF文件");
             return;
           }
           var InspectionStandard = Parse.Object.extend("InspectionStandard");
@@ -641,7 +641,7 @@ export default {
             }
           );
         } else {
-          this.$message.error("有必填项未填写");
+          this.$message("有必填项未填写");
           return false;
         }
       });
@@ -735,7 +735,7 @@ export default {
           );
           reportmodule.set("data", this.form);
           reportmodule.save().then(resultes => {
-            this.$message.success("新增成功");
+            this.$message("新增成功");
             this.dialogReport = false;
             this.dynamicValidateForm.domains = [
               {
@@ -749,7 +749,7 @@ export default {
             ];
           });
         } else {
-          this.$message.error("请填写完整");
+          this.$message("请填写完整");
           return false;
         }
       });

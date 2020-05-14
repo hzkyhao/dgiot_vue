@@ -132,7 +132,7 @@ export default {
                 this.rulesdata = response.actions
             }
            }).catch(error=>{
-               this.$message.error(error.error)
+               this.$message(error.error)
            })
        },
        allsuccss(row){

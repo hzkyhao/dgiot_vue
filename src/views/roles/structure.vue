@@ -342,7 +342,7 @@ export default {
                 this.userFordepartment();
               },
               error => {
-                this.$message.error(error.message)
+                this.$message(error.message)
               }
             );
           });

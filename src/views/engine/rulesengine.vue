@@ -78,7 +78,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     },
     //分页
@@ -124,12 +124,12 @@ export default {
       ruleDelete(id)
         .then(resultes => {
           if (resultes) {
-            this.$message.success("删除成功");
+            this.$message("删除成功");
             this.orginRule();
           }
         })
         .catch(error => {
-          this.$message.error(error.error);
+          this.$message(error.error);
         });
     }
   }

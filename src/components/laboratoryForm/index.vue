@@ -631,20 +631,20 @@ export default {
           }
         }).catch(error=>{
           
-          this.$message.error(error.bodyText)
+          this.$message(error.bodyText)
         });
     },
     //其他资质添加
     addOther() {
       if (this.otherForm.other == "") {
-        this.$message.warning("请填写其他资质名称");
+        this.$message("请填写其他资质名称");
       } else {
         this.dialogVisible = true;
       }
     },
     handleAvatarSuccessOther(response, file, fileList) {
       this.addotherform.imgsrc = response.path;
-      this.$message.success("上传成功");
+      this.$message("上传成功");
     },
     beforeAvatarUploadOther(file) {
       var testmsg = file.name.substring(file.name.lastIndexOf(".") + 1);
@@ -678,11 +678,11 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if(this.laboratoryForm.imgsrc==''){
-             this.$message.error('请上传实验室照片')
+             this.$message('请上传实验室照片')
              return
           }
            if(this.laboratoryForm.imgsrc==''){
-             this.$message.error('请上传资质照片')
+             this.$message('请上传资质照片')
              return
           }
          var Laboratory = Parse.Object.extend('Laboratory')
@@ -694,14 +694,14 @@ export default {
           laboratory.set('status','pending')
           laboratory.save().then(response=>{
             if(response){
-              this.$message.success('添加成功')
+              this.$message('添加成功')
               this.$emit('resultes',{laboratoryForm:this.laboratoryForm,otherslist:this.otherslist,isChecked:true})
             }
           },error=>{
             returnLogin(error)
           })
         } else {
-          this.$message.error("error submit!!");
+          this.$message("error submit!!");
           return false;
         }
       });
@@ -711,7 +711,7 @@ export default {
          this.$refs[formName].validate(valid => {
           if (valid) {
             if(this.addotherform.imgsrc==''){
-              this.$message.error('请上传资质照片')
+              this.$message('请上传资质照片')
               return
             }
             var obj = {

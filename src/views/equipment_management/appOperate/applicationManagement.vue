@@ -66,14 +66,15 @@
                 type="text"
                 size="small"
                 icon="el-icon-key"
-              >{{$t('application.secretkey')}}</el-button> -->
+              >{{$t('application.secretkey')}}</el-button>
               <el-button type="text" size="small" @click="handleClickVisit(scope)">
                 {{$t('application.visit')}}
                 <i class="el-icon-arrow-right"></i>
               </el-button>
+               -->
               <el-button type="text" size="small" @click="Gotoproduct(scope)">
-                {{$t('application.detail')}}
-                <i class="el-icon-right"></i>
+                <i class="el-icon-s-management"></i>
+                管理
               </el-button>
               <!-- <el-popover
                 placement="top"
@@ -299,7 +300,7 @@ export default {
         })
         .catch(res => {
           if (res.code == 1) {
-            this.$message.error("字段不存在");
+            this.$message("字段不存在");
           }
         });
     },
@@ -313,7 +314,7 @@ export default {
      var query = relation.query()
      query.find().then(response=>{
        if(response.length>0){
-         this.$message.warning('请先将应用下的产品删除')
+         this.$message('请先将应用下的产品删除')
           scope._self.$refs[`popover-${scope.$index}`].doClose();
        }else{
          project.destroy().then(
@@ -355,32 +356,6 @@ export default {
         }
       });
     },
-    // lictool(row) {
-    //   console.log(row);
-    //   uploadLicense(row.objectId, row.secret)
-    //     .then(resultes => {
-    //       if (resultes) {
-    //         window.open(
-    //           window.location.origin +
-    //             "/iotapi/lictool?appid=" +
-    //             row.objectId +
-    //             "&appsecret=" +
-    //             row.secret,
-    //           "_blank"
-    //         );
-    //         // console.log(resultes)
-    //         // console.log(window.location)
-    //         // const a = document.createElement('a'); // 创建a标签
-    //         // a.setAttribute('download', '');// download属性
-    //         // a.setAttribute('href', window.location.origin+"/iotapi/lictool?appid="+row.objectId+'&appsecret='+row.secret);// href链接
-
-    //         // a.click();
-    //       }
-    //     })
-    //     .catch(error => {
-    //       this.$message.error(error.error);
-    //     });
-    // },
     serverlictool(row){
         console.log(row)
         this.$router.push({
@@ -392,12 +367,16 @@ export default {
         })
     },
     applicationDeployment(row){
+      if(!row.name){
+        this.$message('没有应用名')
+        return
+      }
       setUpLictool(row.name).then(resultes=>{
         if(resultes){
-          this.$message.success('正在部署中')
+          this.$message('正在部署中')
         }
       }).catch(error=>{
-        this.$message.error(error)
+        this.$message(error)
       })
       //this is /roles/projectManagement
       // console.log('row.name',row.name);

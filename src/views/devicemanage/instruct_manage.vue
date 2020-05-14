@@ -426,7 +426,7 @@ export default {
               console.log(error)
           });
         } else {
-          this.$message.error("有必填项未填写");
+          this.$message("有必填项未填写");
           return false;
         }
       });

@@ -248,7 +248,7 @@ export default {
           
                   // The token could not be validated.
         }).catch(error=>{
-          _this.$message.error(error)
+          _this.$message(error)
         })    
         } else {
           _this.$message({
@@ -276,7 +276,7 @@ export default {
             this.time = res.expire
           })
           .catch(error => {
-            this.$message.error(error)
+            this.$message(error)
           });
         let interval = window.setInterval(function() {
           if (_this.time-- <= 0) {
