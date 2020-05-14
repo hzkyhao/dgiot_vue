@@ -1,7 +1,7 @@
 <template>
   <div class="devproduct">
     <h3>{{$t('route.产品管理')}}
-      <span v-if="projectName!=''">{{'(所属应用:'+projectName+')'}}</span>
+      <span v-if="projectName">{{ '(所属应用:' + projectName + ')' }}</span>
     </h3>
     <el-tabs v-model="activeName">
       <el-tab-pane :label="$t('product.myproduct')+'('+total+')'" name="first">
@@ -623,6 +623,8 @@ export default {
         var Project = Parse.Object.extend("Project");
         var project = new Parse.Query(Project);
         project.get(this.projectid).then(response => {
+          console.log('response ##',response);
+          
          this.projectName = response.attributes.title
           this.form.relationApp = response.attributes.title
           this.getRoles().then(data=>{
