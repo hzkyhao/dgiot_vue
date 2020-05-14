@@ -446,6 +446,9 @@ export default {
     
     },
     selectApp(val) {
+      if(!val){
+        return 
+      }
       getServer(val).then(resultes => {
         if (resultes) {
           this.fileServer = resultes.file;
@@ -623,7 +626,6 @@ export default {
         var Project = Parse.Object.extend("Project");
         var project = new Parse.Query(Project);
         project.get(this.projectid).then(response => {
-          console.log('response ##',response);
           
          this.projectName = response.attributes.title
           this.form.relationApp = response.attributes.title
