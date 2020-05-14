@@ -296,6 +296,7 @@ import {
 import Parse from "parse";
 import { resolve } from "url";
 import { returnLogin } from "@/utils/return";
+import request from '@/utils/request'
 export default {
   data() {
     return {
@@ -568,17 +569,12 @@ export default {
       }
       project.save().then(resultes => {
         if (resultes) {
-          this.$message({
-            message: "添加部署成功！",
-            type: "success"
-          });
-          this.$router.push({ path: "/roles/projectManagement" });
-
-          var sorceId = resultes.id;
-          var destId = this.relationAppObjectId;
+    
+          var sourceId = this.relationAppObjectId; 
+          var destId =  resultes.id;
 
           //添加关联
-          this.addRelation(sorceId, destId);
+          this.addRelation(destId,sourceId);
         }
       }).catch(error =>{
         // Maybe it's title重复
@@ -586,16 +582,16 @@ export default {
 
       });
     },
-    addRelation(relColumName, relTableRowByObjectId) {
-      this.$axiosWen
-        .put("/classes/Project/" + relColumName, {
+    addRelation(destObjectId, sourceObjectId) {
+ /*       this.$axiosWen
+        .put("/classes/Project/" + destObjectId, {
           app: {
             __op: "AddRelation",
             objects: [
               {
                 __type: "Pointer",
                 className: "App",
-                objectId: relTableRowByObjectId //被关联的应用记录的id
+                objectId: sourceObjectId //被关联的应用记录的id
               }
             ]
           }
@@ -605,7 +601,76 @@ export default {
         })
         .catch(function(error) {
           console.log("addRelation", error);
+        }); 
+            dest:{          
+              className:'Project',
+              objectId:destObjectId,
+              fieldName:'app'
+          },
+          src:{
+            className:'App',            
+            objectId:sourceObjectId,
+          }   */
+          
+
+        
+        this.$axiosWen.post("/relation",{    
+          destClass: "Project",
+          destId: destObjectId,
+          destField: "app",
+          srcClass: "App",
+          srcId: sourceObjectId
+        })
+        .then((response) => {
+          this.$message({
+            message: "添加部署成功！",
+            type: "success"
+          });
+          
+          this.$router.push({ path: "/roles/projectManagement" });
+
+
+        })
+        .catch((error) => {
+          this.$message(error)
+          console.log("addRelation", error);
         });
+
+/* 
+        this.$axiosWen.post("/approle",{
+          appid:'YqtGTfll9w',
+          desc:'ds',
+          secret:'RDc4MjQ1NzYxNTg5NDU3ODMyNzUx'
+         } )
+        .then((response) => {
+
+          console.log('approle response',response);         
+       
+
+        })
+ */
+ 
+        
+
+        // 通过objectId来查询
+ /*        var App = Parse.Object.extend("App");
+        var appQuery = new Parse.Query(App);
+        var app = new App()
+
+        app.id = relTableRowByObjectId
+
+        appQuery.equalTo("app", app)
+
+        // 构建project对象
+        var Project = new Parse.Object("Project");
+
+        
+
+        // 为book对象关联作者
+        var relation = Project.relation("app");
+        relation.add(authorOne);
+ */
+
     },
     // 修改
     handleClickUpdate() {
