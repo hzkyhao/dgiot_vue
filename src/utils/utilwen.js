@@ -77,6 +77,7 @@ serviceWen.interceptors.response.use(
 )
 
 function objGet (data, path) {
+  
   if(data == undefined) return '';
   
   const pathArr = path.split('.');
@@ -97,6 +98,7 @@ function getFirstKey(obj){
   var index = keyStr.lastIndexOf("\:");
   return keyStr.substring(index+1,keyStr.length);
 }
+
 
 function dateFormat(fmt, date) {
   // "YYYY-mm-dd HH:MM"
@@ -120,6 +122,25 @@ function dateFormat(fmt, date) {
   };
   return fmt;
 }
+
+function timestampToTime(timestamp,full) {
+	if(!timestamp){
+		return ''
+	}
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+
+    if(full){        
+        return Y + M + D + h + m + s;
+    } else {
+      return Y + M + D
+    }
+}
 export default{
   install(Vue,options)
   {
@@ -129,9 +150,10 @@ export default{
     Vue.prototype.$axiosWen = serviceWen;
     Vue.prototype.$objGet = objGet;
     Vue.prototype.$qs = qs;
-    Vue.prototype.$qs = qs;
     Vue.prototype.$dateFormat = dateFormat;
     Vue.prototype.$getFirstKey = getFirstKey;
+    Vue.prototype.$timestampToTime = timestampToTime;
+    
 
 	}
 }

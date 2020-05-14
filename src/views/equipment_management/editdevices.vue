@@ -20,6 +20,7 @@
                 cellspacing="0"
                 cellpadding="0"
               >
+              <!-- 设备编号: 所属产品: 安装位置 -->
                 <tr>
                   <td class="cloumn">{{$t('equipment.devicenumber')+':'}}</td>
                   <td>{{devicedetail.devaddr}}</td>
@@ -28,6 +29,7 @@
                   <td class="cloumn">{{$t('equipment.installationlocation')}}</td>
                   <td>{{devicedetail.address}}</td>
                 </tr>
+
                 <tr>
                   <td class="cloumn">{{$t('equipment.state')+':'}}</td>
                   <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$t('product.active')}}</td>
@@ -43,7 +45,7 @@
                 </tr>
                 <tr>
                   <td class="cloumn">{{$t('equipment.ipaddress')+':'}}</td>
-                  <td>{{devicedetail.ip}}</td>
+                  <td>{{devicedetail.ip || '-'}}</td>
                   <td class="cloumn">
                     ProductSecret:
                     <el-tooltip
@@ -720,8 +722,8 @@ export default {
                 obj.id = items.id;
                 obj.name = items.attributes.name;
                 obj.lastOnlineTime = this.$dateFormat(
-                  this.$objGet(items, "attributes.tag.attributes.updatedAt")
-                ); // items.attributes.tag.attributes.lastOnlineTime;
+                  this.$objGet(items, "attributes.tag.attributes.lastOnlineTime")
+                ); 
                 obj.status = items.attributes.status;
                 obj.originstatus = items.attributes.status;
                 obj.nodeType = items.attributes.product.attributes.nodeType;
@@ -754,42 +756,32 @@ export default {
       var devices = new Parse.Query(Devices);
       devices.get(this.deviceid).then(resultes => {
         var obj = {};
-        this.productid = resultes.attributes.product.id;
-        this.devicedevaddr = resultes.attributes.devaddr;
+        this.productid = this.$objGet(resultes,'attributes.product.id');
+        this.devicedevaddr = this.$objGet(resultes,'attributes.devaddr');
         obj.id = resultes.id;
         obj.createdAt = utc2beijing(resultes.createdAt);
-        obj.productName = resultes.attributes.product.attributes.name;
-        obj.productid = resultes.attributes.product.id;
-        obj.address = resultes.attributes.tag.attributes.address;
-        if (resultes.attributes.lastOnlineTime) {
-          obj.lastOnlineTime = timestampToTime(
-            resultes.attributes.tag.attributes.updatedAt
-          );
-        } else {
-          obj.lastOnlineTime = "—";
-        }
+        obj.productName = this.$objGet(resultes,'attributes.product.attributes.name')
+        obj.productid = this.$objGet(resultes,'attributes.product.id')
+        obj.address = this.$objGet(resultes,'attributes.address')
+       
+        obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes,'attributes.lastOnlineTime'),true)
+        //  obj.lastOnlineTime = this.$timestampToTime(1589441033)
+        //  obj.lastOnlineTime = this.$timestampToTime(1589441033)
+       
         // console.log('attributes.tag.attributes.updatedAt',resultes.attributes.tag.attributes.updatedAt);
 
-        obj.lastOnlineTime = vm.$dateFormat(
-          "YYYY-mm-dd HH:MM",
-          vm.$objGet(resultes, "attributes.tag.attributes.updatedAt")
-        );
-
-        if (resultes.attributes.tag) {
-          obj.ip = resultes.attributes.tag.attributes.ip;
-        } else {
-          obj.ip = "—";
-        }
+        obj.updatedAt = vm.$dateFormat("YYYY-mm-dd HH:MM",this.$objGet(resultes,"attributes.updatedAt"));
+        obj.ip = this.$objGet(resultes,'attributes.ip')
+    
         obj.basedata = JSON.stringify(resultes.attributes.basedata);
         obj.DeviceName = resultes.attributes.name;
         obj.status = resultes.attributes.status;
-        obj.desc = resultes.attributes.tag.attributes.desc;
-        obj.devaddr = resultes.attributes.devaddr;
-        obj.nodeType = resultes.attributes.product.attributes.nodeType;
+        obj.desc = this.$objGet(resultes,'attributes.desc')
+        obj.devaddr = this.$objGet(resultes,'attributes.devaddr')
+        obj.nodeType = this.$objGet(resultes,'attributes.product.attributes.nodeType')
         // obj.node = resultes.attributes.tag.attributes.node
-        obj.devType = resultes.attributes.product.attributes.devType;
-        obj.productSecret =
-        resultes.attributes.product.attributes.productSecret;
+        obj.devType = this.$objGet(resultes,'attributes.product.attributes.devType')
+        obj.productSecret =  this.$objGet(resultes,'attributes.product.attributes.productSecret')
 
         let thingTemp = vm.$objGet(resultes,'attributes.product.attributes.thing')
 
