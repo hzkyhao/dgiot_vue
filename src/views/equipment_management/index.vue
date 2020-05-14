@@ -904,9 +904,7 @@ export default {
             if (resultes) {
               resultes.map(items => {
                 var obj = {};
-                obj.id = items.id;
-
-                console.log('items ### ',items)                
+                obj.id = items.id;              
 
                 obj.name = items.attributes.name ? items.attributes.name : '' ;
 
@@ -1295,6 +1293,7 @@ export default {
       });
     },
     submitForm(formName) {
+  
       this.$refs[formName].validate(valid => {
         if (valid) {
           var Device = Parse.Object.extend("Device");
@@ -1305,18 +1304,19 @@ export default {
           var datas = new Dict();
           var acl = new Parse.ACL();
           if (this.deviceid != "") {
+
            
-            new Promise((resolve, reject) => {
+            var Promise1 = new Promise((resolve, reject) => {
+
                
               var Tags = Parse.Object.extend("Tag");
               var tags = new Tags();
               tags.id = this.tagsid;
               
               var location = new Parse.GeoPoint({
-                latitude: this.center.lat,
-                longitude: this.center.lng
+                latitude: this.center.lat?this.center.lat:0,
+                longitude: this.center.lng?this.center.lng:0
               });
-              console.log(111)
               datas.id = this.batchid;
               tags.set("assetNum", this.deviceform.assetNum);
               tags.set("devModel", this.deviceform.devModel);
@@ -1335,7 +1335,8 @@ export default {
                 }
               );
             }).then(data => {
-              console.log(data)
+              console.log('Tags updated');
+              
               var Tags1 = Parse.Object.extend("Tag");
               var tags1 = new Tags1();
               tags1.id = data.id
@@ -1377,13 +1378,20 @@ export default {
                   }
                 },
                 error => {
+                  console.log('Device error',error);
+                  
                   returnLogin(error);
                 }
               );
             }).catch(error=>{
+
+              console.log('p error ###'.error);
+              
               reject(error)
             })
           } else {
+            console.log('### devaddrid kong');
+            
             devices1.equalTo("devaddr", this.deviceform.devaddr);
             devices1.equalTo("name", this.deviceform.name);
             devices1.find().then(resultes => {
@@ -1391,7 +1399,7 @@ export default {
                 this.$message("此设备已被创建");
                 return;
               } else {
-                new Promise((reslove, reject) => {
+                var Promise2 = new Promise((reslove, reject) => {
                   var Tags = Parse.Object.extend("Tag");
                   var tags = new Tags();
                   var location = new Parse.GeoPoint({
@@ -1411,6 +1419,8 @@ export default {
                       reslove(resultes);
                     },
                     error => {
+                      console.log('Tag ##3',error);
+                      
                       reject(error);
                     }
                   );
@@ -1457,11 +1467,14 @@ export default {
                         }
                       },
                       error => {
+                        console.log('##4 error',error);
+                        
                         returnLogin(error);
                       }
                     );
                   })
                   .catch(error => {
+                    console.log('##7 error',error);
                     returnLogin(error);
                   });
               }

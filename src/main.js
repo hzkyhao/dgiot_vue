@@ -119,11 +119,13 @@ Vue.prototype.$Cookies = Cookies
 
 // 全局重写 element 的$message 弹框事件
 Vue.prototype.$message = function(msg) {
+
     if(!msg){
         return
     }
     if(typeof msg == 'object'){
       var param = {
+        type:msg.type?msg.type:'warn',
         message:msg.message,
         duration:msg.duration ? msg.duration:800,
         showClose:msg.showClose ? msg.showClose:true
