@@ -239,20 +239,15 @@ export default {
 
         Addapp(Number(this.form.time),this.form.desc,session,formParam).then(resultes=>{
            if(resultes){
-              createRole(resultes.objectId,session,this.form.desc).then(response=>{
-                 if(response){
+            //   createRole(resultes.objectId,session,this.form.desc).then(response=>{                 
                     this.$message({
                         type: "success",
                         message: "应用创建成功"
                      })
                      this.loading = false
                      this.dialogVisible=false
-                     this.getAppdetail(this.pagesize,this.start)
-                 }
-              }).catch(error=>{
-                 this.loading = false
-                 this.$message(error.error)
-              })
+                     this.getAppdetail(this.pagesize,this.start)                
+            //  })
            }
             
         }).catch(error=>{
