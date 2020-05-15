@@ -918,8 +918,12 @@ export default {
                     dataobj[key].actualData.push(
                       timestampToTime(items.time).substring(11)
                     );
-                    dataobj[key].results.unshift(items);
-                    dataobj[key].max = items.dataType.specs.max;
+                    if(dataobj[key].results && dataobj[key].results.length>0){
+                      
+                     dataobj[key].results.unshift(items);
+
+                    }
+                    dataobj[key].max = this.$objGet(items,'dataType.specs.max')
                   }
                 });
               }
