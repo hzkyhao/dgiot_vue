@@ -26,7 +26,6 @@ import Layout from '../views/layout/Layout'
 **/
 export const constantRouterMap = [
   { path: '/login',component: () => import('@/views/login/index'), hidden: true},
-  { path: '/pumplogin',component: () => import('@/views/login/pumplogin'), hidden: true},
   { path: '/resetpassword',component: () => import('@/views/login/resetpassword'), hidden: true},
   { path: '/register',component: () => import('@/views/register/register'), hidden: true},
   { path: '/phonelogin',component: () => import('@/views/login/phonesms'), hidden: true},
@@ -132,12 +131,6 @@ export const constantRouterMap = [
     meta: { title: '主站交互', icon: 'connect' },
    
     children: [
-      // {
-      //   path: '/connectmanage/connectlist',
-      //   name: '连接列表',
-      //   component: () => import('@/views/connectmanage/test2'),
-      //   meta: { title: '连接列表', icon: 'list' }
-      // },
       {
         path: '/connectmanage/report',
         name: '主站连接监测',

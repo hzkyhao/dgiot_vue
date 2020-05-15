@@ -17,9 +17,6 @@
 
 // var serverURL = "http://120.25.171.26:5080/iotapi"
 
-console.log('process ###',process.env );
-// process.env.NODE_ENV === "development"
-
   try {
       // 判断是否为生产环境
       if (process.env.NODE_ENV === "production" || serverURL == '/') {    
@@ -35,8 +32,12 @@ console.log('process ###',process.env );
     } catch (error) {
       var hostname = null
       var serverURL = '/iotapi'
-      console.log('process ###',error);      
+      console.log('process error ###',error);      
     }   
+
+    
+console.log('process ###',process.env );
+// process.env.NODE_ENV === "development"
 
 
 

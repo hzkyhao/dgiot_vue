@@ -65,7 +65,7 @@ export default {
       }
 
       Websocket.subInfo = {
-        topic: "web/"+sessionStorage.getItem('token'), 
+        topic: "web/" + this.$Cookies('sessionToken'), 
         qos: 2,
       };
       Websocket.newClient();
