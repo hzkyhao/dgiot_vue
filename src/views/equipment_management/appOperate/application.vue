@@ -251,7 +251,12 @@ export default {
            }
             
         }).catch(error=>{
-           console.log(error)
+             this.$message({
+               type: "error",
+               message: error.error
+            })
+           this.loading = false
+           this.dialogVisible=false
         })
      },
      getAppdetail(pagesize,start){
