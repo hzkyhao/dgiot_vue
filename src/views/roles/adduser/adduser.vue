@@ -76,6 +76,7 @@ export default {
         callback(new Error("请输入密码"));
       } else {
         if (!/^\w{6,10}$/.test(value)) {
+        // if (!/^([\w]|[.]){6,10}$/.test(value)) {
           callback(new Error("密码格式不正确"));
         }
         callback();
@@ -176,7 +177,7 @@ export default {
         }
 
         if(this.userInfoForm.departmentid){
-          var departmentStr = this.userInfoForm.departmentid[this.userInfoForm.departmentid.length]
+          var departmentStr = this.userInfoForm.departmentid[this.userInfoForm.departmentid.length-1]
         } else {
           var departmentStr = ''
 
