@@ -4,7 +4,7 @@
     <el-form
       :model="userInfoForm"
       status-icon
-      :rules="rules2"
+      :rules="userFormRules"
       ref="userInfoFormRef"
       label-width="100px"
       class="demo-ruleForm"
@@ -14,16 +14,16 @@
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
-          v-model.number="userInfoForm.phone"
+          v-model="userInfoForm.phone"
           placeholder="请输入手机号"
           :maxlength="11"
           auto-complete="off"
         ></el-input>
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱"  prop="email" >
         <el-input v-model="userInfoForm.email" placeholder="请输入邮箱" auto-complete="off"></el-input>
       </el-form-item>
-      <el-form-item label="姓名">
+      <el-form-item label="姓名"  prop="nick" >
         <el-input
           v-model="userInfoForm.nick"
           placeholder="2-5个文字"
@@ -49,7 +49,7 @@
           :maxlength="10"
         ></el-input>
       </el-form-item>
-      <el-form-item label="部门选择">
+      <el-form-item label="部门选择" prop="departmentid">
         <el-cascader
           style="width:600px"
           placeholder="请选择部门"
@@ -107,9 +107,9 @@ export default {
         checkPass: "",
         departmentid: []
       },
-      rules2: {
+      userFormRules: {
         account: [
-          { required: true, message: "请输入账号", trigger: "blur" },
+          { required: true, message: "请输入账号名", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "请输入手机号", trigger: "blur" },
@@ -131,6 +131,7 @@ export default {
         checkPass: [
           { validator: validatecheckPass, trigger: "blur", required: true }
         ],
+        departmentid:[ { required: true, message: "请选择部门", trigger: "blur" }],
         nick: [
           { required: true, message: "请输入昵称", trigger: "blur" },
           { min: 2, max: 5, message: "昵称格式不正确", trigger: "blur" }
@@ -142,7 +143,7 @@ export default {
             message: "请输入正确的邮箱地址",
             trigger: ["blur", "change"]
           }
-        ]
+        ] 
       }
     };
   },
@@ -189,8 +190,8 @@ export default {
           password: this.userInfoForm.password,
           phone: this.userInfoForm.phone,
           email: this.userInfoForm.email,
-          department:departmentStr,
-          aclId:this.aclId
+          department:departmentStr
+          // aclId:this.aclId
         })
         .then((response) => {
           if(response){
