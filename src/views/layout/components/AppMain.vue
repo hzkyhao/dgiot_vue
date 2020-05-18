@@ -24,7 +24,6 @@ import {
 } from "@/utils/wxscoket.js";
 import Parse from 'parse'
 import { eventBus } from '@/api/eventBus';
-import { GetReload } from '@/api/systemmanage/system';
 export default {
   name: 'AppMain',
   data(){
@@ -50,14 +49,6 @@ export default {
    
     //websocket更新方法  
       if(!(window.location.pathname.indexOf('suke')!=-1)){
-      //  Websocket.cInfo.host='115.159.59.185' 
-      // Websocket.cInfo.host='111.231.219.51'
-      // Websocket.cInfo.host='ci.iotn2n.com';                               
-      // Websocket.cInfo.host="cad.iotn2n.com"
-      //  Websocket.cInfo.host="192.168.2.26"
-      // Websocket.cInfo.host='132.232.121.164'
-      // Websocket.cInfo.host='192.168.2.13'
-      // Websocket.cInfo.host = location.hostname;
       if(this.$globalConfig.hostname){        
         Websocket.cInfo.host = this.$globalConfig.hostname
       } else {

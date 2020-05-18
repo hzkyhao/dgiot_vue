@@ -5,17 +5,14 @@
 // var serverURL = "/"  //构建用
 // var serverURL = "http://148.70.107.251:5080/iotapi";
  //var serverURL = "http://ci.iotn2n.com:5080/iotapi";
-//  var serverURL = "http://192.168.2.13:5080/iotapi";//莫易的库
-//  var serverURL = "http://132.232.121.164:5080/iotapi";//伟星的库
 //  var serverURL = "http://148.70.50.192:5080/iotapi"
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
-//  var serverURL = "http://111.231.219.51:5080/iotapi";//建辉环境
-//  var serverURL = "http://192.168.2.9:5080/iotapi"
+ var serverURL = "http://192.168.2.7:5080/iotapi"
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
 //  var serverURL = "http://192.168.2.26:5080/iotapi"
 //  var serverURL = "http://pump.iotn2n.com:5080/iotapi"
 
-var serverURL = "http://120.25.171.26:5080/iotapi"
+// var serverURL = "http://120.25.171.26:5080/iotapi"
 
   try {
       // 判断是否为生产环境
