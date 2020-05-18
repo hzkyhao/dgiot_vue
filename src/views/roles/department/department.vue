@@ -220,10 +220,22 @@ export default {
       var Department = Parse.Object.extend("Department");
       var department = new Department();
       var acl = new Parse.ACL()
-      this.$store.state.user.roles.map(item=>{
+
+      if(Array.isArray(this.$store.state.user.roles)){
+        
+          var roles = this.$store.state.user.roles)
+        
+      } else {
+          var roles = JSON.parse(this.$store.state.user.roles)
+
+      }
+
+
+      roles.map(item=>{
         acl.setRoleReadAccess(item.name,true)
         acl.setRoleWriteAccess(item.name,true)
       })
+    
       if (this.form.departmentid.length == 0) {
         department.set("ParentId", "0");
       } else {
