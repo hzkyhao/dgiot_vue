@@ -223,7 +223,7 @@ export default {
 
       if(Array.isArray(this.$store.state.user.roles)){
         
-          var roles = this.$store.state.user.roles)
+          var roles = this.$store.state.user.roles
         
       } else {
           var roles = JSON.parse(this.$store.state.user.roles)
