@@ -146,7 +146,8 @@
               <el-form-item :label="$t('product.productname')" prop="name">
                 <el-input v-model="form.name" autocomplete="off"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('product.productidentification')" prop="devType">
+               <el-form-item label="产品分组" prop="devType">
+              <!-- <el-form-item :label="$t('product.productidentification')" prop="devType"> -->
                 <el-input v-model="form.devType" autocomplete="off"></el-input>
               </el-form-item>
 
@@ -867,13 +868,14 @@ export default {
             /*    this.form.roles.map(item => {
               acl.setRoleReadAccess(item, true);
               acl.setRoleWriteAccess(item, true);
-            }); */
+            }); 
 
            this.$store.state.project.projectRole.map(item=>{
                    acl.setRoleReadAccess(item, true);
                    acl.setRoleWriteAccess(item, true);
                 })
             product.set("ACL", acl);
+            */
             product.set("nodeType", this.form.nodeType);
             product.set("netType", this.form.netType);
             product.set("dynamicReg", false);
