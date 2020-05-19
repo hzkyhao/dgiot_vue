@@ -416,9 +416,9 @@
                   >
                     <el-option
                       v-for="(item,index) in allProudct"
-                      :label="item.attributes.name"
+                      :label="item.name"
                       :key="index"
-                      :value="item.id"
+                      :value="item.objectId"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -765,10 +765,6 @@ export default {
         obj.address = this.$objGet(resultes,'attributes.address')
        
         obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes,'attributes.lastOnlineTime'),true)
-        //  obj.lastOnlineTime = this.$timestampToTime(1589441033)
-        //  obj.lastOnlineTime = this.$timestampToTime(1589441033)
-       
-        // console.log('attributes.tag.attributes.updatedAt',resultes.attributes.tag.attributes.updatedAt);
 
         obj.updatedAt = vm.$dateFormat("YYYY-mm-dd HH:MM",this.$objGet(resultes,"attributes.updatedAt"));
         obj.ip = this.$objGet(resultes,'attributes.ip')
@@ -864,9 +860,27 @@ export default {
           this.isshowchild = true;
           this.getDevices();
 
-          product.find().then(resultes => {
+        /* product.find().then(resultes => {
+            console.log('产品列表 ###');            
             this.allProudct = resultes;
-          });
+          }); */
+
+      this.$axiosWen.get('/classes/Product',{
+          params:{
+           "where" : {
+             objectId: {
+               $ne: vm.productid
+             }
+           },
+           "order":"updatedAt" //-updatedAt  updatedAt
+          }
+          })
+        .then(response=>{
+          // this.productListForReport = response.results
+          this.allProudct = response.results
+        }) 
+
+
         } else if (
           this.$route.query.nodeType == 1 &&
           this.ischildren == "false"
@@ -990,6 +1004,7 @@ export default {
       this.getDevices();
     },
     checkProduct(val) {
+
       this.ischange = true;
       this.selectproduct = val;
       var Devices = Parse.Object.extend("Device");

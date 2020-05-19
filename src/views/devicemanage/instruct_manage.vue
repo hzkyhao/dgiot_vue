@@ -44,12 +44,11 @@
         <el-table-column label="指令标识" align="center">
           <template slot-scope="scope">{{ scope.row.attributes.di }}</template>
         </el-table-column>
+        <el-table-column label="指令序号" align="center" prop="attributes.order">
+        </el-table-column>
         <el-table-column label="超时时长" align="center" >
           <template slot-scope="scope">{{ scope.row.attributes.duration+'秒'}}</template>
         </el-table-column>
-    <!--     <el-table-column label="下发网关" align="center" width="200">
-          <template slot-scope="scope">{{ scope.row.attributes.devaddr }}</template>
-        </el-table-column> -->
         <el-table-column label="子网编号" align="center" width="200">
           <template slot-scope="scope">{{ scope.row.attributes.pn }}</template>
         </el-table-column>
