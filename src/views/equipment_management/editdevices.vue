@@ -179,10 +179,7 @@
                       :key="index"
                       style="display:block;height:30px;font-style:normal"
                     >
-                      <div
-                        class="stla"
-                        v-if="key.dataType.type=='double'||key.dataType.type=='float'||key.dataType.type=='int'"
-                      >
+                      <div class="stla" v-if="key.dataType.type=='double'||key.dataType.type=='float'||key.dataType.type=='int'" >
                         <span>{{key.name+':'}}</span>
                         <span>{{key.value}}</span>
                         <span v-if="key.dataType.specs.unit">{{key.dataType.specs.unit}}</span>
@@ -544,7 +541,7 @@ export default {
   },
   filters: {
     filterVal(val) {
-      if (val) {
+      if (val || val == 0) {
         return val;
       } else {
         return "--";
@@ -794,6 +791,7 @@ export default {
             dataobj[items["identifier"]] = {
               expectedData: [],
               actualData: [],
+              results:[],
               title:
                 items["dataType"]["type"] == "int" ||
                 items["dataType"]["type"] == "float" ||
@@ -820,6 +818,7 @@ export default {
                   dataobj[items["identifier"]] = {
                     expectedData: [],
                     actualData: [],
+                    results:[],
                     title:
                       items["dataType"]["type"] == "int" ||
                       items["dataType"]["type"] == "float" ||
