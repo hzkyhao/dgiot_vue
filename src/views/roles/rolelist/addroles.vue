@@ -1,63 +1,149 @@
-
 <template>
   <div class="app-container">
-    <h2
-      style="width:200px;background:DarkCyan;height:40px;text-align:center;line-height:40px;cursor:pointer"
-    >添加角色</h2>
-    <el-form
-      :model="ruleForm"
-      :rules="rules"
-      ref="ruleForm"
-      label-width="100px"
-      class="demo-ruleForm"
-    >
-      <!-- <el-form-item label="父级角色" prop="parentrole">
-        <el-select v-model="ruleForm.parentrole" placeholder="选择父级角色" style="width:300px;" @change="standardName()">
-           <el-option v-for="item, in " :label="item" ></el-option> 
-          <el-option
-                  v-for="item in parentrole"
-                  :key="item.id"
-                  :label="item.attributes.alias"
-                  :value="item.id"
-               ></el-option>
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="角色名" prop="name">
-        <el-input v-model="ruleForm.name" style="width:300px;"></el-input>
-      </el-form-item>
-      <el-form-item label="角色描述" prop="description">
-        <el-input v-model="ruleForm.description" style="width:300px;"></el-input>
-      </el-form-item>
-      <el-form-item label="备注" prop="desc">
-        <el-input type="textarea" v-model="ruleForm.desc" style="width:300px;"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button v-if="insert==0||insert==1" type="primary" style="margin-right:10%">取消</el-button>
-        <el-button v-if="insert==0||insert==1" type="success" @click="addroles()">确定</el-button>
-      </el-form-item>
-    </el-form>
+    <h2>添加角色</h2>
+    <div class="from">
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item
+          label="角色名"
+          prop="name"
+        >
+          <el-input
+            v-model="ruleForm.name"
+            style="width:200px;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="部门"
+          prop="departmentid"
+        >
+          <el-cascader
+            v-model="treeModu"
+            placeholder="请选择部门"
+            :props="treeprops"
+            clearable
+            :options="treeData"
+            :show-all-levels="false"
+            ref="cascaderAddr"
+            @change="changeOption('tree')"
+          ></el-cascader>
+        </el-form-item>
+
+        <el-form-item
+          label="角色"
+          prop="role"
+        >
+          <el-select
+            v-model="Option.dictvalue"
+            placeholder="请选择角色"
+            style="width:200px;"
+            :clearable="clearFlag"
+          >
+            <el-option
+              v-for="(item,index) in Option.dictOption"
+              :key="index"
+              :value="item.key"
+              change="changeOption('dict',item.name)"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="备注"
+          prop="description"
+        >
+          <el-input
+            placeholder="备注项为必填项"
+            type="textarea"
+            v-model="ruleForm.description"
+            style="width:500px;"
+          ></el-input>
+        </el-form-item>
+        <el-form-item class="el_btn">
+          <el-form-item
+            label="操作"
+            prop="desc"
+          >
+          </el-form-item>
+          <el-button
+            type="warning"
+            @click="resetFrom()"
+          >重置</el-button>
+          <el-button
+            v-if="insert==0||insert==1"
+            type="primary"
+            style="margin:0 7%"
+          >取消</el-button>
+          <el-button
+            v-if="insert==0||insert==1"
+            type="success"
+            @click="addroles()"
+          >确定</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
 import { Parse } from "parse";
 export default {
-  data() {
+  computed: {
+    treeData () {
+      let cloneData = JSON.parse(JSON.stringify(this.data));
+      return cloneData.filter(father => {
+        let branchArr = cloneData.filter(
+          child => father.objectId == child.ParentId
+        );
+        branchArr.length > 0 ? (father.children = branchArr) : "";
+        return father
+        // .ParentId == 0;
+        console.log(father, "104father.ParentId")
+      });
+    }
+  },
+  data () {
     return {
-      originrole:[],
-      rules1: [],
+      treeModu: [],
+      data: [],
+      treeprops: {
+        value: "name",
+        label: "name"
+      },
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      originrole: [],
       needdelarr: [],
       parentrole: [],
       userid: "",
       roleId: "",
       insert: "",
+      Option: {
+        deptvalue: '',
+        deptOption: [],
+        dictvalue: '',
+        dictOption: []
+      },
+      clearFlag: true,
       ruleForm: {
         name: "",
+        phoneNum: "",
+        mail: "",
+        department: "",
+        duty: "",
+        gender: "男",
+        role: "",
         description: "",
         region: "",
         delivery: false,
         type: [],
         resource: "",
-        desc: "",
         data2: [],
         list: [],
         parentrole: "",
@@ -65,20 +151,16 @@ export default {
           children: "children",
           label: "label"
         },
-        rules1: []
       },
       rules: {
         name: [
           { required: true, message: "请输入角色名", trigger: "blur" },
-          { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
         ],
         description: [
-          { required: true, message: "请输入角色描述", trigger: "blur" },
+          { required: true, message: "请输入权限描述", trigger: "blur" },
           { min: 3, message: "最少三个字符", trigger: "blur" }
         ],
-        parentrole: [
-            { required: true, message: '请选择父级角色', trigger: 'change' }
-          ],
         type: [
           {
             type: "array",
@@ -92,16 +174,78 @@ export default {
         ]
       },
       orderresultes: [],
-      parentid:'',
-      roles:[],
-      
+      parentid: '',
+      roles: [],
     };
   },
   methods: {
-    diguiquchu(datas, arr, v, needdelarr) {
+    changeOption (key, val) {
+      switch (key) {
+        case 'tree':
+          this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1],
+            console.log(this.Option.deptvalue, this.$refs['cascaderAddr'])
+          break;
+        case 'dict':
+          this.Option.dictvalue = val;
+          break;
+      }
+    },
+    //查询部门  角色
+    searchAllOption () {
+      this.$axiosWen.get('/classes/Dict', {
+        params: {
+          "where": {
+            type: "roletemp"
+          },
+        }
+      })
+        .then(res => {
+          this.Option.dictOption = res.results
+        });
+      this.$axiosWen.get("/classes/Department").then(res => {
+        const results = res.results
+        console.log(results)
+        results.forEach((key, val) => {
+          var obj = {};
+          obj.ParentId = key.ParentId;
+          obj.name = key.name;
+          obj.objectId = key.objectId;
+          obj.org_type = key.org_type;
+          obj.createdAt = key.createdAt;
+          this.data.push(obj);
+        })
+        if (res.results) {
+          this.Option.deptOption = res.results
+        } else {
+          this.$message('部门列表获取失败')
+          this.Option.deptOption = []
+        }
+      })
+    },
+    // 重置
+    resetFrom () {
+      this.ruleForm = {
+        name: "",
+        phoneNum: "",
+        mail: "",
+        department: "",
+        duty: "",
+        gender: "男",
+        role: "",
+        description: "",
+        alias: "",
+      },
+        this.Option.deptvalue = ''
+      this.Option.dictvalue = ''
+      this.data = []
+      this.treeModu = []
+      setTimeout(() => {
+        this.searchAllOption()
+      }, 1000);
+    },
+    diguiquchu (datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
       arr.map(item => {
-        console.log(item.key, v, "----------");
         if (item.key == v && item.children.length > 0) {
           // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
           needdelarr.push(v);
@@ -111,101 +255,51 @@ export default {
         }
       });
     },
-    addroles() {
-      var userid = Parse.User.current().id
-      this.insert = this.$route.query.insert;
-      var Roles = Parse.Object.extend("_Role");
-      var role = new Roles();
-      var acl2 = new Parse.ACL();
-       var query = new Parse.Query(Roles);
-      acl2.setRoleReadAccess(this.ruleForm.name,true);
-      acl2.setRoleWriteAccess(this.ruleForm.name,true);
-      acl2.setRoleReadAccess('root',true);
-      acl2.setRoleWriteAccess('root',true);
-      acl2.setRoleReadAccess('admin',true);
-      acl2.setRoleWriteAccess('admin',true);
-      acl2.setReadAccess(userid,true);
-      acl2.setWriteAccess(userid,true);
-      role.set("ACL", acl2);
-      role.set("name", this.ruleForm.name);
-      role.set("desc", this.ruleForm.desc);
-      role.set("alias", this.ruleForm.description);
-      role.save().then(res => {
-        this.selfid = res.id
-        this.originrole.push(res)
-          this.$message({
-            message: "新增成功",
-            type: "success"
-          });
-          this.$router.push({
-            path: "/roles/roles"
-          });
-        },
-        error => {
-          console.log(error);
-        }
-      );
-      // var _this=this
-      //  setTimeout(() => {
-      //       query.get(_this.selfid).then(object=>{
-      //     console.log(object)
-      //   //   this.originrole.map(item=>{
-      //   //   query.get(item.id).then(resultes => {
-      //   //     var relation = resultes.relation("roles");
-      //   //     object.set("objectId", item.id);
-      //   //     relation.add(object);
-      //   //     resultes.save().then(resulte => {
-      //   //       this.$message({
-      //   //         type: "success",
-      //   //         message: "添加成功!"
-      //   //       });
-      //   //       // this.roleacl = false;
-      //   //     });
-      //   //   });
-      //   // })
-      //   })
-      //   }, 1000);
+    addroles () {
+      let params = {
+        "name": this.ruleForm.name,
+        "desc": this.ruleForm.description,
+        "depid": "KOAzvgAsa1",
+        "alias": this.Option.deptvalue,
+        "roletemp": this.Option.dictvalue
+      }
+      this.$axiosWen.post("/role", params).then(res => {
+        console.log(res)
+        // this.$message({
+        //   message: "新增成功",
+        //   type: "success"
+        // });
+        // this.$router.push({
+        //   path: "/roles/roles"
+        // });
+        // 请求成功后,新建模板
+        // this.$axiosWen.post("/role?name=" + this.ruleForm.name + '&tempname=' + this.Option.dictvalue).then((response) => {
+        //   console.log('模板新建成功', response);
+        // })
+        //  设置Department id
+        let id = res.id
+
+        console.log(id)
+        // this.$axiosWen.post("/classes/Department")
+        //   .then((response) => {
+        //     console.log('response', response);
+        //   })
+        // console.log(res)
+
+
+      }).catch(error => {
+        console.log(error)
+      })
+
+      this.$message({
+        message: "新增成功",
+        type: "success"
+      });
+      // this.$router.push({
+      //   path: "/roles/roles"
+      // });
     },
-    // getMenu() {
-    //   var Menu = Parse.Object.extend("Menu");
-    //   var menu = new Parse.Query(Menu);
-    //   menu.find().then(resultes => {
-    //     this.data = [];
-    //     this.orderresultes = resultes;
-    //     resultes.map(item => {
-    //       //  console.log(item)
-    //       if (item.attributes.parentId == 0) {
-    //         this.ruleForm.data2.push({
-    //           id: item.attributes.orderBy,
-    //           label: item.attributes.name,
-    //           parentId: item.attributes.parentId,
-    //           objectId: item.id,
-    //           children: []
-    //         });
-    //       }
-    //     });
-    //     //  console.log(this.data)
-    //     this.Menus();
-    //   });
-    // },
-    // Menus() {
-    //   // console.log(this.orderresultes)
-    //   this.orderresultes.map(children => {
-    //     this.ruleForm.data2.map(item => {
-    //       if (children.attributes.parentId == item.objectId) {
-    //         item.children.push({
-    //           id: children.attributes.orderBy,
-    //           label: children.attributes.name,
-    //           parentId: children.attributes.parentId,
-    //           objectId: children.id
-    //         });
-    //       }
-    //     });
-    //   });
-    //   // console.log(this.data)
-    // },
- 
-    nodetree() {
+    nodetree () {
       this.userid = Parse.User.current().id;
       var User = Parse.Object.extend("_User");
       var user = new Parse.Query(User);
@@ -224,25 +318,54 @@ export default {
         });
       });
     },
-    getdetail() {
+    getdetail () {
       this.insert = this.$route.query.insert;
       console.log(this.insert);
       this.roleId = this.$route.query.roleId;
       console.log(this.insert, "insert");
     }
   },
-  mounted() {
+  mounted () {
     // this.getMenu();
     // this.nodetree()
+    this.searchAllOption()
   }
 };
 </script>
-<style  scoped>
+<style  scoped   lang="scss">
+.from /deep/ .el-form-item {
+  float: left;
+}
+.from /deep/ .el-form-item:last-child .el-form-item__content {
+  margin-left: 0 !important;
+}
+// .from /deep/ .el-form-item:nth-child(7) .el-form-item__label {
+//   width: 58px !important;
+// }
+// .from /deep/ .el-form-item:nth-child(7) .el-form-item__content {
+//   margin-left: 60px !important;
+// }
 .app-container {
   width: 100%;
   min-height: 875px;
   padding: 20px;
   box-sizing: border-box;
   background: #ffffff;
+  h2 {
+    width: 200px;
+    // background: DarkCyan;
+    height: 40px;
+    margin: 20px auto;
+    line-height: 40px;
+    cursor: pointer;
+  }
+  .from {
+    width: 80%;
+    margin: 0 auto;
+    .el_btn {
+      width: 500px;
+      margin-left: 0;
+    }
+  }
 }
 </style>
