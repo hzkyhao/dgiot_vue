@@ -453,7 +453,7 @@
                   </el-select>
                 </el-form-item>
 
-                <div v-if="productdetail.nodeType==0">
+                <div >
                   <el-form-item label="数据标识" required>
                     <el-col :span="11">
                       <el-form-item prop="dis">
@@ -705,7 +705,7 @@
                     <el-option :label="$t('product.date')" value="DATE"></el-option>
                   </el-select>
                 </el-form-item>
-                <div v-if="productdetail.nodeType==0">
+                <div>
                   <el-form-item label="数据标识" required>
                     <el-col :span="11">
                       <el-form-item prop="dis">
