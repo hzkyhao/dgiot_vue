@@ -43,6 +43,13 @@
             <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
             <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
             <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
+
+                <el-button
+              size="mini"
+              type="success"
+              @click="exportRoletemp(scope.row)"
+            >保存模版</el-button>
+
             <el-button
               size="mini"
               type="success"
@@ -621,6 +628,30 @@ export default {
         });
         // console.log(this.treeData)
       });
+    },
+    exportRoletemp(row){
+
+
+    this.$axiosWen.post("/roletemp?name=" + row.attributes.name + '&tempname=' + row.attributes.name + '_' + row.attributes.desc)
+        .then((response) => {
+          console.log('response',response);
+
+      /*     if(response){
+                  window.open(
+                    window.location.origin +
+                      "/iotapi/product?name=" +
+                      _this.productName,
+                      "_blank"
+                  );
+                } */
+
+       
+
+        })
+
+
+
+
     },
     //编辑权限
     handleEditrole(row) {
