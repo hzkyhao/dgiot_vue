@@ -1,105 +1,108 @@
 <template>
   <div class="edituser">
-    <div
-      class="admin"
-      style="margin-bottom:20px"
-    >新增用户</div>
-    <el-form
-      :model="userInfoForm"
-      status-icon
-      :rules="userFormRules"
-      ref="userInfoFormRef"
-      label-width="100px"
-      class="demo-ruleForm"
-    >
-      <el-form-item
-        label="账号"
-        prop="account"
+    <div class="left"></div>
+    <div class="right">
+      <div
+        class="admin"
+        style="margin-bottom:20px"
+      >新增用户</div>
+      <el-form
+        :model="userInfoForm"
+        status-icon
+        :rules="userFormRules"
+        ref="userInfoFormRef"
+        label-width="100px"
+        class="demo-ruleForm"
       >
-        <el-input
-          v-model="userInfoForm.account"
-          placeholder="请输入账号"
-          auto-complete="off"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="手机号"
-        prop="phone"
-      >
-        <el-input
-          v-model="userInfoForm.phone"
-          placeholder="请输入手机号"
-          :maxlength="11"
-          auto-complete="off"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="邮箱"
-        prop="email"
-      >
-        <el-input
-          v-model="userInfoForm.email"
-          placeholder="请输入邮箱"
-          auto-complete="off"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="姓名"
-        prop="nick"
-      >
-        <el-input
-          v-model="userInfoForm.nick"
-          placeholder="2-5个文字"
-          :maxlength="5"
-          auto-complete="off"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="密码"
-        prop="password"
-      >
-        <el-input
-          type="password"
-          v-model="userInfoForm.password"
-          auto-complete="off"
-          placeholder="请输入6-10位数字字母组合"
-          :maxlength="10"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="确认密码"
-        prop="checkPass"
-      >
-        <el-input
-          type="password"
-          v-model="userInfoForm.checkPass"
-          auto-complete="off"
-          placeholder="请再次输入密码"
-          :maxlength="10"
-        ></el-input>
-      </el-form-item>
-      <el-form-item
-        label="部门选择"
-        prop="departmentid"
-      >
-        <el-cascader
-          style="width:600px"
-          placeholder="请选择部门"
-          v-model="userInfoForm.departmentid"
-          :props="treeprops"
-          :options="treeData"
-          auto-complete="off"
-          :show-all-levels="false"
-          change-on-select
-        ></el-cascader>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          @click="addUser"
-        >保存</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item
+          label="账号"
+          prop="account"
+        >
+          <el-input
+            v-model="userInfoForm.account"
+            placeholder="请输入账号"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="手机号"
+          prop="phone"
+        >
+          <el-input
+            v-model="userInfoForm.phone"
+            placeholder="请输入手机号"
+            :maxlength="11"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="邮箱"
+          prop="email"
+        >
+          <el-input
+            v-model="userInfoForm.email"
+            placeholder="请输入邮箱"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="姓名"
+          prop="nick"
+        >
+          <el-input
+            v-model="userInfoForm.nick"
+            placeholder="2-5个文字"
+            :maxlength="5"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="密码"
+          prop="password"
+        >
+          <el-input
+            type="password"
+            v-model="userInfoForm.password"
+            auto-complete="off"
+            placeholder="请输入6-10位数字字母组合"
+            :maxlength="10"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="确认密码"
+          prop="checkPass"
+        >
+          <el-input
+            type="password"
+            v-model="userInfoForm.checkPass"
+            auto-complete="off"
+            placeholder="请再次输入密码"
+            :maxlength="10"
+          ></el-input>
+        </el-form-item>
+        <el-form-item
+          label="部门选择"
+          prop="departmentid"
+        >
+          <el-cascader
+            style="width:600px"
+            placeholder="请选择部门"
+            v-model="userInfoForm.departmentid"
+            :props="treeprops"
+            :options="treeData"
+            auto-complete="off"
+            :show-all-levels="false"
+            change-on-select
+          ></el-cascader>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="addUser"
+          >保存</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
@@ -336,31 +339,35 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .edituser {
   width: 100%;
   min-height: 875px;
   padding: 20px;
   box-sizing: border-box;
   background: #ffffff;
-}
-.admin {
-  font-size: 24px;
-  margin: 20px 0 10px 20px;
-}
-.admin .des {
-  padding-left: 5px;
-  font-size: 15px;
-  color: #777;
-}
-.goodslist {
-  margin-left: 20px;
-  margin-bottom: 10px;
-}
-.el-input {
-  width: 600px;
-}
-.el-form {
-  margin-left: 20px;
+  .left {
+  }
+  .right {
+    .admin {
+      font-size: 24px;
+      margin: 20px 0 10px 20px;
+    }
+    .admin .des {
+      padding-left: 5px;
+      font-size: 15px;
+      color: #777;
+    }
+    .goodslist {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+    .el-input {
+      width: 600px;
+    }
+    .el-form {
+      margin-left: 20px;
+    }
+  }
 }
 </style>

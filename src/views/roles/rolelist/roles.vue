@@ -1,16 +1,27 @@
 <template>
   <div class="roles">
     <div class="search">
-      <el-input :placeholder="$t('user.name')" v-model="search" clearable></el-input>
+      <el-input
+        :placeholder="$t('user.name')"
+        v-model="search"
+        clearable
+      ></el-input>
       <el-button
         type="primary"
         icon="el-icon-search"
         style="margin-left:20px;"
         @click="gettable(0)"
       >{{$t('developer.search')}}</el-button>
-      <el-button type="primary" icon="el-icon-plus" @click="add">{{$t('developer.add')}}</el-button>
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="add"
+      >{{$t('developer.add')}}</el-button>
     </div>
-    <div class="tableroles" style="margin-top:20px">
+    <div
+      class="tableroles"
+      style="margin-top:20px"
+    >
       <el-table
         :data="tableData"
         style="width: 100%;text-align:center"
@@ -18,33 +29,48 @@
         :row-class-name="tableRowClassName"
         :row-style="selectedHighlight"
       >
-        <el-table-column :label="$t('user.name')" align="center">
+        <el-table-column
+          :label="$t('user.name')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.attributes.name}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('developer.describe')" align="center">
+        <el-table-column
+          :label="$t('developer.describe')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.attributes.desc}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('user.Remarks')" align="center">
+        <el-table-column
+          :label="$t('user.Remarks')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.attributes.alias}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="ID" align="center">
+        <el-table-column
+          label="ID"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.id}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('developer.operation')" align="center">
+        <el-table-column
+          :label="$t('developer.operation')"
+          align="center"
+        >
           <template slot-scope="scope">
             <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
             <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
             <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
 
-                <el-button
+            <el-button
               size="mini"
               type="success"
               @click="exportRoletemp(scope.row)"
@@ -66,7 +92,10 @@
         </el-table-column>
       </el-table>
       <!--分页-->
-      <div class="block" style="margin-top:20px;">
+      <div
+        class="block"
+        style="margin-top:20px;"
+      >
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -77,42 +106,64 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog :title="$t('developer.add')" :visible.sync="centerDialogVisible" width="50%">
+    <el-dialog
+      :title="$t('developer.add')"
+      :visible.sync="centerDialogVisible"
+      width="50%"
+    >
       <el-table
         :data="tableDataroles"
         style="width: 100%;text-align:center"
         @selection-change="handleSelectionChange"
         ref="multipleTable"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column :label="$t('user.name')" align="center">
+        <el-table-column
+          type="selection"
+          width="55"
+        ></el-table-column>
+        <el-table-column
+          :label="$t('user.name')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.attributes.name}}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('user.Remarks')" align="center">
+        <el-table-column
+          :label="$t('user.Remarks')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.attributes.desc}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="ID" align="center">
+        <el-table-column
+          label="ID"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{scope.row.id}}</span>
           </template>
         </el-table-column>
       </el-table>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="centerDialogVisible=false">{{$t('developer.cancel')}}</el-button>
-        <el-button type="primary" @click="addacl">{{$t('developer.determine')}}</el-button>
+        <el-button
+          type="primary"
+          @click="addacl"
+        >{{$t('developer.determine')}}</el-button>
       </span>
     </el-dialog>
     <!--菜单-->
     <div class="rolefooter">
       <div class="footerleft">
         <p class="top">
-         <span class="svg-container">
-          <svg-icon icon-class="role_group" />
-         </span> <span>{{$t('user.assignroles1')}}</span>
+          <span class="svg-container">
+            <svg-icon icon-class="role_group" />
+          </span> <span>{{$t('user.assignroles1')}}</span>
           <el-button
             type="primary"
             icon="el-icon-success"
@@ -131,7 +182,10 @@
             :default-checked-keys="rolecontroldata"
             :expand-on-click-node="false"
           >
-            <span class="custom-tree-node" slot-scope="{ node }">
+            <span
+              class="custom-tree-node"
+              slot-scope="{ node }"
+            >
               <span>{{ node.label }}</span>
             </span>
           </el-tree>
@@ -139,10 +193,10 @@
       </div>
       <div class="footerright">
         <p class="top">
-           <span class="svg-container">
-             <svg-icon icon-class="menu_group" />
-           </span>
-           <span>{{$t('user.assignmenu')}}</span>
+          <span class="svg-container">
+            <svg-icon icon-class="menu_group" />
+          </span>
+          <span>{{$t('user.assignmenu')}}</span>
           <el-button
             type="primary"
             icon="el-icon-success"
@@ -150,7 +204,10 @@
             :disabled="rolecontrol"
           >{{$t('product.preservation')}}</el-button>
         </p>
-        <div class="menucontrol" style="margin-top:30px;">
+        <div
+          class="menucontrol"
+          style="margin-top:30px;"
+        >
           <el-tree
             :data="menudata"
             show-checkbox
@@ -161,7 +218,10 @@
             :default-checked-keys="rolemenu"
             :expand-on-click-node="false"
           >
-            <span class="custom-tree-node" slot-scope="{ node }">
+            <span
+              class="custom-tree-node"
+              slot-scope="{ node }"
+            >
               <span>{{ node.label }}</span>
             </span>
           </el-tree>
@@ -169,15 +229,36 @@
       </div>
     </div>
     <!--编辑权限弹窗-->
-    <el-dialog :title="$t('developer.edit')" :visible.sync="roleEdit">
+    <el-dialog
+      :title="$t('developer.edit')"
+      :visible.sync="roleEdit"
+    >
       <el-form :model="form">
-        <el-form-item :label="$t('user.name')" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled></el-input>
+        <el-form-item
+          :label="$t('user.name')"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.name"
+            autocomplete="off"
+            style="width:300px;"
+            disabled
+          ></el-input>
         </el-form-item>
-        <el-form-item :label="$t('user.Remarks')" :label-width="formLabelWidth">
-          <el-input v-model="form.alias" autocomplete="off" style="width:300px;"></el-input>
+        <el-form-item
+          :label="$t('user.Remarks')"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.alias"
+            autocomplete="off"
+            style="width:300px;"
+          ></el-input>
         </el-form-item>
-        <el-form-item :label="$t('developer.describe')" :label-width="formLabelWidth">
+        <el-form-item
+          :label="$t('developer.describe')"
+          :label-width="formLabelWidth"
+        >
           <el-input
             v-model="form.desc"
             autocomplete="off"
@@ -187,19 +268,25 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="roleEdit = false">{{$t('developer.cancel')}}</el-button>
-        <el-button type="primary" @click="updaterole">{{$t('developer.determine')}}</el-button>
+        <el-button
+          type="primary"
+          @click="updaterole"
+        >{{$t('developer.determine')}}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { page,UpdatedMenu,UpdatedRole } from "@/api/login";
+import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
 import { Parse } from "parse";
 import { returnLogin } from '@/utils/return';
 export default {
-  data() {
+  data () {
     return {
       formLabelWidth: "120px",
       roleEdit: false,
@@ -208,7 +295,7 @@ export default {
         alias: "",
         desc: ""
       },
-      data:[],
+      data: [],
       dialogVisible: false,
       multipleSelection: [],
       search: "",
@@ -234,11 +321,11 @@ export default {
       rolecontroldata: [],
       data1: [],
       editroleid: "",
-      getIndex:''
+      getIndex: ''
     };
   },
   computed: {
-    treeData() {
+    treeData () {
       let cloneData = JSON.parse(JSON.stringify(this.data1)); // 对源数据深度克隆
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
@@ -248,7 +335,7 @@ export default {
         return father.parent == 0; //返回第一层
       });
     },
-    menudata(){
+    menudata () {
       let cloneData = JSON.parse(JSON.stringify(this.data)); // 对源数据深度克隆
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
@@ -259,41 +346,41 @@ export default {
       });
     }
   },
-  mounted() {
+  mounted () {
     this.gettable();
     this.getMenu();
     this.getRoleschema();
   },
 
   methods: {
-    getMenu(){
-        this.data=[]
-         var Menu = Parse.Object.extend("Menu");
-         var menu = new Parse.Query(Menu)
-         menu.find().then(resultes=>{
-            resultes.map(items=>{
-            var obj ={}
-            obj.label = items.attributes.name 
-            obj.objectId = items.id
-            obj.parent = items.attributes.parent.id
-            obj.createtime = new Date(items.attributes.createdAt).toLocaleDateString()
-            this.data.push(obj)
-            }) 
-         },
-         (error=>{
-           if(error.code=='209'){
-             this.$message({
-            type: "warning",
-            message: "登陆权限过期，请重新登录"
+    getMenu () {
+      this.data = []
+      var Menu = Parse.Object.extend("Menu");
+      var menu = new Parse.Query(Menu)
+      menu.find().then(resultes => {
+        resultes.map(items => {
+          var obj = {}
+          obj.label = items.attributes.name
+          obj.objectId = items.id
+          obj.parent = items.attributes.parent.id
+          obj.createtime = new Date(items.attributes.createdAt).toLocaleDateString()
+          this.data.push(obj)
+        })
+      },
+        (error => {
+          if (error.code == '209') {
+            this.$message({
+              type: "warning",
+              message: "登陆权限过期，请重新登录"
             });
             this.$router.push({
-              path:'/login'
+              path: '/login'
             })
-           }
-         }))
-          
+          }
+        }))
+
     },
-    diguiquchu(datas, arr, v, needdelarr) {
+    diguiquchu (datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
       arr.map(item => {
         // console.log(item.key, v, "----------");
@@ -306,7 +393,7 @@ export default {
         }
       });
     },
-    add() {
+    add () {
       this.$router.push({
         path: "/roles/editroles",
         query: {
@@ -347,11 +434,11 @@ export default {
     //     });
     //   });
     // },
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.multipleSelection = val;
     },
     //给role添加acl权限
-    addacl() {
+    addacl () {
       var Role = Parse.Object.extend("_Role");
       var role = new Parse.Query(Role);
       role.get(this.objectId).then(object => {
@@ -377,66 +464,66 @@ export default {
       });
     },
     //关闭菜单弹窗
-    handleClose() {
+    handleClose () {
       this.dialogVisible = false;
     },
     //删除角色
-    handleDelete(row) {
+    handleDelete (row) {
       this.$confirm('此操作将永久删除此权限, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          
-          var roles = Parse.Object.extend("_Role");
-          var query = new Parse.Query(roles);
-          query.get(row).then(object => {
-            object.destroy().then(
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+
+        var roles = Parse.Object.extend("_Role");
+        var query = new Parse.Query(roles);
+        query.get(row).then(object => {
+          object.destroy().then(
             response => {
               this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
+                type: 'success',
+                message: '删除成功!'
+              });
               this.gettable();
             },
-          error => {
-            returnLogin(error)
-          }
-        );
-      });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+            error => {
+              returnLogin(error)
+            }
+          );
         });
-      
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+
     },
     //增加菜单
-    addmenu(row) {
+    addmenu (row) {
       // console.log(row)
       this.rolename = row.attributes.name;
 
       // this.dialogVisible = true;
       this.getMenu();
     },
-     tableRowClassName ({row, rowIndex}) {
-        //把每一行的索引放进row
-         
+    tableRowClassName ({ row, rowIndex }) {
+      //把每一行的索引放进row
+
       row.index = rowIndex;
-      },
-    selectedHighlight({row, rowIndex}) {
-     
-         if (this.getIndex === rowIndex) {
-            return {
-          "background-color": "#999999",
-          "border":"5px solid black"
-       };
-     }
     },
-    getDetailmenu(row) {
-     
-      this.getIndex=row.index
+    selectedHighlight ({ row, rowIndex }) {
+
+      if (this.getIndex === rowIndex) {
+        return {
+          "background-color": "#999999",
+          "border": "5px solid black"
+        };
+      }
+    },
+    getDetailmenu (row) {
+
+      this.getIndex = row.index
       this.rolecontrol = false;
       this.rolemenuname = row.attributes.name;
       this.rolemenu = [];
@@ -448,15 +535,15 @@ export default {
       menu.find().then(resultes => {
         // this.getMenu();
         resultes.map(items => {
-          if(items.attributes.parentId!=0){
-          
-             if (items.attributes.ACL.permissionsById['role:'+this.rolemenuname]) {
-               
+          if (items.attributes.parentId != 0) {
+
+            if (items.attributes.ACL.permissionsById['role:' + this.rolemenuname]) {
+
               this.rolemenu.push(items.id);
+            }
           }
-        }
           // console.log(items.attributes.ACL.permissionsById)
-         
+
         });
         this.$refs.tree.setCheckedKeys(this.rolemenu);
       });
@@ -470,18 +557,18 @@ export default {
           // if(items.attributes.ACL.permissionsById['role:'+_this.rolemenuname]){
           //   // console.log(items)
           // }
-          if(items.attributes.parent.id!=0&&items.attributes.ACL.permissionsById['role:'+_this.rolemenuname]){
+          if (items.attributes.parent.id != 0 && items.attributes.ACL.permissionsById['role:' + _this.rolemenuname]) {
             // console.log(items.attributes.parent.id)
-              // if () {
-              _this.rolecontroldata.push(items.id);
-          // } 
-        }
+            // if () {
+            _this.rolecontroldata.push(items.id);
+            // } 
+          }
           _this.$refs.tree1.setCheckedKeys(_this.rolecontroldata);
         });
       });
     },
-    getCheckedKeys() {
-     
+    getCheckedKeys () {
+
       // var Menu = Parse.Object.extend("Menu");
       // var menu = new Parse.Query(Menu);
       // this.$refs.tree.getCheckedKeys().map(items => {
@@ -496,33 +583,33 @@ export default {
       //     });
       //   });
       // }, 100);
-     
-     var checkmenu = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
-        UpdatedMenu(this.rolemenuname,checkmenu).then(resultes=>{
-          if(resultes){
-             this.$message({
-              type: "success",
-              message: "添加成功!"
-            });
-          }
-           
-        })
-    
+
+      var checkmenu = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
+      UpdatedMenu(this.rolemenuname, checkmenu).then(resultes => {
+        if (resultes) {
+          this.$message({
+            type: "success",
+            message: "添加成功!"
+          });
+        }
+
+      })
+
 
       // this.getMenu()
     },
     //权限分配
-    controlroles() {
-      var checkrole= this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys())
-      UpdatedRole(this.rolemenuname,checkrole).then(resultes=>{
-        if(resultes){
-           this.$message({
-              type: "success",
-              message: "添加成功!"
-            });
+    controlroles () {
+      var checkrole = this.$refs.tree1.getCheckedKeys().concat(this.$refs.tree1.getHalfCheckedKeys())
+      UpdatedRole(this.rolemenuname, checkrole).then(resultes => {
+        if (resultes) {
+          this.$message({
+            type: "success",
+            message: "添加成功!"
+          });
         }
-          
-      })  
+
+      })
       // var roles = Parse.Object.extend("_Role");
       // var query = new Parse.Query(roles);
       // var Permission = Parse.Object.extend("Permission");
@@ -541,22 +628,22 @@ export default {
       //   });
       // });
     },
-     
+
     // rowClick (row) {
     //     this.getIndex=row.index
     // },
     //初始化权限列表
-    gettable(start) {
-      if(start==0){
-        this.start=0
+    gettable (start) {
+      if (start == 0) {
+        this.start = 0
       }
       this.tableData = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
       query.limit(this.pagesize);
       query.skip(this.start);
-      if(this.searchvalue!=''){
-        query.equalTo('name',this.searchvalue)
+      if (this.searchvalue != '') {
+        query.equalTo('name', this.searchvalue)
       }
       query.count().then(count => {
         if (count) {
@@ -581,18 +668,18 @@ export default {
         );
       });
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pagesize = val;
       this.gettable();
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.start = Number(val - 1) * Number(this.pagesize);
       this.gettable();
     },
-    handleCheckChange(data, checked) {
+    handleCheckChange (data, checked) {
       console.log(data, checked);
     },
-    searchvalue() {
+    searchvalue () {
       this.tableData = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
@@ -610,7 +697,7 @@ export default {
     // checked(){
 
     // }
-    getRoleschema() {
+    getRoleschema () {
       var Permission = Parse.Object.extend("Permission");
       var permission = new Parse.Query(Permission);
       permission.limit(1000);
@@ -629,23 +716,23 @@ export default {
         // console.log(this.treeData)
       });
     },
-    exportRoletemp(row){
+    exportRoletemp (row) {
 
 
-    this.$axiosWen.post("/roletemp?name=" + row.attributes.name + '&tempname=' + row.attributes.name + '_' + row.attributes.desc)
+      this.$axiosWen.post("/roletemp?name=" + row.attributes.name + '&tempname=' + row.attributes.name + '_' + row.attributes.desc)
         .then((response) => {
-          console.log('response',response);
+          console.log('response', response);
 
-      /*     if(response){
-                  window.open(
-                    window.location.origin +
-                      "/iotapi/product?name=" +
-                      _this.productName,
-                      "_blank"
-                  );
-                } */
+          /*     if(response){
+                      window.open(
+                        window.location.origin +
+                          "/iotapi/product?name=" +
+                          _this.productName,
+                          "_blank"
+                      );
+                    } */
 
-       
+
 
         })
 
@@ -654,7 +741,7 @@ export default {
 
     },
     //编辑权限
-    handleEditrole(row) {
+    handleEditrole (row) {
       this.editroleid = row.id;
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
@@ -666,7 +753,7 @@ export default {
         console.log(resultes);
       });
     },
-    updaterole() {
+    updaterole () {
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
       query.get(this.editroleid).then(resultes => {
