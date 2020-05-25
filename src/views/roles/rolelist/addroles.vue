@@ -188,8 +188,8 @@ export default {
           console.log(this.Option.deptvalue, fatheOptions)
           fatheOptions.forEach(val => {
             if (this.$refs['cascaderAddr'].currentLabels[0] === val.name)
-              this.Option.objectId = val.objectId
-            this.Option.ParentId = val.ParentId
+              this.Option.objectId = val.children[0].objectId
+            this.Option.ParentId = val.objectId
           })
           break;
         case 'dict':
@@ -245,6 +245,7 @@ export default {
         this.Option.deptvalue = ''
       this.Option.dictvalue = ''
       this.Option.objectId = 0
+      this.Option.ParentId = 0
       this.data = []
       this.treeModu = []
       setTimeout(() => {
@@ -269,7 +270,7 @@ export default {
         "desc": this.ruleForm.description,
         "depid": this.Option.objectId,
         "alias": this.Option.deptvalue,
-        "ParentId": this.Option.ParentId,
+        "parent": this.Option.ParentId,
         "tempname": this.Option.dictvalue
       }
       this.$axiosWen.post("/role", params).then(res => {

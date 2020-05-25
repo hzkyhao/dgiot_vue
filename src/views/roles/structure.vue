@@ -551,9 +551,9 @@ export default {
     handleNodeClick (data) {
       if (data.ParentId == 0) {
         console.log('根据父及id查找')
-        console.log(data.objectId)
-        this.data.forEach(key => {
-          console.log(key)
+        this.tableData.forEach(key => {
+          this.tempData = this.tableData.filter(item => item.departmentid == data.children[0].objectId)
+          this.total = this.tempData.length
         })
       } else {
         this.tableData.forEach(value => {
