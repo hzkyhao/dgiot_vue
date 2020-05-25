@@ -100,8 +100,7 @@ export default {
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father
-        // .ParentId == 0;
+        return father.ParentId == 0;
         console.log(father, "104father.ParentId")
       });
     }
@@ -128,7 +127,8 @@ export default {
         deptvalue: '',
         deptOption: [],
         dictvalue: '',
-        dictOption: []
+        dictOption: [],
+        objectId: 0,
       },
       clearFlag: true,
       ruleForm: {
@@ -182,8 +182,13 @@ export default {
     changeOption (key, val) {
       switch (key) {
         case 'tree':
-          this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1],
-            console.log(this.Option.deptvalue, this.$refs['cascaderAddr'])
+          this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1];
+          let fatheOptions = this.$refs['cascaderAddr'].options
+          console.log(this.Option.deptvalue, fatheOptions)
+          fatheOptions.forEach(val => {
+            if (this.$refs['cascaderAddr'].currentLabels[0] === val.name)
+              this.Option.objectId = val.objectId
+          })
           break;
         case 'dict':
           this.Option.dictvalue = val;
@@ -237,6 +242,7 @@ export default {
       },
         this.Option.deptvalue = ''
       this.Option.dictvalue = ''
+      this.Option.objectId = 0
       this.data = []
       this.treeModu = []
       setTimeout(() => {
@@ -259,45 +265,22 @@ export default {
       let params = {
         "name": this.ruleForm.name,
         "desc": this.ruleForm.description,
-        "depid": "KOAzvgAsa1",
+        "depid": this.Option.objectId,
         "alias": this.Option.deptvalue,
-        "roletemp": this.Option.dictvalue
+        "tempname": this.Option.dictvalue
       }
       this.$axiosWen.post("/role", params).then(res => {
         console.log(res)
-        // this.$message({
-        //   message: "新增成功",
-        //   type: "success"
-        // });
-        // this.$router.push({
-        //   path: "/roles/roles"
-        // });
-        // 请求成功后,新建模板
-        // this.$axiosWen.post("/role?name=" + this.ruleForm.name + '&tempname=' + this.Option.dictvalue).then((response) => {
-        //   console.log('模板新建成功', response);
-        // })
-        //  设置Department id
-        let id = res.id
-
-        console.log(id)
-        // this.$axiosWen.post("/classes/Department")
-        //   .then((response) => {
-        //     console.log('response', response);
-        //   })
-        // console.log(res)
-
-
+        this.$message({
+          message: "新增成功",
+          type: "success"
+        });
+        this.$router.push({
+          path: "/roles/roles"
+        });
       }).catch(error => {
         console.log(error)
       })
-
-      this.$message({
-        message: "新增成功",
-        type: "success"
-      });
-      // this.$router.push({
-      //   path: "/roles/roles"
-      // });
     },
     nodetree () {
       this.userid = Parse.User.current().id;
