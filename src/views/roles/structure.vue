@@ -549,12 +549,20 @@ export default {
         });
     },
     handleNodeClick (data) {
-      this.tableData.forEach(value => {
-        if (data.objectId == value.departmentid) {
-          this.tempData = this.tableData.filter(item => item.departmentid == value.departmentid)
-          this.total = this.tempData.length
-        }
-      })
+      if (data.ParentId == 0) {
+        console.log('根据父及id查找')
+        console.log(data.objectId)
+        this.data.forEach(key => {
+          console.log(key)
+        })
+      } else {
+        this.tableData.forEach(value => {
+          if (data.objectId == value.departmentid) {
+            this.tempData = this.tableData.filter(item => item.departmentid == value.departmentid)
+            this.total = this.tempData.length
+          }
+        })
+      }
     },
     // 查询部门
     searchAllOption () {
