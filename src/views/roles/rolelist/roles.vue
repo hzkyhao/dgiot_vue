@@ -1,114 +1,175 @@
 <template>
   <div class="roles">
-    <div class="search">
-      <el-input
-        :placeholder="$t('user.name')"
-        v-model="search"
-        clearable
-      ></el-input>
-      <el-button
-        type="primary"
-        icon="el-icon-search"
-        style="margin-left:20px;"
-        @click="gettable(0)"
-      >{{$t('developer.search')}}</el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="add"
-      >{{$t('developer.add')}}</el-button>
+    <div class="leftTree">
+      <el-tree
+        :data="roleTree"
+        :props="roleProps"
+        @node-click="handleNodeClick"
+        node-key="id"
+        default-expand-all
+        :expand-on-click-node="false"
+      >
+        <span
+          class="custom-tree-node"
+          slot-scope="{ node, data }"
+        >
+          <span>{{ node.label }}</span>
+          <span>
+            <el-button
+              type="text"
+              size="mini"
+              @click="() => appendChildTree(data)"
+            >
+              <i class="el-icon-plus"></i>
+            </el-button>
+            <el-button
+              type="text"
+              size="mini"
+              @click="() => addRoleUser(data)"
+            >
+              <i
+                class="el-icon-s-custom"
+                @click="centerDialogRole = true"
+              ></i>
+            </el-button>
+          </span>
+        </span>
+      </el-tree>
     </div>
-    <div
-      class="tableroles"
-      style="margin-top:20px"
-    >
-      <el-table
-        :data="tableData"
-        style="width: 100%;text-align:center"
-        @row-click="getDetailmenu"
-        :row-class-name="tableRowClassName"
-        :row-style="selectedHighlight"
-      >
-        <el-table-column
-          :label="$t('user.name')"
-          align="center"
+    <div class="rightTable">
+      <div class="search">
+        <el-input
+          :placeholder="$t('user.name')"
+          v-model="search"
+          clearable
+        ></el-input>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          style="margin-left:20px;"
+          @click="gettable(0)"
+        >{{$t('developer.search')}}</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="add"
+        >{{$t('developer.add')}}</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="gettable()"
         >
-          <template slot-scope="scope">
-            <span>{{scope.row.attributes.name}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('developer.describe')"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{scope.row.attributes.desc}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('user.Remarks')"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{scope.row.attributes.alias}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="ID"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{scope.row.id}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('developer.operation')"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
-            <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
-            <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
-
-            <el-button
-              size="mini"
-              type="success"
-              @click="exportRoletemp(scope.row)"
-            >保存模版</el-button>
-
-            <el-button
-              size="mini"
-              type="success"
-              icon="el-icon-edit"
-              @click="handleEditrole(scope.row)"
-            >{{$t('developer.edit')}}</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-            >{{$t('developer.delete')}}</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--分页-->
+          所有角色
+        </el-button>
+      </div>
       <div
-        class="block"
-        style="margin-top:20px;"
+        class="tableroles"
+        style="margin-top:20px"
       >
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :page-sizes="[1,5,10]"
-          :page-size="pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total"
-        ></el-pagination>
+        <el-table
+          :data="tableData"
+          style="width: 100%;text-align:center"
+          @row-click="getDetailmenu"
+          :row-class-name="tableRowClassName"
+          :row-style="selectedHighlight"
+        >
+          <el-table-column
+            :label="$t('user.name')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{scope.row.attributes.name}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('developer.describe')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{scope.row.attributes.desc}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('user.Remarks')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{scope.row.attributes.alias}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="ID"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{scope.row.id}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('developer.operation')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
+              <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
+              <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
+
+              <el-button
+                size="mini"
+                type="success"
+                @click="exportRoletemp(scope.row)"
+              >保存模版</el-button>
+
+              <el-button
+                size="mini"
+                type="success"
+                icon="el-icon-edit"
+                @click="handleEditrole(scope.row)"
+              >{{$t('developer.edit')}}</el-button>
+              <el-button
+                size="mini"
+                type="danger"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+              >{{$t('developer.delete')}}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!--分页-->
+        <div class="rightPagination">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[1,5,10]"
+            :page-size="pagesize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+            v-show="total >2"
+          ></el-pagination>
+        </div>
       </div>
     </div>
     <el-dialog
+      title="添加用户"
+      :visible.sync="centerDialogRole"
+      width="30%"
+      center
+    >
+      <addroles />
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="centerDialogRole = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="centerDialogRole = false"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
       :title="$t('developer.add')"
-      :visible.sync="centerDialogVisible"
+      :visible.sync="dialogVisible"
       width="50%"
     >
       <el-table
@@ -285,9 +346,11 @@
 import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
 import { Parse } from "parse";
 import { returnLogin } from '@/utils/return';
+import addroles from '@/views/roles/rolelist/addroles'
 export default {
   data () {
     return {
+      centerDialogRole: false,
       formLabelWidth: "120px",
       roleEdit: false,
       form: {
@@ -321,10 +384,27 @@ export default {
       rolecontroldata: [],
       data1: [],
       editroleid: "",
-      getIndex: ''
+      getIndex: '',
+      roleProps: {
+        children: 'children',
+        label: 'name'
+      },
+      roleData: []
     };
   },
   computed: {
+    roleTree () {
+      let cloneData = JSON.parse(JSON.stringify(this.roleData));
+      return cloneData.filter(father => {
+        console.log(father)
+        let branchArr = cloneData.filter(
+          child => father.objectId == child.ParentId
+        );
+        branchArr.length > 0 ? (father.children = branchArr) : "";
+        return father.ParentId != 0;
+        console.log(father, "104father.ParentId")
+      });
+    },
     treeData () {
       let cloneData = JSON.parse(JSON.stringify(this.data1)); // 对源数据深度克隆
       return cloneData.filter(father => {
@@ -345,6 +425,9 @@ export default {
         return father.parent == 0; //返回第一层
       });
     }
+  },
+  components: {
+    addroles
   },
   mounted () {
     this.gettable();
@@ -378,7 +461,30 @@ export default {
             })
           }
         }))
-
+      //查询部门
+      this.$axiosWen.get("/classes/_Role").then(res => {
+        const results = res.results
+        results.forEach((key, val) => {
+          var obj = {};
+          // obj.ParentId = key.ParentId;
+          // obj.name = key.name;
+          // obj.objectId = key.objectId;
+          // obj.org_type = key.org_type;
+          // obj.createdAt = key.createdAt;
+          obj.ParentId = key.parent.objectId;
+          obj.name = key.depname;
+          obj.objectId = key.objectId;
+          obj.org_type = key.org_type;
+          obj.createdAt = key.createdAt;
+          this.roleData.push(obj);
+        })
+        if (res.results) {
+          this.deptOption = res.results
+        } else {
+          this.$message('部门列表获取失败')
+          this.deptOption = []
+        }
+      })
     },
     diguiquchu (datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
@@ -637,6 +743,7 @@ export default {
       if (start == 0) {
         this.start = 0
       }
+
       this.tableData = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
@@ -768,17 +875,54 @@ export default {
         this.roleEdit = false;
         this.gettable();
       });
+    },
+    handleNodeClick (data) {
+      this.gettable(data.objectId)
+    },
+    // 添加子节点
+    appendChildTree (data) {
+      console.log(data, '添加子节点')
+    },
+    renderContent (h, { node, data, store }) {
+      return (
+        <span class="custom-tree-node">
+          <span>{node.label}</span>
+          <span>
+            <el-button size="mini" type="text" on-click={() => this.appendChildTree(data)}><i class="el-icon-plus"></i></el-button>
+          </span>
+        </span>);
+    },
+    // 添加用户
+    addRoleUser (parentKey) {
+      console.log(parentKey, '添加用户')
     }
   }
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .roles {
   width: 100%;
   min-height: 875px;
   padding: 20px;
   box-sizing: border-box;
   background: #ffffff;
+  .leftTree {
+    width: 10%;
+    float: left;
+  }
+  .rightTable {
+    width: 87%;
+    float: right;
+    margin-right: 2%;
+    .search {
+      margin: 20px;
+      text-align: center;
+    }
+    .rightPagination {
+      text-align: center;
+      margin: 40px;
+    }
+  }
 }
 .rolefooter {
   height: auto;

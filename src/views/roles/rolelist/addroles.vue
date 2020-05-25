@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h2>添加角色</h2>
+    <!-- <h2>添加角色</h2> -->
     <div class="from">
       <el-form
         :model="ruleForm"
@@ -61,7 +61,7 @@
             placeholder="备注项为必填项"
             type="textarea"
             v-model="ruleForm.description"
-            style="width:500px;"
+            style="width:200px;"
           ></el-input>
         </el-form-item>
         <el-form-item class="el_btn">
@@ -74,11 +74,11 @@
             type="warning"
             @click="resetFrom()"
           >重置</el-button>
-          <el-button
+          <!-- <el-button
             v-if="insert==0||insert==1"
             type="primary"
             style="margin:0 7%"
-          >取消</el-button>
+          >取消</el-button> -->
           <el-button
             v-if="insert==0||insert==1"
             type="success"
@@ -209,7 +209,7 @@ export default {
         .then(res => {
           this.Option.dictOption = res.results
         });
-      this.$axiosWen.get("/classes/Department").then(res => {
+      this.$axiosWen.get("/classes/_Role").then(res => {
         const results = res.results
         console.log(results)
         results.forEach((key, val) => {
@@ -334,7 +334,7 @@ export default {
 // }
 .app-container {
   width: 100%;
-  min-height: 875px;
+  min-height: 400px;
   padding: 20px;
   box-sizing: border-box;
   background: #ffffff;
