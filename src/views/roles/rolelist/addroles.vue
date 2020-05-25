@@ -129,6 +129,7 @@ export default {
         dictvalue: '',
         dictOption: [],
         objectId: 0,
+        ParentId: 0
       },
       clearFlag: true,
       ruleForm: {
@@ -188,6 +189,7 @@ export default {
           fatheOptions.forEach(val => {
             if (this.$refs['cascaderAddr'].currentLabels[0] === val.name)
               this.Option.objectId = val.objectId
+            this.Option.ParentId = val.ParentId
           })
           break;
         case 'dict':
@@ -267,6 +269,7 @@ export default {
         "desc": this.ruleForm.description,
         "depid": this.Option.objectId,
         "alias": this.Option.deptvalue,
+        "ParentId": this.Option.ParentId,
         "tempname": this.Option.dictvalue
       }
       this.$axiosWen.post("/role", params).then(res => {
