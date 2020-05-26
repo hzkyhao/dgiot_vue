@@ -22,7 +22,7 @@
           label="部门"
           prop="departmentid"
         >
-          <el-cascader
+          <!-- <el-cascader
             v-model="treeModu"
             placeholder="请选择部门"
             :props="treeprops"
@@ -31,7 +31,14 @@
             :show-all-levels="false"
             ref="cascaderAddr"
             @change="changeOption('tree')"
-          ></el-cascader>
+          ></el-cascader> -->
+          <el-input
+            placeholder="请输入内容"
+            v-model="deptInfo.name"
+            :disabled="true"
+            style="width:200px"
+          >
+          </el-input>
         </el-form-item>
 
         <el-form-item
@@ -103,6 +110,9 @@ export default {
         return father.ParentId == 0;
         console.log(father, "104father.ParentId")
       });
+    },
+    deptInfo () {
+      return this.$store.getters.deptInfo
     }
   },
   data () {
@@ -266,11 +276,10 @@ export default {
     },
     addroles () {
       let params = {
-        "name": this.ruleForm.name,
+        "depname": this.deptInfo.name,
         "desc": this.ruleForm.description,
-        "depid": this.Option.objectId,
-        "alias": this.Option.deptvalue,
-        "parent": this.Option.ParentId,
+        "name": this.ruleForm.name,
+        "parent": this.deptInfo.ParentId,
         "tempname": this.Option.dictvalue
       }
       this.$axiosWen.post("/role", params).then(res => {
@@ -279,9 +288,10 @@ export default {
           message: "新增成功",
           type: "success"
         });
-        this.$router.push({
-          path: "/roles/roles"
-        });
+        // this.$router.push({
+        //   path: "/roles/roles"
+        // });
+        this.$store.dispatch('setDialogFlag', false)
       }).catch(error => {
         console.log(error)
       })
@@ -315,6 +325,7 @@ export default {
   mounted () {
     // this.getMenu();
     // this.nodetree()
+    console.log(this.deptInfo, "this.deptInfo")
     this.searchAllOption()
   }
 };
@@ -334,7 +345,7 @@ export default {
 // }
 .app-container {
   width: 100%;
-  min-height: 400px;
+  min-height: 320px;
   padding: 20px;
   box-sizing: border-box;
   background: #ffffff;
