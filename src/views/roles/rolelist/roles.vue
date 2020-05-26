@@ -29,7 +29,7 @@
             >
               <i
                 class="el-icon-s-custom"
-                @click="centerDialogRole = true"
+                @click="setDialogRole()"
               ></i>
             </el-button>
           </span>
@@ -151,7 +151,8 @@
     </div>
     <el-dialog
       title="添加用户"
-      :visible.sync="centerDialogRole"
+      :visible="centerDialogRole"
+      @close='closeDialogRole'
       width="30%"
       center
     >
@@ -160,11 +161,11 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="centerDialogRole = false">取 消</el-button>
+        <!-- <el-button @click="centerDialogRole = false">取 消</el-button>
         <el-button
           type="primary"
           @click="centerDialogRole = false"
-        >确 定</el-button>
+        >确 定</el-button> -->
       </span>
     </el-dialog>
     <el-dialog
@@ -350,7 +351,6 @@ import addroles from '@/views/roles/rolelist/addroles'
 export default {
   data () {
     return {
-      centerDialogRole: false,
       formLabelWidth: "120px",
       roleEdit: false,
       form: {
@@ -389,10 +389,14 @@ export default {
         children: 'children',
         label: 'name'
       },
-      roleData: []
+      roleData: [],
+      DialogRoleFlag: true
     };
   },
   computed: {
+    centerDialogRole () {
+      return this.$store.getters.DialogFlag
+    },
     roleTree () {
       let cloneData = JSON.parse(JSON.stringify(this.roleData));
       return cloneData.filter(father => {
@@ -403,7 +407,7 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : "";
         return father.ParentId != 0;
         console.log(father, "104father.ParentId")
-      });
+      })
     },
     treeData () {
       let cloneData = JSON.parse(JSON.stringify(this.data1)); // 对源数据深度克隆
@@ -894,7 +898,14 @@ export default {
     },
     // 添加用户
     addRoleUser (parentKey) {
-      console.log(parentKey, '添加用户')
+      this.$store.dispatch('setDeptInfo', parentKey)
+    },
+    // 显示弹窗
+    setDialogRole () {
+      this.$store.dispatch('setDialogFlag', true)
+    },
+    closeDialogRole () {
+      this.$store.dispatch('setDialogFlag', false)
     }
   }
 };
