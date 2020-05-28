@@ -559,10 +559,10 @@
                     <el-col :span="10">
                       <el-form-item
                         label="偏移"
-                        prop="offSet"
+                        prop="offset"
                         :rules="[{ type: 'number', message: '请输入数字'}]"
                       >
-                        <el-input v-model.number="sizeForm.offSet" auto-complete="off"></el-input>
+                        <el-input v-model.number="sizeForm.offset" auto-complete="off"></el-input>
                       </el-form-item>
                     </el-col>
 
@@ -2608,7 +2608,7 @@ export default {
                   address: this.sizeForm.dis,
                   quantity: this.sizeForm.dinumber,
                   rate: this.sizeForm.rate,
-                  offSet: this.sizeForm.offSet,
+                  offset: this.sizeForm.offset,
                   byteOrder: this.sizeForm.byteOrder
                 },
                 required: true,
