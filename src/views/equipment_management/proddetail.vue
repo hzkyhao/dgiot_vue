@@ -444,24 +444,6 @@
                    </el-col>
             </el-row>
 
-                <div>
-                  <el-form-item label="数据标识" required>
-                    <el-col :span="9">
-                      <el-form-item prop="dis">
-                        <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2">-</el-col>
-                    <el-col :span="9">
-                      <el-form-item>
-                        <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-form-item>
-             
-
-                </div>
-
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
                 <div v-if="sizeForm.type=='INT'||sizeForm.type=='FLOAT'||sizeForm.type=='DOUBLE'">
                   <el-form-item required label="取值范围(数值)">
@@ -542,9 +524,28 @@
                     </el-select>
                   </el-form-item>
                   </el-col>
-                  </el-row>      
+                  </el-row>  
 
-                  <el-divider></el-divider>  
+                <h3 style="font-size:normal;">数据源配置</h3>    
+
+                  <el-divider></el-divider>
+
+               <div name="dataIdentification">
+                  <el-form-item label="数据标识" required>
+                    <el-col :span="9">
+                      <el-form-item prop="dis">
+                        <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="2">-</el-col>
+                    <el-col :span="9">
+                      <el-form-item>
+                        <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-form-item>           
+
+                </div>
 
                   <el-row :gutter="30">
                     <el-col :span="10">
@@ -566,12 +567,7 @@
                       </el-form-item>
                     </el-col>
 
-             <!--        <el-col :span="10">
-                      <el-form-item label="功能码">
-                        <el-input v-model="sizeForm.funCode" auto-complete="off"></el-input>
-                      </el-form-item>
-                    </el-col>
- -->
+
                     <el-col :span="10">
                       <el-form-item label="字节序" prop="byteOrder">
                         <el-select v-model="sizeForm.byteOrder" placeholder="请选择">
@@ -584,6 +580,20 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
+
+                    <el-col :span="10">
+                      <el-form-item label="协议类型">
+                     <el-select v-model="sizeForm.protocol" placeholder="请选择">
+                          <el-option
+                            v-for="(item,index) in ['modbus','dlt645']"
+                            :key="index"
+                            :label="item"
+                            :value="item"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+
 
 
                   </el-row>
@@ -1716,7 +1726,8 @@ export default {
         struct: [],
         rate: "",
         offset: "",
-        byteOrder: ""
+        byteOrder: "",
+        protocol:''
       },
       sizerule: {
         step: [{ required: true, trigger: "blur", validator: vailspecs }],
@@ -2609,7 +2620,8 @@ export default {
                   quantity: this.sizeForm.dinumber,
                   rate: this.sizeForm.rate,
                   offset: this.sizeForm.offset,
-                  byteOrder: this.sizeForm.byteOrder
+                  byteOrder: this.sizeForm.byteOrder,
+                  protocol:this.sizeForm.protocol
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
