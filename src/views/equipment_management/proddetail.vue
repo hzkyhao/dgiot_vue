@@ -424,25 +424,23 @@
             :close-on-click-modal="false"
           >
             <div class="wmxheader">
-
               <el-form ref="sizeForm" :model="sizeForm" size="small" :rules="sizerule">
-                  <!-- update 2020 05-27 hughWang -->
+                <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
-              <el-row gutter="30">
+                <el-row gutter="30">
                   <el-col :span="10">
-                <el-form-item :label="$t('product.functionname')" prop="name">
-                  <el-input v-model="sizeForm.name"></el-input>
-                </el-form-item>
+                    <el-form-item :label="$t('product.functionname')" prop="name">
+                      <el-input v-model="sizeForm.name"></el-input>
+                    </el-form-item>
+                  </el-col>
 
-                </el-col>
-
-                 <el-col :span="10">
-                <el-form-item :label="$t('product.identifier')" prop="identifier">
-                  <el-input v-model="sizeForm.identifier"></el-input>
-                </el-form-item>
-                <!--type-->
-                   </el-col>
-            </el-row>
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
+                      <el-input v-model="sizeForm.identifier"></el-input>
+                    </el-form-item>
+                    <!--type-->
+                  </el-col>
+                </el-row>
 
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
                 <div v-if="sizeForm.type=='INT'||sizeForm.type=='FLOAT'||sizeForm.type=='DOUBLE'">
@@ -468,91 +466,94 @@
                       </el-form-item>
                     </el-col>
                   </el-form-item>
-                  
-            <el-row :gutter="30">
-              <el-col :span="10">
-              <el-form-item label="步长" prop="step">
-              <el-input-number
-                v-model="sizeForm.step"
-                controls-position="right"
-                :precision="2"
-                :min="0"
-                :step="0.01"
-              ></el-input-number>
-            </el-form-item>
-              </el-col>
 
-              <el-col :span="10">                      
-              <el-form-item :label="$t('product.readandwritetype')" prop="isread">
-                <el-radio-group v-model="sizeForm.isread" size="medium">
-                  <el-radio label="rw">{{$t('product.readandwrite')}}</el-radio>
-                  <el-radio label="r">{{$t('product.onlyread')}}</el-radio>
-                </el-radio-group>
-              </el-form-item>
+                  <el-row :gutter="30">
+                    <el-col :span="10">
+                      <el-form-item label="步长" prop="step">
+                        <el-input-number
+                          v-model="sizeForm.step"
+                          controls-position="right"
+                          :precision="2"
+                          :min="0"
+                          :step="0.01"
+                        ></el-input-number>
+                      </el-form-item>
+                    </el-col>
 
-              </el-col>
-            </el-row>
+                    <el-col :span="10">
+                      <el-form-item :label="$t('product.readandwritetype')" prop="isread">
+                        <el-radio-group v-model="sizeForm.isread" size="medium">
+                          <el-radio label="rw">{{$t('product.readandwrite')}}</el-radio>
+                          <el-radio label="r">{{$t('product.onlyread')}}</el-radio>
+                        </el-radio-group>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
 
-          <el-row :gutter="30">
-                <el-col :span="10">
-                  <!-- 数据类型 -->
-                <el-form-item :label="$t('product.datatype')" prop="type">
-                  <!--少个@change=selectStruct-->                 
-                  <el-select v-model="sizeForm.type">
-                    <el-option :label="$t('product.struct')" value="STRUCT"></el-option>
-                    <el-option :label="$t('product.init')" value="INT"></el-option>
-                    <el-option :label="$t('product.float')" value="FLOAT"></el-option>
-                    <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
-                    <el-option :label="$t('product.bool')" value="BOOL"></el-option>
-                    <el-option :label="$t('product.enum')" value="ENUM"></el-option>
-                    <el-option :label="$t('product.string')" value="STRING"></el-option>
-                    <el-option :label="$t('product.date')" value="DATE"></el-option>
-                  </el-select>
-                </el-form-item>
-                </el-col>
-                 <el-col :span="2"> </el-col>              
-                  <el-col :span="10">
-                  <!-- 单位 -->
-                  <el-form-item :label="$t('product.unit')">
-                    <el-select v-model="sizeForm.unit" :placeholder="$t('product.unit')" filterable>
-                      <el-option
-                        v-for="(item,index) in allunit"
-                        :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
-                        :key="index"
-                        :value="item.attributes.data.Symbol"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
-                  </el-col>
-                  </el-row>  
+                  <el-row :gutter="30">
+                    <el-col :span="10">
+                      <!-- 数据类型 -->
+                      <el-form-item :label="$t('product.datatype')" prop="type">
+                        <!--少个@change=selectStruct-->
+                        <el-select v-model="sizeForm.type">
+                          <el-option :label="$t('product.struct')" value="STRUCT"></el-option>
+                          <el-option :label="$t('product.init')" value="INT"></el-option>
+                          <el-option :label="$t('product.float')" value="FLOAT"></el-option>
+                          <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
+                          <el-option :label="$t('product.bool')" value="BOOL"></el-option>
+                          <el-option :label="$t('product.enum')" value="ENUM"></el-option>
+                          <el-option :label="$t('product.string')" value="STRING"></el-option>
+                          <el-option :label="$t('product.date')" value="DATE"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="2"></el-col>
+                    <el-col :span="10">
+                      <!-- 单位 -->
+                      <el-form-item :label="$t('product.unit')">
+                        <el-select
+                          v-model="sizeForm.unit"
+                          :placeholder="$t('product.unit')"
+                          filterable
+                        >
+                          <el-option
+                            v-for="(item,index) in allunit"
+                            :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
+                            :key="index"
+                            :value="item.attributes.data.Symbol"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
 
-                <h3 style="font-size:normal;">数据源配置</h3>    
+                  <h3 style="font-size:normal;">数据源配置</h3>
 
                   <el-divider></el-divider>
 
-               <div name="dataIdentification">
-                  <el-form-item label="数据标识" required>
-                    <el-col :span="9">
-                      <el-form-item prop="dis">
-                        <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2">-</el-col>
-                    <el-col :span="9">
-                      <el-form-item>
-                        <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-form-item>           
-
-                </div>
+                  <div name="dataIdentification">
+                    <el-form-item label="数据标识" required>
+                      <el-col :span="9">
+                        <el-form-item prop="dis">
+                          <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="2">-</el-col>
+                      <el-col :span="9">
+                        <el-form-item>
+                          <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-form-item>
+                  </div>
 
                   <el-row :gutter="30">
                     <el-col :span="10">
                       <el-form-item
                         label="修正系数"
                         prop="rate"
-                        :rules="[{ type: 'number', message: '请输入数字'}]">
+                        :rules="[{ type: 'number', message: '请输入数字'}]"
+                      >
                         <el-input v-model.number="sizeForm.rate" auto-complete="off"></el-input>
                       </el-form-item>
                     </el-col>
@@ -566,7 +567,6 @@
                         <el-input v-model.number="sizeForm.offset" auto-complete="off"></el-input>
                       </el-form-item>
                     </el-col>
-
 
                     <el-col :span="10">
                       <el-form-item label="字节序" prop="byteOrder">
@@ -583,7 +583,7 @@
 
                     <el-col :span="10">
                       <el-form-item label="协议类型">
-                     <el-select v-model="sizeForm.protocol" placeholder="请选择">
+                        <el-select v-model="sizeForm.protocol" placeholder="请选择">
                           <el-option
                             v-for="(item,index) in ['modbus','dlt645']"
                             :key="index"
@@ -593,12 +593,7 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
-
-
-
                   </el-row>
-
-
                 </div>
 
                 <!--BOOL数据类型添加格式-->
@@ -767,31 +762,29 @@
           >
             <div class="structheader">
               <el-form ref="structform" :model="structform" size="small" :rules="structrule">
-
                 <el-row gutter="30">
                   <el-col :span="10">
-                <el-form-item :label="$t('product.functionname')" prop="name">
-                  <el-input v-model="structform.name"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('product.identifier')" prop="identifier">
-                  <el-input v-model="structform.identifier"></el-input>
-                </el-form-item>
+                    <el-form-item :label="$t('product.functionname')" prop="name">
+                      <el-input v-model="structform.name"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
+                      <el-input v-model="structform.identifier"></el-input>
+                    </el-form-item>
                   </el-col>
-                 <el-col :span="10">
-                <el-form-item :label="$t('product.datatype')" prop="type">
-                  <el-select v-model="structform.type">
-                    <el-option :label="$t('product.init')" value="INT"></el-option>
-                    <el-option :label="$t('product.float')" value="FLOAT"></el-option>
-                    <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
-                    <el-option :label="$t('product.bool')" value="BOOL"></el-option>
-                    <el-option :label="$t('product.enum')" value="ENUM"></el-option>
-                    <el-option :label="$t('product.string')" value="STRING"></el-option>
-                    <el-option :label="$t('product.date')" value="DATE"></el-option>
-                  </el-select>
-                </el-form-item>
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.datatype')" prop="type">
+                      <el-select v-model="structform.type">
+                        <el-option :label="$t('product.init')" value="INT"></el-option>
+                        <el-option :label="$t('product.float')" value="FLOAT"></el-option>
+                        <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
+                        <el-option :label="$t('product.bool')" value="BOOL"></el-option>
+                        <el-option :label="$t('product.enum')" value="ENUM"></el-option>
+                        <el-option :label="$t('product.string')" value="STRING"></el-option>
+                        <el-option :label="$t('product.date')" value="DATE"></el-option>
+                      </el-select>
+                    </el-form-item>
                   </el-col>
                 </el-row>
-
 
                 <div>
                   <el-form-item label="数据标识" required>
@@ -808,8 +801,6 @@
                     </el-col>
                   </el-form-item>
                 </div>
-
-
 
                 <div
                   v-if="structform.type=='INT'||structform.type=='FLOAT'||structform.type=='DOUBLE'"
@@ -983,11 +974,10 @@
               >{{$t('developer.determine')}}</el-button>
             </span>
           </el-dialog>
-
-
         </el-tab-pane>
         <!--协议解析-->
-        <el-tab-pane :label="$t('product.contentparsing')" name="fourth">
+        <div  style="diaplay:none;">
+        <el-tab-pane label="物解析22" name="fourth">
           <div class="protolheader">
             <el-form
               :inline="true"
@@ -1142,6 +1132,7 @@
             ><textarea class="ace_text-input"></textarea></pre>
           </div>
         </el-tab-pane>
+        </div>
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane :label="$t('product.physicalaccess')" name="fiveth">
           <div class="productchannel" style="text-align:right;padding:10px;">
@@ -1727,7 +1718,7 @@ export default {
         rate: "",
         offset: "",
         byteOrder: "",
-        protocol:''
+        protocol: ""
       },
       sizerule: {
         step: [{ required: true, trigger: "blur", validator: vailspecs }],
@@ -2621,7 +2612,7 @@ export default {
                   rate: this.sizeForm.rate,
                   offset: this.sizeForm.offset,
                   byteOrder: this.sizeForm.byteOrder,
-                  protocol:this.sizeForm.protocol
+                  protocol: this.sizeForm.protocol
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
@@ -2660,7 +2651,6 @@ export default {
                 dataForm: {
                   address: this.sizeForm.dis,
                   quantity: this.sizeForm.dinumber
-
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
