@@ -83,16 +83,7 @@
     <!--指令弹窗-->
     <el-dialog :title="dialogTitle+'指令'" :visible.sync="dialogFormVisible" @open="openDialog">
       <el-form ref="form" :model="form" size="small" :rules="formrule">
-        <p
-          style="border: 1px solid rgb(204, 204, 204);
-                color: rgb(64, 158, 255);
-                font-size: 14px;
-                margin-top: 0;
-                height: 30px;
-                line-height: 30px;
-                padding-left: 20px;
-                box-sizing: border-box;"
-        >指令信息</p>
+        <h4 >&nbsp;&nbsp;指令信息</h4>
         <el-row>
           <el-col :span="12">
             <el-form-item label="指令名称" :label-width="formLabelWidth" prop="name">
@@ -120,21 +111,9 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <p
-          style="border: 1px solid rgb(204, 204, 204);
-                color: rgb(64, 158, 255);
-                font-size: 14px;
-                margin-top: 0;
-                height: 30px;
-                line-height: 30px;
-                padding-left: 20px;
-                box-sizing: border-box;"
-        >指令下发策略</p>
+        <h4 >&nbsp;&nbsp;指令下发策略</h4>
         <el-row>
           <el-col :span="12">
-   <!--          <el-form-item label="下发网关" :label-width="formLabelWidth" prop="lowerhair">
-              <el-input v-model="form.lowerhair" autocomplete="off" placeholder="请输入下发网关"></el-input>
-            </el-form-item> -->
             <el-form-item label="超时时长" :label-width="formLabelWidth" prop="duration">
               <el-input v-model.number="form.duration" autocomplete="off" placeholder="请输入超时时长">
                 <template slot="append">秒</template>
@@ -196,67 +175,7 @@ export default {
       default: ""
     }
   },
-  data() {
-    var checkNumber = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("超长时长不能为空"));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          callback();
-        }
-      }, 1000);
-    };
-    var checkNumber1 = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("发送间隔不能为空"));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          callback();
-        }
-      }, 1000);
-    };
-    var checkIndex = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("发送间隔不能为空"));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          callback();
-        }
-      }, 1000);
-    };
-    var checkIndex1 = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("子网编号不能为空"));
-      }
- /*      setTimeout(() => {
-        if (!Number.isInteger(value)) {
-          callback(new Error("请输入数字值"));
-        } else {
-          callback();
-        }
-      }, 1000); */
-    };
-    var isValidMask = (rule, value, callback) => {
-      var regx = /^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/;
-      if (!value) {
-        return callback(new Error("子网编号不能为空"));
-      } else {
-        if (!regx.test(value)) {
-          return callback(new Error("请输入正确的子网编号"));
-        } else {
-          callback();
-        }
-      }
-    };
+  data() {   
     return {
       formInline: {
         name: ""
@@ -277,38 +196,31 @@ export default {
         duration: "",
         order: "",
         interval: "",
-        // lowerhair: "",
         rotation: "",
         subnet: ""
       },
       formrule: {
         duration: [
-          { required: true, trigger: "blur" },
-          { validator: checkNumber }
+          { required: true,  message: "请输入",trigger: "blur" }
         ],
         interval: [
-          { required: true, trigger: "blur" },
-          { validator: checkNumber1 }
+          { required: true,  message: "请输入",trigger: "blur" }
         ],
         name: [
           { required: true, message: "指标名称不能为空", trigger: "blur" }
         ],
-        type: [{ required: true, message: "请挑选指标类型", trigger: "blur" }],
+        type: [{ required: true, message: "请选择操作类型", trigger: "blur" }],
         enable: [
           { required: true, message: "指标是否启用不能为空", trigger: "change" }
         ],
         order: [
           { required: true, message: "指标序号不能为空", trigger: "blur" } //指令序号     
         ],
-  /*       lowerhair: [
-          { required: true, message: "下发网关不能为空", trigger: "blur" }
-        ], */
         rotation: [
           { required: true, message: "生效轮次不能为空", trigger: "change" }
         ],
         subnet: [
-          { required: true, message: "子网编号不能为空", trigger: "blur" },
-          { validator: checkIndex1 }
+          { required: true, message: "子网编号不能为空", trigger: "blur" }
         ],
         pointer: [
           { required: true, message: "指令指标不能为空", trigger: "blur" }
@@ -384,7 +296,7 @@ export default {
       this.$refs.form.resetFields()
     },
     check(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(valid => {    
         if (valid) {
           var Instruct = Parse.Object.extend("Instruct");
           var instruct = new Instruct();
@@ -428,7 +340,7 @@ export default {
           this.$message("有必填项未填写");
           return false;
         }
-      });
+      })
     },
      handleSizeChange(val) {
         this.pagesize=val
