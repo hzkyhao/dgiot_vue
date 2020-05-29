@@ -399,6 +399,7 @@ export default {
     },
     roleTree () {
       let cloneData = JSON.parse(JSON.stringify(this.roleData));
+      console.log(cloneData)
       return cloneData.filter(father => {
         console.log(father)
         let branchArr = cloneData.filter(
@@ -468,22 +469,29 @@ export default {
       //查询部门
       this.$axiosWen.get("/classes/_Role").then(res => {
         const results = res.results
-        results.forEach((key, val) => {
-          var obj = {};
-          // obj.ParentId = key.ParentId;
-          // obj.name = key.name;
-          // obj.objectId = key.objectId;
-          // obj.org_type = key.org_type;
-          // obj.createdAt = key.createdAt;
-          obj.ParentId = key.parent.objectId;
-          obj.name = key.depname;
-          obj.objectId = key.objectId;
-          obj.org_type = key.org_type;
-          obj.createdAt = key.createdAt;
-          this.roleData.push(obj);
-        })
-        if (res.results) {
+        if (results) {
           this.deptOption = res.results
+          results.forEach((key, val) => {
+            var obj = {};
+            // obj.ParentId = key.ParentId;
+            // obj.name = key.name;
+            // obj.objectId = key.objectId;
+            // obj.org_type = key.org_type;
+            // obj.createdAt = key.createdAt;
+            // obj.ParentId = key.parent.objectId;
+            // obj.name = key.depname;
+            // obj.objectId = key.objectId;
+            // obj.org_type = key.org_type;
+            // obj.createdAt = key.createdAt;
+            if (key.level == 1 || key.level == 2) {
+              obj.ParentId = key.parent.objectId;
+              obj.name = key.depname;
+              obj.objectId = key.objectId;
+              obj.org_type = key.org_type;
+              obj.createdAt = key.createdAt;
+              this.roleData.push(obj);
+            }
+          })
         } else {
           this.$message('部门列表获取失败')
           this.deptOption = []
