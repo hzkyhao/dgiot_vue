@@ -65,12 +65,13 @@
         <!--产品信息-->
         <el-tab-pane :label="$t('product.productinformation')" name="first">
           <div style="background:#ffffff;padding:10px;box-sizing:border-box;">
-        <!-- 导出 -->
-              <div class="addtopic" style="text-align:right;margin-bottom:10px;">
+            <!-- 导出 -->
+            <div class="addtopic" style="text-align:right;margin-bottom:10px;">
               <el-button
                 type="primary"
                 size="small"
-                @click="exportProduct"  >{{$t('product.exportpro')}}</el-button>
+                @click="exportProduct"
+              >{{$t('product.exportpro')}}</el-button>
             </div>
 
             <div>
@@ -130,7 +131,6 @@
               </table>
             </div>
           </div>
-      
         </el-tab-pane>
         <!--topic列表-->
         <el-tab-pane :label="'Topic'+$t('product.list')" name="second">
@@ -425,49 +425,22 @@
           >
             <div class="wmxheader">
               <el-form ref="sizeForm" :model="sizeForm" size="small" :rules="sizerule">
-                <!-- <el-form-item label="功能类型" prop="resource">
-                  <el-radio-group v-model="sizeForm.resource" size="medium">
-                    <el-radio :label="1">属性</el-radio>
-                    <el-radio :label="2">事件</el-radio>
-                    <el-radio :label="3">复合型</el-radio>
-                  </el-radio-group>
-                </el-form-item>-->
-                <el-form-item :label="$t('product.functionname')" prop="name">
-                  <el-input v-model="sizeForm.name"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('product.identifier')" prop="identifier">
-                  <el-input v-model="sizeForm.identifier"></el-input>
-                </el-form-item>
-                <!--type-->
-                <el-form-item :label="$t('product.datatype')" prop="type">
-                  <!--少个@change=selectStruct-->
-                  <el-select v-model="sizeForm.type">
-                    <el-option :label="$t('product.struct')" value="STRUCT"></el-option>
-                    <el-option :label="$t('product.init')" value="INT"></el-option>
-                    <el-option :label="$t('product.float')" value="FLOAT"></el-option>
-                    <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
-                    <el-option :label="$t('product.bool')" value="BOOL"></el-option>
-                    <el-option :label="$t('product.enum')" value="ENUM"></el-option>
-                    <el-option :label="$t('product.string')" value="STRING"></el-option>
-                    <el-option :label="$t('product.date')" value="DATE"></el-option>
-                  </el-select>
-                </el-form-item>
+                <!-- update 2020 05-27 hughWang -->
+                <!-- 功能名称  -->
+                <el-row gutter="30">
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.functionname')" prop="name">
+                      <el-input v-model="sizeForm.name"></el-input>
+                    </el-form-item>
+                  </el-col>
 
-                <div >
-                  <el-form-item label="数据标识" required>
-                    <el-col :span="11">
-                      <el-form-item prop="dis">
-                        <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2">-</el-col>
-                    <el-col :span="11">
-                      <el-form-item>
-                        <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
-                      </el-form-item>
-                    </el-col>
-                  </el-form-item>
-                </div>
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
+                      <el-input v-model="sizeForm.identifier"></el-input>
+                    </el-form-item>
+                    <!--type-->
+                  </el-col>
+                </el-row>
 
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
                 <div v-if="sizeForm.type=='INT'||sizeForm.type=='FLOAT'||sizeForm.type=='DOUBLE'">
@@ -477,7 +450,6 @@
                         <el-input
                           v-model.number="sizeForm.startnumber"
                           type="number"
-                          
                           :placeholder="$t('product.minimumvalue')"
                         ></el-input>
                       </el-form-item>
@@ -489,34 +461,141 @@
                           @input="changeValue('sizeForm')"
                           v-model.number="sizeForm.endnumber"
                           type="number"
-                         
                           :placeholder="$t('product.maximumvalue')"
                         ></el-input>
                       </el-form-item>
                     </el-col>
                   </el-form-item>
-                  <el-form-item label="步长" prop="step">
-                    <el-input-number v-model="sizeForm.step" controls-position="right"   :precision="2" :min="0"
-                      :step="0.01"></el-input-number>
-                    <!-- <el-input
-                      v-model.number=""
-                      type="number"
-                      class="inputnumber"
-                      :precision="2"
-                      :step="0.01"
-                    ></el-input> -->
-                  </el-form-item>
-                  <el-form-item :label="$t('product.unit')">
-                    <el-select v-model="sizeForm.unit" :placeholder="$t('product.unit')" filterable>
-                      <el-option
-                        v-for="(item,index) in allunit"
-                        :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
-                        :key="index"
-                        :value="item.attributes.data.Symbol"
-                      ></el-option>
-                    </el-select>
-                  </el-form-item>
+
+                  <el-row :gutter="30">
+                    <el-col :span="10">
+                      <el-form-item label="步长" prop="step">
+                        <el-input-number
+                          v-model="sizeForm.step"
+                          controls-position="right"
+                          :precision="2"
+                          :min="0"
+                          :step="0.01"
+                        ></el-input-number>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                      <el-form-item :label="$t('product.readandwritetype')" prop="isread">
+                        <el-radio-group v-model="sizeForm.isread" size="medium">
+                          <el-radio label="rw">{{$t('product.readandwrite')}}</el-radio>
+                          <el-radio label="r">{{$t('product.onlyread')}}</el-radio>
+                        </el-radio-group>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                  <el-row :gutter="30">
+                    <el-col :span="10">
+                      <!-- 数据类型 -->
+                      <el-form-item :label="$t('product.datatype')" prop="type">
+                        <!--少个@change=selectStruct-->
+                        <el-select v-model="sizeForm.type">
+                          <el-option :label="$t('product.struct')" value="STRUCT"></el-option>
+                          <el-option :label="$t('product.init')" value="INT"></el-option>
+                          <el-option :label="$t('product.float')" value="FLOAT"></el-option>
+                          <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
+                          <el-option :label="$t('product.bool')" value="BOOL"></el-option>
+                          <el-option :label="$t('product.enum')" value="ENUM"></el-option>
+                          <el-option :label="$t('product.string')" value="STRING"></el-option>
+                          <el-option :label="$t('product.date')" value="DATE"></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="2"></el-col>
+                    <el-col :span="10">
+                      <!-- 单位 -->
+                      <el-form-item :label="$t('product.unit')">
+                        <el-select
+                          v-model="sizeForm.unit"
+                          :placeholder="$t('product.unit')"
+                          filterable
+                        >
+                          <el-option
+                            v-for="(item,index) in allunit"
+                            :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
+                            :key="index"
+                            :value="item.attributes.data.Symbol"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                  <h3 style="font-size:normal;">数据源配置</h3>
+
+                  <el-divider></el-divider>
+
+                  <div name="dataIdentification">
+                    <el-form-item label="数据标识" required>
+                      <el-col :span="9">
+                        <el-form-item prop="dis">
+                          <el-input v-model="sizeForm.dis" placeholder="数据标识"></el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="2">-</el-col>
+                      <el-col :span="9">
+                        <el-form-item>
+                          <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"></el-input>
+                        </el-form-item>
+                      </el-col>
+                    </el-form-item>
+                  </div>
+
+                  <el-row :gutter="30">
+                    <el-col :span="10">
+                      <el-form-item
+                        label="修正系数"
+                        prop="rate"
+                        :rules="[{ type: 'number', message: '请输入数字'}]"
+                      >
+                        <el-input v-model.number="sizeForm.rate" auto-complete="off"></el-input>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                      <el-form-item
+                        label="修正偏移"
+                        prop="offset"
+                        :rules="[{ type: 'number', message: '请输入数字'}]"
+                      >
+                        <el-input v-model.number="sizeForm.offset" auto-complete="off"></el-input>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                      <el-form-item label="字节序" prop="byteOrder">
+                        <el-select v-model="sizeForm.byteOrder" placeholder="请选择">
+                          <el-option
+                            v-for="item in [{value: 'big',label: '大端'},{value:'little',label:'小端'}]"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                      <el-form-item label="协议类型">
+                        <el-select v-model="sizeForm.protocol" placeholder="请选择">
+                          <el-option
+                            v-for="(item,index) in ['modbus','dlt645']"
+                            :key="index"
+                            :label="item"
+                            :value="item"
+                          ></el-option>
+                        </el-select>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
                 </div>
+
                 <!--BOOL数据类型添加格式-->
                 <div v-if="sizeForm.type=='BOOL'">
                   <el-form-item :label="$t('product.attribute')" required>
@@ -662,16 +741,11 @@
                     <el-input v-model="sizeForm.date" readonly></el-input>
                   </el-form-item>
                 </div>
-                <el-form-item :label="$t('product.readandwritetype')" prop="isread">
-                  <el-radio-group v-model="sizeForm.isread" size="medium">
-                    <el-radio label="rw">{{$t('product.readandwrite')}}</el-radio>
-                    <el-radio label="r">{{$t('product.onlyread')}}</el-radio>
-                  </el-radio-group>
-                </el-form-item>
               </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="wmxdialogVisible = false">{{$t('developer.cancel')}}</el-button>
+              <!-- 物模型提交 -->
               <el-button
                 type="primary"
                 @click="submitForm('sizeForm')"
@@ -688,23 +762,30 @@
           >
             <div class="structheader">
               <el-form ref="structform" :model="structform" size="small" :rules="structrule">
-                <el-form-item :label="$t('product.functionname')" prop="name">
-                  <el-input v-model="structform.name"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('product.identifier')" prop="identifier">
-                  <el-input v-model="structform.identifier"></el-input>
-                </el-form-item>
-                <el-form-item :label="$t('product.datatype')" prop="type">
-                  <el-select v-model="structform.type">
-                    <el-option :label="$t('product.init')" value="INT"></el-option>
-                    <el-option :label="$t('product.float')" value="FLOAT"></el-option>
-                    <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
-                    <el-option :label="$t('product.bool')" value="BOOL"></el-option>
-                    <el-option :label="$t('product.enum')" value="ENUM"></el-option>
-                    <el-option :label="$t('product.string')" value="STRING"></el-option>
-                    <el-option :label="$t('product.date')" value="DATE"></el-option>
-                  </el-select>
-                </el-form-item>
+                <el-row gutter="30">
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.functionname')" prop="name">
+                      <el-input v-model="structform.name"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
+                      <el-input v-model="structform.identifier"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="10">
+                    <el-form-item :label="$t('product.datatype')" prop="type">
+                      <el-select v-model="structform.type">
+                        <el-option :label="$t('product.init')" value="INT"></el-option>
+                        <el-option :label="$t('product.float')" value="FLOAT"></el-option>
+                        <el-option :label="$t('product.double')" value="DOUBLE"></el-option>
+                        <el-option :label="$t('product.bool')" value="BOOL"></el-option>
+                        <el-option :label="$t('product.enum')" value="ENUM"></el-option>
+                        <el-option :label="$t('product.string')" value="STRING"></el-option>
+                        <el-option :label="$t('product.date')" value="DATE"></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+
                 <div>
                   <el-form-item label="数据标识" required>
                     <el-col :span="11">
@@ -720,6 +801,7 @@
                     </el-col>
                   </el-form-item>
                 </div>
+
                 <div
                   v-if="structform.type=='INT'||structform.type=='FLOAT'||structform.type=='DOUBLE'"
                 >
@@ -730,7 +812,6 @@
                           @input="changeStructValue('structform')"
                           v-model.number="structform.startnumber"
                           type="number"
-                          
                           :placeholder="$t('product.minimumvalue')"
                         ></el-input>
                       </el-form-item>
@@ -741,24 +822,28 @@
                         <el-input
                           v-model.number="structform.endnumber"
                           type="number"
-                        
                           :placeholder="$t('product.maximumvalue')"
                         ></el-input>
                       </el-form-item>
                     </el-col>
                   </el-form-item>
+
                   <el-form-item label="步长" prop="step">
-                     <el-input-number v-model="structform.step" controls-position="right"   :precision="2" :step="0.01" :min="0"></el-input-number>
-                    <!-- <el-input
-                      v-model.number=""
-                      type="number"
-                      class="inputnumber"
+                    <el-input
+                      v-model="structform.step"
+                      controls-position="right"
                       :precision="2"
-                      :step="0.1"
-                    ></el-input> -->
+                      :step="0.01"
+                      :min="0"
+                    ></el-input>
                   </el-form-item>
+
                   <el-form-item :label="$t('product.unit')">
-                    <el-select v-model="structform.unit" :placeholder="$t('product.unit')" filterable>
+                    <el-select
+                      v-model="structform.unit"
+                      :placeholder="$t('product.unit')"
+                      filterable
+                    >
                       <el-option
                         v-for="(item,index) in allunit"
                         :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
@@ -891,7 +976,8 @@
           </el-dialog>
         </el-tab-pane>
         <!--协议解析-->
-        <el-tab-pane :label="$t('product.contentparsing')" name="fourth">
+        <div  style="diaplay:none;">
+        <el-tab-pane label="物解析22" name="fourth">
           <div class="protolheader">
             <el-form
               :inline="true"
@@ -935,11 +1021,14 @@
             width="50%"
             :close-on-click-modal="false"
           >
-          <el-table :data="protolchannel" style="width: 100%;" :row-class-name="getChannelEnable" ref="multipleTable" @selection-change="handleSelectionChange">
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
+            <el-table
+              :data="protolchannel"
+              style="width: 100%;"
+              :row-class-name="getChannelEnable"
+              ref="multipleTable"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
                   <span>{{scope.row.id}}</span>
@@ -966,11 +1055,10 @@
                   <span>{{scope.row.attributes.cType}}</span>
                 </template>
               </el-table-column>
-              
             </el-table>
-             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="updateAllChannel">确定</el-button>
-              </div>
+            <div slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="updateAllChannel">确定</el-button>
+            </div>
           </el-dialog>
           <!--公共协议库弹窗-->
           <el-dialog
@@ -1044,6 +1132,7 @@
             ><textarea class="ace_text-input"></textarea></pre>
           </div>
         </el-tab-pane>
+        </div>
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane :label="$t('product.physicalaccess')" name="fiveth">
           <div class="productchannel" style="text-align:right;padding:10px;">
@@ -1109,7 +1198,7 @@
         </el-tab-pane>
         <!-- <el-tab-pane label="物采集" name="eighth">
           <TaskCollection1 :productId="productId" :isreload="isreload" />
-        </el-tab-pane> -->
+        </el-tab-pane>-->
         <el-tab-pane label="物存储" name="seven">
           <div class="productchannel" style="text-align:right;padding:10px;">
             <el-popover
@@ -1320,7 +1409,7 @@
             <template slot-scope="scope">
               <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
               <span v-else-if="scope.row.attributes.type==2">{{$t('developer.resourcechannel')}}</span>
-               <span v-else>任务通道</span>
+              <span v-else>任务通道</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.servicetype')">
@@ -1413,33 +1502,19 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="导出" :visible.sync="exportDialogShow" width="25%">
+      <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
 
-     
-      <el-dialog title="导出" :visible.sync="exportDialogShow" width="25%" >
-
-
-        <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
-      
-     
-        <div slot="footer" class="dialog-footer">
-          <el-button size="small" class="btn-right" @click="exportDialogShow = false">关闭</el-button>
-        </div>
-      </el-dialog>
-  
-
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" class="btn-right" @click="exportDialogShow = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
-
-
-
-
-
-
-  
 </template>
 <script>
 import Parse from "parse";
 import { getRule, ruleDelete } from "@/api/rules";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 var editor;
 var editor1;
 var editor2;
@@ -1460,7 +1535,7 @@ import { Compile, subupadte } from "@/api/systemmanage/system";
 import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
 import gql from "graphql-tag";
-import {postFile} from '@/api/appcontrol'
+import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
   sendInfo,
@@ -1471,7 +1546,7 @@ import {
 // import TaskCollection1 from "./task_collection1";
 import { returnLogin } from "@/utils/return";
 import { error } from "util";
-import $ from 'jquery'
+import $ from "jquery";
 export default {
   // components: {
   //   TaskCollection1
@@ -1486,91 +1561,87 @@ export default {
       }
     };
     var validminnumber = (rule, value, callback) => {
-      console.log(value)
-        if(value===''){
-          callback(new Error("最小值不能为空"))
-        }else{
+      console.log(value);
+      if (value === "") {
+        callback(new Error("最小值不能为空"));
+      } else {
         //   if(value<0){
         //   callback(new Error('最小值不能小于0'))
         // }else{
-          if(this.sizeForm.endnumber!==''){
-            if (value >= this.sizeForm.endnumber) {
-              callback(new Error("最小值小于最大值"));
-            } else {
-              callback();
-            }
+        if (this.sizeForm.endnumber !== "") {
+          if (value >= this.sizeForm.endnumber) {
+            callback(new Error("最小值小于最大值"));
+          } else {
+            callback();
           }
-        // }
         }
-          
-      
+        // }
+      }
     };
     var validmaxnumber = (rule, value, callback) => {
-     
-      if(value===''){
-        callback(new Error("最大值不能为空"))
-      }else{
-        if(this.sizeForm.startnumber!==''){
-            if (value <= this.sizeForm.startnumber) {
-              callback(new Error("最大值必须大于最小值"));
-            } else {
-              callback();
-            }
+      if (value === "") {
+        callback(new Error("最大值不能为空"));
+      } else {
+        if (this.sizeForm.startnumber !== "") {
+          if (value <= this.sizeForm.startnumber) {
+            callback(new Error("最大值必须大于最小值"));
+          } else {
+            callback();
+          }
         }
-      // }
+        // }
       }
-      
     };
     var vailspecs = (rule, value, callback) => {
-      if(value<0){
-        callback(new Error('步长大于0'))
-      }else if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
+      if (value < 0) {
+        callback(new Error("步长大于0"));
+      } else if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
         callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
         callback();
       }
     };
     var validstructminnumber = (rule, value, callback) => {
-      if(value===''){
-          callback(new Error("最小值不能为空"))
-        }else{
+      if (value === "") {
+        callback(new Error("最小值不能为空"));
+      } else {
         //   if(value<0){
         //   callback(new Error('最小值不能小于0'))
         // }else{
-          if(this.structform.endnumber!==''){
-            if (value >= this.structform.endnumber) {
-              callback(new Error("最小值小于最大值"));
-            } else {
-              callback();
-            }
+        if (this.structform.endnumber !== "") {
+          if (value >= this.structform.endnumber) {
+            callback(new Error("最小值小于最大值"));
+          } else {
+            callback();
+          }
           // }
         }
-            
-        }
+      }
     };
     var validstructmaxnumber = (rule, value, callback) => {
-       if(value===''){
-        callback(new Error("最大值不能为空"))
-      }
-      else{
+      if (value === "") {
+        callback(new Error("最大值不能为空"));
+      } else {
         // if(value<0){
         //   callback(new Error('最大值不能小于0'))
         // }else{
-          if(this.structform.startnumber!==''){
-            if (value <= this.structform.startnumber) {
-              callback(new Error("最大值必须大于最小值"));
-            } else {
-              callback();
-            }
+        if (this.structform.startnumber !== "") {
+          if (value <= this.structform.startnumber) {
+            callback(new Error("最大值必须大于最小值"));
+          } else {
+            callback();
+          }
         }
         // }
-        
       }
     };
     var vailstructspecs = (rule, value, callback) => {
-      if(value<0){
+      if (value < 0) {
         callback(new Error("步长大于0"));
-      }else if (value >= this.structform.endnumber - this.structform.startnumber) {
+      } else if (
+        value >=
+        this.structform.endnumber - this.structform.startnumber
+      ) {
         callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
         callback();
@@ -1578,9 +1649,9 @@ export default {
     };
     return {
       //topic数据
-      multipleSelection:[],
-      protolchannel:[],
-      protoldialog:false,
+      multipleSelection: [],
+      protolchannel: [],
+      protoldialog: false,
       productimg: "",
       topicdialogVisible: false,
       topicform: {
@@ -1589,9 +1660,9 @@ export default {
         desc: "",
         isupdated: -1
       },
-      exportDialogShow:false,
-      exportUrl:'',
-      exportName:'',
+      exportDialogShow: false,
+      exportUrl: "",
+      exportName: "",
       decodertotal: 0,
       decoderstart: 0,
       decoderlength: 10,
@@ -1643,7 +1714,11 @@ export default {
             attributevalue: ""
           }
         ],
-        struct: []
+        struct: [],
+        rate: "",
+        offset: "",
+        byteOrder: "",
+        protocol: ""
       },
       sizerule: {
         step: [{ required: true, trigger: "blur", validator: vailspecs }],
@@ -1742,7 +1817,7 @@ export default {
       ProductSecret: "",
       dynamicReg: false,
       productId: "",
-      productName:'',
+      productName: "",
       productdetail: {},
       topicData: [],
       topic: [
@@ -1854,21 +1929,19 @@ export default {
     }
   },
   methods: {
-    changeValue(formName){
+    changeValue(formName) {
       this.$refs[formName].validateField("startnumber", errMsg => {
         if (errMsg) {
-          return false
+          return false;
         } else {
-         
         }
       });
     },
-    changeStructValue(formName){
+    changeStructValue(formName) {
       this.$refs[formName].validateField("startnumber", errMsg => {
         if (errMsg) {
-          return false
+          return false;
         } else {
-         
         }
       });
     },
@@ -1940,8 +2013,7 @@ export default {
         }
       );
     },
-    exportProduct(){
-
+    exportProduct() {
       var _this = this;
       /*
       postFile (_this.productName).then(response=>{
@@ -1957,35 +2029,31 @@ export default {
 
       // let url = Cookies.get('apiserver') + '/product?name=' + _this.productName;
 
-
-       let url = '/product?name=' + _this.productName;
-      _this.$axios.get(url)
-      .then(function (response) {
-        /*      let content = response;               
+      let url = "/product?name=" + _this.productName;
+      _this.$axios
+        .get(url)
+        .then(function(response) {
+          /*      let content = response;               
                 _this.exportNameDownload = _this.productName + '.json'; 
                 var blob = new Blob([content]);
                 _this.exportUrl = URL.createObjectURL(blob);
                 _this.exportDialogShow = true;  
-                */ 
-                if(response){
-                  window.open(
-                    window.location.origin +
-                      "/iotapi/product?name=" +
-                      _this.productName,
-                      "_blank"
-                  );
-                }
+                */
 
-          // window.location.origin = "/iotapi/product?name="+_this.productName;                    
+          if (response) {
+            window.open(
+              window.location.origin +
+                "/iotapi/product?name=" +
+                _this.productName,
+              "_blank"
+            );
+          }
 
-      })
-      .catch(function (error) {       
-         _this.$message({message: error,type: "error"});
-      }); 
-
-      
-
-
+          // window.location.origin = "/iotapi/product?name="+_this.productName;
+        })
+        .catch(function(error) {
+          _this.$message({ message: error, type: "error" });
+        });
 
       // $.ajax({
       //   type: 'GET',
@@ -2007,8 +2075,8 @@ export default {
       // })
     },
     //热加载弹窗
-    updatesubdialog(){
-      this.protoldialog = true
+    updatesubdialog() {
+      this.protoldialog = true;
       var Channel = Parse.Object.extend("Channel");
       var query = new Parse.Query(Channel);
       var Product = Parse.Object.extend("Product");
@@ -2017,9 +2085,10 @@ export default {
       query.equalTo("product", product);
       query.equalTo("type", "1");
       query.ascending("-updatedAt");
-        query.find().then(res => {
-        this.protolchannel = res;
-        this.$refs.multipleTable.toggleAllSelection()
+      query.find().then(
+        res => {
+          this.protolchannel = res;
+          this.$refs.multipleTable.toggleAllSelection();
         },
         error => {
           returnLogin(error);
@@ -2028,44 +2097,44 @@ export default {
     },
     //通道全选
     handleSelectionChange(val) {
-        this.multipleSelection = val;
+      this.multipleSelection = val;
     },
-    updateAllChannel(){
-      if(this.multipleSelection.length==0){
-        this.protoldialog = false
-      }else{
-        var arr = []
-        this.multipleSelection.map(item=>{
-          arr.push(new Promise((reslove,reject)=>{
-            return  subupadte(item.id, "update")
+    updateAllChannel() {
+      if (this.multipleSelection.length == 0) {
+        this.protoldialog = false;
+      } else {
+        var arr = [];
+        this.multipleSelection.map(item => {
+          arr.push(
+            new Promise((reslove, reject) => {
+              return subupadte(item.id, "update")
                 .then(resultes => {
                   if (resultes) {
-                   
-                    reslove(resultes)
+                    reslove(resultes);
                   }
                 })
                 .catch(error => {
-                
-                  reject(error)
+                  reject(error);
                 });
-          }))
-        })
-              Promise.all(arr)
-                .then(data => {
-                this.$message({
-                    message: "热加载成功",
-                    type: "success"
-                });
-                if (data.length == this.multipleSelection.length) {
-                   this.protoldialog = false
-                }
-                })
-                .catch(error => {
-                this.$message({
-                    message: error,
-                    type: "error"
-                });
+            })
+          );
+        });
+        Promise.all(arr)
+          .then(data => {
+            this.$message({
+              message: "热加载成功",
+              type: "success"
             });
+            if (data.length == this.multipleSelection.length) {
+              this.protoldialog = false;
+            }
+          })
+          .catch(error => {
+            this.$message({
+              message: error,
+              type: "error"
+            });
+          });
       }
     },
     getProductChannel() {
@@ -2075,7 +2144,7 @@ export default {
       var product = new Product();
       product.id = this.productId;
       query.equalTo("product", product);
-      query.containedIn("type", ['1','3']);
+      query.containedIn("type", ["1", "3"]);
       query.skip(this.channelstart);
       query.limit(this.channellength);
       query.ascending("-updatedAt");
@@ -2213,7 +2282,7 @@ export default {
       product.id = this.productId;
       query.skip(this.allChannelstart);
       query.limit(this.allChannellength);
-      query.containedIn("type", ['1','3']);
+      query.containedIn("type", ["1", "3"]);
       query.ascending("-updatedAt");
       if (!isallchannel) {
         query.notEqualTo("product", product);
@@ -2539,7 +2608,11 @@ export default {
                 },
                 dataForm: {
                   address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
+                  quantity: this.sizeForm.dinumber,
+                  rate: this.sizeForm.rate,
+                  offset: this.sizeForm.offset,
+                  byteOrder: this.sizeForm.byteOrder,
+                  protocol: this.sizeForm.protocol
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
@@ -2842,7 +2915,7 @@ export default {
                 type: "success",
                 message: "保存成功"
               });
-              this.schemadialogVisible = false
+              this.schemadialogVisible = false;
             }
           },
           error => {
@@ -2961,7 +3034,7 @@ export default {
       product.get(this.productId).then(
         response => {
           if (response) {
-            this.productName = response.attributes.name
+            this.productName = response.attributes.name;
             for (var key in response.attributes) {
               this.productdetail[key] = response.attributes[key];
             }
@@ -3214,7 +3287,7 @@ export default {
           this.$message(error.error);
         });
     },
-    
+
     chaxun() {
       var Dict = Parse.Object.extend("Dict");
       var datas = new Parse.Query(Dict);
@@ -3917,6 +3990,6 @@ export default {
 }
 
 .export-p {
-text-align:center;
+  text-align: center;
 }
 </style>
