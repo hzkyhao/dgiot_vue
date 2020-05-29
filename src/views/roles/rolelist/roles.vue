@@ -19,6 +19,7 @@
               type="text"
               size="mini"
               @click="() => appendChildTree(data)"
+              title="添加子节点"
             >
               <i class="el-icon-plus"></i>
             </el-button>
@@ -30,6 +31,7 @@
               <i
                 class="el-icon-s-custom"
                 @click="setDialogRole()"
+                title="添加用户"
               ></i>
             </el-button>
           </span>
@@ -399,15 +401,12 @@ export default {
     },
     roleTree () {
       let cloneData = JSON.parse(JSON.stringify(this.roleData));
-      console.log(cloneData)
       return cloneData.filter(father => {
-        console.log(father)
         let branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
         return father.ParentId != 0;
-        console.log(father, "104father.ParentId")
       })
     },
     treeData () {
@@ -603,6 +602,7 @@ export default {
                 message: '删除成功!'
               });
               this.gettable();
+              this.getMenu()
             },
             error => {
               returnLogin(error)
@@ -915,7 +915,18 @@ export default {
     closeDialogRole () {
       this.$store.dispatch('setDialogFlag', false)
     }
-  }
+  },
+  watch: {
+    centerDialogRole: {
+      deep: true,
+      handler: function (val) {
+        if (val == false) {
+          this.getMenu()
+          this.gettable()
+        }
+      }
+    }
+  },
 };
 </script>
 <style scoped lang="scss">

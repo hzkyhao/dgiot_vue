@@ -217,6 +217,7 @@ export default {
         }
       })
         .then(res => {
+          console.log(res)
           this.Option.dictOption = res.results
         });
       this.$axiosWen.get("/classes/_Role").then(res => {
