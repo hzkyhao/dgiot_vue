@@ -982,7 +982,7 @@ export default {
 
       } else {
             
-        var topoUrl= 'http://192.168.2.18:8888'
+        var topoUrl = this.$globalConfig.localTopoUrl
         
       }
       var url = `${topoUrl}/#?proudctid=${row.id}`;
