@@ -701,8 +701,9 @@ export default {
       })
     },
     goEdit(row) {
+       // #topoUrl
       window.open(
-        `${window.location.origin}/spa-platform/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
+        `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
         "_blank"
       );
     },

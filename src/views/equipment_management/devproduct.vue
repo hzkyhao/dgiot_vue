@@ -976,9 +976,11 @@ export default {
     },
     proudctView(row) {
 
+       // #topoUrl
+
       if(this.$globalConfig.serverURL.substr(0,1) == '/'){    
       
-        var topoUrl= window.location.origin + '/spa-plaform'
+        var topoUrl= window.location.origin + '/spa'
 
       } else {
             
