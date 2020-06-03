@@ -11,8 +11,8 @@
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
 //  var serverURL = "http://192.168.2.26:5080/iotapi"
 //  var serverURL = "http://pump.iotn2n.com:5080/iotapi"
-var serverURL = "http://sinmahe.iotn2n.com:5080/iotapi"
-// var serverURL = "http://120.25.171.26:5080/iotapi"
+// var serverURL = "http://sinmahe.iotn2n.com:5080/iotapi"
+var serverURL = "http://120.25.171.26:5080/iotapi"
 
 try {
   // 判断是否为生产环境

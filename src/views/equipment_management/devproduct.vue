@@ -978,14 +978,13 @@ export default {
 
       if(this.$globalConfig.serverURL.substr(0,1) == '/'){    
       
-        var topoUrl= window.location.origin + '/spa'
+        var topoUrl= window.location.origin + '/spa-plaform'
 
       } else {
             
         var topoUrl= 'http://192.168.2.18:8888'
         
       }
-      // var url = `${window.location.origin}/spa/?proudctid=${row.id}`;
       var url = `${topoUrl}/#?proudctid=${row.id}`;
       window.open(url, "__blank");
     }
