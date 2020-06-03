@@ -14,6 +14,8 @@
 // var serverURL = "http://sinmahe.iotn2n.com:5080/iotapi"
 var serverURL = "http://120.25.171.26:5080/iotapi"
 
+var localTopoUrl = 'http://192.168.2.18:8888'
+
 try {
   // 判断是否为生产环境
   if (process.env.NODE_ENV === "production" || serverURL == '/') {
