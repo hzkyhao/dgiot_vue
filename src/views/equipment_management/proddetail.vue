@@ -551,20 +551,16 @@
                     <el-col :span="10">
                       <el-form-item
                         label="修正系数"
-                        prop="rate"
-                        :rules="[{ type: 'number', message: '请输入数字'}]"
                       >
-                        <el-input v-model.number="sizeForm.rate" auto-complete="off"></el-input>
+                        <el-input v-model="sizeForm.rate" auto-complete="off"></el-input>
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item
                         label="修正偏移"
-                        prop="offset"
-                        :rules="[{ type: 'number', message: '请输入数字'}]"
                       >
-                        <el-input v-model.number="sizeForm.offset" auto-complete="off"></el-input>
+                        <el-input v-model="sizeForm.offset" auto-complete="off"></el-input>
                       </el-form-item>
                     </el-col>
 
