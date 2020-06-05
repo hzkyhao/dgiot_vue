@@ -427,7 +427,7 @@
               <el-form ref="sizeForm" :model="sizeForm" size="small" :rules="sizerule">
                 <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
-                <el-row gutter="30">
+                <el-row :gutter="30">
                   <el-col :span="10">
                     <el-form-item :label="$t('product.functionname')" prop="name">
                       <el-input v-model="sizeForm.name"></el-input>
@@ -569,8 +569,8 @@
                     </el-col>
 
                     <el-col :span="10">
-                      <el-form-item label="字节序" prop="byteOrder">
-                        <el-select v-model="sizeForm.byteOrder" placeholder="请选择">
+                      <el-form-item label="字节序" prop="byteorder">
+                        <el-select v-model="sizeForm.byteorder" placeholder="请选择">
                           <el-option
                             v-for="item in [{value: 'big',label: '大端'},{value:'little',label:'小端'}]"
                             :key="item.value"
@@ -583,9 +583,13 @@
 
                     <el-col :span="10">
                       <el-form-item label="协议类型">
-                        <el-select v-model="sizeForm.protocol" placeholder="请选择">
+                        <el-select
+                          @change="protocolChange"
+                          v-model="sizeForm.protocol"
+                          placeholder="请选择"
+                        >
                           <el-option
-                            v-for="(item,index) in ['modbus','dlt645']"
+                            v-for="(item,index) in ['normal','modbus']"
                             :key="index"
                             :label="item"
                             :value="item"
@@ -593,6 +597,39 @@
                         </el-select>
                       </el-form-item>
                     </el-col>
+                  </el-row>
+
+                  <el-row  :gutter="30" v-show="showNewItem">
+
+                      <el-col :span="10">
+                          <el-form-item label="寄存器状态" prop="byteorder">
+                            <el-select v-model="sizeForm.operatetype" placeholder="请选择">
+                              <el-option
+                                v-for="item in [{value: 'coilStatus',label: '线圈状态'},{value:'输入状态',label:'输入状态'},{value:'holdingRegister',label:'保持寄存器'},{value:'inputRegister',label:'输入寄存器'}]"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              ></el-option>
+                            </el-select>
+                          </el-form-item>
+                        </el-col>
+
+                        <el-col :span="10">
+                          <el-form-item label="数据类型">
+                            <el-select
+                              v-model="sizeForm.originaltype"
+                              placeholder="请选择"
+                            >
+                              <el-option
+                                v-for="(item,index) in ['int16','uint16','int32','uint32','int64','uint64','float','double','string','customizedData']"
+                                :key="index"
+                                :label="item"
+                                :value="item"
+                              ></el-option>
+                            </el-select>
+                          </el-form-item>
+                        </el-col>
+                    
                   </el-row>
                 </div>
 
@@ -762,7 +799,7 @@
           >
             <div class="structheader">
               <el-form ref="structform" :model="structform" size="small" :rules="structrule">
-                <el-row gutter="30">
+                <el-row :gutter="30">
                   <el-col :span="10">
                     <el-form-item :label="$t('product.functionname')" prop="name">
                       <el-input v-model="structform.name"></el-input>
@@ -976,162 +1013,164 @@
           </el-dialog>
         </el-tab-pane>
         <!--协议解析-->
-        <div  style="diaplay:none;">
-        <el-tab-pane label="物解析22" name="fourth">
-          <div class="protolheader">
-            <el-form
-              :inline="true"
-              :model="formInline"
-              class="demo-form-inline"
-              :rules="addRules"
-              ref="formInline"
-            >
-              <el-form-item :label="$t('product.protocolname')" prop="name">
-                <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('plugins.version')">
-                <el-input v-model="formInline.version" :placeholder="$t('plugins.version')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('developer.describe')">
-                <el-input v-model="formInline.desc" :placeholder="$t('developer.describe')"></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  type="primary"
-                  @click="subAce('formInline',true)"
-                  size="small"
-                >{{$t('product.preservation')}}</el-button>
-                <el-button type="primary" @click="subAce1('formInline')" size="small">设为公共</el-button>
-                <el-button
-                  type="primary"
-                  @click="chaxun"
-                  size="small"
-                >{{$t('product.publicagreementlibrary')}}</el-button>
-              </el-form-item>
-              <el-form-item style="display:block">
-                <el-button type="primary" @click="protol" size="small">{{$t('product.compile')}}</el-button>
-                <el-button type="success" @click="updatesubdialog" size="small">热加载</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-          <!--通道热加载-->
-          <el-dialog
-            title="通道热加载"
-            :visible.sync="protoldialog"
-            width="50%"
-            :close-on-click-modal="false"
-          >
-            <el-table
-              :data="protolchannel"
-              style="width: 100%;"
-              :row-class-name="getChannelEnable"
-              ref="multipleTable"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column type="selection" width="55"></el-table-column>
-              <el-table-column :label="$t('developer.channelnumber')">
-                <template slot-scope="scope">
-                  <span>{{scope.row.id}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.channelname')">
-                <template slot-scope="scope">
-                  <span>{{scope.row.attributes.name}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.channeladdr')">
-                <template slot-scope="scope">
-                  <span>{{'channel/'+scope.row.id}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.channeltype')">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-                  <span v-else>{{$t('developer.resourcechannel')}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.servicetype')">
-                <template slot-scope="scope">
-                  <span>{{scope.row.attributes.cType}}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="updateAllChannel">确定</el-button>
-            </div>
-          </el-dialog>
-          <!--公共协议库弹窗-->
-          <el-dialog
-            :title="$t('product.publicagreementlibrary')"
-            :visible.sync="dialogTableVisible"
-            width="50%"
-            :close-on-click-modal="false"
-          >
-            <el-table :data="gridData" style="width:100%;text-align:center;margin-top:20px;">
-              <el-table-column :label="$t('product.protocolname')" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.attributes.data.name}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('plugins.version')" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.attributes.data.version}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.describe')" align="center">
-                <template slot-scope="scope">
-                  <span>{{scope.row.attributes.data.desc}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="创建时间" align="center">
-                <template slot-scope="scope">
-                  <span>{{utc2beijing(scope.row.attributes.createdAt)}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.operation')" align="center" width="200">
-                <template slot-scope="scope">
+        <div style="diaplay:none;">
+          <el-tab-pane label="物解析22" name="fourth">
+            <div class="protolheader">
+              <el-form
+                :inline="true"
+                :model="formInline"
+                class="demo-form-inline"
+                :rules="addRules"
+                ref="formInline"
+              >
+                <el-form-item :label="$t('product.protocolname')" prop="name">
+                  <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('plugins.version')">
+                  <el-input v-model="formInline.version" :placeholder="$t('plugins.version')"></el-input>
+                </el-form-item>
+                <el-form-item :label="$t('developer.describe')">
+                  <el-input v-model="formInline.desc" :placeholder="$t('developer.describe')"></el-input>
+                </el-form-item>
+                <el-form-item>
                   <el-button
                     type="primary"
-                    size="mini"
-                    @click="editordata(scope.row)"
-                  >{{$t('product.clone')}}</el-button>
+                    @click="subAce('formInline',true)"
+                    size="small"
+                  >{{$t('product.preservation')}}</el-button>
+                  <el-button type="primary" @click="subAce1('formInline')" size="small">设为公共</el-button>
                   <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deletedata(scope.row.id)"
-                  >{{$t('developer.delete')}}</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="elpagination" style="padding:20px 0">
-              <el-pagination
-                @size-change="decoderSizeChange"
-                @current-change="devicerCurrentChange"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="decoderlength"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="decodertotal"
-              ></el-pagination>
+                    type="primary"
+                    @click="chaxun"
+                    size="small"
+                  >{{$t('product.publicagreementlibrary')}}</el-button>
+                </el-form-item>
+                <el-form-item style="display:block">
+                  <el-button type="primary" @click="protol" size="small">{{$t('product.compile')}}</el-button>
+                  <el-button type="success" @click="updatesubdialog" size="small">热加载</el-button>
+                </el-form-item>
+              </el-form>
             </div>
-          </el-dialog>
-          <div>
-            <div style="background:#ffffff">
-              <label id="plug-name"></label>
+            <!--通道热加载-->
+            <el-dialog
+              title="通道热加载"
+              :visible.sync="protoldialog"
+              width="50%"
+              :close-on-click-modal="false"
+            >
+              <el-table
+                :data="protolchannel"
+                style="width: 100%;"
+                :row-class-name="getChannelEnable"
+                ref="multipleTable"
+                @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column :label="$t('developer.channelnumber')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.id}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.channelname')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.attributes.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.channeladdr')">
+                  <template slot-scope="scope">
+                    <span>{{'channel/'+scope.row.id}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.channeltype')">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
+                    <span v-else>{{$t('developer.resourcechannel')}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.servicetype')">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.attributes.cType}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="updateAllChannel">确定</el-button>
+              </div>
+            </el-dialog>
+            <!--公共协议库弹窗-->
+            <el-dialog
+              :title="$t('product.publicagreementlibrary')"
+              :visible.sync="dialogTableVisible"
+              width="50%"
+              :close-on-click-modal="false"
+            >
+              <el-table :data="gridData" style="width:100%;text-align:center;margin-top:20px;">
+                <el-table-column :label="$t('product.protocolname')" align="center">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.attributes.data.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('plugins.version')" align="center">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.attributes.data.version}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.describe')" align="center">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.attributes.data.desc}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="创建时间" align="center">
+                  <template slot-scope="scope">
+                    <span>{{utc2beijing(scope.row.attributes.createdAt)}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('developer.operation')" align="center" width="200">
+                  <template slot-scope="scope">
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="editordata(scope.row)"
+                    >{{$t('product.clone')}}</el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      @click="deletedata(scope.row.id)"
+                    >{{$t('developer.delete')}}</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div class="elpagination" style="padding:20px 0">
+                <el-pagination
+                  @size-change="decoderSizeChange"
+                  @current-change="devicerCurrentChange"
+                  :page-sizes="[10, 20, 30, 50]"
+                  :page-size="decoderlength"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  :total="decodertotal"
+                ></el-pagination>
+              </div>
+            </el-dialog>
+            <div>
+              <div style="background:#ffffff">
+                <label id="plug-name"></label>
+              </div>
+              <pre id="editor" class="ace_editor" style="min-height:600px;margin-bottom:0;"><textarea class="ace_text-input"></textarea></pre>
+              <div style="background:#ffffff">
+                <label id="plug-name"></label>
+              </div>
+              <div
+                style="color:#c2be9e;background:#272822;border-top:1px solid #dddddd;padding:5px"
+              >
+                <span>{{$t('product.controloutput')}}</span>
+              </div>
+              <pre
+                id="editor2"
+                class="ace_editor"
+                style="min-height:300px;margin-bottom:0;margin-top:0"
+              ><textarea class="ace_text-input"></textarea></pre>
             </div>
-            <pre id="editor" class="ace_editor" style="min-height:600px;margin-bottom:0;"><textarea class="ace_text-input"></textarea></pre>
-            <div style="background:#ffffff">
-              <label id="plug-name"></label>
-            </div>
-            <div style="color:#c2be9e;background:#272822;border-top:1px solid #dddddd;padding:5px">
-              <span>{{$t('product.controloutput')}}</span>
-            </div>
-            <pre
-              id="editor2"
-              class="ace_editor"
-              style="min-height:300px;margin-bottom:0;margin-top:0"
-            ><textarea class="ace_text-input"></textarea></pre>
-          </div>
-        </el-tab-pane>
+          </el-tab-pane>
         </div>
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane :label="$t('product.physicalaccess')" name="fiveth">
@@ -1715,10 +1754,14 @@ export default {
           }
         ],
         struct: [],
-        rate: "",
-        offset: "",
-        byteOrder: "",
-        protocol: ""
+        rate: 1,
+        offset: 0,
+        byteorder: "big",
+        protocol: "normal",
+        operatetype:'inputRegister',
+        originaltype:'int16'
+
+
       },
       sizerule: {
         step: [{ required: true, trigger: "blur", validator: vailspecs }],
@@ -1888,7 +1931,8 @@ export default {
       resourcedialogFormVisible: false,
       resourceform: {},
       resourcechannelid: "",
-      isreload: 1
+      isreload: 1,
+      showNewItem:false
     };
   },
   watch: {
@@ -1929,6 +1973,13 @@ export default {
     }
   },
   methods: {
+    protocolChange(val) {
+      if (val == "modbus") {
+        this.showNewItem = true;
+      } else {
+         this.showNewItem = false;
+      }
+    },
     changeValue(formName) {
       this.$refs[formName].validateField("startnumber", errMsg => {
         if (errMsg) {
@@ -2611,13 +2662,20 @@ export default {
                   quantity: this.sizeForm.dinumber,
                   rate: this.sizeForm.rate,
                   offset: this.sizeForm.offset,
-                  byteOrder: this.sizeForm.byteOrder,
-                  protocol: this.sizeForm.protocol
+                  byteorder: this.sizeForm.byteorder,
+                  protocol: this.sizeForm.protocol,
+                  operatetype: this.sizeForm.operatetype,
+                  originaltype: this.sizeForm.originaltype
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
               };
+              // 去除多余的属性
+              if(!this.showNewItem){
+                  delete obj.dataForm.operatetype
+                  delete obj.dataForm.originaltype
+              }
             } else if (this.sizeForm.type == "BOOL") {
               obj = {
                 name: this.sizeForm.name,
