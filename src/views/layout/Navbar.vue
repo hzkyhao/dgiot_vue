@@ -4,7 +4,7 @@
     <!-- <breadcrumb  class="breadcrumb-container"/> -->
      <div class="systitle">
       <img v-if="imgsrc" :src="imgsrc">
-      <h2>{{title||'水泵检测平台'}}</h2>
+      <h2>{{title || ''}}</h2>
       <!-- <h2 v-if="type=='pump'">水泵智能检测大数据平台</h2> -->
     </div>
     <sidebar/>

@@ -7,14 +7,14 @@
 //var serverURL = "http://ci.iotn2n.com:5080/iotapi";
 //  var serverURL = "http://148.70.50.192:5080/iotapi"
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
-//  var serverURL = "http://192.168.2.7:5080/iotapi"
+ var serverURL = "http://192.168.2.7:5080/iotapi"
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
 //  var serverURL = "http://192.168.2.26:5080/iotapi"
 //  var serverURL = "http://pump.iotn2n.com:5080/iotapi"
 // var serverURL = "http://sinmahe.iotn2n.com:5080/iotapi"
-var serverURL = "http://120.25.171.26:5080/iotapi"
+// var serverURL = "http://120.25.171.26:5080/iotapi"
 
-var localTopoUrl = 'http://192.168.2.18:8888'
+var localTopoUrl = 'http://192.168.2.18:8339'
 
 try {
   // 判断是否为生产环境
@@ -76,5 +76,6 @@ module.exports = {
    */
   timeout: 1200000,
   hostname: hostname,
-  serverURL: serverURL
+  serverURL: serverURL,
+  localTopoUrl:localTopoUrl
 }
