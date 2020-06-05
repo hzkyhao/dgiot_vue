@@ -1754,7 +1754,7 @@ export default {
         offset: 0,
         byteorder: "big",
         protocol: "normal",
-        operatetype:'inputRegister',
+        operatetype:'holdingRegister',
         originaltype:'int16'
 
 
