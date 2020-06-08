@@ -142,7 +142,9 @@ export default {
       }
     };
   },
+  created(){},
   mounted() {
+    // this.$router.push('/performance_monitoring')
     this.choujiang()
   },
   methods: {
