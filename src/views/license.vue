@@ -1,5 +1,3 @@
-import ScrollPane from '@/components/ScrollPane';
-import { setInterval, clearInterval } from 'timers';
 <template>
   <div class="license">
     <div class="licenseleft">
