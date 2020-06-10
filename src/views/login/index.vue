@@ -133,6 +133,18 @@ export default {
     };
   },
   methods: {
+    getlicense() {
+      license().then(resultes => {
+        if (resultes.result == false) {
+          this.$router.push({
+            path: "/license"
+          });
+        } else {
+          // this.$router.push("/login");
+          localStorage.setItem("list", "[]");
+        }
+      });
+    },
     // 获取标题
     getTitle() {
 
@@ -242,6 +254,7 @@ export default {
     }
   },
   created() {
+    this.getlicense()  
     this.getTitle();
   },
   mounted() {}
