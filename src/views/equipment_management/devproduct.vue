@@ -987,7 +987,8 @@ export default {
         var topoUrl = this.$globalConfig.localTopoUrl
         
       }
-      var url = `${topoUrl}/#?proudctid=${row.id}`;
+      //为了兼容性,暂时传两个相同的值
+      var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`;
       window.open(url, "__blank");
     }
   },
