@@ -777,7 +777,7 @@
               </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="wmxdialogVisible = false">{{$t('developer.cancel')}}</el-button>
+              <el-button @click="wmxhandleClose">{{$t('developer.cancel')}}</el-button>
               <!-- 物模型提交 -->
               <el-button
                 type="primary"
@@ -3177,6 +3177,10 @@ export default {
 
     //    }
     wmxhandleClose() {
+
+      // this.sizeForm.type = 'INT'
+      this.$refs['sizeForm'].resetFields()
+      
       this.wmxdialogVisible = false;
     },
     //协议编辑
