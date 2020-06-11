@@ -3178,7 +3178,7 @@ export default {
     //    }
     wmxhandleClose() {
 
-      // this.sizeForm.type = 'INT'
+      this.sizeForm.type = 'INT'
       this.$refs['sizeForm'].resetFields()
       
       this.wmxdialogVisible = false;
