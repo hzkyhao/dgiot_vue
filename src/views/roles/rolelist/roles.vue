@@ -655,6 +655,9 @@ export default {
         resultes.map(items => {
           if (items.attributes.parentId != 0) {
 
+            console.log('items.attributes.ACL.permissionsById',items.attributes.ACL.permissionsById);
+            
+
             if (items.attributes.ACL.permissionsById['role:' + this.rolemenuname]) {
 
               this.rolemenu.push(items.id);
@@ -675,7 +678,7 @@ export default {
           // if(items.attributes.ACL.permissionsById['role:'+_this.rolemenuname]){
           //   // console.log(items)
           // }
-          if (items.attributes.parent.id != 0 && items.attributes.ACL.permissionsById['role:' + _this.rolemenuname]) {
+          if (items.attributes.parent && items.attributes.parent.id != 0 && items.attributes.ACL.permissionsById['role:' + _this.rolemenuname]) {
             // console.log(items.attributes.parent.id)
             // if () {
             _this.rolecontroldata.push(items.id);
@@ -826,7 +829,12 @@ export default {
           obj.label = items.attributes.alias;
           obj.alias = items.attributes.name;
           obj.objectId = items.id;
-          obj.parent = items.attributes.parent.id;
+          let parentId = this.$objGet(items,'attributes.parent.id');
+
+          if(parentId){
+            
+            obj.parent = parentId
+          } 
           obj.createtime = new Date(
             items.attributes.createdAt
           ).toLocaleDateString();
