@@ -9,6 +9,31 @@
         label-width="100px"
         class="demo-ruleForm"
       >
+          <el-form-item
+          label="parent"
+          prop="parent"
+        >
+<!--           <el-input
+            v-model="ruleForm.ParentId"
+            style="width:200px;"
+          ></el-input> -->
+
+    <el-select
+            v-model="ruleForm.ParentId"
+            placeholder="请选择Parent"
+          >
+            <el-option
+              v-for="(item,index) in roleList"
+              :key="index"
+              :value="item.objectId"
+              :label="item.name + ':' + item.desc"
+            >
+            </el-option>
+          </el-select>
+
+        </el-form-item>
+        
+
         <el-form-item
           label="角色名"
           prop="name"
@@ -33,21 +58,20 @@
             @change="changeOption('tree')"
           ></el-cascader> -->
           <el-input
-            placeholder="请输入内容"
-            v-model="deptInfo.name"
-            :disabled="true"
+            placeholder="请输入部门名称"
+            v-model="ruleForm.depname"
             style="width:200px"
           >
           </el-input>
         </el-form-item>
 
         <el-form-item
-          label="角色"
+          label="角色模版"
           prop="role"
         >
           <el-select
-            v-model="Option.dictvalue"
-            placeholder="请选择角色"
+            v-model="ruleForm.dictvalue"
+            placeholder="请选择角色模版"
             style="width:200px;"
             :clearable="clearFlag"
           >
@@ -143,6 +167,7 @@ export default {
       },
       clearFlag: true,
       ruleForm: {
+        parentId:'',
         name: "",
         phoneNum: "",
         mail: "",
@@ -162,6 +187,7 @@ export default {
           children: "children",
           label: "label"
         },
+        dictvalue:''
       },
       rules: {
         name: [
@@ -187,6 +213,7 @@ export default {
       orderresultes: [],
       parentid: '',
       roles: [],
+      roleList:[]
     };
   },
   methods: {
@@ -233,8 +260,10 @@ export default {
           this.data.push(obj);
         })
         if (res.results) {
+          this.roleList = res.results
           this.Option.deptOption = res.results
         } else {
+          this.roleList = []
           this.$message('部门列表获取失败')
           this.Option.deptOption = []
         }
@@ -277,11 +306,11 @@ export default {
     },
     addroles () {
       let params = {
-        "depname": this.deptInfo.name,
+        "depname": this.ruleForm.depname,
         "desc": this.ruleForm.description,
         "name": this.ruleForm.name,
-        "parent": this.deptInfo.ParentId,
-        "tempname": this.Option.dictvalue
+        "parent": this.ruleForm.ParentId,
+        "tempname": this.ruleForm.dictvalue
       }
       this.$axiosWen.post("/role", params).then(res => {
         console.log(res)
