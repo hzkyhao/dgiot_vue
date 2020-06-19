@@ -85,15 +85,20 @@
               <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
               <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
               <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
-
               <el-button
                 size="mini"
                 type="success"
                 @click="exportRoletemp(scope.row)"
-                >保存模版</el-button
+                >保存模板</el-button
               >
-
               <el-button
+                size="mini"
+                type="success"
+                @click="exportRolerole(scope.row)"
+                >修改</el-button
+              >
+              <el-button
+                v-show="false"
                 size="mini"
                 type="success"
                 icon="el-icon-edit"
@@ -324,7 +329,8 @@ export default {
       roleMenuList: [],
       dataPermissions: [],
       rolePermissonList: [],
-      loadingService: {}
+      loadingService: {},
+      roleItem: []
     };
   },
   computed: {
@@ -333,6 +339,10 @@ export default {
     },
     roleTree() {
       let cloneData = JSON.parse(JSON.stringify(this.roleData));
+      cloneData.forEach(item => {
+        console.log(item);
+        console.log(item.ParentId === item.objectId);
+      });
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
@@ -405,24 +415,14 @@ export default {
           this.deptOption = res.results;
           results.forEach((key, val) => {
             var obj = {};
-            // obj.ParentId = key.ParentId;
-            // obj.name = key.name;
-            // obj.objectId = key.objectId;
-            // obj.org_type = key.org_type;
-            // obj.createdAt = key.createdAt;
-            // obj.ParentId = key.parent.objectId;
-            // obj.name = key.depname;
-            // obj.objectId = key.objectId;
-            // obj.org_type = key.org_type;
-            // obj.createdAt = key.createdAt;
-            if (key.level == 1 || key.level == 2) {
-              obj.ParentId = key.parent.objectId;
-              obj.name = key.depname;
-              obj.objectId = key.objectId;
-              obj.org_type = key.org_type;
-              obj.createdAt = key.createdAt;
-              this.roleData.push(obj);
-            }
+            // if (key.level == 1 || key.level == 2) {
+            obj.ParentId = key.parent.objectId;
+            obj.name = key.depname;
+            obj.objectId = key.objectId;
+            obj.org_type = key.org_type;
+            obj.createdAt = key.createdAt;
+            this.roleData.push(obj);
+            // }
           });
         } else {
           this.$message("部门列表获取失败");
@@ -581,6 +581,7 @@ export default {
       this.$axiosWen
         .get("/role?name=" + row.attributes.name)
         .then(res => {
+          this.roleItem = res;
           this.checkMenus = res.menus;
           this.checkRoles = res.rules;
           this.loadingService.close();
@@ -708,48 +709,78 @@ export default {
           console.log(error);
         });
     },
-    exportRoletemp(row) {
-      console.log(row);
+    // 修改角色权限
+    exportRolerole(row) {
       let usersList = [];
       let rolesList = [];
       let checkrole = [];
       let checkmenu = [];
       let selectMenu = this.$refs.menusTree.getCheckedNodes();
       let selectRermission = this.$refs.permissionTree.getCheckedNodes();
-      let rolesData = item.roles;
-      let usersData = item.users;
-      selectMenu.forEach(item => {
-        checkmenu.push(item.label);
-      });
-      selectRermission.forEach(item => {
-        checkrole.push(item.alias);
-      });
+      let rolesData = this.roleItem.roles;
+      let usersData = this.roleItem.users;
       usersData.forEach(item => {
         usersList.push(item.username);
       });
       rolesData.forEach(item => {
         rolesList.push(item.name);
       });
-      // this.$axios
-      //   .put("/role", {
-      //     objectId: item.objectId,
-      //     name: this.roleItem.name,
-      //     alias: this.roleItem.alias,
-      //     desc: this.roleItem.desc,
-      //     rules: checkrole,
-      //     menus: checkmenu,
-      //     roles: rolesList,
-      //     users: usersList
-      //   })
-      //   .then(res => {
-      //     this.$message.success("模板信息更新成功");
-      //     this.initData();
-      //   })
-      //   .catch(error => {
-      //     this.$message({
-      //       message: "更新失败!"
-      //     });
-      //   });
+      if (selectMenu && selectRermission) {
+        selectMenu.forEach(item => {
+          console.log(item);
+          checkmenu.push(item.label);
+        });
+        selectRermission.forEach(item => {
+          console.log(item);
+          checkrole.push(item.alias);
+        });
+        this.$axios
+          .put("/role", {
+            objectId: this.roleItem.objectId,
+            name: row.attributes.name,
+            alias: row.attributes.alias,
+            desc: row.attributes.desc,
+            rules: checkrole,
+            menus: checkmenu,
+            roles: rolesList,
+            users: usersList
+          })
+          .then(res => {
+            this.$message("角色信息更新成功");
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message({
+              message: "更新失败!"
+            });
+          });
+      } else {
+        this.$message("请选择菜单列表和权限列表");
+      }
+    },
+    // 保存模板
+    exportRoletemp(row) {
+      this.$axiosWen
+        .post(
+          "/roletemp?name=" +
+            row.attributes.name +
+            "&tempname=" +
+            row.attributes.name +
+            "_" +
+            row.attributes.desc
+        )
+        .then(response => {
+          console.log("response", response);
+
+          /*     if(response){
+                      window.open(
+                        window.location.origin +
+                          "/iotapi/product?name=" +
+                          _this.productName,
+                          "_blank"
+                      );
+                    } */
+        });
     },
     //编辑权限
     handleEditrole(row) {
