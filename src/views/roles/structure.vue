@@ -1,13 +1,98 @@
 <template>
   <div class="structure">
+    <div class="adduserDiadlog">
+      <el-dialog title="新增用户" :visible.sync="adduserDiadlog" width="600px">
+        <div>
+          <el-form
+            :model="userInfoForm"
+            status-icon
+            :rules="userFormRules"
+            ref="userInfoFormRef"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+            <el-form-item label="账号" prop="account">
+              <el-input
+                v-model="userInfoForm.account"
+                placeholder="请输入账号"
+                auto-complete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="手机号" prop="phone">
+              <el-input
+                v-model="userInfoForm.phone"
+                placeholder="请输入手机号"
+                :maxlength="11"
+                auto-complete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱" prop="email">
+              <el-input
+                v-model="userInfoForm.email"
+                placeholder="请输入邮箱"
+                auto-complete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="姓名" prop="nick">
+              <el-input
+                v-model="userInfoForm.nick"
+                placeholder="2-5个文字"
+                :maxlength="5"
+                auto-complete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                type="password"
+                v-model="userInfoForm.password"
+                auto-complete="off"
+                placeholder="请输入6-10位数字字母组合"
+                :maxlength="10"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="checkPass">
+              <el-input
+                type="password"
+                v-model="userInfoForm.checkPass"
+                auto-complete="off"
+                placeholder="请再次输入密码"
+                :maxlength="10"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="部门选择" prop="departmentid">
+              <!-- <el-cascader
+                style="width:460px"
+                placeholder="请选择部门"
+                v-model="userInfoForm.departmentid"
+                :props="treeprops"
+                :options="treeData"
+                auto-complete="off"
+                :show-all-levels="false"
+                change-on-select
+              ></el-cascader> -->
+              <el-select
+                v-model="userInfoForm.departmentid"
+                placeholder="请选择部门"
+              >
+                <el-option
+                  v-for="(item, index) in deptOption"
+                  :key="index"
+                  :value="item.objectId"
+                  :label="item.name + ':' + item.desc"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div slot="footer">
+          <el-button @click="adduserDiadlog = false">取 消</el-button>
+          <el-button type="primary" @click="addUser">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
     <el-row :gutter="20">
-      <el-col
-        :xs="24"
-        :sm="24"
-        :md="24"
-        :lg="24"
-        :xl="24"
-      >
+      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <!--表格渲染-->
         <div class="tabContent">
           <div class="elTree">
@@ -25,26 +110,42 @@
               icon="el-icon-search"
               @click="userFordepartment(0)"
               size="small"
-            >{{$t('developer.search')}}</el-button>
+              >{{ $t("developer.search") }}</el-button
+            >
             <el-button
               class="filter-item"
               type="primary"
               icon="el-icon-circle-plus"
               @click="adduser"
               size="small"
-            >{{$t('user.newusers')}}</el-button>
+              >{{ $t("user.newusers") }}</el-button
+            >
             <el-button
               class="filter-item"
               type="primary"
               @click="userFordepartment()"
               size="small"
-            >所有用户</el-button>
-            <el-tree
+              >所有用户</el-button
+            >
+            <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
               @node-click="handleNodeClick"
-            ></el-tree>
-
+            ></el-tree> -->
+            <div class="leftTree">
+              <el-tree
+                :data="roleTree"
+                :props="elTreedefaultProps"
+                @node-click="handleNodeClick"
+                node-key="id"
+                default-expand-all
+                :expand-on-click-node="false"
+              >
+                <span class="custom-tree-node" slot-scope="{ node }">
+                  <span>{{ node.label }}</span>
+                </span>
+              </el-tree>
+            </div>
           </div>
           <div class="elTable">
             <el-table
@@ -55,34 +156,30 @@
             >
               <el-table-column label="用户名">
                 <template slot-scope="scope">
-                  <div>{{scope.row.attributes.username}}</div>
+                  <div>{{ scope.row.attributes.username }}</div>
                 </template>
               </el-table-column>
               <el-table-column label="电话">
                 <template slot-scope="scope">
-                  <div>{{scope.row.attributes.phone}}</div>
+                  <div>{{ scope.row.attributes.phone }}</div>
                 </template>
               </el-table-column>
-              <el-table-column
-                :show-overflow-tooltip="true"
-                label="邮箱"
-              >
+              <el-table-column :show-overflow-tooltip="true" label="邮箱">
                 <template slot-scope="scope">
-                  <div>{{scope.row.attributes.email}}</div>
+                  <div>{{ scope.row.attributes.email }}</div>
                 </template>
               </el-table-column>
               <el-table-column label="部门">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.departmentname}}</div>
+                  <div>{{ scope.row.departmentname }}</div>
                 </template>
               </el-table-column>
 
-              <el-table-column
-                :show-overflow-tooltip="true"
-                label="创建时间"
-              >
+              <el-table-column :show-overflow-tooltip="true" label="创建时间">
                 <template slot-scope="scope">
-                  <span>{{new Date(scope.row.createdAt).toLocaleDateString()}}</span>
+                  <span>{{
+                    new Date(scope.row.createdAt).toLocaleDateString()
+                  }}</span>
                 </template>
               </el-table-column>
               <!-- <el-table-column label="是否启用">
@@ -92,8 +189,8 @@
               inactive-color="#ff4949"
               :active-text="scope.row.attributes.emailVerified==true? '启用':''"
               :inactive-text="scope.row.attributes.emailVerified==false? '禁用':''"
-              v-model="scope.row.attributes.emailVerified" 
-              @change=changerole(scope.$index,scope.row)                
+              v-model="scope.row.attributes.emailVerified"
+              @change=changerole(scope.$index,scope.row)
               />
             </template>
           </el-table-column>-->
@@ -128,17 +225,20 @@
                     type="success"
                     size="small"
                     @click="handleEditor(scope.row)"
-                  >{{$t('developer.edit')}}</el-button>
+                    >{{ $t("developer.edit") }}</el-button
+                  >
                   <el-button
                     type="danger"
                     size="small"
                     @click="handleDetele(scope.row)"
-                  >{{$t('developer.delete')}}</el-button>
+                    >{{ $t("developer.delete") }}</el-button
+                  >
                   <el-button
                     size="mini"
                     type="primary"
                     @click="editorrole(scope.row.id)"
-                  >{{$t('user.assignroles')}}</el-button>
+                    >{{ $t("user.assignroles") }}</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -150,7 +250,7 @@
               layout="total, prev, pager, next, sizes"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :page-sizes="[1,5,10]"
+              :page-sizes="[1, 5, 10]"
               :page-size="pagesize"
               class="total_pagination"
             />
@@ -168,44 +268,30 @@
           @selection-change="handleSelectionChange"
           ref="multipleTable"
         >
-          <el-table-column
-            type="selection"
-            width="55"
-          ></el-table-column>
-          <el-table-column
-            :label="$t('user.name')"
-            align="center"
-          >
+          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.attributes.name}}</span>
+              <span>{{ scope.row.attributes.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            :label="$t('developer.describe')"
-            align="center"
-          >
+          <el-table-column :label="$t('developer.describe')" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.attributes.desc}}</span>
+              <span>{{ scope.row.attributes.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            label="ID"
-            align="center"
-          >
+          <el-table-column label="ID" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.id}}</span>
+              <span>{{ scope.row.id }}</span>
             </template>
           </el-table-column>
         </el-table>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button @click="roleacl = false">{{$t('developer.cancel')}}</el-button>
-          <el-button
-            type="primary"
-            @click="adduseracl"
-          >{{$t('developer.determine')}}</el-button>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="roleacl = false">{{
+            $t("developer.cancel")
+          }}</el-button>
+          <el-button type="primary" @click="adduseracl">{{
+            $t("developer.determine")
+          }}</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -218,10 +304,30 @@ import { setTimeout } from "timers";
 var arr = [];
 var arr1 = [];
 export default {
-  data () {
+  data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (!/^\w{6,10}$/.test(value)) {
+          // if (!/^([\w]|[.]){6,10}$/.test(value)) {
+          callback(new Error("密码格式不正确"));
+        }
+        callback();
+      }
+    };
+    var validatecheckPass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.userInfoForm.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
     return {
       deptOption: [],
-      departmentidFlag: 'false',
+      departmentidFlag: "false",
       height: document.documentElement.clientHeight - 180 + "px;",
       delLoading: false,
       sup_this: this,
@@ -236,8 +342,8 @@ export default {
       },
       data: [],
       elTreedefaultProps: {
-        children: 'children',
-        label: 'name'
+        children: "children",
+        label: "name"
       },
       dataforuser: [],
       total: 0,
@@ -256,30 +362,139 @@ export default {
       roleacl: false,
       multipleSelection: [],
       userrolelist: [],
-      tempData: []
+      tempData: [],
+      roleData: [],
+      adduserDiadlog: false,
+      userInfoForm: {
+        account: "",
+        phone: "",
+        nick: "",
+        password: "",
+        email: "",
+        checkPass: "",
+        departmentid: []
+      },
+      userFormRules: {
+        account: [{ required: true, message: "请输入账号名", trigger: "blur" }],
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          {
+            validator: function(rule, value, callback) {
+              var MobileRegex = /^1[34578]\d{9}$/;
+              if (!MobileRegex.test(value)) {
+                callback(new Error("手机号码格式不正确！"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
+        ],
+        password: [
+          { validator: validatePass, trigger: "blur", required: true }
+        ],
+        checkPass: [
+          { validator: validatecheckPass, trigger: "blur", required: true }
+        ],
+        departmentid: [
+          { required: true, message: "请选择部门", trigger: "blur" }
+        ],
+        nick: [
+          { required: true, message: "请输入昵称", trigger: "blur" },
+          { min: 2, max: 5, message: "昵称格式不正确", trigger: "blur" }
+        ],
+        email: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ]
+      },
+      treeprops: {
+        value: "objectId",
+        label: "name"
+      }
     };
   },
   computed: {
-    treeData () {
+    treeData() {
       let cloneData = JSON.parse(JSON.stringify(this.deptOption));
+      console.log(cloneData);
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId == 0;
+        return father.ParentId;
       });
     },
-    tableFilterData () {
-      return this.tempData
+    roleTree() {
+      let cloneData = JSON.parse(JSON.stringify(this.roleData));
+      return cloneData.filter(father => {
+        let branchArr = cloneData.filter(
+          child => father.objectId == child.ParentId
+        );
+        branchArr.length > 0 ? (father.children = branchArr) : "";
+        return father.ParentId != 0;
+      });
+    },
+    tableFilterData() {
+      return this.tempData;
     }
   },
-  mounted () {
+  mounted() {
     this.userFordepartment();
     this.searchAllOption();
   },
   methods: {
-    editorrole (id) {
+    // 添加用户
+    addUser() {
+      this.$refs["userInfoFormRef"].validate(valid => {
+        if (!valid) {
+          this.$message({
+            message: "用户信息不完整",
+            type: "danger"
+          });
+          return false;
+        }
+
+        if (this.userInfoForm.departmentid) {
+          var departmentStr = this.userInfoForm.departmentid[
+            this.userInfoForm.departmentid.length - 1
+          ];
+        } else {
+          var departmentStr = "";
+        }
+
+        this.$axiosWen
+          .post("/user", {
+            username: this.userInfoForm.account,
+            nick: this.userInfoForm.nick,
+            password: this.userInfoForm.password,
+            phone: this.userInfoForm.phone,
+            email: this.userInfoForm.email,
+            department: this.userInfoForm.departmentid
+            // aclId:this.aclId
+          })
+          .then(response => {
+            if (response) {
+              this.$message({
+                message: "用户添加成功！",
+                type: "success"
+              });
+              this.adduserDiadlog = false;
+            } else {
+              this.$message("添加失败");
+            }
+          })
+          .catch(error => {
+            this.$message(error);
+          });
+      });
+    },
+    editorrole(id) {
       this.userrolelist = [];
       this.objectId = id;
       this.roleacl = true;
@@ -310,7 +525,7 @@ export default {
         });
       });
     },
-    seleItem (arr1, arr2, arr3) {
+    seleItem(arr1, arr2, arr3) {
       arr1.map(items => {
         if (!arr2.includes(items)) {
           arr3.push(items);
@@ -324,7 +539,7 @@ export default {
       this.userRolereset(arr3);
     },
 
-    userRolereset (disroles) {
+    userRolereset(disroles) {
       Promise.all([
         disroles.map(nowitems => {
           this.testroles(nowitems);
@@ -339,7 +554,7 @@ export default {
         }
       });
     },
-    testroles (id) {
+    testroles(id) {
       console.log(id);
       var Roles = Parse.Object.extend("_Role");
       var roles = new Roles();
@@ -351,15 +566,15 @@ export default {
         var relation = roles.relation("users");
         userrelation.set("objectId", this.objectId);
         relation.add(userrelation);
-        roles.save().then(resultes => { });
+        roles.save().then(resultes => {});
       } else {
         var relation = roles.relation("users");
         userrelation.set("objectId", this.objectId);
         relation.remove(userrelation);
-        roles.save().then(resultes => { });
+        roles.save().then(resultes => {});
       }
     },
-    adduseracl () {
+    adduseracl() {
       this.seleItem(this.userrolelist, this.multipleSelection, []);
       // this.userRolereset(this.userrolelist, this.multipleSelection);
       // var roles = Parse.Object.extend("_Role");
@@ -392,7 +607,7 @@ export default {
       //   });
       // });
     },
-    handleSelectionChange (val) {
+    handleSelectionChange(val) {
       this.multipleSelection = [];
 
       val.map(items => {
@@ -400,16 +615,16 @@ export default {
       });
     },
     //编辑
-    handleEditor (row) {
+    handleEditor(row) {
       this.$router.push({
-        path: '/roles/edituser',
+        path: "/roles/edituser",
         query: {
           id: row.id
         }
-      })
+      });
     },
     //删除
-    handleDetele (row) {
+    handleDetele(row) {
       console.log(row);
       this.$confirm("此操作将永久删除此用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -429,7 +644,7 @@ export default {
                 this.userFordepartment();
               },
               error => {
-                this.$message(error.message)
+                this.$message(error.message);
               }
             );
           });
@@ -441,24 +656,24 @@ export default {
           });
         });
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pagesize = val;
       this.userFordepartment();
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.start = Number(val - 1) * Number(this.pagesize);
       this.userFordepartment();
     },
     //初始化用户
-    userFordepartment (start) {
+    userFordepartment(start) {
       if (start == 0) {
-        this.start = 0
+        this.start = 0;
       }
-      this.tableData = []
+      this.tableData = [];
       var User = Parse.Object.extend("_User");
       var query = new Parse.Query(User);
       if (this.query.value != "") {
-        query.matches("username", this.query.value, 'i');
+        query.matches("username", this.query.value, "i");
         this.pagesize = 10;
         this.start = 0;
       }
@@ -480,9 +695,11 @@ export default {
               obj.attributes.emailVerified = item.attributes.emailVerified;
               obj.createdAt = item.createdAt;
               obj.id = item.id;
-              obj.departmentid = item.attributes.department ? item.attributes.department.id : ''
+              obj.departmentid = item.attributes.department
+                ? item.attributes.department.id
+                : "";
               this.tableData.push(obj);
-              this.tempData = this.tableData
+              this.tempData = this.tableData;
             });
           });
         } else {
@@ -491,12 +708,13 @@ export default {
         }
       });
     },
-    adduser () {
-      this.$router.push({
-        path: "/roles/adduser"
-      });
+    adduser() {
+      this.adduserDiadlog = true;
+      // this.$router.push({
+      //   path: "/roles/adduser"
+      // });
     },
-    changerole (index, row) {
+    changerole(index, row) {
       var emailrole = "";
       var emailtype = "";
       var isemail = true;
@@ -548,43 +766,58 @@ export default {
           });
         });
     },
-    handleNodeClick (data) {
+    handleNodeClick(data) {
       if (data.ParentId == 0) {
-        console.log('根据父及id查找')
+        console.log("根据父及id查找");
         this.tableData.forEach(key => {
-          this.tempData = this.tableData.filter(item => item.departmentid == data.children[0].objectId)
-          this.total = this.tempData.length
-        })
+          this.tempData = this.tableData.filter(
+            item => item.departmentid == data.children[0].objectId
+          );
+          this.total = this.tempData.length;
+        });
       } else {
         this.tableData.forEach(value => {
           if (data.objectId == value.departmentid) {
-            this.tempData = this.tableData.filter(item => item.departmentid == value.departmentid)
-            this.total = this.tempData.length
+            this.tempData = this.tableData.filter(
+              item => item.departmentid == value.departmentid
+            );
+            this.total = this.tempData.length;
           }
-        })
+        });
       }
     },
     // 查询部门
-    searchAllOption () {
-      this.$axiosWen.get("/classes/Department").then(res => {
-        const results = res.results
-        console.log(res.results)
-        results.forEach((key, val) => {
-          var obj = {};
-          obj.ParentId = key.ParentId;
-          obj.name = key.name;
-          obj.objectId = key.objectId;
-          obj.org_type = key.org_type;
-          obj.createdAt = key.createdAt;
-          this.data.push(obj);
-        })
-        if (res.results) {
-          this.deptOption = res.results
+    searchAllOption() {
+      this.$axiosWen.get("/classes/_Role").then(res => {
+        const results = res.results;
+        if (results) {
+          this.deptOption = results;
+          results.forEach((key, val) => {
+            var obj = {};
+            // obj.ParentId = key.ParentId;
+            // obj.name = key.name;
+            // obj.objectId = key.objectId;
+            // obj.org_type = key.org_type;
+            // obj.createdAt = key.createdAt;
+            // obj.ParentId = key.parent.objectId;
+            // obj.name = key.depname;
+            // obj.objectId = key.objectId;
+            // obj.org_type = key.org_type;
+            // obj.createdAt = key.createdAt;
+            if (key.level == 1 || key.level == 2) {
+              obj.ParentId = key.parent.objectId;
+              obj.name = key.depname;
+              obj.objectId = key.objectId;
+              obj.org_type = key.org_type;
+              obj.createdAt = key.createdAt;
+              this.roleData.push(obj);
+            }
+          });
         } else {
-          this.$message('部门列表获取失败')
-          this.deptOption = []
+          this.$message("部门列表获取失败");
+          this.deptOption = [];
         }
-      })
+      });
     }
   }
 };
@@ -631,4 +864,3 @@ export default {
   color: rgb(19, 206, 102) !important;
 }
 </style>
-
