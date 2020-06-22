@@ -156,17 +156,17 @@
             >
               <el-table-column label="用户名">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.attributes.username }}</div>
+                  <div>{{ scope.row.username }}</div>
                 </template>
               </el-table-column>
               <el-table-column label="电话">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.attributes.phone }}</div>
+                  <div>{{ scope.row.phone }}</div>
                 </template>
               </el-table-column>
               <el-table-column :show-overflow-tooltip="true" label="邮箱">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.attributes.email }}</div>
+                  <div>{{ scope.row.email }}</div>
                 </template>
               </el-table-column>
               <el-table-column label="部门">
@@ -271,12 +271,12 @@
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.name }}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.describe')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.desc }}</span>
+              <span>{{ scope.row.desc }}</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" align="center">
@@ -669,44 +669,42 @@ export default {
       if (start == 0) {
         this.start = 0;
       }
-      this.tableData = [];
-      var User = Parse.Object.extend("_User");
-      var query = new Parse.Query(User);
-      if (this.query.value != "") {
-        query.matches("username", this.query.value, "i");
-        this.pagesize = 10;
-        this.start = 0;
-      }
-      query.limit(this.pagesize);
-      query.skip(this.start);
-
-      query.count().then(count => {
-        if (count) {
-          this.total = count;
-          query.find().then(results => {
-            results.map(item => {
-              var obj = {
-                attributes: {}
-              };
-              obj.attributes.username = item.attributes.username;
-              obj.attributes.phone = item.attributes.phone;
-              obj.attributes.email = item.attributes.email;
-              obj.attributes.departmentname = item.attributes.departmentname;
-              obj.attributes.emailVerified = item.attributes.emailVerified;
-              obj.createdAt = item.createdAt;
-              obj.id = item.id;
-              obj.departmentid = item.attributes.department
-                ? item.attributes.department.id
-                : "";
-              this.tableData.push(obj);
-              this.tempData = this.tableData;
-            });
-          });
-        } else {
-          this.dataforuser = [];
-          this.total = 0;
-        }
-      });
+      // var User = Parse.Object.extend("_User");
+      // var query = new Parse.Query(User);
+      // if (this.query.value != "") {
+      //   query.matches("username", this.query.value, "i");
+      //   this.pagesize = 10;
+      //   this.start = 0;
+      // }
+      // query.limit(this.pagesize);
+      // query.skip(this.start);
+      // query.count().then(count => {
+      //   if (count) {
+      //     this.total = count;
+      //     query.find().then(results => {
+      //       results.map(item => {
+      //         var obj = {
+      //           attributes: {}
+      //         };
+      //         obj.attributes.username = item.attributes.username;
+      //         obj.attributes.phone = item.attributes.phone;
+      //         obj.attributes.email = item.attributes.email;
+      //         obj.attributes.departmentname = item.attributes.departmentname;
+      //         obj.attributes.emailVerified = item.attributes.emailVerified;
+      //         obj.createdAt = item.createdAt;
+      //         obj.id = item.id;
+      //         obj.departmentid = item.attributes.department
+      //           ? item.attributes.department.id
+      //           : "";
+      //         this.tableData.push(obj);
+      //         this.tempData = this.tableData;
+      //       });
+      //     });
+      //   } else {
+      //     this.dataforuser = [];
+      //     this.total = 0;
+      //   }
+      // });
     },
     adduser() {
       this.adduserDiadlog = true;
@@ -718,7 +716,7 @@ export default {
       var emailrole = "";
       var emailtype = "";
       var isemail = true;
-      if (row.attributes.emailVerified == true) {
+      if (row.emailVerified == true) {
         emailrole = "禁用";
         isemail = false;
         emailtype = "warning";
@@ -767,24 +765,34 @@ export default {
         });
     },
     handleNodeClick(data) {
-      if (data.ParentId == 0) {
-        console.log("根据父及id查找");
-        this.tableData.forEach(key => {
-          this.tempData = this.tableData.filter(
-            item => item.departmentid == data.children[0].objectId
-          );
-          this.total = this.tempData.length;
+      const loading = this.$loading({
+        lock: true,
+        text: "加载中",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      this.tempData = [];
+      this.$axiosWen
+        .get("/role?name=" + data.name)
+        .then(res => {
+          let tempData = [];
+          tempData.username = res.name;
+          tempData.phone = res.phone;
+          tempData.email = res.email;
+          tempData.departmentname = res.departmentname;
+          tempData.createdAt = res.createdAt;
+          this.tempData.push(tempData);
+          setTimeout(() => {
+            loading.close();
+          }, 1200);
+        })
+        .catch(err => {
+          setTimeout(() => {
+            loading.close();
+          }, 1200);
+          console.log(err);
+          this.total = 0;
         });
-      } else {
-        this.tableData.forEach(value => {
-          if (data.objectId == value.departmentid) {
-            this.tempData = this.tableData.filter(
-              item => item.departmentid == value.departmentid
-            );
-            this.total = this.tempData.length;
-          }
-        });
-      }
     },
     // 查询部门
     searchAllOption() {
@@ -813,6 +821,7 @@ export default {
               this.roleData.push(obj);
             }
           });
+          this.handleNodeClick(this.roleData[0]);
         } else {
           this.$message("部门列表获取失败");
           this.deptOption = [];
