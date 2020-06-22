@@ -95,94 +95,101 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
         <!--表格渲染-->
         <div class="tabContent">
-          <div class="elTree">
-            <el-input
-              v-model="query.value"
-              clearable
-              :placeholder="$t('user.name')"
-              style="width: 200px;"
-              class="filter-item"
-              size="small"
-            />
-            <el-button
-              class="filter-item"
-              type="primary"
-              icon="el-icon-search"
-              @click="userFordepartment(0)"
-              size="small"
-              >{{ $t("developer.search") }}</el-button
-            >
-            <el-button
-              class="filter-item"
-              type="primary"
-              icon="el-icon-circle-plus"
-              @click="adduser"
-              size="small"
-              >{{ $t("user.newusers") }}</el-button
-            >
-            <el-button
-              class="filter-item"
-              type="primary"
-              @click="userFordepartment()"
-              size="small"
-              >所有用户</el-button
-            >
-            <!-- <el-tree
+          <el-row :gutter="24">
+            <el-col :span="7">
+              <div class="elTree">
+                <el-input
+                  v-model="query.value"
+                  clearable
+                  :placeholder="$t('user.name')"
+                  style="width: 200px;"
+                  class="filter-item"
+                  size="small"
+                />
+                <el-button
+                  class="filter-item"
+                  type="primary"
+                  icon="el-icon-search"
+                  @click="userFordepartment(0)"
+                  size="small"
+                  >{{ $t("developer.search") }}</el-button
+                >
+                <el-button
+                  class="filter-item"
+                  type="primary"
+                  icon="el-icon-circle-plus"
+                  @click="adduser"
+                  size="small"
+                  >{{ $t("user.newusers") }}</el-button
+                >
+                <el-button
+                  class="filter-item"
+                  type="primary"
+                  @click="userFordepartment()"
+                  size="small"
+                  >所有用户</el-button
+                >
+                <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
               @node-click="handleNodeClick"
             ></el-tree> -->
-            <div class="leftTree">
-              <el-tree
-                :data="roleTree"
-                :props="elTreedefaultProps"
-                @node-click="handleNodeClick"
-                node-key="id"
-                default-expand-all
-                :expand-on-click-node="false"
-              >
-                <span class="custom-tree-node" slot-scope="{ node }">
-                  <span>{{ node.label }}</span>
-                </span>
-              </el-tree>
-            </div>
-          </div>
-          <div class="elTable">
-            <el-table
-              v-loading="loading"
-              :data="tableFilterData"
-              size="small"
-              style="width: 90%;margin-top:20px"
+                <div class="leftTree">
+                  <el-tree
+                    :data="roleTree"
+                    :props="elTreedefaultProps"
+                    @node-click="handleNodeClick"
+                    node-key="id"
+                    default-expand-all
+                    :expand-on-click-node="false"
+                  >
+                    <span class="custom-tree-node" slot-scope="{ node }">
+                      <span>{{ node.label }}</span>
+                    </span>
+                  </el-tree>
+                </div>
+              </div></el-col
             >
-              <el-table-column label="用户名">
-                <template slot-scope="scope">
-                  <div>{{ scope.row.username }}</div>
-                </template>
-              </el-table-column>
-              <el-table-column label="电话">
-                <template slot-scope="scope">
-                  <div>{{ scope.row.phone }}</div>
-                </template>
-              </el-table-column>
-              <el-table-column :show-overflow-tooltip="true" label="邮箱">
-                <template slot-scope="scope">
-                  <div>{{ scope.row.email }}</div>
-                </template>
-              </el-table-column>
-              <el-table-column label="部门">
-                <template slot-scope="scope">
-                  <div>{{ scope.row.departmentname }}</div>
-                </template>
-              </el-table-column>
+            <el-col :span="17">
+              <div class="elTable">
+                <el-table
+                  v-loading="loading"
+                  :data="tableFilterData"
+                  size="small"
+                  style="width: 90%;margin-top:20px"
+                >
+                  <el-table-column label="用户名">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.username }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="电话">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.phone }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :show-overflow-tooltip="true" label="邮箱">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.email }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="部门">
+                    <template slot-scope="scope">
+                      <div>{{ scope.row.departmentname }}</div>
+                    </template>
+                  </el-table-column>
 
-              <el-table-column :show-overflow-tooltip="true" label="创建时间">
-                <template slot-scope="scope">
-                  <span>{{
-                    new Date(scope.row.createdAt).toLocaleDateString()
-                  }}</span>
-                </template>
-              </el-table-column>
-              <!-- <el-table-column label="是否启用">
+                  <el-table-column
+                    :show-overflow-tooltip="true"
+                    label="创建时间"
+                  >
+                    <template slot-scope="scope">
+                      <span>{{
+                        new Date(scope.row.createdAt).toLocaleDateString()
+                      }}</span>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column label="是否启用">
             <template slot-scope="scope">
                <el-switch
               active-color="#13ce66"
@@ -194,13 +201,13 @@
               />
             </template>
           </el-table-column>-->
-              <el-table-column
-                :label="$t('developer.operation')"
-                align="center"
-                width="400"
-              >
-                <template slot-scope="scope">
-                  <!-- <el-button
+                  <el-table-column
+                    :label="$t('developer.operation')"
+                    align="center"
+                    width="400"
+                  >
+                    <template slot-scope="scope">
+                      <!-- <el-button
                 type="info"
                 size="small"
                 @click="changerole(scope.$index,scope.row)"
@@ -221,40 +228,42 @@
                 ></div>{{$t('developer.enable')}}
               </el-button> -->
 
-                  <el-button
-                    type="success"
-                    size="small"
-                    @click="handleEditor(scope.row)"
-                    >{{ $t("developer.edit") }}</el-button
-                  >
-                  <el-button
-                    type="danger"
-                    size="small"
-                    @click="handleDetele(scope.row)"
-                    >{{ $t("developer.delete") }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="editorrole(scope.row.id)"
-                    >{{ $t("user.assignroles") }}</el-button
-                  >
-                </template>
-              </el-table-column>
-            </el-table>
-            <!--分页组件-->
-            <el-pagination
-              :total="total"
-              v-show="total > 2"
-              style="margin-top: 8px;"
-              layout="total, prev, pager, next, sizes"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :page-sizes="[1, 5, 10]"
-              :page-size="pagesize"
-              class="total_pagination"
-            />
-          </div>
+                      <el-button
+                        type="success"
+                        size="small"
+                        @click="handleEditor(scope.row)"
+                        >{{ $t("developer.edit") }}</el-button
+                      >
+                      <el-button
+                        type="danger"
+                        size="small"
+                        @click="handleDetele(scope.row)"
+                        >{{ $t("developer.delete") }}</el-button
+                      >
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="editorrole(scope.row.objectId)"
+                        >{{ $t("user.assignroles") }}</el-button
+                      >
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <!--分页组件-->
+                <el-pagination
+                  :total="total"
+                  v-show="total > 2"
+                  style="margin-top: 8px;"
+                  layout="total, prev, pager, next, sizes"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :page-sizes="[1, 5, 10]"
+                  :page-size="pagesize"
+                  class="total_pagination"
+                />
+              </div>
+            </el-col>
+          </el-row>
         </div>
       </el-col>
       <!--分配角色-->
@@ -271,12 +280,12 @@
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.name }}</span>
+              <span>{{ scope.row.attributes.alias }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.describe')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.desc }}</span>
+              <span>{{ scope.row.attributes.desc }}</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" align="center">
@@ -495,6 +504,7 @@ export default {
       });
     },
     editorrole(id) {
+      console.log(id);
       this.userrolelist = [];
       this.objectId = id;
       this.roleacl = true;
@@ -506,12 +516,14 @@ export default {
         var user = new User();
         query.addAscending("createdAt");
         query.find().then(resultes => {
+          console.log(resultes);
           this.rolelist = resultes;
           user.set("objectId", this.objectId);
           query.equalTo("users", user);
           query.find().then(result => {
             result.map(item => {
               resultes.map((roleitem, index) => {
+                console.log(roleitem);
                 if (item.id == roleitem.id) {
                   this.$refs.multipleTable.toggleRowSelection(
                     this.rolelist[index],
@@ -775,13 +787,17 @@ export default {
       this.$axiosWen
         .get("/role?name=" + data.name)
         .then(res => {
-          let tempData = [];
-          tempData.username = res.name;
-          tempData.phone = res.phone;
-          tempData.email = res.email;
-          tempData.departmentname = res.departmentname;
-          tempData.createdAt = res.createdAt;
-          this.tempData.push(tempData);
+          let users = res.users;
+          users.forEach(item => {
+            let tempData = [];
+            tempData.username = item.username;
+            tempData.phone = item.phone;
+            tempData.email = item.email;
+            tempData.objectId = item.objectId;
+            tempData.departmentname = item.departmentname;
+            tempData.createdAt = item.createdAt;
+            this.tempData.push(tempData);
+          });
           setTimeout(() => {
             loading.close();
           }, 1200);
@@ -846,13 +862,9 @@ export default {
     .elTree {
       margin-top: 30px;
       margin-left: 20px;
-      width: 30%;
       float: left;
     }
     .elTable {
-      width: 60%;
-      float: right;
-      margin-right: 5%;
       .total_pagination {
         text-align: center;
         width: 90%;
