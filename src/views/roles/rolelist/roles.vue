@@ -77,15 +77,15 @@
               <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
               <el-button
                 size="mini"
-                type="success"
-                @click="exportRoletemp(scope.row)"
-                >保存模板</el-button
+                type="info"
+                @click="exportRolerole(scope.row)"
+                >修改</el-button
               >
               <el-button
                 size="mini"
                 type="success"
-                @click="exportRolerole(scope.row)"
-                >修改</el-button
+                @click="exportRoletemp(scope.row)"
+                >保存模板</el-button
               >
               <el-button
                 v-show="false"
@@ -699,26 +699,26 @@ export default {
           console.log(item);
           checkrole.push(item.alias);
         });
-        // this.$axios
-        //   .put("/role", {
-        //     objectId: this.roleItem.objectId,
-        //     name: row.attributes.name,
-        //     alias: row.attributes.alias,
-        //     desc: row.attributes.desc,
-        //     rules: checkrole,
-        //     menus: checkmenu,
-        //     roles: rolesList,
-        //     users: usersList
-        //   })
-        //   .then(res => {
-        //     this.$message("角色信息更新成功");
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //     this.$message({
-        //       message: "更新失败!"
-        //     });
-        //   });
+        this.$axios
+          .put("/role", {
+            objectId: this.roleItem.objectId,
+            name: row.attributes.name,
+            alias: row.attributes.alias,
+            desc: row.attributes.desc,
+            rules: checkrole,
+            menus: checkmenu,
+            roles: rolesList,
+            users: usersList
+          })
+          .then(res => {
+            this.$message("角色信息更新成功");
+          })
+          .catch(error => {
+            console.log(error);
+            this.$message({
+              message: "更新失败!"
+            });
+          });
       } else {
         this.$message("请选择菜单列表和权限列表");
       }
