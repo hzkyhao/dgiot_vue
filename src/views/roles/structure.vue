@@ -74,13 +74,13 @@
                 v-model="userInfoForm.departmentid"
                 placeholder="请选择部门"
               >
-                <el-option
+                <!-- <el-option
                   v-for="(item, index) in deptOption"
                   :key="index"
                   :value="item.objectId"
                   :label="item.name + ':' + item.desc"
                 >
-                </el-option>
+                </el-option> -->
               </el-select>
             </el-form-item>
           </el-form>
@@ -456,8 +456,9 @@ export default {
   methods: {
     // addItemUser
     addItemUser(item) {
+      console.log(item);
       this.adduserDiadlog = true;
-      this.userInfoForm.departmentid = item.name;
+      this.userInfoForm.departmentid = item.objectId;
     },
     // 添加用户
     addUser() {
@@ -470,13 +471,13 @@ export default {
           return false;
         }
 
-        if (this.userInfoForm.departmentid) {
-          var departmentStr = this.userInfoForm.departmentid[
-            this.userInfoForm.departmentid.length - 1
-          ];
-        } else {
-          var departmentStr = "";
-        }
+        // if (this.userInfoForm.departmentid) {
+        //   var departmentStr = this.userInfoForm.departmentid[
+        //     this.userInfoForm.departmentid.length - 1
+        //   ];
+        // } else {
+        //   var departmentStr = "";
+        // }
 
         this.$axiosWen
           .post("/user", {
