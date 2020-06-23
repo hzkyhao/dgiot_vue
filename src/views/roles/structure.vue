@@ -136,7 +136,7 @@
             ></el-tree> -->
                 <div class="leftTree">
                   <el-tree
-                    :data="roleTree"
+                    :data="deptTreeData"
                     :props="elTreedefaultProps"
                     node-key="id"
                     default-expand-all
@@ -351,6 +351,7 @@ export default {
       }
     };
     return {
+      deptTreeData: [],
       deptOption: [],
       departmentidFlag: "false",
       height: document.documentElement.clientHeight - 180 + "px;",
@@ -444,27 +445,6 @@ export default {
     };
   },
   computed: {
-    treeData() {
-      let cloneData = JSON.parse(JSON.stringify(this.deptOption));
-      return cloneData.filter(father => {
-        let branchArr = cloneData.filter(
-          child => father.objectId == child.ParentId
-        );
-        branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId;
-      });
-    },
-    roleTree() {
-      let cloneData = JSON.parse(JSON.stringify(this.roleData));
-      return cloneData.filter(father => {
-        let branchArr = cloneData.filter(
-          child => father.objectId == child.ParentId
-        );
-        branchArr.length > 0 ? (father.children = branchArr) : "";
-        console.log(father.ParentId, "father.ParentId");
-        return father.ParentId == 0;
-      });
-    },
     tableFilterData() {
       return this.tempData;
     }
@@ -838,37 +818,18 @@ export default {
     },
     // 查询部门
     searchAllOption() {
-      this.$axiosWen.get("/classes/_Role").then(res => {
-        const results = res.results;
-        if (results) {
-          this.deptOption = results;
-          results.forEach((key, val) => {
-            var obj = {};
-            // obj.ParentId = key.ParentId;
-            // obj.name = key.name;
-            // obj.objectId = key.objectId;
-            // obj.org_type = key.org_type;
-            // obj.createdAt = key.createdAt;
-            // obj.ParentId = key.parent.objectId;
-            // obj.name = key.depname;
-            // obj.objectId = key.objectId;
-            // obj.org_type = key.org_type;
-            // obj.createdAt = key.createdAt;
-            if (key.level == 1 || key.level == 2) {
-              obj.ParentId = key.parent.objectId;
-              obj.name = key.depname;
-              obj.objectId = key.objectId;
-              obj.org_type = key.org_type;
-              obj.createdAt = key.createdAt;
-              this.roleData.push(obj);
-            }
-          });
-          this.handleNodeClick(this.roleData[0]);
-        } else {
+      // 获取部门tree树
+      this.$axiosWen
+        .get("/roletree")
+        .then(res => {
+          this.deptTreeData = res.results;
+          this.handleNodeClick(this.deptTreeData[0]);
+        })
+        .catch(err => {
           this.$message("部门列表获取失败");
-          this.deptOption = [];
-        }
-      });
+          this.deptTreeData = [];
+          console.log(err);
+        });
     }
   }
 };

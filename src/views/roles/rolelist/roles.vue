@@ -2,7 +2,7 @@
   <div class="roles">
     <div class="leftTree">
       <el-tree
-        :data="roleTree"
+        :data="deptTreeData"
         :props="roleProps"
         @node-click="handleNodeClick"
         node-key="id"
@@ -12,21 +12,6 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span>
-            <!-- <el-button
-              type="text"
-              size="mini"
-              @click="() => appendChildTree(data)"
-              title="添加子节点"
-            >
-              <i class="el-icon-plus"></i>
-            </el-button>
-            <el-button type="text" size="mini" @click="() => addRoleUser(data)">
-              <i
-                class="el-icon-s-custom"
-                @click="setDialogRole(data)"
-                title="添加用户"
-              ></i>
-            </el-button> -->
             <i
               class="el-icon-plus"
               @click="setDialogRole(data)"
@@ -286,6 +271,7 @@ import addroles from "@/views/roles/rolelist/addroles";
 export default {
   data() {
     return {
+      deptTreeData: [],
       formLabelWidth: "120px",
       roleEdit: false,
       form: {
@@ -339,16 +325,6 @@ export default {
   computed: {
     centerDialogRole() {
       return this.$store.getters.DialogFlag;
-    },
-    roleTree() {
-      let cloneData = JSON.parse(JSON.stringify(this.roleData));
-      return cloneData.filter(father => {
-        let branchArr = cloneData.filter(
-          child => father.objectId == child.ParentId
-        );
-        branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId == 0;
-      });
     },
     permissionTreeData() {
       const cloneData = JSON.parse(JSON.stringify(this.dataPermissions));
@@ -407,27 +383,17 @@ export default {
           console.log(error);
         });
       //查询部门
-      this.$axiosWen.get("/classes/_Role").then(res => {
-        this.roleData = [];
-        const results = res.results;
-        if (results) {
-          this.deptOption = res.results;
-          results.forEach((key, val) => {
-            var obj = {};
-            // if (key.level == 1 || key.level == 2) {
-            obj.ParentId = key.parent.objectId;
-            obj.name = key.depname;
-            obj.objectId = key.objectId;
-            obj.org_type = key.org_type;
-            obj.createdAt = key.createdAt;
-            this.roleData.push(obj);
-            // }
-          });
-        } else {
+      this.$axiosWen
+        .get("/roletree")
+        .then(res => {
+          this.deptTreeData = res.results;
+          this.handleNodeClick(this.deptTreeData[0]);
+        })
+        .catch(err => {
           this.$message("部门列表获取失败");
-          this.deptOption = [];
-        }
-      });
+          this.deptTreeData = [];
+          console.log(err);
+        });
     },
     diguiquchu(datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
