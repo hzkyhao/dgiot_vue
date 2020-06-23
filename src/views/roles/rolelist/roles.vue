@@ -339,16 +339,13 @@ export default {
     },
     roleTree() {
       let cloneData = JSON.parse(JSON.stringify(this.roleData));
-      cloneData.forEach(item => {
-        console.log(item);
-        console.log(item.ParentId === item.objectId);
-      });
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId != 0;
+        console.log(branchArr);
+        return father.objectId == "5oJbAtE9oS";
       });
     },
     permissionTreeData() {
@@ -734,26 +731,26 @@ export default {
           console.log(item);
           checkrole.push(item.alias);
         });
-        this.$axios
-          .put("/role", {
-            objectId: this.roleItem.objectId,
-            name: row.attributes.name,
-            alias: row.attributes.alias,
-            desc: row.attributes.desc,
-            rules: checkrole,
-            menus: checkmenu,
-            roles: rolesList,
-            users: usersList
-          })
-          .then(res => {
-            this.$message("角色信息更新成功");
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message({
-              message: "更新失败!"
-            });
-          });
+        // this.$axios
+        //   .put("/role", {
+        //     objectId: this.roleItem.objectId,
+        //     name: row.attributes.name,
+        //     alias: row.attributes.alias,
+        //     desc: row.attributes.desc,
+        //     rules: checkrole,
+        //     menus: checkmenu,
+        //     roles: rolesList,
+        //     users: usersList
+        //   })
+        //   .then(res => {
+        //     this.$message("角色信息更新成功");
+        //   })
+        //   .catch(error => {
+        //     console.log(error);
+        //     this.$message({
+        //       message: "更新失败!"
+        //     });
+        //   });
       } else {
         this.$message("请选择菜单列表和权限列表");
       }
