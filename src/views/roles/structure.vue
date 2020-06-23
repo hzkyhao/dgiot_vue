@@ -190,7 +190,9 @@
                   </el-table-column>
                   <el-table-column label="部门">
                     <template slot-scope="scope">
-                      <div>{{ scope.row.departmentname }}</div>
+                      <div>
+                        {{ scope.row.departmentname || departmentname }}
+                      </div>
                     </template>
                   </el-table-column>
 
@@ -351,6 +353,7 @@ export default {
       }
     };
     return {
+      departmentname: "",
       deptTreeData: [],
       deptOption: [],
       departmentidFlag: "false",
@@ -633,10 +636,11 @@ export default {
     },
     //编辑
     handleEditor(row) {
+      console.log(row);
       this.$router.push({
         path: "/roles/edituser",
         query: {
-          id: row.id
+          id: row.objectId
         }
       });
     },
@@ -782,6 +786,7 @@ export default {
         });
     },
     handleNodeClick(data) {
+      this.departmentname = data.name;
       const loading = this.$loading({
         lock: true,
         text: "加载中",
@@ -793,17 +798,8 @@ export default {
         .get("/role?name=" + data.name)
         .then(res => {
           let users = res.users;
-          users.forEach(item => {
-            let tempData = [];
-            if (item.username.indexOf("user_for_") == -1) {
-              tempData.username = item.username;
-              tempData.phone = item.phone;
-              tempData.email = item.email;
-              tempData.objectId = item.objectId;
-              tempData.departmentname = item.departmentname;
-              tempData.createdAt = item.createdAt;
-              this.tempData.push(tempData);
-            }
+          this.tempData = users.filter(item => {
+            return item.username.indexOf("user_for_") == -1;
           });
           setTimeout(() => {
             loading.close();

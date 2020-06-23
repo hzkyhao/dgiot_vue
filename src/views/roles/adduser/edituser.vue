@@ -9,47 +9,60 @@
       class="demo-ruleForm"
     >
       <el-form-item label="账号" prop="account">
-        <el-input v-model="ruleForm2.account" placeholder="请输入账号"></el-input>
+        <el-input
+          v-model="ruleForm2.account"
+          placeholder="请输入账号"
+        ></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
-        <el-input v-model="ruleForm2.phone" placeholder="请输入手机号" :maxlength="11"></el-input>
+        <el-input
+          v-model="ruleForm2.phone"
+          placeholder="请输入手机号"
+          :maxlength="11"
+        ></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input v-model="ruleForm2.email" placeholder="请输入邮箱"></el-input>
       </el-form-item>
       <el-form-item label="姓名" prop="username">
-        <el-input v-model="ruleForm2.username" placeholder="2-5个文字" :maxlength="5"></el-input>
+        <el-input
+          v-model="ruleForm2.username"
+          placeholder="2-5个文字"
+          :maxlength="5"
+        ></el-input>
       </el-form-item>
-       <!-- <el-form-item label="密码" prop="password">
+      <!-- <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm2.password"></el-input>
       </el-form-item> -->
       <el-form-item label="部门选择">
-          <el-cascader
-            style="width:600px"
-            placeholder="请选择部门"
-            v-model="ruleForm2.departmentid"
-            :props="treeprops"
-            :options="treeData"
-            auto-complete="off"
-            :show-all-levels="false"
-            change-on-select
-          ></el-cascader>
-        </el-form-item>
+        <el-cascader
+          style="width:600px"
+          placeholder="请选择部门"
+          v-model="ruleForm2.departmentid"
+          :props="treeprops"
+          :options="data"
+          auto-complete="off"
+          :show-all-levels="false"
+          change-on-select
+        ></el-cascader>
+      </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="editoruser(ruleForm2)">保存</el-button>
+        <el-button type="primary" @click="editoruser(ruleForm2)"
+          >保存</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
-import{ Parse } from 'parse'
+import { Parse } from "parse";
 export default {
   data() {
     return {
-      data:[],
-       treeprops:{
-        value:'objectId',
-        label:'name'
+      data: [],
+      treeprops: {
+        value: "objectId",
+        label: "name"
       },
       ruleForm2: {
         account: "",
@@ -58,99 +71,95 @@ export default {
         password: "",
         email: "",
         checkPass: "",
-        departmentid:[],
-        password:''
+        departmentid: [],
+        password: ""
       },
       id: "",
-       treeprops:{
-        value:'objectId',
-        label:'name'
-      },
+      treeprops: {
+        value: "objectId",
+        label: "name"
+      }
     };
   },
-  computed:{
-        treeData(){
-          let cloneData = JSON.parse(JSON.stringify(this.data))    // 对源数据深度克隆
-          return cloneData.filter(father=>{               
-            let branchArr = cloneData.filter(child=>father.objectId == child.ParentId)    //返回每一项的子级数组
-            branchArr.length>0 ? father.children = branchArr : ''   //如果存在子级，则给父级添加一个children属性，并赋值
-            return father.ParentId==0;      //返回第一层
-          });
-        },
-  },
+  computed: {},
   mounted() {
-        this.editUser()
-        
+    this.editUser();
   },
   methods: {
-      editUser(){
-        var userid = this.$route.query.id
-        var  User = new Parse.User()
-        var  user= new Parse.Query(User);
-        user.get(userid).then(resultes=>{
-          this.ruleForm2.username = resultes.attributes.nick
-          this.ruleForm2.phone = resultes.attributes.phone
-          this.ruleForm2.account = resultes.attributes.username
-          this.ruleForm2.email = resultes.attributes.email
-          // this.ruleForm2.password = resultes.attributes.password
-          // this.ruleForm2.departmentid.push(resultes.attributes.department.id)
-          this.getDepartment()
-        })
-        
-      },
+    editUser() {
+      var userid = this.$route.query.id;
+      // 获取用户详情
+      // this.$axiosWen
+      //   .get("/classes/_User/" + userid)
+      //   .then(res => {
+      //     this.ruleForm2.username = res.nick;
+      //     this.ruleForm2.phone = res.phone;
+      //     this.ruleForm2.account = res.username;
+      //     this.ruleForm2.email = res.email;
+      //     this.getDepartment();
+      //   })
+      //   .catch(err => {
+      //     this.$message({
+      //       type: "error",
+      //       message: "用户详情获取失败"
+      //     });
+      //     console.log(err);
+      //   });
+    },
     editoruser(formName) {
-          var User = new Parse.User();
-          var user= new Parse.Query(User);
-          user.get(this.$route.query.id).then(res=>{
-            if(this.ruleForm2.departmentid.length==0){
-            }else{
-            var Department = Parse.Object.extend("Department");
-            var department = new Department();
-            department.set('objectId',this.ruleForm2.departmentid[this.ruleForm2.departmentid.length-1])
-            res.set('department',department)
-            }
-          res.set("username", this.ruleForm2.account);
-          res.set("nick", this.ruleForm2.username);
-          res.set("phone", this.ruleForm2.phone);
-          res.set("email", this.ruleForm2.email);
-          // if(this.ruleForm2.password!=''){
-          //    res.set("password", this.ruleForm2.password);
-          // }
-          res.save().then(resultes => {
-              this.$message({
-                message: "更改成功",
-                type: "success"
-              });
-              this.$router.push({
-                  path:'/roles/structure'
-              })
-            })
-            .catch(error=>{
-              this.$message({
-                type:'error',
-                message:error.message
-              })
-            });
-          })
-          
+      // var User = new Parse.User();
+      // var user = new Parse.Query(User);
+      // user.get(this.$route.query.id).then(res => {
+      //   // if (this.ruleForm2.departmentid.length) {
+      //   //   var Department = Parse.Object.extend("Department");
+      //   //   var department = new Department();
+      //   //   department.set(
+      //   //     "objectId",
+      //   //     this.ruleForm2.departmentid[this.ruleForm2.departmentid.length - 1]
+      //   //   );
+      //   //   res.set("department", department);
+      //   // }
+      //   res.set("username", this.ruleForm2.account);
+      //   res.set("nick", this.ruleForm2.username);
+      //   res.set("phone", this.ruleForm2.phone);
+      //   res.set("email", this.ruleForm2.email);
+      //   // if(this.ruleForm2.password!=''){
+      //   //    res.set("password", this.ruleForm2.password);
+      //   // }
+      //   res
+      //     .save()
+      //     .then(resultes => {
+      //       this.$message({
+      //         message: "更改成功",
+      //         type: "success"
+      //       });
+      //       // this.$router.push({
+      //       //   path: "/roles/structure"
+      //       // });
+      //     })
+      //     .catch(error => {
+      //       this.$message({
+      //         type: "error",
+      //         message: error.message
+      //       });
+      //     });
+      // });
     },
     getDepartment() {
-      var Department = Parse.Object.extend("Department");
-      var department = new Parse.Query(Department);
-      department.limit(10000)
-      department.find().then(resultes => {
-        
-        resultes.map(items=>{
-          var obj={}
-          items.createtime = new Date(items.attributes.createdAt).toLocaleDateString()
-          obj.name = items.attributes.name,
-          obj.ParentId = items.attributes.ParentId
-          obj.objectId =items.id
-          obj.level = items.attributes.level
-          obj.createtime = items.createtime
-          this.data.push(obj)
+      this.$axiosWen
+        .get("/roletree")
+        .then(res => {
+          let results = res.results;
+          results.forEach(element => {
+            console.log(element);
+          });
+          this.data = res.results;
         })
-      });
+        .catch(err => {
+          this.$message("部门列表获取失败");
+          this.data = [];
+          console.log(err);
+        });
     }
   }
 };
