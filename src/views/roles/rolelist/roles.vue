@@ -12,7 +12,7 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label }}</span>
           <span>
-            <el-button
+            <!-- <el-button
               type="text"
               size="mini"
               @click="() => appendChildTree(data)"
@@ -23,10 +23,15 @@
             <el-button type="text" size="mini" @click="() => addRoleUser(data)">
               <i
                 class="el-icon-s-custom"
-                @click="setDialogRole()"
+                @click="setDialogRole(data)"
                 title="添加用户"
               ></i>
-            </el-button>
+            </el-button> -->
+            <i
+              class="el-icon-plus"
+              @click="setDialogRole(data)"
+              title="添加用户"
+            ></i>
           </span>
         </span>
       </el-tree>
@@ -136,14 +141,12 @@
       width="30%"
       center
     >
-      <addroles />
-      <span slot="footer" class="dialog-footer">
-        <!-- <el-button @click="centerDialogRole = false">取 消</el-button>
+      <div style="height:420px"><addroles /></div>
+      <!-- <el-button @click="centerDialogRole = false">取 消</el-button>
         <el-button
           type="primary"
           @click="centerDialogRole = false"
         >确 定</el-button> -->
-      </span>
     </el-dialog>
     <el-dialog
       :title="$t('developer.add')"
@@ -344,8 +347,7 @@ export default {
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
-        console.log(branchArr);
-        return father.objectId == "5oJbAtE9oS";
+        return father.ParentId == 0;
       });
     },
     permissionTreeData() {
@@ -836,7 +838,8 @@ export default {
       this.$store.dispatch("setDeptInfo", parentKey);
     },
     // 显示弹窗
-    setDialogRole() {
+    setDialogRole(data) {
+      this.$store.commit("set_DeptObj", data);
       this.$store.dispatch("setDialogFlag", true);
     },
     closeDialogRole() {

@@ -138,18 +138,33 @@
                   <el-tree
                     :data="roleTree"
                     :props="elTreedefaultProps"
-                    @node-click="handleNodeClick"
                     node-key="id"
                     default-expand-all
                     :expand-on-click-node="false"
                   >
-                    <span class="custom-tree-node" slot-scope="{ node }">
-                      <span>{{ node.label }}</span>
+                    <span class="custom-tree-node" slot-scope="{ node, data }">
+                      <span @click="handleNodeClick(data)">{{
+                        node.label
+                      }}</span>
+                      <span>
+                        <!-- <el-button
+                          type="text"
+                          size="mini"
+                          @click="() => appendChildTree(data)"
+                          title="添加子节点"
+                        >
+                          <i class="el-icon-plus"></i>
+                        </el-button> -->
+                        <i
+                          class="el-icon-plus"
+                          @click="addItemUser(data)"
+                          title="添加用户"
+                        ></i>
+                      </span>
                     </span>
                   </el-tree>
-                </div>
-              </div></el-col
-            >
+                </div></div
+            ></el-col>
             <el-col :span="17">
               <div class="elTable">
                 <el-table
@@ -446,7 +461,8 @@ export default {
           child => father.objectId == child.ParentId
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId != 0;
+        console.log(father.ParentId, "father.ParentId");
+        return father.ParentId == 0;
       });
     },
     tableFilterData() {
@@ -458,6 +474,11 @@ export default {
     this.searchAllOption();
   },
   methods: {
+    // addItemUser
+    addItemUser(item) {
+      this.adduserDiadlog = true;
+      this.userInfoForm.departmentid = item.name;
+    },
     // 添加用户
     addUser() {
       this.$refs["userInfoFormRef"].validate(valid => {

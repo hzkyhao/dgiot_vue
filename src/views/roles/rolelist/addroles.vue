@@ -9,44 +9,27 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-          <el-form-item
-          label="parent"
-          prop="parent"
-        >
-<!--           <el-input
+        <el-form-item label="parent" prop="parent">
+          <!--           <el-input
             v-model="ruleForm.ParentId"
             style="width:200px;"
           ></el-input> -->
 
-    <el-select
-            v-model="ruleForm.ParentId"
-            placeholder="请选择Parent"
-          >
+          <el-select v-model="ruleForm.ParentId" placeholder="请选择Parent">
             <el-option
-              v-for="(item,index) in roleList"
+              v-for="(item, index) in roleList"
               :key="index"
               :value="item.objectId"
               :label="item.name + ':' + item.desc"
             >
             </el-option>
           </el-select>
-
         </el-form-item>
-        
 
-        <el-form-item
-          label="角色名"
-          prop="name"
-        >
-          <el-input
-            v-model="ruleForm.name"
-            style="width:200px;"
-          ></el-input>
+        <el-form-item label="角色名" prop="name">
+          <el-input v-model="ruleForm.name" style="width:200px;"></el-input>
         </el-form-item>
-        <el-form-item
-          label="部门"
-          prop="departmentid"
-        >
+        <el-form-item label="部门" prop="departmentid">
           <!-- <el-cascader
             v-model="treeModu"
             placeholder="请选择部门"
@@ -65,10 +48,7 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item
-          label="角色模版"
-          prop="role"
-        >
+        <el-form-item label="角色模版" prop="role">
           <el-select
             v-model="ruleForm.dictvalue"
             placeholder="请选择角色模版"
@@ -76,7 +56,7 @@
             :clearable="clearFlag"
           >
             <el-option
-              v-for="(item,index) in Option.dictOption"
+              v-for="(item, index) in Option.dictOption"
               :key="index"
               :value="item.key"
               change="changeOption('dict',item.name)"
@@ -84,10 +64,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          label="备注"
-          prop="description"
-        >
+        <el-form-item label="备注" prop="description">
           <el-input
             placeholder="备注项为必填项"
             type="textarea"
@@ -96,25 +73,19 @@
           ></el-input>
         </el-form-item>
         <el-form-item class="el_btn">
-          <el-form-item
-            label="操作"
-            prop="desc"
-          >
-          </el-form-item>
-          <el-button
-            type="warning"
-            @click="resetFrom()"
-          >重置</el-button>
+          <el-form-item label="操作" prop="desc"> </el-form-item>
+          <el-button type="warning" @click="resetFrom()">重置</el-button>
           <!-- <el-button
             v-if="insert==0||insert==1"
             type="primary"
             style="margin:0 7%"
           >取消</el-button> -->
           <el-button
-            v-if="insert==0||insert==1"
+            v-if="insert == 0 || insert == 1"
             type="success"
             @click="addroles()"
-          >确定</el-button>
+            >确定</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -124,7 +95,7 @@
 import { Parse } from "parse";
 export default {
   computed: {
-    treeData () {
+    treeData() {
       let cloneData = JSON.parse(JSON.stringify(this.data));
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
@@ -132,14 +103,13 @@ export default {
         );
         branchArr.length > 0 ? (father.children = branchArr) : "";
         return father.ParentId == 0;
-        console.log(father, "104father.ParentId")
       });
     },
-    deptInfo () {
-      return this.$store.getters.deptInfo
+    deptInfo() {
+      return this.$store.getters.deptInfo;
     }
   },
-  data () {
+  data() {
     return {
       treeModu: [],
       data: [],
@@ -148,8 +118,8 @@ export default {
         label: "name"
       },
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: "children",
+        label: "label"
       },
       originrole: [],
       needdelarr: [],
@@ -158,16 +128,16 @@ export default {
       roleId: "",
       insert: "",
       Option: {
-        deptvalue: '',
+        deptvalue: "",
         deptOption: [],
-        dictvalue: '',
+        dictvalue: "",
         dictOption: [],
         objectId: 0,
         ParentId: 0
       },
       clearFlag: true,
       ruleForm: {
-        parentId:'',
+        parentId: "",
         name: "",
         phoneNum: "",
         mail: "",
@@ -187,7 +157,7 @@ export default {
           children: "children",
           label: "label"
         },
-        dictvalue:''
+        dictvalue: ""
       },
       rules: {
         name: [
@@ -211,45 +181,46 @@ export default {
         ]
       },
       orderresultes: [],
-      parentid: '',
+      parentid: "",
       roles: [],
-      roleList:[]
+      roleList: []
     };
   },
   methods: {
-    changeOption (key, val) {
+    changeOption(key, val) {
       switch (key) {
-        case 'tree':
-          this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1];
-          let fatheOptions = this.$refs['cascaderAddr'].options
-          console.log(this.Option.deptvalue, fatheOptions)
+        case "tree":
+          this.Option.deptvalue = this.$refs["cascaderAddr"].currentLabels[1];
+          let fatheOptions = this.$refs["cascaderAddr"].options;
+          console.log(this.Option.deptvalue, fatheOptions);
           fatheOptions.forEach(val => {
-            if (this.$refs['cascaderAddr'].currentLabels[0] === val.name)
-              this.Option.objectId = val.children[0].objectId
-            this.Option.ParentId = val.objectId
-          })
+            if (this.$refs["cascaderAddr"].currentLabels[0] === val.name)
+              this.Option.objectId = val.children[0].objectId;
+            this.Option.ParentId = val.objectId;
+          });
           break;
-        case 'dict':
+        case "dict":
           this.Option.dictvalue = val;
           break;
       }
     },
     //查询部门  角色
-    searchAllOption () {
-      this.$axiosWen.get('/classes/Dict', {
-        params: {
-          "where": {
-            type: "roletemp"
-          },
-        }
-      })
+    searchAllOption() {
+      this.$axiosWen
+        .get("/classes/Dict", {
+          params: {
+            where: {
+              type: "roletemp"
+            }
+          }
+        })
         .then(res => {
-          console.log(res)
-          this.Option.dictOption = res.results
+          console.log(res);
+          this.Option.dictOption = res.results;
         });
       this.$axiosWen.get("/classes/_Role").then(res => {
-        const results = res.results
-        console.log(results)
+        const results = res.results;
+        console.log(results);
         results.forEach((key, val) => {
           var obj = {};
           obj.ParentId = key.ParentId;
@@ -258,20 +229,20 @@ export default {
           obj.org_type = key.org_type;
           obj.createdAt = key.createdAt;
           this.data.push(obj);
-        })
+        });
         if (res.results) {
-          this.roleList = res.results
-          this.Option.deptOption = res.results
+          this.roleList = res.results;
+          this.Option.deptOption = res.results;
         } else {
-          this.roleList = []
-          this.$message('部门列表获取失败')
-          this.Option.deptOption = []
+          this.roleList = [];
+          this.$message("部门列表获取失败");
+          this.Option.deptOption = [];
         }
-      })
+      });
     },
     // 重置
-    resetFrom () {
-      this.ruleForm = {
+    resetFrom() {
+      (this.ruleForm = {
         name: "",
         phoneNum: "",
         mail: "",
@@ -280,19 +251,19 @@ export default {
         gender: "男",
         role: "",
         description: "",
-        alias: "",
-      },
-        this.Option.deptvalue = ''
-      this.Option.dictvalue = ''
-      this.Option.objectId = 0
-      this.Option.ParentId = 0
-      this.data = []
-      this.treeModu = []
+        alias: ""
+      }),
+        (this.Option.deptvalue = "");
+      this.Option.dictvalue = "";
+      this.Option.objectId = 0;
+      this.Option.ParentId = 0;
+      this.data = [];
+      this.treeModu = [];
       setTimeout(() => {
-        this.searchAllOption()
+        this.searchAllOption();
       }, 1000);
     },
-    diguiquchu (datas, arr, v, needdelarr) {
+    diguiquchu(datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
       arr.map(item => {
         if (item.key == v && item.children.length > 0) {
@@ -304,29 +275,32 @@ export default {
         }
       });
     },
-    addroles () {
+    addroles() {
       let params = {
-        "depname": this.ruleForm.depname,
-        "desc": this.ruleForm.description,
-        "name": this.ruleForm.name,
-        "parent": this.ruleForm.ParentId,
-        "tempname": this.ruleForm.dictvalue
-      }
-      this.$axiosWen.post("/role", params).then(res => {
-        console.log(res)
-        this.$message({
-          message: "新增成功",
-          type: "success"
+        depname: this.ruleForm.depname,
+        desc: this.ruleForm.description,
+        name: this.ruleForm.name,
+        parent: this.ruleForm.ParentId,
+        tempname: this.ruleForm.dictvalue
+      };
+      this.$axiosWen
+        .post("/role", params)
+        .then(res => {
+          console.log(res);
+          this.$message({
+            message: "新增成功",
+            type: "success"
+          });
+          // this.$router.push({
+          //   path: "/roles/roles"
+          // });
+          this.$store.dispatch("setDialogFlag", false);
+        })
+        .catch(error => {
+          console.log(error);
         });
-        // this.$router.push({
-        //   path: "/roles/roles"
-        // });
-        this.$store.dispatch('setDialogFlag', false)
-      }).catch(error => {
-        console.log(error)
-      })
     },
-    nodetree () {
+    nodetree() {
       this.userid = Parse.User.current().id;
       var User = Parse.Object.extend("_User");
       var user = new Parse.Query(User);
@@ -340,27 +314,28 @@ export default {
           query.equalTo("users", user);
           query.find().then(result => {
             console.log(result);
-            this.parentrole = result
+            this.parentrole = result;
           });
         });
       });
     },
-    getdetail () {
+    getdetail() {
       this.insert = this.$route.query.insert;
       console.log(this.insert);
       this.roleId = this.$route.query.roleId;
       console.log(this.insert, "insert");
     }
   },
-  mounted () {
+  mounted() {
+    this.ruleForm.ParentId = this.$store.state.user.departmentObj.name;
     // this.getMenu();
     // this.nodetree()
-    console.log(this.deptInfo, "this.deptInfo")
-    this.searchAllOption()
+    console.log(this.deptInfo, "this.deptInfo");
+    this.searchAllOption();
   }
 };
 </script>
-<style  scoped   lang="scss">
+<style scoped lang="scss">
 .from /deep/ .el-form-item {
   float: left;
 }
