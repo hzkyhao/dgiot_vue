@@ -310,6 +310,7 @@
 import Parse from "parse";
 import { Promise } from "q";
 import { setTimeout } from "timers";
+import $ from "jquery";
 var arr = [];
 var arr1 = [];
 export default {
@@ -430,7 +431,6 @@ export default {
   computed: {
     treeData() {
       let cloneData = JSON.parse(JSON.stringify(this.deptOption));
-      console.log(cloneData);
       return cloneData.filter(father => {
         let branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
@@ -504,38 +504,41 @@ export default {
       });
     },
     editorrole(id) {
-      console.log(id);
+      this.rolelist = [];
       this.userrolelist = [];
       this.objectId = id;
       this.roleacl = true;
       var User = Parse.Object.extend("_User");
       var user = new Parse.Query(User);
-      user.get(this.objectId).then(resultes => {
-        var Role = Parse.Object.extend("_Role");
-        var query = new Parse.Query(Role);
-        var user = new User();
-        query.addAscending("createdAt");
-        query.find().then(resultes => {
-          console.log(resultes);
-          this.rolelist = resultes;
-          user.set("objectId", this.objectId);
-          query.equalTo("users", user);
-          query.find().then(result => {
-            result.map(item => {
-              resultes.map((roleitem, index) => {
-                console.log(roleitem);
-                if (item.id == roleitem.id) {
-                  this.$refs.multipleTable.toggleRowSelection(
-                    this.rolelist[index],
-                    true
-                  );
-                  this.userrolelist.push(roleitem.id);
-                }
+      user
+        .get(this.objectId)
+        .then(resultes => {
+          var Role = Parse.Object.extend("_Role");
+          var query = new Parse.Query(Role);
+          var user = new User();
+          query.addAscending("createdAt");
+          query.find().then(resultes => {
+            this.rolelist = resultes;
+            user.set("objectId", this.objectId);
+            query.equalTo("users", user);
+            query.find().then(result => {
+              result.map(item => {
+                resultes.map((roleitem, index) => {
+                  if (item.id == roleitem.id) {
+                    this.$refs.multipleTable.toggleRowSelection(
+                      this.rolelist[index],
+                      true
+                    );
+                    this.userrolelist.push(roleitem.id);
+                  }
+                });
               });
             });
           });
+        })
+        .catch(error => {
+          console.log(error);
         });
-      });
     },
     seleItem(arr1, arr2, arr3) {
       arr1.map(items => {
@@ -790,13 +793,15 @@ export default {
           let users = res.users;
           users.forEach(item => {
             let tempData = [];
-            tempData.username = item.username;
-            tempData.phone = item.phone;
-            tempData.email = item.email;
-            tempData.objectId = item.objectId;
-            tempData.departmentname = item.departmentname;
-            tempData.createdAt = item.createdAt;
-            this.tempData.push(tempData);
+            if (item.username.indexOf("user_for_") == -1) {
+              tempData.username = item.username;
+              tempData.phone = item.phone;
+              tempData.email = item.email;
+              tempData.objectId = item.objectId;
+              tempData.departmentname = item.departmentname;
+              tempData.createdAt = item.createdAt;
+              this.tempData.push(tempData);
+            }
           });
           setTimeout(() => {
             loading.close();
