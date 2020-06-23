@@ -203,6 +203,7 @@ export default {
           this.Option.dictvalue = val;
           break;
       }
+      console.log(this.Option.dictvalue);
     },
     //查询部门  角色
     searchAllOption() {
@@ -327,7 +328,7 @@ export default {
     }
   },
   mounted() {
-    this.ruleForm.ParentId = this.$store.state.user.departmentObj.name;
+    this.ruleForm.ParentId = this.$store.state.user.departmentObj.objectId;
     // this.getMenu();
     // this.nodetree()
     console.log(this.deptInfo, "this.deptInfo");

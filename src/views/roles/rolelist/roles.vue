@@ -15,7 +15,7 @@
             <i
               class="el-icon-plus"
               @click="setDialogRole(data)"
-              title="添加用户"
+              title="添加角色"
             ></i>
           </span>
         </span>
@@ -120,7 +120,7 @@
       </div>
     </div>
     <el-dialog
-      title="添加用户"
+      title="添加角色"
       :visible="centerDialogRole"
       @close="closeDialogRole"
       width="30%"
