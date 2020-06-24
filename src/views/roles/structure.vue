@@ -74,13 +74,13 @@
                 v-model="userInfoForm.departmentid"
                 placeholder="请选择部门"
               >
-                <!-- <el-option
-                  v-for="(item, index) in deptOption"
-                  :key="index"
+                <el-option
+                  v-for="item in deptOption"
+                  :key="item.objectId"
                   :value="item.objectId"
                   :label="item.name + ':' + item.desc"
                 >
-                </el-option> -->
+                </el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -459,7 +459,9 @@ export default {
   methods: {
     // addItemUser
     addItemUser(item) {
+      this.deptOption = [];
       console.log(item);
+      this.deptOption.push(item);
       this.adduserDiadlog = true;
       this.userInfoForm.departmentid = item.objectId;
     },
