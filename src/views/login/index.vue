@@ -201,7 +201,7 @@ export default {
                   }
                 });
                 sessionStorage.setItem("username", user.attributes.username);
-                sessionStorage.setItem("roles", user.attributes.roles[0].alias);
+                // sessionStorage.setItem("roles", user.attributes.roles[0].alias);
                 localStorage.setItem("list", JSON.stringify(this.routes));
       
                 this.$router.push({ path:"/dashboard" });

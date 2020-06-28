@@ -610,12 +610,12 @@ export default {
       if (start == 0) {
         this.start = 0;
       }
-      this.loadingService = this.$loading({
+/*       this.loadingService = this.$loading({
         lock: true,
         text: "请求发送中...",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
-      });
+      }); */
       this.tableData = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
@@ -631,7 +631,7 @@ export default {
         query.find().then(
           res => {
             this.tableData = res;
-            this.loadingService.close();
+            // this.loadingService.close();
           },
           error => {
             console.log(error);
