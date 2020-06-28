@@ -75,7 +75,7 @@
               <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
               <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
               <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
-              <el-button
+<!--               <el-button
                 size="mini"
                 type="info"
                 @click="exportRolerole(scope.row)"
@@ -101,7 +101,20 @@
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
                 >{{ $t("developer.delete") }}</el-button
-              >
+              > -->
+
+                     <el-dropdown split-button type="primary" size="medium" @click="exportRolerole(scope.row)">
+                    <span class="el-dropdown-link">
+                      修改
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+
+                      <el-dropdown-item icon="el-icon-circle-check" @click.native="exportRoletemp(scope.row)" >保存模板</el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-delete" @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
+                      <!-- <el-dropdown-item @click.native="taskDetail(scope.row.objectId,scope.row.test_bed.id)">详情</el-dropdown-item> -->
+                    </el-dropdown-menu>
+                  </el-dropdown>
+
             </template>
           </el-table-column>
         </el-table>
@@ -539,13 +552,26 @@ export default {
         };
       }
     },
-    getDetailmenu(row) {
+    getDetailmenu(row,column,event,cell) {
+
+      if(column && column.label == '操作'){
+
+        return
+
+      }
+
       this.loadingService = this.$loading({
         lock: true,
         text: "数据加载中...",
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.6)"
       });
+
+      console.log('column',column);
+      console.log('event',event);
+      console.log('cell',cell);
+
+      
 
       this.currentSelectIndex = row.index
 
@@ -711,6 +737,15 @@ export default {
       let selectRermission = this.$refs.permissionTree.getCheckedNodes();
       let rolesData = this.roleItem.roles;
       let usersData = this.roleItem.users;
+      if(!usersData || !rolesData){
+        
+          this.$message({
+              message: "请检查数据是否有误"
+            });
+
+        return false
+
+      }
       usersData.forEach(item => {
         usersList.push(item.username);
       });
