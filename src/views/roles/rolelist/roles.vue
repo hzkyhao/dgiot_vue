@@ -305,7 +305,7 @@ export default {
       rolecontroldata: [],
       data1: [],
       editroleid: "",
-      getIndex: "",
+      currentSelectIndex: "",
       roleProps: {
         children: "children",
         label: "name"
@@ -528,55 +528,82 @@ export default {
 
       row.index = rowIndex;
     },
-    selectedHighlight({ row, rowIndex }) {
-      if (this.getIndex === rowIndex) {
+    selectedHighlight({ row, rowIndex }) {  
+      
+      if (this.currentSelectIndex === rowIndex) {
         return {
-          "background-color": "#999999",
-          border: "5px solid black"
+          // "background-color": "#409EFF",
+          "color":"#409EFF",
+          "font-weight":"bold"
+          // border: "5px solid black"
         };
       }
     },
     getDetailmenu(row) {
       this.loadingService = this.$loading({
         lock: true,
-        text: "请求发送中...",
+        text: "数据加载中...",
         spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        background: "rgba(0, 0, 0, 0.6)"
       });
+
+      this.currentSelectIndex = row.index
+
+
       this.$axiosWen
         .get("/role?name=" + row.attributes.name)
         .then(res => {
           this.roleItem = res;
-          this.checkMenus = res.menus;
-          this.checkRoles = res.rules;
-          this.loadingService.close();
+          if(res && res.menus && res.rules){  
+
+            this.checkMenus = res.menus;
+            this.checkRoles = res.rules;
+            this.doSetChecked()
+
+          } else {
+               this.$message({
+                type: "warning",
+                message: "获取角色菜单失败"
+              })
+          }
+
+          this.loadingService.close()
+
         })
         .catch(error => {
           this.loadingService.close();
           console.log(error);
         });
+
+    },
+    doSetChecked(){
+      
       this.roleMenuList = [];
       this.rolePermissonList = [];
+
       this.menuListRes.map(items => {
         this.checkMenus.map(mentItem => {
           if (items.name == mentItem.name) {
             this.roleMenuList.push(items.objectId);
           }
-        });
-      });
-      this.$refs.menusTree.setCheckedKeys(this.roleMenuList);
+        })
+      })
+      // set ###
+      this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+
       this.permissionListRes.map(items => {
         this.checkRoles.map(mentItem => {
           if (items.name === mentItem.name) {
             this.rolePermissonList.push(items.objectId);
           }
-        });
-        this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
-      });
+        })
+      })
+      // set ###
+      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
     },
 
     // rowClick (row) {
-    //     this.getIndex=row.index
+    //     this.currentSelectIndex=row.index
     // },
     //初始化权限列表
     gettable(start) {
@@ -882,5 +909,7 @@ export default {
 <style>
 .roles .search .el-input {
   width: 200px;
+
 }
+
 </style>
