@@ -12,11 +12,7 @@
             class="demo-ruleForm"
           >
             <el-form-item label="账号" prop="account">
-              <el-input
-                v-model="userInfoForm.account"
-                placeholder="请输入账号"
-                auto-complete="off"
-              ></el-input>
+              <el-input v-model="userInfoForm.account" placeholder="请输入账号" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="手机号" prop="phone">
               <el-input
@@ -27,11 +23,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input
-                v-model="userInfoForm.email"
-                placeholder="请输入邮箱"
-                auto-complete="off"
-              ></el-input>
+              <el-input v-model="userInfoForm.email" placeholder="请输入邮箱" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="nick">
               <el-input
@@ -69,18 +61,14 @@
                 auto-complete="off"
                 :show-all-levels="false"
                 change-on-select
-              ></el-cascader> -->
-              <el-select
-                v-model="userInfoForm.departmentid"
-                placeholder="请选择部门"
-              >
+              ></el-cascader>-->
+              <el-select v-model="userInfoForm.departmentid" placeholder="请选择部门">
                 <el-option
                   v-for="item in deptOption"
                   :key="item.objectId"
                   :value="item.objectId"
                   :label="item.name + ':' + item.desc"
-                >
-                </el-option>
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -112,28 +100,25 @@
                   icon="el-icon-search"
                   @click="userFordepartment(0)"
                   size="small"
-                  >{{ $t("developer.search") }}</el-button
-                >
+                >{{ $t("developer.search") }}</el-button>
                 <el-button
                   class="filter-item"
                   type="primary"
                   icon="el-icon-circle-plus"
                   @click="adduser"
                   size="small"
-                  >{{ $t("user.newusers") }}</el-button
-                >
+                >{{ $t("user.newusers") }}</el-button>
                 <el-button
                   class="filter-item"
                   type="primary"
                   @click="userFordepartment()"
                   size="small"
-                  >所有用户</el-button
-                >
+                >所有用户</el-button>
                 <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
               @node-click="handleNodeClick"
-            ></el-tree> -->
+                ></el-tree>-->
                 <div class="leftTree">
                   <el-tree
                     :data="deptTreeData"
@@ -143,9 +128,11 @@
                     :expand-on-click-node="false"
                   >
                     <span class="custom-tree-node" slot-scope="{ node, data }">
-                      <span @click="handleNodeClick(data)">{{
+                      <span @click="handleNodeClick(data)">
+                        {{
                         node.label
-                      }}</span>
+                        }}
+                      </span>
                       <span>
                         <!-- <el-button
                           type="text"
@@ -154,17 +141,14 @@
                           title="添加子节点"
                         >
                           <i class="el-icon-plus"></i>
-                        </el-button> -->
-                        <i
-                          class="el-icon-plus"
-                          @click="addItemUser(data)"
-                          title="添加用户"
-                        ></i>
+                        </el-button>-->
+                        <i class="el-icon-plus" @click="addItemUser(data)" title="添加用户"></i>
                       </span>
                     </span>
                   </el-tree>
-                </div></div
-            ></el-col>
+                </div>
+              </div>
+            </el-col>
             <el-col :span="17">
               <div class="elTable">
                 <el-table
@@ -190,20 +174,17 @@
                   </el-table-column>
                   <el-table-column label="部门">
                     <template slot-scope="scope">
-                      <div>
-                        {{ scope.row.departmentname || departmentname }}
-                      </div>
+                      <div>{{ scope.row.departmentname || departmentname }}</div>
                     </template>
                   </el-table-column>
 
-                  <el-table-column
-                    :show-overflow-tooltip="true"
-                    label="创建时间"
-                  >
+                  <el-table-column :show-overflow-tooltip="true" label="创建时间">
                     <template slot-scope="scope">
-                      <span>{{
+                      <span>
+                        {{
                         new Date(scope.row.createdAt).toLocaleDateString()
-                      }}</span>
+                        }}
+                      </span>
                     </template>
                   </el-table-column>
                   <!-- <el-table-column label="是否启用">
@@ -217,12 +198,8 @@
               @change=changerole(scope.$index,scope.row)
               />
             </template>
-          </el-table-column>-->
-                  <el-table-column
-                    :label="$t('developer.operation')"
-                    align="center"
-                    width="400"
-                  >
+                  </el-table-column>-->
+                  <el-table-column :label="$t('developer.operation')" align="center" width="400">
                     <template slot-scope="scope">
                       <!-- <el-button
                 type="info"
@@ -243,26 +220,23 @@
                 <div
                   style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#00cc33;margin-right:10px"
                 ></div>{{$t('developer.enable')}}
-              </el-button> -->
+                      </el-button>-->
 
                       <el-button
                         type="success"
                         size="small"
                         @click="handleEditor(scope.row)"
-                        >{{ $t("developer.edit") }}</el-button
-                      >
+                      >{{ $t("developer.edit") }}</el-button>
                       <el-button
                         type="danger"
                         size="small"
                         @click="handleDetele(scope.row)"
-                        >{{ $t("developer.delete") }}</el-button
-                      >
+                      >{{ $t("developer.delete") }}</el-button>
                       <el-button
                         size="mini"
                         type="primary"
                         @click="editorrole(scope.row.objectId)"
-                        >{{ $t("user.assignroles") }}</el-button
-                      >
+                      >{{ $t("user.assignroles") }}</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -289,11 +263,7 @@
         :visible.sync="roleacl"
         :close-on-click-modal="false"
       >
-        <el-table
-          :data="rolelist"
-          @selection-change="handleSelectionChange"
-          ref="multipleTable"
-        >
+        <el-table :data="rolelist" @selection-change="handleSelectionChange" ref="multipleTable">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
@@ -312,12 +282,16 @@
           </el-table-column>
         </el-table>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="roleacl = false">{{
+          <el-button @click="roleacl = false">
+            {{
             $t("developer.cancel")
-          }}</el-button>
-          <el-button type="primary" @click="adduseracl">{{
+            }}
+          </el-button>
+          <el-button type="primary" @click="adduseracl">
+            {{
             $t("developer.determine")
-          }}</el-button>
+            }}
+          </el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -354,6 +328,7 @@ export default {
     };
     return {
       departmentname: "",
+      curDepartmentId:"",
       deptTreeData: [],
       deptOption: [],
       departmentidFlag: "false",
@@ -648,14 +623,39 @@ export default {
     },
     //删除
     handleDetele(row) {
-      console.log(row);
+      if (!this.curDepartmentId) {
+        this.$message({
+          type: "error",
+          message: "请先选择部门"
+        });
+        return
+      }
+       
       this.$confirm("此操作将永久删除此用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-          var User = Parse.Object.extend("_User");
+      }).then(() => {
+
+        this.$axiosWen
+          .delete("/user", {
+            params: {
+              department: this.curDepartmentId,
+              username: row.username
+            }
+          })
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+            this.handleNodeClick({ name: this.departmentname });
+          });
+
+        // this.departmentname
+        // row.username
+
+        /*           var User = Parse.Object.extend("_User");
           var user = new Parse.Query(User);
           user.get(row.id).then(object => {
             object.destroy().then(
@@ -670,14 +670,8 @@ export default {
                 this.$message(error.message);
               }
             );
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+          }); */
+      });
     },
     handleSizeChange(val) {
       this.pagesize = val;
@@ -789,6 +783,7 @@ export default {
     },
     handleNodeClick(data) {
       this.departmentname = data.name;
+      this.curDepartmentId = data.objectId;
       const loading = this.$loading({
         lock: true,
         text: "加载中",
