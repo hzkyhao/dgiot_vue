@@ -639,7 +639,7 @@ export default {
 
         this.$axiosWen
           .delete("/user", {
-            params: {
+            data: {
               department: this.curDepartmentId,
               username: row.username
             }
