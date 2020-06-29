@@ -124,6 +124,7 @@
       </el-tab-pane>
     </el-tabs>
     <div class="prodialog">
+      <!-- 创建产品对话框 ###-->
       <el-dialog
         :title="$t('product.createproduct')"
         :visible.sync="dialogFormVisible"
@@ -848,6 +849,8 @@ export default {
                           });
                           this.dialogFormVisible = false;
                           this.$refs["ruleForm"].resetFields();
+
+                          this.resetProductForm()
                           this.searchProduct();
                         }
                       })
@@ -911,6 +914,21 @@ export default {
           return false;
         }
       });
+    },
+    resetProductForm(){
+     this.form = {
+              name: "",
+              category: [],
+              nodeType: 0,
+              desc: "",
+              netType: "",
+              devType: "",
+              productSecret: "",
+              roles: [],
+              relationApp: ""
+            }
+    this.imageUrl = "";
+
     },
     deviceToDetail(row) {
       this.$router.push({

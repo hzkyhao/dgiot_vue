@@ -142,7 +142,7 @@
                         >
                           <i class="el-icon-plus"></i>
                         </el-button>-->
-                        <i class="el-icon-plus" @click="addItemUser(data)" title="添加用户"></i>
+                        <i class="el-icon-circle-plus-outline" @click="addItemUser(data)" title="添加用户"></i>
                       </span>
                     </span>
                   </el-tree>
