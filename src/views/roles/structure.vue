@@ -12,7 +12,11 @@
             class="demo-ruleForm"
           >
             <el-form-item label="账号" prop="account">
-              <el-input v-model="userInfoForm.account" placeholder="请输入账号" auto-complete="off"></el-input>
+              <el-input
+                v-model="userInfoForm.account"
+                placeholder="请输入账号"
+                auto-complete="off"
+              ></el-input>
             </el-form-item>
             <el-form-item label="手机号" prop="phone">
               <el-input
@@ -23,7 +27,11 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="userInfoForm.email" placeholder="请输入邮箱" auto-complete="off"></el-input>
+              <el-input
+                v-model="userInfoForm.email"
+                placeholder="请输入邮箱"
+                auto-complete="off"
+              ></el-input>
             </el-form-item>
             <el-form-item label="姓名" prop="nick">
               <el-input
@@ -62,7 +70,10 @@
                 :show-all-levels="false"
                 change-on-select
               ></el-cascader>-->
-              <el-select v-model="userInfoForm.departmentid" placeholder="请选择部门">
+              <el-select
+                v-model="userInfoForm.departmentid"
+                placeholder="请选择部门"
+              >
                 <el-option
                   v-for="item in deptOption"
                   :key="item.objectId"
@@ -100,20 +111,23 @@
                   icon="el-icon-search"
                   @click="userFordepartment(0)"
                   size="small"
-                >{{ $t("developer.search") }}</el-button>
+                  >{{ $t("developer.search") }}</el-button
+                >
                 <el-button
                   class="filter-item"
                   type="primary"
                   icon="el-icon-circle-plus"
                   @click="adduser"
                   size="small"
-                >{{ $t("user.newusers") }}</el-button>
+                  >{{ $t("user.newusers") }}</el-button
+                >
                 <el-button
                   class="filter-item"
                   type="primary"
                   @click="userFordepartment()"
                   size="small"
-                >所有用户</el-button>
+                  >所有用户</el-button
+                >
                 <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
@@ -129,9 +143,7 @@
                   >
                     <span class="custom-tree-node" slot-scope="{ node, data }">
                       <span @click="handleNodeClick(data)">
-                        {{
-                        node.label
-                        }}
+                        {{ node.label }}
                       </span>
                       <span>
                         <!-- <el-button
@@ -142,7 +154,11 @@
                         >
                           <i class="el-icon-plus"></i>
                         </el-button>-->
-                        <i class="el-icon-circle-plus-outline" @click="addItemUser(data)" title="添加用户"></i>
+                        <i
+                          class="el-icon-circle-plus-outline"
+                          @click="addItemUser(data)"
+                          title="添加用户"
+                        ></i>
                       </span>
                     </span>
                   </el-tree>
@@ -174,16 +190,19 @@
                   </el-table-column>
                   <el-table-column label="部门">
                     <template slot-scope="scope">
-                      <div>{{ scope.row.departmentname || departmentname }}</div>
+                      <div>
+                        {{ scope.row.departmentname || departmentname }}
+                      </div>
                     </template>
                   </el-table-column>
 
-                  <el-table-column :show-overflow-tooltip="true" label="创建时间">
+                  <el-table-column
+                    :show-overflow-tooltip="true"
+                    label="创建时间"
+                  >
                     <template slot-scope="scope">
                       <span>
-                        {{
-                        new Date(scope.row.createdAt).toLocaleDateString()
-                        }}
+                        {{ new Date(scope.row.createdAt).toLocaleDateString() }}
                       </span>
                     </template>
                   </el-table-column>
@@ -199,7 +218,11 @@
               />
             </template>
                   </el-table-column>-->
-                  <el-table-column :label="$t('developer.operation')" align="center" width="400">
+                  <el-table-column
+                    :label="$t('developer.operation')"
+                    align="center"
+                    width="400"
+                  >
                     <template slot-scope="scope">
                       <!-- <el-button
                 type="info"
@@ -226,17 +249,20 @@
                         type="success"
                         size="small"
                         @click="handleEditor(scope.row)"
-                      >{{ $t("developer.edit") }}</el-button>
+                        >{{ $t("developer.edit") }}</el-button
+                      >
                       <el-button
                         type="danger"
                         size="small"
                         @click="handleDetele(scope.row)"
-                      >{{ $t("developer.delete") }}</el-button>
+                        >{{ $t("developer.delete") }}</el-button
+                      >
                       <el-button
                         size="mini"
                         type="primary"
                         @click="editorrole(scope.row.objectId)"
-                      >{{ $t("user.assignroles") }}</el-button>
+                        >{{ $t("user.assignroles") }}</el-button
+                      >
                     </template>
                   </el-table-column>
                 </el-table>
@@ -263,7 +289,11 @@
         :visible.sync="roleacl"
         :close-on-click-modal="false"
       >
-        <el-table :data="rolelist" @selection-change="handleSelectionChange" ref="multipleTable">
+        <el-table
+          :data="rolelist"
+          @selection-change="handleSelectionChange"
+          ref="multipleTable"
+        >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
@@ -283,14 +313,10 @@
         </el-table>
         <div slot="footer" class="dialog-footer">
           <el-button @click="roleacl = false">
-            {{
-            $t("developer.cancel")
-            }}
+            {{ $t("developer.cancel") }}
           </el-button>
           <el-button type="primary" @click="adduseracl">
-            {{
-            $t("developer.determine")
-            }}
+            {{ $t("developer.determine") }}
           </el-button>
         </div>
       </el-dialog>
@@ -328,7 +354,7 @@ export default {
     };
     return {
       departmentname: "",
-      curDepartmentId:"",
+      curDepartmentId: "",
       deptTreeData: [],
       deptOption: [],
       departmentidFlag: "false",
@@ -628,18 +654,17 @@ export default {
           type: "error",
           message: "请先选择部门"
         });
-        return
+        return;
       }
-       
+
       this.$confirm("此操作将永久删除此用户, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-
         this.$axiosWen
           .delete("/user", {
-            params: {
+            data: {
               department: this.curDepartmentId,
               username: row.username
             }
