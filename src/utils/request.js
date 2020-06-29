@@ -63,12 +63,9 @@ service.interceptors.response.use(
      localStorage.removeItem('list')
      location.href = '/#/login'
     }
-    else if(error.response.status===403){
-      Message({
-        message: '没有操作权限 r',
-        type: 'error',
-        duration: 2 * 1000
-      })
+    else if(error.response.status===403){    
+      console.log('没有操作权限');
+      
       return Promise.reject(error.response.data)
     }
     else{
