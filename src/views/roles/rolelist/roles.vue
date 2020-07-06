@@ -32,11 +32,11 @@
               @click="gettable(0)"
             >{{ $t("developer.search") }}</el-button>
             <!-- icon="el-icon-plus" -->
-            <el-button type="primary" size="mini" @click="add">
+  <!--           <el-button type="primary" size="mini" @click="add">
               {{
               $t("developer.add")
               }}
-            </el-button>
+            </el-button> -->
             <!-- icon="el-icon-search" -->
             <el-button type="primary" size="mini" @click="gettable()">所有角色</el-button>
           </div>

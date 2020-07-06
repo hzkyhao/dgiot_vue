@@ -113,14 +113,14 @@
                   size="small"
                   >{{ $t("developer.search") }}</el-button
                 >
-                <el-button
+  <!--               <el-button
                   class="filter-item"
                   type="primary"
                   icon="el-icon-circle-plus"
                   @click="adduser"
                   size="small"
                   >{{ $t("user.newusers") }}</el-button
-                >
+                > -->
                 <el-button
                   class="filter-item"
                   type="primary"
