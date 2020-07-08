@@ -546,13 +546,14 @@ export default {
     submitUpload() {
       //this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
 
-      this.uploadAction = "/iotapi/product?appid=" + Cookies.get("appids");
+      this.uploadAction = "/iotapi/product";
       // this.uploadAction = 'http://cad.iotn2n.com:5080/iotapi/product?appid=' + Cookies.get("appids");
 
       this.$nextTick(() => {
         // console.log('uploadHeaders',this.uploadHeaders);
 
-        this.uploadData.key = "key";
+        this.uploadData.appid =  Cookies.get("appids")
+        // this.uploadData.key = "key";
         this.$refs.fileUpload.submit();
       });
     },
