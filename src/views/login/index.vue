@@ -190,6 +190,7 @@ export default {
 
               this.$Cookies.set("sessionToken", user.attributes.sessionToken);
               this.$Cookies.set("username", user.attributes.username);
+              
               this.$store.dispatch("setRoles", user.attributes.roles);
               var Menu = Parse.Object.extend("Navigation");
               var menu = new Parse.Query(Menu);
@@ -202,6 +203,9 @@ export default {
                 });
                 sessionStorage.setItem("username", user.attributes.username);
                 sessionStorage.setItem("roles", user.attributes.roles[0]? user.attributes.roles[0].alias : '');
+
+                this.$Cookies.set("appids", user.attributes.roles[0]? user.attributes.roles[0].name : '');
+
                 localStorage.setItem("list", JSON.stringify(this.routes));
       
                 this.$router.push({ path:"/dashboard" });
