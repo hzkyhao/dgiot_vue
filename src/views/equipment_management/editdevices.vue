@@ -278,6 +278,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="info" plain>{{$t('equipment.Refresh')}}</el-button>
+                <!-- 添加子设备按钮  -->
                 <el-button
                   type="primary"
                   @click="childDialog=true"
