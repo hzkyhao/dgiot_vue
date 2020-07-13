@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
   <meta name="mobile-web-app-capable" content="yes">
-  <link href="static/js/index.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/element-ui/2.8.2/theme-chalk/index.css" rel="stylesheet">
   <link rel="icon" href="favicon.ico" sizes="64*64">
   <title>采集系统管理</title>
 
@@ -119,18 +119,18 @@
 
   <!-- loading end -->
   <div id="app"></div>
-  <script src="static/js/vue.js"></script>
-  <script src="static/js/vue-router.min.js"></script>
-  <script src="static/js/index.js"></script>
-  <script src="static/js/axios.min.js"></script>
-  <script src="static/js/vue-i18n.min.js"></script>
-  <script src="static/js/echarts.min.js"></script>
+  <script src="https://cdn.bootcss.com/vue/2.6.11/vue.js"></script>
+  <script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
+  <script src="https://cdn.bootcss.com/element-ui/2.8.2/index.js"></script>
+  <script src="https://cdn.bootcss.com/axios/0.18.0/axios.min.js"></script>
+  <script src="https://cdn.bootcss.com/vue-i18n/8.7.0/vue-i18n.min.js"></script>
+  <script src="https://cdn.bootcss.com/echarts/4.2.1/echarts.min.js"></script>
 
   <!-- built files will be auto injected -->
 </body>
 
 
-<script src="static/js/zh-CN.min.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/2.8.2/locale/zh-CN.min.js"></script>
 
 <script src="static/js/mqttws31.js"></script>
 <script src="static/js/src/jsoneditor.js"></script>
