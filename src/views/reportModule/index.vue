@@ -7,22 +7,22 @@
       <el-table :data="tableData" stripe style="width: 100%;text-align:center">
         <el-table-column label="ID" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.objectId}}</span>
+            <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="产品名称" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.data.sample}}</span>
+            <span>{{ scope.row.data.sample }}</span>
           </template>
         </el-table-column>
         <el-table-column label="检验类别" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.data.category}}</span>
+            <span>{{ scope.row.data.category }}</span>
           </template>
         </el-table-column>
         <el-table-column label="检验标准" align="center">
           <template slot-scope="scope">
-            <span>{{scope.row.data.inspection_standard}}</span>
+            <span>{{ scope.row.data.inspection_standard }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -35,19 +35,19 @@
       </el-table>
       <div class="block">
         <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
           :page-sizes="[5, 10,20]"
           :page-size="length"
-          layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-        ></el-pagination>
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
     <!--弹窗-->
     <el-dialog
-      title="模板详情"
       :visible.sync="dialogTableVisible"
+      title="模板详情"
       width="50%"
       style="padding:20px;box-sizing: border-box;"
     >
@@ -60,17 +60,17 @@
         <el-table-column label="检验项目" align="center">
           <template slot-scope="scope">{{ scope.row.inspecting }}</template>
         </el-table-column>
-        <el-table-column property="title" label="保证值" align="center"></el-table-column>
-        <el-table-column property="value" label="测试值" align="center"></el-table-column>
-        <el-table-column property label="评定" align="center"></el-table-column>
+        <el-table-column property="title" label="保证值" align="center"/>
+        <el-table-column property="value" label="测试值" align="center"/>
+        <el-table-column property label="评定" align="center"/>
       </el-table>
     </el-dialog>
   </div>
 </template>
 <script>
-import { Parse } from "parse";
-import { getReport, getReportdetail } from "@/api/reportmodule/reportmodule";
-import Cookies from "js-cookie";
+import { Parse } from 'parse'
+import { getReport, getReportdetail } from '@/api/reportmodule/reportmodule'
+import Cookies from 'js-cookie'
 export default {
   data() {
     return {
@@ -80,84 +80,84 @@ export default {
       length: 10,
       dialogTableVisible: false,
       gridData: []
-    };
+    }
   },
   mounted() {
-    this.reportList();
+    this.reportList()
   },
   methods: {
     addmodule() {
       this.$router.push({
-        path: "/reportmodule/module"
-      });
+        path: '/reportmodule/module'
+      })
     },
     handleEdit(id) {
-      console.log(id);
-      this.dialogTableVisible = true;
+      console.log(id)
+      this.dialogTableVisible = true
       getReportdetail(id)
         .then(res => {
-          this.gridData = res.data.inspecting;
+          this.gridData = res.data.inspecting
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     handleDelete(id) {
-      this.$confirm("此操作将永久删除此检验标准, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('此操作将永久删除此检验标准, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
-          var Datas = Parse.Object.extend("Datas");
-          var datas = new Parse.Query(Datas);
+          var Datas = Parse.Object.extend('Datas')
+          var datas = new Parse.Query(Datas)
           datas.get(id).then(object => {
             object.destroy().then(
               response => {
                 this.$message({
-                  type: "success",
-                  message: "删除成功!"
-                });
-                this.reportList();
+                  type: 'success',
+                  message: '删除成功!'
+                })
+                this.reportList()
               },
               error => {
-                console.log(error);
+                console.log(error)
               }
-            );
-          });
+            )
+          })
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     reportList() {
       getReport(this.start, this.length).then(resultes => {
-        this.tableData = resultes.data;
-        this.total = resultes.data.length;
-      });
+        this.tableData = resultes.data
+        this.total = resultes.data.length
+      })
     },
     handleSizeChange(val) {
-      this.pagesize = val;
-      this.reportList(this.start, this.pagesize);
+      this.pagesize = val
+      this.reportList(this.start, this.pagesize)
     },
     handleCurrentChange(val) {
-      this.start = Number(val - 1) * Number(this.pagesize);
-      this.reportList(this.start, this.pagesize);
+      this.start = Number(val - 1) * Number(this.pagesize)
+      this.reportList(this.start, this.pagesize)
     },
     editorDetail(id) {
       this.$router.push({
-        path: "/reportmodule/module",
+        path: '/reportmodule/module',
         query: {
           id: id
         }
-      });
-      Cookies.set("reportId", id);
+      })
+      Cookies.set('reportId', id)
     }
   }
-};
+}
 </script>
 <style scoped>
 .reportmodule {

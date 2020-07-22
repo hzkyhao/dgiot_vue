@@ -38,16 +38,16 @@ export function getLog() {
     url: '/nodes',
     method: 'get',
     params: {
-     
+
     }
   })
 }
-export function joinLog(action,node) {
+export function joinLog(action, node) {
   return request({
-    url: '/cluster?action='+action,
+    url: '/cluster?action=' + action,
     method: 'post',
     data: {
-     node:node,
+      node: node
     }
   })
 }

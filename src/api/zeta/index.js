@@ -1,33 +1,33 @@
 import request from '@/utils/request'
 
-export function ZetaEtag(tag,status) {
+export function ZetaEtag(tag, status) {
   return request({
-    url: 'zeta/etag/'+tag,
+    url: 'zeta/etag/' + tag,
     method: 'get',
-    params:{
-        status:status
+    params: {
+      status: status
     }
   })
 }
-export function ZetaEtagHistroy(tag,limit,timestamp) {
+export function ZetaEtagHistroy(tag, limit, timestamp) {
   return request({
-    url: 'zeta/etag/history/'+tag,
+    url: 'zeta/etag/history/' + tag,
     method: 'get',
-    params:{
-    limit:limit,
-    timestamp:timestamp
+    params: {
+      limit: limit,
+      timestamp: timestamp
     }
   })
 }
 
-export function ZetaEtagTopn(limit,skip,status) {
+export function ZetaEtagTopn(limit, skip, status) {
   return request({
     url: 'zeta/etag/tag/topn',
     method: 'get',
-    params:{
-    limit:limit,
-    skip:skip,
-    status:status
+    params: {
+      limit: limit,
+      skip: skip,
+      status: status
     }
   })
 }

@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { format } from 'path';
+import { format } from 'path'
 
 export default {
   props: {
@@ -29,13 +29,13 @@ export default {
     chartData: {
       type: Object,
       required: true,
-      default:()=>{
-            return {
-              expectedData: [],
-              expectedData1: [],
-              actualData: [],
-              title:'1'
-          }
+      default: () => {
+        return {
+          expectedData: [],
+          expectedData1: [],
+          actualData: [],
+          title: '1'
+        }
       }
     }
   },
@@ -46,14 +46,14 @@ export default {
     }
   },
   // 不需要watch,watch会影响首次（如果在tabs中）渲染
-//   watch: {
-//     chartData: {
-//       deep: true,
-//       handler(val) {
-//          this.setOptions(val)
-//       }
-//     },
-//   },
+  //   watch: {
+  //     chartData: {
+  //       deep: true,
+  //       handler(val) {
+  //          this.setOptions(val)
+  //       }
+  //     },
+  //   },
   mounted() {
     this.initChart()
     if (this.autoResize) {
@@ -84,7 +84,7 @@ export default {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, actualData,title } = {}) {
+    setOptions({ expectedData, actualData, title } = {}) {
       this.chart.setOption({
         xAxis: {
           data: actualData,
@@ -101,8 +101,8 @@ export default {
         },
         title: {
           text: title,
-          textStyle:{
-            color:"black"
+          textStyle: {
+            color: 'black'
           }
         },
         tooltip: {
@@ -114,35 +114,35 @@ export default {
           formatter: '{a} <br/>{b} : {c}万台'
         },
         yAxis: {
-        name:'年产量(万台)',
+          name: '年产量(万台)',
           axisTick: {
             show: false
           },
-        axisLabel: {
-            formatter: "{value}"
-            },
-            axisLabel: {
-              textStyle: {
-                color: "#fff" //坐标值得具体的颜色
-              }
-            },
-            nameTextStyle:{
-                color:"#ffffff",
-                padding:10,
-                fontSize:14
+          axisLabel: {
+            formatter: '{value}'
+          },
+          axisLabel: {
+            textStyle: {
+              color: '#fff' // 坐标值得具体的颜色
             }
-          
+          },
+          nameTextStyle: {
+            color: '#ffffff',
+            padding: 10,
+            fontSize: 14
+          }
+
         },
         legend: {
           data: ['年产量'],
-           textStyle:{
-            color:'#ffffff'
-          },
+          textStyle: {
+            color: '#ffffff'
+          }
         },
         series: [{
-          name: '年产量', 
-        //    symbol: 'circle',
-           symbolSize: 10,
+          name: '年产量',
+          //    symbol: 'circle',
+          symbolSize: 10,
           itemStyle: {
             normal: {
               color: '#e67070',
@@ -159,10 +159,10 @@ export default {
           type: 'line',
           data: expectedData,
           tooltip: true,
-          animationDuration: 2800,
+          animationDuration: 2800
         //   animationEasing: 'cubicInOut',
-          
-        },
+
+        }
         // {
         //   name: '数据1',
         //   symbol: 'circle',
@@ -189,11 +189,10 @@ export default {
       })
     },
     initChart() {
-      setTimeout(()=>{
-         this.chart = echarts.init(this.$el, 'macarons')
-         this.setOptions(this.chartData)
-      },1000)
-     
+      setTimeout(() => {
+        this.chart = echarts.init(this.$el, 'macarons')
+        this.setOptions(this.chartData)
+      }, 1000)
     }
   }
 }

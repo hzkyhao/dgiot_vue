@@ -21,28 +21,28 @@ export default {
       type: String,
       default: '250px'
     },
-     businessdata:{
-         type:Object,
-         default:()=>{
-             return {
-                 data:[],
-                 title:''
-             }
-         }
-     }
+    businessdata: {
+      type: Object,
+      default: () => {
+        return {
+          data: [],
+          title: ''
+        }
+      }
+    }
   },
   data() {
     return {
       chart: null
     }
   },
-  watch:{
-      businessdata:{
-          deep:true,
-          handler(val){
-              this.initChart(val)
-          }
+  watch: {
+    businessdata: {
+      deep: true,
+      handler(val) {
+        this.initChart(val)
       }
+    }
   },
   mounted() {
     this.initChart(this.businessdata)
@@ -73,15 +73,15 @@ export default {
         //   orient: 'bottom',
         //   x: 'left',
           bottom: '0',
-        //   data: businessdata.data.name,
-           textStyle:{
-            color:'#ffffff'
+          //   data: businessdata.data.name,
+          textStyle: {
+            color: '#ffffff'
           }
         },
         // calculable: true,
-        color:['#3399FF','#bbe2e8','#6cacde','#C71585','#6A5ACD','#F0F8FF','#98FB98'],
-         grid: {
-          top:100,
+        color: ['#3399FF', '#bbe2e8', '#6cacde', '#C71585', '#6A5ACD', '#F0F8FF', '#98FB98'],
+        grid: {
+          top: 100,
           left: '2%',
           right: '2%',
           bottom: 100,
@@ -115,7 +115,7 @@ export default {
             //             },
             //             b: {
             //                 fontSize: 12,
-            //                 lineHeight: 20,  
+            //                 lineHeight: 20,
             //             },
             //             per: {
             //                 color: '#eee',

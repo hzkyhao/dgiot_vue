@@ -2,9 +2,9 @@
   <div class="edituser">
     <div class="admin" style="margin-bottom:20px">编辑用户</div>
     <el-form
+      ref="ruleForm2"
       :model="ruleForm2"
       status-icon
-      ref="ruleForm2"
       label-width="100px"
       class="demo-ruleForm"
     >
@@ -12,103 +12,105 @@
         <el-input
           v-model="ruleForm2.account"
           placeholder="请输入账号"
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
           v-model="ruleForm2.phone"
-          placeholder="请输入手机号"
           :maxlength="11"
-        ></el-input>
+          placeholder="请输入手机号"
+        />
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="ruleForm2.email" placeholder="请输入邮箱"></el-input>
+        <el-input v-model="ruleForm2.email" placeholder="请输入邮箱"/>
       </el-form-item>
       <el-form-item label="姓名" prop="username">
         <el-input
           v-model="ruleForm2.username"
-          placeholder="2-5个文字"
           :maxlength="5"
-        ></el-input>
+          placeholder="2-5个文字"
+        />
       </el-form-item>
       <!-- <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm2.password"></el-input>
       </el-form-item> -->
       <el-form-item label="部门选择">
         <el-cascader
-          style="width:600px"
-          placeholder="请选择部门"
           v-model="ruleForm2.departmentid"
           :props="treeprops"
           :options="data"
-          auto-complete="off"
           :show-all-levels="false"
+          style="width:600px"
+          placeholder="请选择部门"
+          auto-complete="off"
           change-on-select
-        ></el-cascader>
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="editoruser(ruleForm2)"
-          >保存</el-button
+        <el-button
+          type="primary"
+          @click="editoruser(ruleForm2)"
+        >保存</el-button
         >
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
-import { Parse } from "parse";
+import { Parse } from 'parse'
 export default {
   data() {
     return {
       data: [],
       treeprops: {
-        value: "objectId",
-        label: "name"
+        value: 'objectId',
+        label: 'name'
       },
       ruleForm2: {
-        account: "",
-        phone: "",
-        username: "",
-        password: "",
-        email: "",
-        checkPass: "",
+        account: '',
+        phone: '',
+        username: '',
+        password: '',
+        email: '',
+        checkPass: '',
         departmentid: [],
-        password: ""
+        password: ''
       },
-      id: "",
+      id: '',
       treeprops: {
-        value: "objectId",
-        label: "name"
+        value: 'objectId',
+        label: 'name'
       }
-    };
+    }
   },
   computed: {},
   mounted() {
-    this.editUser();
+    this.editUser()
   },
   methods: {
     editUser() {
-      var userid = this.$route.query.id;
+      var userid = this.$route.query.id
       // 获取用户详情
       this.$axiosWen
-        .get("/classes/_User/" + userid)
+        .get('/classes/_User/' + userid)
         .then(res => {
-          this.ruleForm2.username = res.nick;
-          this.ruleForm2.phone = res.phone;
-          this.ruleForm2.account = res.username;
-          this.ruleForm2.email = res.email;
-          this.getDepartment();
+          this.ruleForm2.username = res.nick
+          this.ruleForm2.phone = res.phone
+          this.ruleForm2.account = res.username
+          this.ruleForm2.email = res.email
+          this.getDepartment()
         })
         .catch(err => {
           this.$message({
-            type: "error",
-            message: "用户详情获取失败"
-          });
-          console.log(err);
-        });
+            type: 'error',
+            message: '用户详情获取失败'
+          })
+          console.log(err)
+        })
     },
     editoruser(formName) {
-      var User = new Parse.User();
-      var user = new Parse.Query(User);
+      var User = new Parse.User()
+      var user = new Parse.Query(User)
       user.get(this.$route.query.id).then(res => {
         // if (this.ruleForm2.departmentid.length) {
         //   var Department = Parse.Object.extend("Department");
@@ -119,10 +121,10 @@ export default {
         //   );
         //   res.set("department", department);
         // }
-        res.set("username", this.ruleForm2.account);
-        res.set("nick", this.ruleForm2.username);
-        res.set("phone", this.ruleForm2.phone);
-        res.set("email", this.ruleForm2.email);
+        res.set('username', this.ruleForm2.account)
+        res.set('nick', this.ruleForm2.username)
+        res.set('phone', this.ruleForm2.phone)
+        res.set('email', this.ruleForm2.email)
         // if(this.ruleForm2.password!=''){
         //    res.set("password", this.ruleForm2.password);
         // }
@@ -130,39 +132,39 @@ export default {
           .save()
           .then(resultes => {
             this.$message({
-              message: "更改成功",
-              type: "success"
-            });
+              message: '更改成功',
+              type: 'success'
+            })
             // this.$router.push({
             //   path: "/roles/structure"
             // });
           })
           .catch(error => {
             this.$message({
-              type: "error",
+              type: 'error',
               message: error.message
-            });
-          });
-      });
+            })
+          })
+      })
     },
     getDepartment() {
       this.$axiosWen
-        .get("/roletree")
+        .get('/roletree')
         .then(res => {
-          let results = res.results;
+          const results = res.results
           results.forEach(element => {
-            console.log(element);
-          });
-          this.data = res.results;
+            console.log(element)
+          })
+          this.data = res.results
         })
         .catch(err => {
-          this.$message("部门列表获取失败");
-          this.data = [];
-          console.log(err);
-        });
+          this.$message('部门列表获取失败')
+          this.data = []
+          console.log(err)
+        })
     }
   }
-};
+}
 </script>
 <style scoped>
 .edituser {

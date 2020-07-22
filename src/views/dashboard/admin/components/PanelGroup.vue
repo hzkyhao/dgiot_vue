@@ -11,7 +11,7 @@
         </div>
       </div>
     </el-col>
-     <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="czgl" class-name="card-panel-icon" />
@@ -33,7 +33,7 @@
         </div>
       </div>
     </el-col>
-     <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="sczyl" class-name="card-panel-icon" />
@@ -55,7 +55,7 @@
         </div>
       </div>
     </el-col>
-     <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="12" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="qy" class-name="card-panel-icon" />
@@ -89,13 +89,12 @@
       </div>
     </el-col> -->
   </el-row>
-  
-  
+
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
-import ScrollPane from '@/components/ScrollPane';
+import ScrollPane from '@/components/ScrollPane'
 
 export default {
   components: {

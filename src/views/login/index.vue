@@ -1,7 +1,7 @@
 <template>
   <div
-    class="login-container"
     :style="{background: 'url(' +(loginbannersrc ? loginbannersrc : backgroundsrc)+') no-repeat cover'}"
+    class="login-container"
   >
     <div class="loginbanner">
       <!-- <Pointwave style="width:100%;height:100%"></Pointwave> -->
@@ -13,13 +13,13 @@
         label-position="left"
       >
         <div class="logo">
-          <img :src="logosrc || index_logo" alt="logo" style="width:80px;height:80px;" />
-          <p>{{title}}</p>
+          <img :src="logosrc || index_logo" alt="logo" style="width:80px;height:80px;" >
+          <p>{{ title }}</p>
         </div>
-<div style="margin: 20px" v-show="false">
-  <el-radio  disabled v-model="roleType" label="pump">水泵登录</el-radio>
-  <el-radio v-model="roleType" label="default">平台登录</el-radio>
-</div>
+        <div v-show="false" style="margin: 20px">
+          <el-radio v-model="roleType" disabled label="pump">水泵登录</el-radio>
+          <el-radio v-model="roleType" label="default">平台登录</el-radio>
+        </div>
         <!-- <h5 style="text-align:center;font-size:20px;color:rgba(0, 0, 0, 0.647058823529412);margin:20px 0;">账号密码登录</h5> -->
         <el-form-item prop="username">
           <span class="svg-container">
@@ -39,10 +39,10 @@
           </span>
           <el-input
             v-model="loginForm.password"
+            :type="pwdType"
             name="password"
             auto-complete="on"
             placeholder="请输入密码"
-            :type="pwdType"
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
@@ -76,195 +76,191 @@
     </div>
   </div>
 </template>
- 
+
 <script>
-import { isvalidUsername } from "@/utils/validate";
-import { Parse } from "parse";
-import { getsession } from "@/utils/wxscoket.js";
-import { Sitepro } from "@/api/login";
-import { license } from "@/api/license";
+import { isvalidUsername } from '@/utils/validate'
+import { Parse } from 'parse'
+import { getsession } from '@/utils/wxscoket.js'
+import { Sitepro } from '@/api/login'
+import { license } from '@/api/license'
 export default {
-  name: "Login",
+  name: 'Login',
   beforeRouteEnter(to, from, next) {
     // 注意，在路由进入之前，组件实例还未渲染，所以无法获取this实例，只能通过vm来访问组件实例
     next(vm => {
       // this.getTitle()
       //  document.title=this.title
-    });
+    })
   },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error("请输入正确的用户名"));
+        callback(new Error('请输入正确的用户名'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error("密码不能小于5位"));
+        callback(new Error('密码不能小于5位'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       reset: false,
-      title: "",
-      roleType:'default',
+      title: '',
+      roleType: 'default',
       loginForm: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername }
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
-        password: [{ required: true, trigger: "blur", validator: validatePass }]
+        password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
-      pwdType: "password",
+      pwdType: 'password',
       checked: false,
-      imgsrc: require("../../imgages/u50.png"),
-      index_logo: require("../../imgages/index_logo.png"),
-      logosrc: "",
-      backgroundsrc: require("../../imgages/loginbanner.jpg"),
+      imgsrc: require('../../imgages/u50.png'),
+      index_logo: require('../../imgages/index_logo.png'),
+      logosrc: '',
+      backgroundsrc: require('../../imgages/loginbanner.jpg'),
       routes: [],
       loginbannersrc: false
-    };
+    }
   },
+  created() {
+    this.getlicense()
+    this.getTitle()
+  },
+  mounted() {},
   methods: {
     getlicense() {
       license().then(resultes => {
         if (resultes.result == false) {
           this.$router.push({
-            path: "/license"
-          });
+            path: '/license'
+          })
         } else {
           // this.$router.push("/login");
-          localStorage.setItem("list", "[]");
+          localStorage.setItem('list', '[]')
         }
-      });
+      })
     },
     // 获取标题
     getTitle() {
-
       // Parse.User.logOut();
       Sitepro(this.roleType).then(resultes => {
-        if(!resultes){
-                    resultes = {}
-           }
-        this.title = resultes.title;
-        document.title = this.title ? this.title :'采集管理系统';
+        if (!resultes) {
+          resultes = {}
+        }
+        this.title = resultes.title
+        document.title = this.title ? this.title : '采集管理系统'
 
-        this.logosrc = resultes.logo;        
-        this.loginbannersrc = resultes.background;
+        this.logosrc = resultes.logo
+        this.loginbannersrc = resultes.background
 
-        this.$Cookies.set("appid", resultes.objectId);
-        this.$Cookies.set("roletype", this.roleType);
-        this.$Cookies.set("application", this.roleType);
-      
+        this.$Cookies.set('appid', resultes.objectId)
+        this.$Cookies.set('roletype', this.roleType)
+        this.$Cookies.set('application', this.roleType)
 
-        sessionStorage.setItem("product_title", resultes.title?resultes.title:'');
-        sessionStorage.setItem("dashboard", resultes.dashboard?resultes.dashboard:'#');
-        sessionStorage.setItem("imgsrc", resultes.logo?resultes.logo:'');
-        sessionStorage.setItem("copyright", resultes.copyright?resultes.copyright:'');
-        sessionStorage.setItem("roletype", this.roleType)
-
-      });
+        sessionStorage.setItem('product_title', resultes.title ? resultes.title : '')
+        sessionStorage.setItem('dashboard', resultes.dashboard ? resultes.dashboard : '#')
+        sessionStorage.setItem('imgsrc', resultes.logo ? resultes.logo : '')
+        sessionStorage.setItem('copyright', resultes.copyright ? resultes.copyright : '')
+        sessionStorage.setItem('roletype', this.roleType)
+      })
     },
     showPwd() {
-      if (this.pwdType === "password") {
-        this.pwdType = "";
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
       } else {
-        this.pwdType = "password";
+        this.pwdType = 'password'
       }
     },
     handleLogin() {
-      this.routes = [];
+      this.routes = []
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          var user = this.loginForm;
+          var user = this.loginForm
           Parse.User.logIn(this.loginForm.username, this.loginForm.password)
             .then(user => {
-              getsession(user.attributes.sessionToken);
+              getsession(user.attributes.sessionToken)
 
-              this.$Cookies.set("sessionToken", user.attributes.sessionToken);
-              this.$Cookies.set("username", user.attributes.username);
-              
-              this.$store.dispatch("setRoles", user.attributes.roles);
-              var Menu = Parse.Object.extend("Navigation");
-              var menu = new Parse.Query(Menu);
+              this.$Cookies.set('sessionToken', user.attributes.sessionToken)
+              this.$Cookies.set('username', user.attributes.username)
+
+              this.$store.dispatch('setRoles', user.attributes.roles)
+              var Menu = Parse.Object.extend('Navigation')
+              var menu = new Parse.Query(Menu)
               menu.find().then(menu => {
-                var menu1 = menu;
+                var menu1 = menu
                 menu1.map(items => {
                   if (items.attributes.parent) {
-                    this.routes.push(items);
+                    this.routes.push(items)
                   }
-                });
-                sessionStorage.setItem("username", user.attributes.username);
-                sessionStorage.setItem("roles", user.attributes.roles[0]? user.attributes.roles[0].alias : '');
+                })
+                sessionStorage.setItem('username', user.attributes.username)
+                sessionStorage.setItem('roles', user.attributes.roles[0] ? user.attributes.roles[0].alias : '')
 
-                this.$Cookies.set("appids", user.attributes.roles[0]? user.attributes.roles[0].name : '');
+                this.$Cookies.set('appids', user.attributes.roles[0] ? user.attributes.roles[0].name : '')
 
-                localStorage.setItem("list", JSON.stringify(this.routes));
-      
-                this.$router.push({ path:"/dashboard" });
-        
-              });
+                localStorage.setItem('list', JSON.stringify(this.routes))
+
+                this.$router.push({ path: '/dashboard' })
+              })
             })
             .catch(error => {
               if (error.code == 101) {
-                if (error.message.indexOf("Invalid") == -1) {
+                if (error.message.indexOf('Invalid') == -1) {
                   this.$message({
-                    type: "warning",
-                    message: "密码输入错误次数过多，该账户已被锁住"
-                  });
+                    type: 'warning',
+                    message: '密码输入错误次数过多，该账户已被锁住'
+                  })
                 } else {
                   this.$message({
-                    type: "warning",
-                    message: "用户名或密码错误"
-                  });
+                    type: 'warning',
+                    message: '用户名或密码错误'
+                  })
                 }
               } else {
                 this.$message({
-                  type: "warning",
+                  type: 'warning',
                   message: error.message
-                });
+                })
               }
-            });
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     resetPassword() {
       this.$router.push({
-        path: "/resetpassword"
-      });
+        path: '/resetpassword'
+      })
     },
     register() {
       this.$router.push({
-        path: "/register"
-      });
+        path: '/register'
+      })
     },
     phonelogin() {
       this.$router.push({
-        path: "/phonelogin",
+        path: '/phonelogin',
         query: {
-          action: "login"
+          action: 'login'
         }
-      });
+      })
     }
-  },
-  created() {
-    this.getlicense()  
-    this.getTitle();
-  },
-  mounted() {}
-};
+  }
+}
 </script>
- 
+
 <style rel="stylesheet/scss" lang="scss">
 $light_gray: rgba(0, 0, 0, 0.247058823529412);
 
@@ -307,7 +303,7 @@ $light_gray: rgba(0, 0, 0, 0.247058823529412);
   }
 }
 </style>
- 
+
 <style rel="stylesheet/scss" lang="scss" scoped>
 $bg: rgba(45, 58, 75, 0.8);
 $dark_gray: #889aa4;

@@ -21,7 +21,6 @@ export default {
   computed: {
     message() {
       return '开发中......'
-
     }
   }
 }

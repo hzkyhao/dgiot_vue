@@ -5,52 +5,52 @@
 </template>
 
 <script>
-import { Parse } from "parse";
+import { Parse } from 'parse'
 export default {
-  name: "App",
+  name: 'App',
   provide() {
     return {
       reload: this.reload
-    };
+    }
   },
   data() {
     return {
-      username: "",
-      token: "",
+      username: '',
+      token: '',
       isRouterAlive: true
-    };
+    }
   },
   mounted() {
-    Parse.initialize("shuwa", "webapi", "HZlora2017");
-    Parse.serverURL = this.$globalConfig.serverURL;
+    Parse.initialize('shuwa', 'webapi', 'HZlora2017')
+    Parse.serverURL = this.$globalConfig.serverURL
 
-    if (this.$Cookies.get("roles")) {
-      this.$store.dispatch("setRoles", this.$Cookies.get("roles"));
+    if (this.$Cookies.get('roles')) {
+      this.$store.dispatch('setRoles', this.$Cookies.get('roles'))
     }
-    this.appShow();
+    this.appShow()
   },
   methods: {
     reload() {
-      this.isRouterAlive = false;
+      this.isRouterAlive = false
       this.$nextTick(function() {
-        this.isRouterAlive = true;
-      });
+        this.isRouterAlive = true
+      })
     },
     appShow() {
-      const { PAGE_START_TIME } = window;
-      const END_TIME = new Date().getTime(); // 结束时间
-      const diffTime = END_TIME - PAGE_START_TIME;
+      const { PAGE_START_TIME } = window
+      const END_TIME = new Date().getTime() // 结束时间
+      const diffTime = END_TIME - PAGE_START_TIME
       const timer = setTimeout(
         () => {
-          clearTimeout(timer);
-          document.querySelector(".app-loading").className +=
-            " app-loading-hide";
+          clearTimeout(timer)
+          document.querySelector('.app-loading').className +=
+            ' app-loading-hide'
         },
         diffTime > 2000 ? 0 : 2000 - diffTime
-      );
+      )
     }
   }
-};
+}
 </script>
 <style>
 section {

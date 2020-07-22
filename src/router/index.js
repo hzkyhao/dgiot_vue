@@ -25,50 +25,50 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login',component: () => import('@/views/login/index'), hidden: true},
-  { path: '/resetpassword',component: () => import('@/views/login/resetpassword'), hidden: true},
-  { path: '/register',component: () => import('@/views/register/register'), hidden: true},
-  { path: '/phonelogin',component: () => import('@/views/login/phonesms'), hidden: true},
-  { path: '/license', component: () => import('@/views/license'), hidden: true},
-  { path: '/404', component: () => import('@/views/404'), hidden: true},
+  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
+  { path: '/resetpassword', component: () => import('@/views/login/resetpassword'), hidden: true },
+  { path: '/register', component: () => import('@/views/register/register'), hidden: true },
+  { path: '/phonelogin', component: () => import('@/views/login/phonesms'), hidden: true },
+  { path: '/license', component: () => import('@/views/license'), hidden: true },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
   {
     path: '/pdf/download',
     component: () => import('@/views/pdf/download'),
     hidden: true
-  }, 
-  { path: '/userinfo', 
-  component: Layout, 
-  hidden: true,
-  children:[{
-    path: '/userinfo/:userid',
-    name:'userinfo',
-    component: () => import('@/views/user/userinfo'), 
-    hidden:true,
-    meta: { title: '个人中心'},
-  }]  
-},
+  },
+  { path: '/userinfo',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: '/userinfo/:userid',
+      name: 'userinfo',
+      component: () => import('@/views/user/userinfo'),
+      hidden: true,
+      meta: { title: '个人中心' }
+    }]
+  },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name:'首页',
+    name: '首页',
     children: [
-    {
-      path: '/dashboard',
-      name: '首页',
-      component: () => import('@/views/equipment_management/platform_overview'),
-      meta: { title: '首页',icon:'platform' }
-    },
-  ]
+      {
+        path: '/dashboard',
+        name: '首页',
+        component: () => import('@/views/equipment_management/platform_overview'),
+        meta: { title: '首页', icon: 'platform' }
+      }
+    ]
   },
-  //档案管理
+  // 档案管理
   {
     path: '/filemanage',
     component: Layout,
     redirect: '/filemanage/index',
     name: '档案管理',
     meta: { title: '档案管理', icon: 'file' },
-    alwaysShow:true,
+    alwaysShow: true,
     children: [
       // {
       //   path: 'index',
@@ -112,8 +112,8 @@ export const constantRouterMap = [
     redirect: '/readmeter',
     name: '集抄集收查询',
     meta: { title: '集抄集收查询', icon: 'devicemanage' },
-    alwaysShow:true,
-    children:[
+    alwaysShow: true,
+    children: [
       {
         path: '/readmeter/historystatistical',
         name: '抄表数据查询',
@@ -127,9 +127,9 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/connectmanage/report',
     name: '主站交互',
-    alwaysShow:true,
+    alwaysShow: true,
     meta: { title: '主站交互', icon: 'connect' },
-   
+
     children: [
       {
         path: '/connectmanage/report',
@@ -148,10 +148,10 @@ export const constantRouterMap = [
   {
     path: '/monitoring',
     component: Layout,
-    name:'监控分析',
+    name: '监控分析',
     redirect: '/monitoring',
     meta: { title: '监控分析', icon: 'tasks' },
-    children:[
+    children: [
       {
         path: '/monitoring/meterReading',
         name: '抄表结果',
@@ -166,7 +166,7 @@ export const constantRouterMap = [
       }
     ]
   },
-  
+
   // {
   //   path: '/flat',
   //   component: Layout,
@@ -180,7 +180,7 @@ export const constantRouterMap = [
   //       component: () => import('@/views/flat/index'),
   //       meta: { title: '搜寻设备', icon: 'dushuju' },
   //     },
-     
+
   //   ]
   // },
   // {
@@ -220,29 +220,29 @@ export const constantRouterMap = [
     path: '/dataanalysis',
     component: Layout,
     redirect: '/dataanalysis/index1',
-    name:'大数据看板',
-    alwaysShow:true,
-     meta: {
-     title: '大数据看板',
-     icon: 'dataany'
-   },
+    name: '大数据看板',
+    alwaysShow: true,
+    meta: {
+      title: '大数据看板',
+      icon: 'dataany'
+    },
     children: [
       {
         path: '/dataanalysis/index1',
         component: () => import('@/views/dataanalysis/index1'),
-        name:'行业分析',
+        name: '行业分析',
         meta: { title: '行业分析', icon: 'hangyefenxi' }
       },
       {
         path: '/dataanalysis/index2',
         component: () => import('@/views/dataanalysis/index2'),
-        name:'质量比对',
+        name: '质量比对',
         meta: { title: '质量比对', icon: 'zhiliang' }
       },
       {
         path: '/dataanalysis/index3',
         component: () => import('@/views/dataanalysis/index3'),
-        name:'远程检测',
+        name: '远程检测',
         meta: { title: '远程检测', icon: 'link' }
       }
     ]
@@ -251,9 +251,9 @@ export const constantRouterMap = [
     path: '/roles',
     component: Layout,
     redirect: '/roles',
-    name:'系统管理',
+    name: '系统管理',
     meta: { title: '系统管理', icon: 'rolemanage' },
-    children:[
+    children: [
       {
         path: '/roles/structure',
         name: '用户管理',
@@ -275,9 +275,9 @@ export const constantRouterMap = [
       {
         path: '/roles/editroles',
         name: '添加角色',
-        meta: { title: '添加角色'},
-        hidden:true,
-        component: () => import('@/views/roles/rolelist/addroles'),
+        meta: { title: '添加角色' },
+        hidden: true,
+        component: () => import('@/views/roles/rolelist/addroles')
       },
       {
         path: '/roles/applicationManagement',
@@ -288,16 +288,16 @@ export const constantRouterMap = [
       {
         path: '/roles/adduser',
         name: '新增用户',
-        meta: { title: '新增用户'},
-        hidden:true,
-        component: () => import('@/views/roles/adduser/adduser'),
+        meta: { title: '新增用户' },
+        hidden: true,
+        component: () => import('@/views/roles/adduser/adduser')
       },
       {
         path: '/roles/edituser',
         name: '编辑用户',
-        meta: { title: '编辑用户'},
-        hidden:true,
-        component: () => import('@/views/roles/adduser/edituser'),
+        meta: { title: '编辑用户' },
+        hidden: true,
+        component: () => import('@/views/roles/adduser/edituser')
       },
       {
         path: '/roles/menu',
@@ -323,12 +323,12 @@ export const constantRouterMap = [
         component: () => import('@/views/equipment_management/appOperate/applicationManagement'),
         meta: { title: '工程管理', icon: 'project' }
       },
-      
+
       {
         path: '/applicationManagement/addApp',
         name: '新增应用',
         component: () => import('@/views/equipment_management/appOperate/addApp'),
-        hidden:true,
+        hidden: true,
         meta: { title: '新增应用', icon: 'department' }
       },
       {
@@ -341,128 +341,128 @@ export const constantRouterMap = [
         path: '/roles/tasklistmanage',
         name: '任务管理',
         component: () => import('@/views/equipment_management/tasklistmanage'),
-        meta: { title: '任务管理',icon:'tasklistmanage' }
+        meta: { title: '任务管理', icon: 'tasklistmanage' }
       },
       {
         path: '/roles/thing',
         name: '设备管理',
         component: () => import('@/views/equipment_management/index'),
-        meta: { title: '设备管理',icon:'device' }
+        meta: { title: '设备管理', icon: 'device' }
       },
       {
         path: '/performance_monitoring',
         component: () => import('@/views/dashboard/index'),
-        name:'性能监控',
-        meta: { title: '性能监控', icon: 'platform' }    
+        name: '性能监控',
+        meta: { title: '性能监控', icon: 'platform' }
       },
       {
         path: '/roles/product',
         name: '产品管理',
         component: () => import('@/views/equipment_management/devproduct'),
-        meta: { title: '产品管理',icon:'product' }
+        meta: { title: '产品管理', icon: 'product' }
       },
       {
         path: '/roles/taskcollection',
         name: '任务采集',
         component: () => import('@/views/equipment_management/task_collection1'),
-        meta: { title: '任务采集',icon:'taskcollection'},
+        meta: { title: '任务采集', icon: 'taskcollection' }
       },
       {
         path: '/roles/detailproduct',
         name: '产品详情',
         component: () => import('@/views/equipment_management/proddetail'),
-        meta: { title: '产品详情'},
-        hidden:true
+        meta: { title: '产品详情' },
+        hidden: true
       },
       {
         path: '/roles/editdevices',
         name: '设备详情',
         component: () => import('@/views/equipment_management/editdevices'),
-        meta: { title: '设备详情'},
-        hidden:true
+        meta: { title: '设备详情' },
+        hidden: true
       },
       {
         path: '/roles/onlinetest',
         name: '在线调试',
         component: () => import('@/views/equipment_management/onlinetest'),
-        meta: { title: '在线调试', icon:'onlinetest'}
-       
+        meta: { title: '在线调试', icon: 'onlinetest' }
+
       },
       {
         path: '/roles/nodes',
         name: '节点管理',
         component: () => import('@/views/installation/log'),
-        meta: { title: '节点管理', icon:'nodemgr'}
+        meta: { title: '节点管理', icon: 'nodemgr' }
       },
-      
+
       {
         path: '/roles/server_control',
         name: '部署管理',
         component: () => import('@/views/equipment_management/server_control'),
-        meta: { title: '部署管理',icon:'platform' }
+        meta: { title: '部署管理', icon: 'platform' }
       },
       {
         path: '/roles/tdengine',
         name: '数据库管理',
         component: () => import('@/views/equipment_management/tdengine'),
-        meta: { title: '数据库管理',icon:'platform' }
-      },
+        meta: { title: '数据库管理', icon: 'platform' }
+      }
     ]
   },
   {
     path: '/rules_engine',
     component: Layout,
     redirect: '/rules_engine/engine',
-    name:'规则引擎',
+    name: '规则引擎',
     meta: { title: '规则引擎', icon: 'engine' },
-    children:[
+    children: [
       {
         path: '/rules_engine/engine',
         name: '规则管理',
         component: () => import('@/views/engine/rulesengine'),
-        meta: { title: '规则管理',icon:'rulesengine' }
+        meta: { title: '规则管理', icon: 'rulesengine' }
       },
       {
         path: '/rules_engine/channel',
         name: '通道管理',
         component: () => import('@/views/engine/resourcechannel'),
-        meta: { title: '通道管理',icon:'channelmanage' }
+        meta: { title: '通道管理', icon: 'channelmanage' }
       },
       {
         path: '/rules_engine/addengine',
         name: '新增规则',
         component: () => import('@/views/engine/addengine'),
-        meta: { title: '新增规则'},
-        hidden:true,
+        meta: { title: '新增规则' },
+        hidden: true
       },
       {
         path: '/rules_engine/checkengine',
         name: '查看规则',
         component: () => import('@/views/engine/checkengine'),
-        meta: { title: '查看规则'},
-        hidden:true,
-      }, 
+        meta: { title: '查看规则' },
+        hidden: true
+      }
     ]
   },
   {
     path: '/app',
     component: Layout,
     redirect: '/app',
-    name:'应用（项目）服务',
+    name: '应用（项目）服务',
     meta: { title: '应用（项目）服务', icon: 'engine' }
   },
   {
     path: '/pro',
     component: Layout,
     redirect: '/pro',
-    name:'产品管理',
+    name: '产品管理',
     meta: { title: '产品管理', icon: 'product' }
   },
   {
     path: '/help',
     component: Layout,
     redirect: '/help',
-    name:'帮助中心',
+    name: '帮助中心',
     meta: { title: '帮助中心', icon: 'help' }
   },
   // {

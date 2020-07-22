@@ -1,6 +1,6 @@
 <template>
   <div class="devproduct">
-    <h3>{{$t('route.产品管理')}}
+    <h3>{{ $t('route.产品管理') }}
       <span v-if="projectName">{{ '(所属应用:' + projectName + ')' }}</span>
     </h3>
     <el-tabs v-model="activeName">
@@ -11,19 +11,19 @@
               <el-input
                 v-model="formInline.productname"
                 :placeholder="$t('product.searchproductname')"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="searchProduct(0)">{{$t('developer.search')}}</el-button>
+              <el-button type="primary" @click="searchProduct(0)">{{ $t('developer.search') }}</el-button>
             </el-form-item>
             <el-form-item style="float:right;text-align:right">
               <el-button
+                v-show="projectid!=''"
                 type="primary"
                 @click="addproduct"
-                v-show="projectid!=''"
-              >{{$t('product.createproduct')}}</el-button>
+              >{{ $t('product.createproduct') }}</el-button>
 
-              <el-button type="primary" @click="importDialogShow = true">{{$t('product.importpro')}}</el-button>
+              <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
 
               <!-- <el-button
                 type="primary"
@@ -33,67 +33,67 @@
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="id" label="ProductID"></el-table-column>
+              <el-table-column prop="id" label="ProductID"/>
               <el-table-column :label="$t('product.productname')">
                 <template slot-scope="scope">
-                  <span>{{scope.row.attributes.name}}</span>
+                  <span>{{ scope.row.attributes.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.productgrouping')">
                 <template slot-scope="scope">
-                  <span>{{scope.row.attributes.devType}}</span>
+                  <span>{{ scope.row.attributes.devType }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.nodetype')">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.nodeType==1">{{$t('product.gateway')}}</span>
-                  <span v-if="scope.row.attributes.nodeType==0">{{$t('product.equipment')}}</span>
+                  <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
+                  <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.classification')">
                 <template slot-scope="scope">
-                  <span>{{scope.row.CategoryKey}}</span>
+                  <span>{{ scope.row.CategoryKey }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.addingtime')">
                 <template slot-scope="scope">
-                  <span>{{utc2beijing(scope.row.createdAt)}}</span>
+                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" width="320">
                 <template slot-scope="scope">
                   <el-link
-                    type="primary"
                     :underline="false"
+                    type="primary"
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
                   >配置</el-link>
-                  <el-popover placement="top" width="300" :ref="`popover-${scope.$index}`">
-                    <p>确定删除这个{{scope.row.name}}产品吗？</p>
+                  <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
+                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button
                         size="mini"
                         @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                      >{{$t('developer.cancel')}}</el-button>
+                      >{{ $t('developer.cancel') }}</el-button>
                       <el-button
                         type="primary"
                         size="mini"
                         @click="makeSure(scope)"
-                      >{{$t('developer.determine')}}</el-button>
+                      >{{ $t('developer.determine') }}</el-button>
                     </div>
                     <el-link
                       slot="reference"
                       :underline="false"
                       icon="el-icon-delete"
                       type="danger"
-                    >{{$t('developer.delete')}}</el-link>
+                    >{{ $t('developer.delete') }}</el-link>
                   </el-popover>
                   <el-link
                     :underline="false"
                     icon="el-icon-attract"
-                    @click="GoTodevices(scope.row)"
                     type="primary"
-                  >{{$t('product.equipment')}}</el-link>
+                    @click="GoTodevices(scope.row)"
+                  >{{ $t('product.equipment') }}</el-link>
                   <el-link
                     :underline="false"
                     icon="el-icon-edit"
@@ -112,13 +112,13 @@
           </div>
           <div class="elpagination" style="margin-top:20px;">
             <el-pagination
-              @size-change="productSizeChange"
-              @current-change="productCurrentChange"
               :page-sizes="[10, 20, 30, 50]"
               :page-size="length"
-              layout="total, sizes, prev, pager, next, jumper"
               :total="total"
-            ></el-pagination>
+              layout="total, sizes, prev, pager, next, jumper"
+              @size-change="productSizeChange"
+              @current-change="productCurrentChange"
+            />
           </div>
         </div>
       </el-tab-pane>
@@ -128,28 +128,28 @@
       <el-dialog
         :title="$t('product.createproduct')"
         :visible.sync="dialogFormVisible"
-        width="40%"
-        top="5vh"
         :close-on-click-modal="false"
         :before-close="handleClose"
+        width="40%"
+        top="5vh"
       >
         <div class="content">
           <!--产品信息-->
           <div class="contentone">
             <div style="display:flex;">
-              <span>{{$t('product.productinformation')}}</span>
+              <span>{{ $t('product.productinformation') }}</span>
               <p
                 style="height:1px;width:auto;border-top:1px dashed #dddddd;flex-grow:2;margin:10px;"
-              ></p>
+              />
             </div>
 
-            <el-form :model="form" :rules="rules" ref="ruleForm">
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item :label="$t('product.productname')" prop="name">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
+                <el-input v-model="form.name" autocomplete="off"/>
               </el-form-item>
-               <el-form-item label="产品分组" prop="devType">
-              <!-- <el-form-item :label="$t('product.productidentification')" prop="devType"> -->
-                <el-input v-model="form.devType" autocomplete="off"></el-input>
+              <el-form-item label="产品分组" prop="devType">
+                <!-- <el-form-item :label="$t('product.productidentification')" prop="devType"> -->
+                <el-input v-model="form.devType" autocomplete="off"/>
               </el-form-item>
 
               <!--        <el-form-item :label="$t('product.classification')" prop="category">
@@ -157,20 +157,20 @@
               </el-form-item>-->
 
               <el-form-item :label="$t('product.classification')">
-                <el-cascader v-model="form.category" :options="categoryListOptions"></el-cascader>
+                <el-cascader v-model="form.category" :options="categoryListOptions"/>
               </el-form-item>
 
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
 
               <el-form-item label="所属应用" prop="roles" >
-                <el-select v-model="form.relationApp" @change="selectApp" disabled>
+                <el-select v-model="form.relationApp" disabled @change="selectApp">
                   <el-option
                     v-for="(item,index) in allApps"
                     :key="index"
                     :label="item.attributes.title"
                     :value="item.attributes.title"
-                  ></el-option>
+                  />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -178,17 +178,17 @@
           <!--节点类型-->
           <div class="contenttwo" style="margin-top:20px;">
             <div style="display:flex;">
-              <span>{{$t('product.nodetype')}}</span>
+              <span>{{ $t('product.nodetype') }}</span>
               <p
                 style="height:1px;width:auto;border-top:1px dashed #dddddd;flex-grow:2;margin:10px;"
-              ></p>
+              />
             </div>
 
-            <el-form :model="form" :rules="rules" ref="ruleForm">
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item :label="$t('product.nodetype')" prop="nodeType">
                 <el-radio-group v-model="form.nodeType" @change="changeNode">
-                  <el-radio :label="0">{{$t('product.equipment')}}</el-radio>
-                  <el-radio :label="1">{{$t('product.gateway')}}</el-radio>
+                  <el-radio :label="0">{{ $t('product.equipment') }}</el-radio>
+                  <el-radio :label="1">{{ $t('product.gateway') }}</el-radio>
                 </el-radio-group>
               </el-form-item>
               <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
@@ -202,12 +202,12 @@
           <!--连网方式-->
           <div class="contentthird" style="margin-top:20px;">
             <div style="display:flex;">
-              <span>{{$t('product.networkinganddescription')}}</span>
+              <span>{{ $t('product.networkinganddescription') }}</span>
               <p
                 style="height:1px;width:auto;border-top:1px dashed #dddddd;flex-grow:2;margin:10px;"
-              ></p>
+              />
             </div>
-            <el-form :model="form" :rules="rules" ref="ruleForm">
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item
                 :label="$t('product.networking')+'(共'+(channel.length)+'项)'"
                 prop="netType"
@@ -219,70 +219,70 @@
                     :label="(index+1)+':'+item.label"
                     :value="item.value"
                     :title="'当前第'+(index+1)+'项'"
-                  ></el-option>
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="产品模型">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon" v-loading="loading"></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" >
+                <i v-loading="loading" v-else class="el-icon-plus avatar-uploader-icon"/>
                 <form
+                  ref="uploadform"
                   method="POST"
                   enctype="multipart/form-data"
-                  ref="uploadform"
                   style="position: absolute"
                 >
                   <input
                     type="file"
-                    @change="upload($event)"
                     style="position:relative;top:-100px; opacity:0;z-index:5;height:100px;width:100px;cursor:pointer"
-                  />
+                    @change="upload($event)"
+                  >
                 </form>
                 <el-button
+                  v-if="imageUrl"
                   type="danger"
-                  @click="deleteImgsrc"
                   size="mini"
                   style="vertical-align:text-bottom"
-                  v-if="imageUrl"
+                  @click="deleteImgsrc"
                 >删除</el-button>
               </el-form-item>
               <el-form-item :label="$t('developer.describe')" prop="desc">
-                <el-input type="textarea" v-model="form.desc"></el-input>
+                <el-input v-model="form.desc" type="textarea"/>
               </el-form-item>
             </el-form>
           </div>
         </div>
 
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">{{$t('developer.determine')}}</el-button>
-          <el-button @click="dialogFormVisible = false">{{$t('developer.cancel')}}</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">{{ $t('developer.determine') }}</el-button>
+          <el-button @click="dialogFormVisible = false">{{ $t('developer.cancel') }}</el-button>
         </div>
       </el-dialog>
     </div>
 
     <div class="import-dialog">
-      <el-dialog title="导入产品" :visible.sync="importDialogShow" width="25%">
-        <el-form :model="formPro" ref="uploadProForm">
+      <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
+        <el-form ref="uploadProForm" :model="formPro">
           <!--   <el-row :gutter="20">
-  <el-col :span="12">  
-     <el-input  placeholder=" " size="small" v-model="formPro.name" :disabled="true"> </el-input> 
+  <el-col :span="12">
+     <el-input  placeholder=" " size="small" v-model="formPro.name" :disabled="true"> </el-input>
      </el-col>
-  <el-col :span="12"> 
+  <el-col :span="12">
 
   </el-col>
           -->
           <el-upload
-            class="upload-demo"
+            ref="fileUpload"
             :action="uploadAction"
             :data="uploadData"
             :headers="uploadHeaders"
             :file-list="fileList"
             :on-change="handleChange"
             :with-credentials="true"
-            accept=".xls, .xlsx, .zip"
-            ref="fileUpload"
             :auto-upload="false"
             :on-success="handleUploadSuccess"
             :on-error="handleUploadError"
+            class="upload-demo"
+            accept=".xls, .xlsx, .zip"
           >
             <el-button slot="trigger" size="small" type="primary">选泽文件</el-button>
           </el-upload>
@@ -299,484 +299,483 @@
   </div>
 </template>
 <script>
-let Base64 = require("js-base64").Base64;
-import { getIndustry } from "@/api/applicationManagement";
-import Parse from "parse";
-import { setTimeout } from "timers";
-import { returnLogin } from "@/utils/return";
-import IconSelect from "@/components/IconSelect";
-import Cookies from "js-cookie";
-import $ from "jquery";
-import { getServer } from "@/api/appcontrol";
-import { resolve } from 'url';
+const Base64 = require('js-base64').Base64
+import { getIndustry } from '@/api/applicationManagement'
+import Parse from 'parse'
+import { setTimeout } from 'timers'
+import { returnLogin } from '@/utils/return'
+import IconSelect from '@/components/IconSelect'
+import Cookies from 'js-cookie'
+import $ from 'jquery'
+import { getServer } from '@/api/appcontrol'
+import { resolve } from 'url'
 export default {
   data() {
     return {
       length: 10,
       total: 0,
       start: 0,
-      activeName: "first",
+      activeName: 'first',
       formInline: {
-        productname: ""
+        productname: ''
       },
       uploadHeaders: {
-        sessionToken: Cookies.get("access_token")
+        sessionToken: Cookies.get('access_token')
       },
-      uploadAction: "",
+      uploadAction: '',
       uploadData: {},
       fileList: [],
-      productIdentifier: "",
+      productIdentifier: '',
       proTableData: [],
-      formLabelWidth: "80px",
+      formLabelWidth: '80px',
       dialogFormVisible: false,
       importDialogShow: false,
       form: {
-        name: "",
+        name: '',
         category: [],
         nodeType: 0,
-        desc: "",
-        netType: "",
-        devType: "",
-        productSecret: "",
+        desc: '',
+        netType: '',
+        devType: '',
+        productSecret: '',
         roles: [],
-        relationApp: ""
+        relationApp: ''
       },
       formPro: {
-        name: "",
-        url: ""
+        name: '',
+        url: ''
       },
       rules: {
-        name: [{ required: true, message: "请输入产品", trigger: "blur" }],
+        name: [{ required: true, message: '请输入产品', trigger: 'blur' }],
         devType: [
           {
             required: true,
-            message: "请输入产品标识，用于区分不同设备",
-            trigger: "blur"
+            message: '请输入产品标识，用于区分不同设备',
+            trigger: 'blur'
           }
         ],
         category: [
-          { required: true, message: "请选择所属分类", trigger: "change" }
+          { required: true, message: '请选择所属分类', trigger: 'change' }
         ],
         nodeType: [
-          { required: true, message: "请选择节点类型", trigger: "change" }
+          { required: true, message: '请选择节点类型', trigger: 'change' }
         ],
         netType: [
-          { required: true, message: "请选择联网方式", trigger: "change" }
+          { required: true, message: '请选择联网方式', trigger: 'change' }
         ],
         relationApp: [
-          { required: true, message: "请选择产品可见角色", trigger: "change" }
+          { required: true, message: '请选择产品可见角色', trigger: 'change' }
         ]
       },
       option: [],
       ruleoptions: [],
       channel: [
-        { label: "蜂窝(2G/3G/4G)(直连)", value: "CELLULAR" },
-        { label: "NB-IOT通道", value: "NB-IOT" },
-        { label: "BLE(低功耗蓝牙)", value: "Bluetooth" },
-        { label: "5G通道(直连)", value: "5G" },
-        { label: "WIFI通道(直连)", value: "WIFI" },
-        { label: "ZigBee通道", value: "ZigBee" },
-        { label: "Modbus", value: "Modbus" },
-        { label: "LoRa(WAN)(直连)", value: "LoRaWAN" },
-        { label: "OPC UA", value: " OPC UA" },
-        { label: "ZETA通道", value: "ZETA" },
-        { label: "网线连接(直连)", value: "网线连接" },
-        { label: "自定义", value: "OTHER" } 
+        { label: '蜂窝(2G/3G/4G)(直连)', value: 'CELLULAR' },
+        { label: 'NB-IOT通道', value: 'NB-IOT' },
+        { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
+        { label: '5G通道(直连)', value: '5G' },
+        { label: 'WIFI通道(直连)', value: 'WIFI' },
+        { label: 'ZigBee通道', value: 'ZigBee' },
+        { label: 'Modbus', value: 'Modbus' },
+        { label: 'LoRa(WAN)(直连)', value: 'LoRaWAN' },
+        { label: 'OPC UA', value: ' OPC UA' },
+        { label: 'ZETA通道', value: 'ZETA' },
+        { label: '网线连接(直连)', value: '网线连接' },
+        { label: '自定义', value: 'OTHER' }
       ],
-      imageUrl: "",
-      productid: "",
+      imageUrl: '',
+      productid: '',
       loading: false,
       allApps: [],
       categoryList: [],
       categoryListOptions: [],
-      fileServer: "",
-      access_token: "",
-      projectid: "",
-      projectName:''
-    };
+      fileServer: '',
+      access_token: '',
+      projectid: '',
+      projectName: ''
+    }
   },
   computed: {},
   mounted() {
-    this.Industry();
-    this.searchProduct(0);
+    this.Industry()
+    this.searchProduct(0)
+  },
+  beforeDestroy() {
+    this.projectName = ''
   },
   methods: {
-    changeNode(val,first){
-    
-      if(first!=0){
-         this.form.netType=''
+    changeNode(val, first) {
+      if (first != 0) {
+        this.form.netType = ''
       }
-     
-     if(val==0){
-       this.channel = [
-          { label: "蜂窝(2G/3G/4G)", value: "CELLULAR" },
-        { label: "NB-IOT通道", value: "NB-IOT" },
-        { label: "BLE(低功耗蓝牙)", value: "Bluetooth" },
-        { label: "5G通道", value: "5G" },
-        { label: "WIFI通道", value: "WIFI" },
-        { label: "ZigBee通道", value: "ZigBee" },
-         { label: "LoRa(WAN)", value: "LoRaWAN" },
-        { label: "Modbus", value: "Modbus" },
-        { label: "OPC UA", value: " OPC UA" },
-        { label: "ZETA通道", value: "ZETA" },
-        { label: "网线连接", value: "网线连接" },
-       
-        { label: "自定义", value: "OTHER" } 
-       ]
-     }else{
-       this.channel=[
-          { label: "蜂窝(2G/3G/4G)", value: "CELLULAR" },
-          { label: "5G通道", value: "5G" },
-          { label: "WIFI通道", value: "WIFI" },
-          { label: "NB-IOT通道", value: "NB-IOT" },
-          { label: "LoRaWAN", value: "LoRaWAN" },
-          { label: "网线连接", value: "网线连接" },
-          { label: "自定义", value: "OTHER" }
-       ]
-     }
+
+      if (val == 0) {
+        this.channel = [
+          { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
+          { label: 'NB-IOT通道', value: 'NB-IOT' },
+          { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
+          { label: '5G通道', value: '5G' },
+          { label: 'WIFI通道', value: 'WIFI' },
+          { label: 'ZigBee通道', value: 'ZigBee' },
+          { label: 'LoRa(WAN)', value: 'LoRaWAN' },
+          { label: 'Modbus', value: 'Modbus' },
+          { label: 'OPC UA', value: ' OPC UA' },
+          { label: 'ZETA通道', value: 'ZETA' },
+          { label: '网线连接', value: '网线连接' },
+
+          { label: '自定义', value: 'OTHER' }
+        ]
+      } else {
+        this.channel = [
+          { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
+          { label: '5G通道', value: '5G' },
+          { label: 'WIFI通道', value: 'WIFI' },
+          { label: 'NB-IOT通道', value: 'NB-IOT' },
+          { label: 'LoRaWAN', value: 'LoRaWAN' },
+          { label: '网线连接', value: '网线连接' },
+          { label: '自定义', value: 'OTHER' }
+        ]
+      }
     },
     getRoles() {
-      return new Promise((resolve,reject)=>{
-            var App = Parse.Object.extend("App");
-      var query = new Parse.Query(App);
-      query.find().then(res => {
-        resolve(res)
-      },error=>{
-        reject(error)
+      return new Promise((resolve, reject) => {
+        var App = Parse.Object.extend('App')
+        var query = new Parse.Query(App)
+        query.find().then(res => {
+          resolve(res)
+        }, error => {
+          reject(error)
+        })
       })
-  })
-    
     },
     selectApp(val) {
-      if(!val){
-        return 
+      if (!val) {
+        return
       }
       getServer(val).then(resultes => {
         if (resultes) {
-          this.fileServer = resultes.file;
-          this.access_token = resultes.access_token;
+          this.fileServer = resultes.file
+          this.access_token = resultes.access_token
         }
-      });
+      })
     },
     treeData(paramData) {
-      let cloneData = JSON.parse(JSON.stringify(paramData)); // 对源数据深度克隆
+      const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
       return cloneData.filter(father => {
-        let branchArr = cloneData.filter(child => father.id == child.parentid); //返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : ""; //如果存在子级，则给父级添加一个children属性，并赋值
-        return father.parentid == 0; //返回第一层
-      });
+        const branchArr = cloneData.filter(child => father.id == child.parentid) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+        return father.parentid == 0 // 返回第一层
+      })
     },
     deleteImgsrc() {
-      event.stopPropagation();
-      this.imageUrl = "";
+      event.stopPropagation()
+      this.imageUrl = ''
     },
     upload(event) {
-      this.loading = true;
+      this.loading = true
       if (event) {
-        var file = event.target.files[0]; //name: "dangqi1.png" || type: "image/png"
-        var name = file.name;
-        var testmsg = event.target.files[0].type;
-        var type = file.type.split("/")[0];
+        var file = event.target.files[0] // name: "dangqi1.png" || type: "image/png"
+        var name = file.name
+        var testmsg = event.target.files[0].type
+        var type = file.type.split('/')[0]
         var extension =
-          testmsg === "image/jpeg" ||
-          testmsg === "image/JPEG" ||
-          testmsg === "image/png" ||
-          testmsg === "image/PNG" ||
-          testmsg === "image/bpm" ||
-          testmsg === "image/BPM";
+          testmsg === 'image/jpeg' ||
+          testmsg === 'image/JPEG' ||
+          testmsg === 'image/png' ||
+          testmsg === 'image/PNG' ||
+          testmsg === 'image/bpm' ||
+          testmsg === 'image/BPM'
         if (!extension) {
-          //将图片img转化为base64
+          // 将图片img转化为base64
           this.$message({
-            message: "请上传图片",
-            type: "error"
-          });
-          return false; //必须加上return false; 才能阻止
+            message: '请上传图片',
+            type: 'error'
+          })
+          return false // 必须加上return false; 才能阻止
         } else {
-          var reader = new FileReader();
-          reader.readAsDataURL(file);
-          var that = this;
+          var reader = new FileReader()
+          reader.readAsDataURL(file)
+          var that = this
           reader.onloadend = function() {
-            var dataURL = reader.result;
-            var blob = that.dataURItoBlob(dataURL);
-            that.uploadFile(blob, name); //执行上传接口
-          };
+            var dataURL = reader.result
+            var blob = that.dataURItoBlob(dataURL)
+            that.uploadFile(blob, name) // 执行上传接口
+          }
         }
       }
     },
     dataURItoBlob(dataURI) {
       // base64 解码
-      var byteString = atob(dataURI.split(",")[1]);
+      var byteString = atob(dataURI.split(',')[1])
       var mimeString = dataURI
-        .split(",")[0]
-        .split(":")[1]
-        .split(";")[0];
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
+        .split(',')[0]
+        .split(':')[1]
+        .split(';')[0]
+      var ab = new ArrayBuffer(byteString.length)
+      var ia = new Uint8Array(ab)
       for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+        ia[i] = byteString.charCodeAt(i)
       }
-      return new Blob([ab], { type: mimeString });
+      return new Blob([ab], { type: mimeString })
     },
     uploadFile(imgUrl, name) {
-      var formdata = new FormData();
-      formdata.append("file", imgUrl, name);
-      formdata.append("output", "json");
-      formdata.append("path", this.form.relationApp);
+      var formdata = new FormData()
+      formdata.append('file', imgUrl, name)
+      formdata.append('output', 'json')
+      formdata.append('path', this.form.relationApp)
       // formdata.append("path", Cookies.get("appids"));
-      formdata.append("auth_token", this.access_token); //下面是要传递的参数
-      //此处必须设置为  multipart/form-data
-      let config = {
+      formdata.append('auth_token', this.access_token) // 下面是要传递的参数
+      // 此处必须设置为  multipart/form-data
+      const config = {
         headers: {
-          "Content-Type": "multipart/form-data" //之前说的以表单传数据的格式来传递fromdata
+          'Content-Type': 'multipart/form-data' // 之前说的以表单传数据的格式来传递fromdata
         }
-      };
+      }
       this.$http
         .post(this.fileServer, formdata)
         .then(res => {
           if (res) {
-            this.imageUrl = res.body.url;
-            this.loading = false;
+            this.imageUrl = res.body.url
+            this.loading = false
           }
         })
         .catch(error => {
-          this.loading = false;
-          this.$message(error.bodyText);
-        });
+          this.loading = false
+          this.$message(error.bodyText)
+        })
     },
     submitUpload() {
-      //this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
+      // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
 
-      this.uploadAction = "/iotapi/product";
+      this.uploadAction = '/iotapi/product'
       // this.uploadAction = 'http://cad.iotn2n.com:5080/iotapi/product?appid=' + Cookies.get("appids");
 
       this.$nextTick(() => {
         // console.log('uploadHeaders',this.uploadHeaders);
 
-        this.uploadData.appid =  Cookies.get("appids")
+        this.uploadData.appid = Cookies.get('appids')
         // this.uploadData.key = "key";
-        this.$refs.fileUpload.submit();
-      });
+        this.$refs.fileUpload.submit()
+      })
     },
     beforeUpload: function(file) {
-      var fd = new window.FormData();
-      fd.append("key", file, "fileName");
+      var fd = new window.FormData()
+      fd.append('key', file, 'fileName')
       this.$axiosWen
-        .post("/product?appid=" + Cookies.get("appids"), fd, {
+        .post('/product?appid=' + Cookies.get('appids'), fd, {
           headers: {
-            sessionToken: Cookies.get("access_token"),
-            "Content-Type": "multipart/form-data"
+            sessionToken: Cookies.get('access_token'),
+            'Content-Type': 'multipart/form-data'
           }
         })
         .then(function(res) {
-          console.log(res);
-        });
-      return false; // 返回false不会自动上传
+          console.log(res)
+        })
+      return false // 返回false不会自动上传
     },
     handleUploadSuccess(response, file, fileList) {
-      console.log("### Success response", response);
+      console.log('### Success response', response)
       this.$message({
-        type: "success",
-        message: "产品导入成功"
-      });
-      this.importDialogShow = false;
-      this.$refs["uploadProForm"].resetFields();
-      this.searchProduct();
+        type: 'success',
+        message: '产品导入成功'
+      })
+      this.importDialogShow = false
+      this.$refs['uploadProForm'].resetFields()
+      this.searchProduct()
     },
     handleUploadError(err, file, fileList) {
       this.$message({
         showClose: true,
         message: err
-      });
+      })
     },
     handleChange(file, fileList) {
       if (fileList.length > 0) {
-        this.fileList = [fileList[fileList.length - 1]]; // 展示最后一次选择的文件
+        this.fileList = [fileList[fileList.length - 1]] // 展示最后一次选择的文件
       }
     },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒
       var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
         .toISOString()
-        .replace(/T/g, " ")
-        .replace(/\.[\d]{3}Z/, "");
-      return date; // 2017-03-31 16:02:06
+        .replace(/T/g, ' ')
+        .replace(/\.[\d]{3}Z/, '')
+      return date // 2017-03-31 16:02:06
     },
-    //得到category
-    getDict(resultes,category) {
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      datas.containedIn("type", category);
-      datas.limit(1000);
+    // 得到category
+    getDict(resultes, category) {
+      var Dict = Parse.Object.extend('Dict')
+      var datas = new Parse.Query(Dict)
+      datas.containedIn('type', category)
+      datas.limit(1000)
       datas.find().then(response => {
         resultes.map(items => {
           response.map(category => {
             if (items.attributes.category == category.attributes.type) {
-              items.CategoryKey = category.attributes.data.CategoryName;
+              items.CategoryKey = category.attributes.data.CategoryName
             }
-          });
-        });
-        this.proTableData = resultes;
-      });
+          })
+        })
+        this.proTableData = resultes
+      })
     },
     searchProduct(start) {
       if (start == 0) {
-        this.start = 0;
+        this.start = 0
       }
-      var category = [];
+      var category = []
       if (this.$route.query.project) {
-        
-        this.projectid = this.$route.query.project;
-        var Project = Parse.Object.extend("Project");
-        var project = new Parse.Query(Project);
+        this.projectid = this.$route.query.project
+        var Project = Parse.Object.extend('Project')
+        var project = new Parse.Query(Project)
         project.get(this.projectid).then(response => {
-          
-         this.projectName = response.attributes.title
+          this.projectName = response.attributes.title
           this.form.relationApp = response.attributes.title
-          this.getRoles().then(data=>{
+          this.getRoles().then(data => {
             this.allApps = data
-             this.selectApp(response.attributes.title)
-          }).catch(error=>{
+            this.selectApp(response.attributes.title)
+          }).catch(error => {
             returnLogin(error)
           })
-         
-          var relation = response.relation("product");
-          var query = relation.query();
-          if (this.formInline.productname != "") {
-            query.matches("name", this.formInline.productname, "i");
+
+          var relation = response.relation('product')
+          var query = relation.query()
+          if (this.formInline.productname != '') {
+            query.matches('name', this.formInline.productname, 'i')
           }
-          query.ascending("-updatedAt");
-          query.skip(this.start);
-          query.limit(this.length);
+          query.ascending('-updatedAt')
+          query.skip(this.start)
+          query.limit(this.length)
           query.count().then(count => {
-            this.total = count;
+            this.total = count
             query.find().then(resultes => {
               if (resultes) {
                 resultes.map(items => {
                   if (
-                    items.attributes.category != "" &&
+                    items.attributes.category != '' &&
                     items.attributes.category
                   ) {
-                    category.push(items.attributes.category);
+                    category.push(items.attributes.category)
                   }
-                });
-                this.getDict(resultes,category);
+                })
+                this.getDict(resultes, category)
               }
-            });
-          });
-        });
-      } else {
-        var Product = Parse.Object.extend("Product");
-        var product = new Parse.Query(Product);
-        if (this.formInline.productname != "") {
-          product.matches("name", this.formInline.productname, "i");
-        }
-        this.getRoles().then(data=>{
-            this.allApps = data
-          }).catch(error=>{
-            returnLogin(error)
+            })
           })
-        product.ascending("-updatedAt");
-        product.skip(this.start);
-        product.limit(this.length);
-        product.notEqualTo("devType", "report");
+        })
+      } else {
+        var Product = Parse.Object.extend('Product')
+        var product = new Parse.Query(Product)
+        if (this.formInline.productname != '') {
+          product.matches('name', this.formInline.productname, 'i')
+        }
+        this.getRoles().then(data => {
+          this.allApps = data
+        }).catch(error => {
+          returnLogin(error)
+        })
+        product.ascending('-updatedAt')
+        product.skip(this.start)
+        product.limit(this.length)
+        product.notEqualTo('devType', 'report')
         product.count().then(
           count => {
-            this.total = count;
+            this.total = count
             product.find().then(resultes => {
               if (resultes) {
                 resultes.map(items => {
                   if (
-                    items.attributes.category != "" &&
+                    items.attributes.category != '' &&
                     items.attributes.category
                   ) {
-                    category.push(items.attributes.category);
+                    category.push(items.attributes.category)
                   }
-                });
-                this.getDict(resultes,category);
+                })
+                this.getDict(resultes, category)
               }
-            });
+            })
           },
           error => {
-            returnLogin(error);
+            returnLogin(error)
           }
-        );
+        )
       }
     },
     handleClose() {
-      this.dialogFormVisible = false;
+      this.dialogFormVisible = false
     },
-    //添加产品弹窗
+    // 添加产品弹窗
     addproduct() {
-      this.dialogFormVisible = true;
+      this.dialogFormVisible = true
     },
     getParent(id, origin, returnarr) {
       origin.map(item => {
         if (id == item.id) {
-          returnarr.unshift(item.value);
-          this.getParent(item.parentid, origin, returnarr);
+          returnarr.unshift(item.value)
+          this.getParent(item.parentid, origin, returnarr)
         } else if (item.parentid == 0 && item.id == id) {
-          returnarr.unshift(item.value);
+          returnarr.unshift(item.value)
         }
-      });
-      this.form.category = returnarr;
-      return returnarr;
+      })
+      this.form.category = returnarr
+      return returnarr
     },
-    //查找Industry父级
+    // 查找Industry父级
     getIndustryParent(type, originarr) {
       originarr.map(item => {
         if (item.value == type) {
-          this.getParent(item.id, originarr, []);
+          this.getParent(item.id, originarr, [])
         }
-      });
+      })
     },
     editorProduct(row) {
       // this.form.roles = [];
-      this.form.relationApp = "";
-      this.dialogFormVisible = true;
-      this.productid = row.id;
-      this.getIndustryParent(row.attributes.category, this.categoryList);
-      this.form.desc = row.attributes.desc;
-      this.form.name = row.attributes.name;
-      this.form.nodeType = row.attributes.nodeType;
-      this.form.netType = row.attributes.netType;
-      this.form.devType = row.attributes.devType;
-      this.form.productSecret = row.attributes.productSecret;
-      this.changeNode(row.attributes.nodeType,0)
+      this.form.relationApp = ''
+      this.dialogFormVisible = true
+      this.productid = row.id
+      this.getIndustryParent(row.attributes.category, this.categoryList)
+      this.form.desc = row.attributes.desc
+      this.form.name = row.attributes.name
+      this.form.nodeType = row.attributes.nodeType
+      this.form.netType = row.attributes.netType
+      this.form.devType = row.attributes.devType
+      this.form.productSecret = row.attributes.productSecret
+      this.changeNode(row.attributes.nodeType, 0)
       if (row.attributes.icon) {
-        this.imageUrl = row.attributes.icon;
+        this.imageUrl = row.attributes.icon
       }
       for (var key in row.attributes.ACL.permissionsById) {
-        this.form.relationApp = key ? key.substr(5) : "";
+        this.form.relationApp = key ? key.substr(5) : ''
       }
       this.selectApp(this.form.relationApp)
     },
     handleChange() {},
-    //查询样品
+    // 查询样品
     Industry() {
-      this.categoryList = [];
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      datas.equalTo("data.key", "category");
-      datas.limit(1000);
+      this.categoryList = []
+      var Dict = Parse.Object.extend('Dict')
+      var datas = new Parse.Query(Dict)
+      datas.equalTo('data.key', 'category')
+      datas.limit(1000)
       datas.find().then(
         response => {
           if (response) {
             response.map(items => {
-              var obj = {};
-              obj.value = items.attributes.type;
-              obj.label = items.attributes.data.CategoryName;
-              obj.id = items.attributes.data.Id;
-              obj.parentid = items.attributes.data.SuperId;
-              this.categoryList.push(obj);
-            });
+              var obj = {}
+              obj.value = items.attributes.type
+              obj.label = items.attributes.data.CategoryName
+              obj.id = items.attributes.data.Id
+              obj.parentid = items.attributes.data.SuperId
+              this.categoryList.push(obj)
+            })
             // this.searchProduct();
-            this.categoryListOptions = this.treeData(this.categoryList);
+            this.categoryListOptions = this.treeData(this.categoryList)
           }
         },
         error => {
-          returnLogin(error);
+          returnLogin(error)
         }
-      );
+      )
     },
     // distinct(a, b) {
     //     let arr = a.concat(b);
@@ -789,90 +788,88 @@ export default {
     // },
 
     submitForm(formName) {
-      var objectId = Parse.User.current().id;
+      var objectId = Parse.User.current().id
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var ranNum = Math.ceil(Math.random() * 25);
+          var ranNum = Math.ceil(Math.random() * 25)
           var productSecret = Base64.encode(
             String.fromCharCode(65 + ranNum) +
               Math.ceil(Math.random() * 10000000) +
               Number(new Date())
-          );
-          var Product = Parse.Object.extend("Product");
-          var product = new Product();
-          var acl = new Parse.ACL();
-          if (this.productid == "") {
-            //新增产品
-            var Product1 = Parse.Object.extend("Product");
-            var product1 = new Parse.Query(Product1);
-            product1.equalTo("name", this.form.name);
+          )
+          var Product = Parse.Object.extend('Product')
+          var product = new Product()
+          var acl = new Parse.ACL()
+          if (this.productid == '') {
+            // 新增产品
+            var Product1 = Parse.Object.extend('Product')
+            var product1 = new Parse.Query(Product1)
+            product1.equalTo('name', this.form.name)
             product1.count().then(count => {
               if (count != 0) {
-                this.$message("产品名称已存在");
-                return false;
+                this.$message('产品名称已存在')
+                return false
               } else {
-                product.set("productSecret", productSecret);
-                this.$store.state.project.projectRole.map(item=>{
-                   acl.setRoleReadAccess(item, true);
-                   acl.setRoleWriteAccess(item, true);
+                product.set('productSecret', productSecret)
+                this.$store.state.project.projectRole.map(item => {
+                  acl.setRoleReadAccess(item, true)
+                  acl.setRoleWriteAccess(item, true)
                 })
-               
-                product.set("ACL", acl);
-                product.set("nodeType", this.form.nodeType);
-                product.set("netType", this.form.netType);
-                product.set("dynamicReg", false);
+
+                product.set('ACL', acl)
+                product.set('nodeType', this.form.nodeType)
+                product.set('netType', this.form.netType)
+                product.set('dynamicReg', false)
                 product.set(
-                  "category",
+                  'category',
                   this.form.category[this.form.category.length - 1]
                 ),
-                product.set("icon", this.imageUrl);
-                product.set("name", this.form.name);
-                product.set("devType", this.form.devType);
-                product.set("desc", this.form.desc);
-                product.set("topics", []);
+                product.set('icon', this.imageUrl)
+                product.set('name', this.form.name)
+                product.set('devType', this.form.devType)
+                product.set('desc', this.form.desc)
+                product.set('topics', [])
                 product.save().then(
                   res => {
                     if (res) {
-                      this.projectid = this.$route.query.project;
-                      var Project = Parse.Object.extend("Project");
-                      var project = new Parse.Query(Project);
-                      var Product2 = Parse.Object.extend("Product");
+                      this.projectid = this.$route.query.project
+                      var Project = Parse.Object.extend('Project')
+                      var project = new Parse.Query(Project)
+                      var Product2 = Parse.Object.extend('Product')
                       var product2 = new Product2()
                       project.get(this.projectid).then(response => {
                         var relation = response.relation('product')
-                        product2.set('objectId',res.id)
+                        product2.set('objectId', res.id)
                         relation.add(product2)
-                        response.save().then(resultes=>{
-                          if(resultes){
+                        response.save().then(resultes => {
+                          if (resultes) {
                             this.$message({
-                            type: "success",
-                            message: `创建成功,请完成产品配置`
-                          });
-                          this.dialogFormVisible = false;
-                          this.$refs["ruleForm"].resetFields();
+                              type: 'success',
+                              message: `创建成功,请完成产品配置`
+                            })
+                            this.dialogFormVisible = false
+                            this.$refs['ruleForm'].resetFields()
 
-                          this.resetProductForm()
-                          this.searchProduct();
-                        }
+                            this.resetProductForm()
+                            this.searchProduct()
+                          }
+                        })
                       })
-                     
-                    })
-                     
                     }
                   },
                   error => {
-                    returnLogin(error);
+                    returnLogin(error)
                   }
-                );
+                )
               }
-            });
+            })
           } else {
-            product.id = this.productid;
-            product.set("productSecret", this.form.productSecret);
+            product.id = this.productid
+            product.set('productSecret', this.form.productSecret)
             /*    this.form.roles.map(item => {
               acl.setRoleReadAccess(item, true);
               acl.setRoleWriteAccess(item, true);
-            }); 
+            });
 
            this.$store.state.project.projectRole.map(item=>{
                    acl.setRoleReadAccess(item, true);
@@ -880,85 +877,84 @@ export default {
                 })
             product.set("ACL", acl);
             */
-            product.set("nodeType", this.form.nodeType);
-            product.set("netType", this.form.netType);
-            product.set("dynamicReg", false);
+            product.set('nodeType', this.form.nodeType)
+            product.set('netType', this.form.netType)
+            product.set('dynamicReg', false)
             product.set(
-              "category",
+              'category',
               this.form.category[this.form.category.length - 1]
             ),
-              product.set("icon", this.imageUrl);
-            product.set("name", this.form.name);
-            product.set("devType", this.form.devType);
-            product.set("desc", this.form.desc);
-            product.set("topics", []);
+            product.set('icon', this.imageUrl)
+            product.set('name', this.form.name)
+            product.set('devType', this.form.devType)
+            product.set('desc', this.form.desc)
+            product.set('topics', [])
             product.save().then(
               res => {
                 if (res) {
                   this.$message({
-                    type: "success",
+                    type: 'success',
                     message: `编辑成功`
-                  });
-                  this.dialogFormVisible = false;
-                  this.$refs["ruleForm"].resetFields();
-                  this.searchProduct();
-                  this.productid = "";
+                  })
+                  this.dialogFormVisible = false
+                  this.$refs['ruleForm'].resetFields()
+                  this.searchProduct()
+                  this.productid = ''
                 }
               },
               error => {
-                returnLogin(error);
+                returnLogin(error)
               }
-            );
+            )
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetProductForm(){
-     this.form = {
-              name: "",
-              category: [],
-              nodeType: 0,
-              desc: "",
-              netType: "",
-              devType: "",
-              productSecret: "",
-              roles: [],
-              relationApp: ""
-            }
-    this.imageUrl = "";
-
+    resetProductForm() {
+      this.form = {
+        name: '',
+        category: [],
+        nodeType: 0,
+        desc: '',
+        netType: '',
+        devType: '',
+        productSecret: '',
+        roles: [],
+        relationApp: ''
+      }
+      this.imageUrl = ''
     },
     deviceToDetail(row) {
       this.$router.push({
-        path: "/roles/detailproduct",
+        path: '/roles/detailproduct',
         query: {
           id: row.id
         }
-      });
+      })
     },
     GoTodevices(row) {
       this.$router.push({
-        path: "/roles/thing",
+        path: '/roles/thing',
         query: {
           productid: row.id
         }
-      });
+      })
     },
-    /*el-popover点击关闭*/
+    /* el-popover点击关闭*/
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      var Device = Parse.Object.extend("Device");
-      var devices = new Parse.Query(Device);
-      devices.equalTo("product", scope.row.id);
+      var Product = Parse.Object.extend('Product')
+      var product = new Parse.Query(Product)
+      var Device = Parse.Object.extend('Device')
+      var devices = new Parse.Query(Device)
+      devices.equalTo('product', scope.row.id)
       devices.find().then(resultes => {
         if (resultes.length > 0) {
-          this.$message("请先删除该产品下设备");
-          return;
+          this.$message('请先删除该产品下设备')
+          return
         } else {
           product.get(scope.row.id).then(
             resultes => {
@@ -966,55 +962,47 @@ export default {
                 response => {
                   if (response) {
                     this.$message({
-                      type: "success",
-                      message: "删除成功"
-                    });
-                    scope._self.$refs[`popover-${scope.$index}`].doClose();
-                    this.searchProduct();
+                      type: 'success',
+                      message: '删除成功'
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.searchProduct()
                   }
                 },
                 error => {
-                  returnLogin(error);
+                  returnLogin(error)
                 }
-              );
+              )
             },
             error => {
-              returnLogin(error);
+              returnLogin(error)
             }
-          );
+          )
         }
-      });
+      })
     },
     productSizeChange(val) {
-      this.length = val;
-      this.searchProduct();
+      this.length = val
+      this.searchProduct()
     },
     productCurrentChange(val) {
-      this.start = (val - 1) * this.length;
-      this.searchProduct();
+      this.start = (val - 1) * this.length
+      this.searchProduct()
     },
     proudctView(row) {
+      // #topoUrl
 
-       // #topoUrl
-
-      if(this.$globalConfig.serverURL.substr(0,1) == '/'){    
-      
-        var topoUrl= window.location.origin + '/spa'
-
+      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
+        var topoUrl = window.location.origin + '/spa'
       } else {
-            
         var topoUrl = this.$globalConfig.localTopoUrl
-        
       }
-      //为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`;
-      window.open(url, "__blank");
+      // 为了兼容性,暂时传两个相同的值
+      var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
+      window.open(url, '__blank')
     }
-  },
-  beforeDestroy(){
-    this.projectName=''
   }
-};
+}
 </script>
 <style scoped>
 .devproduct {

@@ -1,66 +1,66 @@
 <template>
   <div class="module">
-    <div id="editor_holder"></div>
-    <el-button type="primary" @click="addmodule" style="margin-top:20px;">保 存</el-button>
+    <div id="editor_holder"/>
+    <el-button type="primary" style="margin-top:20px;" @click="addmodule">保 存</el-button>
   </div>
 </template>
- 
+
 <script>
-let schema = {
-  type: "object",
-  title: "水泵检测模板配置",
+const schema = {
+  type: 'object',
+  title: '水泵检测模板配置',
   properties: {
     sample: {
-      type: "string",
-      description: "产品名称",
-      minLength:10,
+      type: 'string',
+      description: '产品名称',
+      minLength: 10
     },
     category: {
-      type: "string",
-      description: "检验类别"
+      type: 'string',
+      description: '检验类别'
     },
     inspection_standard: {
-      type: "string",
-      description: "检验标准"
+      type: 'string',
+      description: '检验标准'
     },
     inspecting: {
-      type: "array",
-      title: "检测名称",
+      type: 'array',
+      title: '检测名称',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
           inspecting_item: {
-            type: "string",
-            description: "检验项目",
+            type: 'string',
+            description: '检验项目'
           },
           guarantee_value: {
-            type: "array",
-            title: "保证值",
-            format: "table",
+            type: 'array',
+            title: '保证值',
+            format: 'table',
             uniqueItems: true,
             items: {
-              type: "object",
-              title: "保证值",
+              type: 'object',
+              title: '保证值',
               properties: {
                 title: {
-                  type: "string",
-                  description: "保证值"
+                  type: 'string',
+                  description: '保证值'
                 },
                 value: {
-                  type: "string",
-                  description: "测试值"
+                  type: 'string',
+                  description: '测试值'
                 },
                 assess: {
-                  type: "string",
-                  description: "评定"
+                  type: 'string',
+                  description: '评定'
                 },
                 evidenceway: {
-                  type: "string",
-                  description: "取证方式"
+                  type: 'string',
+                  description: '取证方式'
                 },
                 evidence: {
-                  type: "string",
-                  description: "证据链"
+                  type: 'string',
+                  description: '证据链'
                 }
               }
             }
@@ -70,87 +70,87 @@ let schema = {
     }
   },
   default: {}
-};
-import { Parse } from "parse";
-import Cookies from "js-cookie";
-import { addReport } from "@/api/reportmodule/reportmodule";
-import Vue from "vue";
+}
+import { Parse } from 'parse'
+import Cookies from 'js-cookie'
+import { addReport } from '@/api/reportmodule/reportmodule'
+import Vue from 'vue'
 import $ from 'jquery'
 var editor
-JSONEditor.defaults.options.theme = "foundation4";
+JSONEditor.defaults.options.theme = 'foundation4'
 // JSONEditor.defaults.options.iconlib = 'foundation2';
 
 export default {
   data() {
     return {
-      default: "",
-      reportId: "",
-      editor: ""
-    };
+      default: '',
+      reportId: '',
+      editor: ''
+    }
+  },
+  mounted() {
+    this.getSchema()
   },
   methods: {
     getSchema() {
-      this.reportId = this.$route.query.id;
-      JSONEditor.defaults.options.show_errors= 'change'
+      this.reportId = this.$route.query.id
+      JSONEditor.defaults.options.show_errors = 'change'
       if (this.reportId) {
-        var report = Parse.Object.extend("Datas");
-        var query = new Parse.Query(report);
+        var report = Parse.Object.extend('Datas')
+        var query = new Parse.Query(report)
         query.get(this.reportId).then(resultes => {
-          schema.default = resultes.attributes.data;
+          schema.default = resultes.attributes.data
           schema.default.inspecting.map(children => {
             children.guarantee_value.map(deleteid => {
-              delete deleteid.id;
-            });
-          });
-         editor = new JSONEditor(
-            document.getElementById("editor_holder"),
+              delete deleteid.id
+            })
+          })
+          editor = new JSONEditor(
+            document.getElementById('editor_holder'),
             {
               schema,
-              theme:'foundation4'
+              theme: 'foundation4'
             }
-          );
+          )
         }),
-          error => {
-            console.log(error);
-          };
+        error => {
+          console.log(error)
+        }
       } else {
-        schema.default = {};
-        editor = new JSONEditor(document.getElementById("editor_holder"), {
+        schema.default = {}
+        editor = new JSONEditor(document.getElementById('editor_holder'), {
           schema: schema
-        });
+        })
       }
     },
     addmodule() {
       var errors = editor.validate({
-        });
-        console.log(errors)
+      })
+      console.log(errors)
       if (errors.length) {
       } else {
         addReport(editor.getValue(), this.reportId)
           .then(resultes => {
             if (resultes) {
               this.$message({
-                type: "success",
-                message: "添加成功!"
-              });
+                type: 'success',
+                message: '添加成功!'
+              })
               this.$router.push({
-                path: "/reportmodule/index"
-              });
+                path: '/reportmodule/index'
+              })
             }
           })
           .catch(error => {
             this.$message({
-              type: "error",
+              type: 'error',
               message: error.error
-            });
-          });
+            })
+          })
       }
     }
-  },
-  mounted() {
-    this.getSchema();
   }
-};
+}
 </script>
 
 <style scoped>

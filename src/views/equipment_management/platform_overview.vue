@@ -88,10 +88,10 @@
     <div class="search">
       <el-form :inline="true" :model="formInline" class="demo-form-inline" size="samll">
         <el-form-item label="创建日期:">
-          <el-date-picker v-model="formInline.starttime" type="datetime" placeholder="选择创建开始时间"></el-date-picker>
+          <el-date-picker v-model="formInline.starttime" type="datetime" placeholder="选择创建开始时间"/>
         </el-form-item>
         <el-form-item label="项目关键字:">
-          <el-input v-model="formInline.project" placeholder="项目关键字"></el-input>
+          <el-input v-model="formInline.project" placeholder="项目关键字"/>
         </el-form-item>
         <el-form-item>
           <!-- <el-button type="primary" @click="onSubmit">查询</el-button> -->
@@ -102,7 +102,7 @@
     <div class="bottom">
       <ul class="projectlist">
         <li>
-          <div class="lilist"></div>
+          <div class="lilist"/>
           <div class="licontent">
             <div>
               <p>产品数量</p>
@@ -118,8 +118,8 @@
             </div>
           </div>
           <div class="listbottom">
-            <div class="list_bottom_left"></div>
-            <div class="list_bottom_right"></div>
+            <div class="list_bottom_left"/>
+            <div class="list_bottom_right"/>
           </div>
         </li>
         <li>2</li>
@@ -137,28 +137,28 @@ export default {
   data() {
     return {
       formInline: {
-        starttime: "",
-        project: ""
+        starttime: '',
+        project: ''
       }
-    };
+    }
   },
-  created(){},
+  created() {},
   mounted() {
     // this.$router.push('/performance_monitoring')
     this.choujiang()
   },
   methods: {
-    choujiang(){
+    choujiang() {
       var projectlist = document.getElementsByClassName('projectlist')[0]
       var children = projectlist.children
       console.log(children)
       setInterval(() => {
-          var time = Math.floor(Math.random()*7)
-          children[time].className = 'cover'
-      }, 1000);
+        var time = Math.floor(Math.random() * 7)
+        children[time].className = 'cover'
+      }, 1000)
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .platform {

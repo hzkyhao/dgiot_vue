@@ -8,19 +8,19 @@ var DISCONNECT_MSG = '当前尚未连接'
 // console.log(parse)
 // var Clentsession = Parse.User.current().attributes.sessionToken
 // console.log(Clentsession)
-var clientssession=sessionStorage.getItem('token')
-var info ={
-  topic: "web/"+clientssession, 
-  qos: 2,
-};
-function getsession(session){
-    clientssession = session
-    info = {
-    topic: "web/"+clientssession, 
-    qos: 2,
-  };
+var clientssession = sessionStorage.getItem('token')
+var info = {
+  topic: 'web/' + clientssession,
+  qos: 2
+}
+function getsession(session) {
+  clientssession = session
+  info = {
+    topic: 'web/' + clientssession,
+    qos: 2
   }
- 
+}
+
 function formatDate(date, fmt) {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
@@ -40,7 +40,7 @@ function formatDate(date, fmt) {
   }
   return fmt
 }
-const didata = [];
+const didata = []
 function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
@@ -50,7 +50,7 @@ var sendInfo = {
   qos: 0,
   retained: true
 }
- 
+
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',
@@ -63,21 +63,21 @@ var Websocket = {
     userName: 'test',
     password: 'test123',
     keepAlive: null,
-    keepAliveInterval:10,
+    keepAliveInterval: 10,
     cleanSession: false
   },
   sendInfo: '{}',
-  hooks:[],
+  hooks: [],
   tablelist: [],
-  subInfo:info,
+  subInfo: info,
   originrecivedata: [],
-  send: function () {
+  send: function() {
     var _this = this
     var sendInfo = JSON.parse(_this.sendInfo)
     console.log(sendInfo)
     _this.sendMessage(sendInfo)
   },
-  log: function (Msg) {
+  log: function(Msg) {
     try {
       Msg = JSON.parse(Msg)
       // eslint-disable-next-line no-empty
@@ -85,12 +85,12 @@ var Websocket = {
     }
     // eslint-disable-next-line no-undef
   },
-  newClient: function () {
+  newClient: function() {
     var _this = this
     // eslint-disable-next-line no-undef
     _this.client = new Paho.MQTT.Client(_this.cInfo.host, Number(_this.cInfo.port), _this.cInfo.clientId)
   },
-  sslPort: function () {
+  sslPort: function() {
     var _this = this
     var useSSL = _this.cInfo.useSSL
     if (useSSL) {
@@ -99,54 +99,51 @@ var Websocket = {
       _this.cInfo.port = 5080
     }
   },
-  recive: function (msg) {
+  recive: function(msg) {
     console.log(msg)
   },
 
-  add_hook:function(Re, Callback){
-    if(this.hooks.length>0){
-      for(var i=0;i<this.hooks.length;i++){
-        if(this.hooks[i].re.toString() == Re.toString()){
-          this.hooks[i].re= Re
+  add_hook: function(Re, Callback) {
+    if (this.hooks.length > 0) {
+      for (var i = 0; i < this.hooks.length; i++) {
+        if (this.hooks[i].re.toString() == Re.toString()) {
+          this.hooks[i].re = Re
           this.hooks[i].callback = Callback
-        return 
+          return
         }
-      }  
+      }
     }
-    this.hooks.push({re:Re,callback:Callback});
-    
+    this.hooks.push({ re: Re, callback: Callback })
   },
 
-  dispatch:function(message){
-      var topic = message.destinationName
-      this.hooks.map(item=>{
-        if(item.re.test(topic)){
-          item.callback(message.payloadString)
-        }
-      })
+  dispatch: function(message) {
+    var topic = message.destinationName
+    this.hooks.map(item => {
+      if (item.re.test(topic)) {
+        item.callback(message.payloadString)
+      }
+    })
   },
 
-  connect: function () {
+  connect: function() {
     var _this = this
     // eslint-disable-next-line no-undef
     if (_this.client.isConnected()) {
-  
-      return 
+      return
     }
     // _this.newClient()
-    _this.client.onConnectionLost = function (responseObject) {
+    _this.client.onConnectionLost = function(responseObject) {
       if (responseObject.errorCode !== 0) {
         console.log('onConnectionLost: ' + responseObject.errorMessage)
-        setTimeout(function(){
+        setTimeout(function() {
           _this.connect()
-        },1000)
-       
-      }else{
+        }, 1000)
+      } else {
         window.clearTimeout()
       }
       // return
     }
-    _this.client.onMessageArrived = function (message) {
+    _this.client.onMessageArrived = function(message) {
       try {
         message.msgString = message.payloadString
       } catch (e) {
@@ -154,24 +151,24 @@ var Websocket = {
       }
       _this.dispatch(message)
     }
- 
+
     var options = {
-      onFailure: function (err) {
+      onFailure: function(err) {
         _this.connState = false
         console.log('连接失败 ' + err.errorMessage)
-        setTimeout(function(){
+        setTimeout(function() {
           _this.connect()
-        },5000)
+        }, 5000)
       },
-      onSuccess: function () {
+      onSuccess: function() {
         _this.connState = true
-        _this.subscribe(_this.subInfo,function(res) {
+        _this.subscribe(_this.subInfo, function(res) {
           if (res.result) {
             console.log(_this.subInfo)
-            console.log("订阅成功"); 
-          } 
+            console.log('订阅成功')
+          }
         })
-      },
+      }
     }
     var userName = _this.cInfo.userName
     var password = _this.cInfo.password
@@ -191,8 +188,8 @@ var Websocket = {
     // options.useSSL = useSSL
     _this.client.connect(options)
   },
- 
-  disconnect: function () {
+
+  disconnect: function() {
     var _this = this
     if (_this.client && this.client.isConnected()) {
       _this.client.disconnect()
@@ -200,11 +197,11 @@ var Websocket = {
     }
     console.log('已经断开连接！')
     _this.connState = false
-    setTimeout(function(){
+    setTimeout(function() {
       _this.connect()
-    },5000)
+    }, 5000)
   },
-  subscribe: function (subInfo, callback) {
+  subscribe: function(subInfo, callback) {
     var _this = this
     if (!_this.client || !_this.client.isConnected()) {
       console.log(DISCONNECT_MSG)
@@ -217,13 +214,13 @@ var Websocket = {
     }
     _this.client.subscribe(subInfo.topic, {
       qos: Number(subInfo.qos),
-      onSuccess: function (msg) {
+      onSuccess: function(msg) {
         subInfo.msg = msg
         console.log(subInfo.msg)
         subInfo.result = true
         callback && callback(subInfo)
       },
-      onFailure: function (err) {
+      onFailure: function(err) {
         if (err.errorCode[0] === 128) {
           console.log('The topic cannot SUBSCRIBE for ACL Deny')
         }
@@ -234,7 +231,7 @@ var Websocket = {
       }
     })
   },
-  unsubscribe: function (subInfo, callback) {
+  unsubscribe: function(subInfo, callback) {
     var _this = this
     if (!_this.client || !_this.client.isConnected()) {
       _this.tablelist.push({ date: formatDate(new Date(), 'yyyy-MM-dd hh:mm'), content: DISCONNECT_MSG })
@@ -248,13 +245,13 @@ var Websocket = {
       return
     }
     _this.client.unsubscribe(subInfo.topic, {
-      onSuccess: function (msg) {
+      onSuccess: function(msg) {
         subInfo.msg = msg
         console.log(subInfo)
         subInfo.result = true
         callback && callback(subInfo)
       },
-      onFailure: function (err) {
+      onFailure: function(err) {
         subInfo.msg = err
         console.log(err)
         subInfo.result = true
@@ -262,7 +259,7 @@ var Websocket = {
       }
     })
   },
-  sendMessage: function (sendInfo) {
+  sendMessage: function(sendInfo) {
     var _this = this
     var text = sendInfo.text
     if (!_this.client || !_this.client.isConnected()) {

@@ -2,93 +2,93 @@
   <div class="task_collection">
     <div class="top">
       <div class="left">
-        <el-button type="primary" @click="dialogVisible = true">{{$t('task.Configurationtask')}}</el-button>
-        <el-button type="primary" style="margin-left:30px" @click="deletetask">{{$t('developer.delete')}}</el-button>
+        <el-button type="primary" @click="dialogVisible = true">{{ $t('task.Configurationtask') }}</el-button>
+        <el-button type="primary" style="margin-left:30px" @click="deletetask">{{ $t('developer.delete') }}</el-button>
       </div>
       <div class="right">
         <el-input
-          type="text"
-          style="width:200px;margin-left:30px;"
           :placeholder="$t('task.pleaseentertaskname')"
           v-model="valueforsearch"
+          type="text"
+          style="width:200px;margin-left:30px;"
           clearable
-        ></el-input>
-        <el-button type="primary" @click="search">{{$t('developer.search')}}</el-button>
+        />
+        <el-button type="primary" @click="search">{{ $t('developer.search') }}</el-button>
       </div>
     </div>
     <div class="center">
       <el-table
+        v-loading="loading"
         ref="multipleTable"
         :data="tableData3"
         tooltip-effect="dark"
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        v-loading="loading"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-       <el-table-column :label="$t('task.Taskname')">
+        <el-table-column type="selection" width="55"/>
+        <el-table-column :label="$t('task.Taskname')">
           <template slot-scope="scope">
-            <span>{{scope.row.attributes.name}}</span>
+            <span>{{ scope.row.attributes.name }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('task.Starttime')">
           <template slot-scope="scope">
-            <span>{{timestampToTime(scope.row.attributes.args.starttime)}}</span>
+            <span>{{ timestampToTime(scope.row.attributes.args.starttime) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('task.DataID')">
           <template slot-scope="scope">
-            <span>{{scope.row.attributes.args.dis.join(',')}}</span>
+            <span>{{ scope.row.attributes.args.dis.join(',') }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('task.Cycleunit')">
           <template slot-scope="scope">
-            <span>{{scope.row.attributes.args.freq}}</span>
-            <span v-if="scope.row.attributes.args.unit=='day'">{{$t('task.Day')}}</span>
-            <span v-else-if="scope.row.attributes.args.unit=='minute'">{{$t('task.Minute')}}</span>
-            <span v-else-if="scope.row.attributes.args.unit=='hour'">{{$t('task.Hour')}}</span>
-            <span v-else-if="scope.row.attributes.args.unit=='month'">{{$t('task.month')}}</span>
+            <span>{{ scope.row.attributes.args.freq }}</span>
+            <span v-if="scope.row.attributes.args.unit=='day'">{{ $t('task.Day') }}</span>
+            <span v-else-if="scope.row.attributes.args.unit=='minute'">{{ $t('task.Minute') }}</span>
+            <span v-else-if="scope.row.attributes.args.unit=='hour'">{{ $t('task.Hour') }}</span>
+            <span v-else-if="scope.row.attributes.args.unit=='month'">{{ $t('task.month') }}</span>
           </template>
         </el-table-column>
-          <el-table-column label="上报通道">
+        <el-table-column label="上报通道">
           <template slot-scope="scope">
-            <span >{{channelResorceMap(scope.row.attributes.args.upchannel)}}</span>
+            <span >{{ channelResorceMap(scope.row.attributes.args.upchannel) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('task.Sendchannel')">
           <template slot-scope="scope">
-            <span >{{channelMap(scope.row.attributes.args.downchannel)}}</span>
+            <span >{{ channelMap(scope.row.attributes.args.downchannel) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('task.Operation')">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" @click="editcrond(scope.row.id)">{{$t('task.Edit')}}</el-button>
+            <el-button size="small" type="primary" @click="editcrond(scope.row.id)">{{ $t('task.Edit') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
       <!--分页-->
       <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :page-sizes="[10, 25, 50, 100]"
         :page-size="length"
-        layout="total, sizes, prev, pager, next, jumper"
         :total="total"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
         style="margin-top:30px;"
-      ></el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <!--弹窗-->
     <el-dialog
       :title="$t('task.Configuretask')"
       :visible.sync="dialogVisible"
-      width="50%"
       :before-close="handleClose"
       :close-on-click-modal="false"
+      width="50%"
       top="5vh"
     >
       <div class="dialog">
-        <el-form ref="taskform" :model="taskform" label-width="120px" :rules="taskformrules">
+        <el-form ref="taskform" :model="taskform" :rules="taskformrules" label-width="120px">
           <el-form-item label="工程名称" prop="project">
             <el-select v-model="taskform.project" placeholder="请选择工程" @change="projectSelect">
               <el-option
@@ -96,7 +96,7 @@
                 :key="item.id"
                 :label="item.attributes.title"
                 :value="item.id"
-              ></el-option>
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('task.productname')" prop="product">
@@ -106,21 +106,21 @@
                 :key="item.id"
                 :label="item.attributes.name"
                 :value="item.id"
-              ></el-option>
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('task.Taskname')" prop="name">
-            <el-input type="text" v-model="taskform.name" :placeholder="$t('task.pleaseentertaskname')"></el-input>
+            <el-input v-model="taskform.name" :placeholder="$t('task.pleaseentertaskname')" type="text"/>
           </el-form-item>
           <!--采集开始时间-->
           <el-form-item :label="$t('task.Starttime')" prop="starttime">
             <el-date-picker
               v-model="taskform.starttime"
-              type="datetime"
               :placeholder="$t('task.Selectstarttime')"
-              @change="testdata"
               :picker-options="pickerOptionsStart"
-            ></el-date-picker>
+              type="datetime"
+              @change="testdata"
+            />
           </el-form-item>
           <!--采集间隔时间-->
           <el-form-item :label="$t('task.Collectioninterval')" required>
@@ -132,11 +132,11 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                  ></el-option>
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="2">-</el-col>
+            <el-col :span="2" class="line">-</el-col>
             <el-col :span="11">
               <el-form-item prop="freq">
                 <el-select v-model="taskform.freq" :placeholder="$t('task.Select')">
@@ -145,44 +145,44 @@
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
-                  ></el-option> 
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-form-item>
-           <el-form-item :label="$t('task.Endtime')" prop="endtime">
+          <el-form-item :label="$t('task.Endtime')" prop="endtime">
             <el-date-picker
               v-model="taskform.endtime"
-              type="datetime"
               :placeholder="$t('task.Selectendtime')"
-              @change="enddata"
               :picker-options="pickerOptionsEnd"
-            ></el-date-picker>
+              type="datetime"
+              @change="enddata"
+            />
           </el-form-item>
           <!--冻结日期-->
           <el-form-item :label="$t('task.Frozendate')">
             <el-date-picker
               v-model="taskform.frozendate"
-              type="date"
               :placeholder="$t('task.Currentday')"
+              type="date"
               value-format="timestamp"
-            ></el-date-picker>
+            />
           </el-form-item>
           <!--上报通道-->
           <el-form-item :label="$t('task.Reportchannel')" prop="upchannel">
             <el-select v-model="taskform.upchannel" :placeholder="$t('task.Multiplereportingchannelsareallowed')" multiple>
-                <el-option v-for="(item,index) in resourcechannelData" :key="index" :label="item.attributes.name" :value="item.id"></el-option>
+              <el-option v-for="(item,index) in resourcechannelData" :key="index" :label="item.attributes.name" :value="item.id"/>
             </el-select>
           </el-form-item>
           <!--采集策略-->
           <el-form-item :label="$t('task.Collectionpolicy')" class="lineone" label-width="100px">
-            <div class="flexg" v-for="(item, index) in taskform.downchannel" :key="index">
+            <div v-for="(item, index) in taskform.downchannel" :key="index" class="flexg">
               <el-form-item
                 :label="$t('task.Rotation')+(index+1)"
-                class="elformcontent"
-                label-width="60px"
                 :prop="'downchannel.'+index+'.type'"
                 :rules="[{required: true, message: '选择通道类型',trigger: 'change'}]"
+                class="elformcontent"
+                label-width="60px"
               >
                 <el-select v-model="item.type" :placeholder="$t('task.Selectchannel')">
                   <el-option
@@ -190,69 +190,75 @@
                     :key="item.id"
                     :label="item.attributes.name"
                     :value="item.id"
-                  ></el-option>
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item
                 :prop="'downchannel.'+index+'.interval'"
                 :rules="[{required: true, message: '输入时长',type:'number'}]"
               >
-                <el-input v-model.number="item.interval" type="number" :min="1" placeholder="本轮时长"></el-input>
+                <el-input v-model.number="item.interval" :min="1" type="number" placeholder="本轮时长"/>
               </el-form-item>
               <el-form-item>
                 <el-select v-model="item.unit" >
-                  <el-option :label="$t('task.Hour')" value="hours"></el-option>
-                  <el-option :label="$t('task.Minute')" value="minutes"></el-option>
-                  <el-option :label="$t('task.Seconds')" value="seconds"></el-option>
+                  <el-option :label="$t('task.Hour')" value="hours"/>
+                  <el-option :label="$t('task.Minute')" value="minutes"/>
+                  <el-option :label="$t('task.Seconds')" value="seconds"/>
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-link
-                  type="primary"
-                  @click.prevent="removeDomain1(item)"
                   :underline="false"
+                  type="primary"
                   icon="el-icon-minus"
-                >{{$t('developer.delete')}}</el-link>
+                  @click.prevent="removeDomain1(item)"
+                >{{ $t('developer.delete') }}</el-link>
               </el-form-item>
             </div>
           </el-form-item>
           <div style="width: 100%;margin-left: 50px">
             <el-link
-              @click="addDomain1"
+              :underline="false"
               icon="el-icon-plus"
               type="primary"
-              :underline="false"
-            >{{$t('task.Add')}}</el-link>
+              @click="addDomain1"
+            >{{ $t('task.Add') }}</el-link>
           </div>
-           <el-form-item class="lineone"  label-width="20px" required>
-             <div class="flexg">
-                <el-form-item label="设备总数" prop="meteraddress" label-width="100px">
-                <el-input type="text" v-model="taskform.meteraddress" placeholder="all代表全部,数字代表数据大小" @change="inputChange"></el-input>
+          <el-form-item class="lineone" label-width="20px" required>
+            <div class="flexg">
+              <el-form-item label="设备总数" prop="meteraddress" label-width="100px">
+                <el-input v-model="taskform.meteraddress" type="text" placeholder="all代表全部,数字代表数据大小" @change="inputChange"/>
                 <p style="color:black;margin:0;position:absolute;top:25px">(all代表全部)</p>
-                    </el-form-item>
-                    <el-form-item label="起始页码" label-width="80px" v-if="taskform.meteraddress!='all'"
-                     prop="pageindex"
-                    :rules="[{required:true,message:'请输入长度',tigger:'blur',type:'number'}]"
-                    >
-                     <el-input type="text" v-model.number="taskform.pageindex"></el-input>
-                      
-                    </el-form-item>
-                    <el-form-item label="每页设备数" label-width="100px" v-if="taskform.meteraddress!='all'"
-                     prop="pagesize"
-                    :rules="[{required:true,message:'请输入页数大小',tigger:'blur',type:'number'}]"
-                    >
-                        <el-input type="text" v-model.number="taskform.pagesize"></el-input>
-                    </el-form-item>
-                    </div>
-                </el-form-item>
-                <el-form-item label="操作指令" prop="operation">
-                   <el-input type="text" v-model="taskform.operation"></el-input>
-                </el-form-item>
+              </el-form-item>
+              <el-form-item
+                v-if="taskform.meteraddress!='all'"
+                :rules="[{required:true,message:'请输入长度',tigger:'blur',type:'number'}]"
+                label="起始页码"
+                label-width="80px"
+                prop="pageindex"
+              >
+                <el-input v-model.number="taskform.pageindex" type="text"/>
+
+              </el-form-item>
+              <el-form-item
+                v-if="taskform.meteraddress!='all'"
+                :rules="[{required:true,message:'请输入页数大小',tigger:'blur',type:'number'}]"
+                label="每页设备数"
+                label-width="100px"
+                prop="pagesize"
+              >
+                <el-input v-model.number="taskform.pagesize" type="text"/>
+              </el-form-item>
+            </div>
+          </el-form-item>
+          <el-form-item label="操作指令" prop="operation">
+            <el-input v-model="taskform.operation" type="text"/>
+          </el-form-item>
         </el-form>
       </div>
-       
+
       <div class="di" style="width:100%;">
-        <label for>{{$t('task.DataitemID')}}</label>
+        <label for>{{ $t('task.DataitemID') }}</label>
         <el-transfer
           v-model="diselect"
           :data="data"
@@ -277,8 +283,8 @@
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose" style="float:left">{{$t('developer.cancel')}}</el-button>
-        <el-button @click="convartion('taskform')" style="float:right" type="primary">{{$t('task.Submission')}}</el-button>
+        <el-button style="float:left" @click="handleClose">{{ $t('developer.cancel') }}</el-button>
+        <el-button style="float:right" type="primary" @click="convartion('taskform')">{{ $t('task.Submission') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -290,91 +296,91 @@ import {
   Addtasks,
   Removetask,
   Taskdetail
-} from "@/api/historytask";
-import { timestampToTime, timetounix } from "@/api/login";
-import { getProject} from "@/api/applicationManagement";
-import $ from "jquery";
-import Parse from "parse";
-import { returnLogin } from '@/utils/return';
-var taskid = "";
+} from '@/api/historytask'
+import { timestampToTime, timetounix } from '@/api/login'
+import { getProject } from '@/api/applicationManagement'
+import $ from 'jquery'
+import Parse from 'parse'
+import { returnLogin } from '@/utils/return'
+var taskid = ''
 export default {
-  name:'TaskCollection1',
-  props:{
-      productId:{
-          type:String,
-          default:''
-      },
-      isreload:{
-        type:Number,
-        default:0
-      }
+  name: 'TaskCollection1',
+  props: {
+    productId: {
+      type: String,
+      default: ''
+    },
+    isreload: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {
-      selectdata: "",
+      selectdata: '',
       options1: [],
       applist: [],
       productlist: [],
       taskform: {
-        name: "",
+        name: '',
         ftype: 0,
         downchannel: [
           {
             type: '',
             interval: 20,
-            unit: "seconds"
+            unit: 'seconds'
           }
         ],
         upchannel: [],
-        starttime: "",
-        endtime: "",
-        unit: "",
-        freq: "",
-        meteraddress: "all",
-        frozendate: "",
-        project: "",
-        product: "",
-        pagesize:10,
-        pageindex:1,
-        operation:'read'
+        starttime: '',
+        endtime: '',
+        unit: '',
+        freq: '',
+        meteraddress: 'all',
+        frozendate: '',
+        project: '',
+        product: '',
+        pagesize: 10,
+        pageindex: 1,
+        operation: 'read'
       },
       taskformrules: {
-        name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
+        name: [{ required: true, message: '请输入任务名称', trigger: 'blur' }],
         ftype: [
-          { required: true, message: "请选择终端类型", trigger: "change" }
+          { required: true, message: '请选择终端类型', trigger: 'change' }
         ],
-        project: [{ required: true, message: "请选择工程", trigger: "change" }],
-        product: [{ required: true, message: "请选择产品", trigger: "change" }],
+        project: [{ required: true, message: '请选择工程', trigger: 'change' }],
+        product: [{ required: true, message: '请选择产品', trigger: 'change' }],
         starttime: [
           {
-            type: "date",
+            type: 'date',
             required: true,
-            message: "请选择开始时间",
-            trigger: "change"
+            message: '请选择开始时间',
+            trigger: 'change'
           }
         ],
         endtime: [
           {
-            type: "date",
+            type: 'date',
             required: true,
-            message: "请选择结束时间",
-            trigger: "change"
+            message: '请选择结束时间',
+            trigger: 'change'
           }
         ],
         meteraddress: [
-          { required: true, message: "请输入终端逻辑地址", trigger: "blur" }
+          { required: true, message: '请输入终端逻辑地址', trigger: 'blur' }
         ],
         operation: [
-          { required: true, message: "请输入操作指令", trigger: "blur" }
+          { required: true, message: '请输入操作指令', trigger: 'blur' }
         ],
         unit: [
-          { required: true, message: "请选择间隔类型", trigger: "change" }
+          { required: true, message: '请选择间隔类型', trigger: 'change' }
         ],
         freq: [
-          { required: true, message: "请选择间隔时长", trigger: "change" }
+          { required: true, message: '请选择间隔时长', trigger: 'change' }
         ],
         upchannel: [
-          { required: true, message: "请选择上报通道", trigger: "change" }
+          { required: true, message: '请选择上报通道', trigger: 'change' }
         ]
       },
       node: null,
@@ -387,517 +393,516 @@ export default {
       data: [],
       diselect: [],
       dialogVisible: false,
-      valueforsearch: "",
+      valueforsearch: '',
       pickerOptionsStart: {
         disabledDate: time => {
-          let endDateVal = this.taskform.endtime;
+          const endDateVal = this.taskform.endtime
           if (endDateVal) {
             return (
               time.getTime() > new Date(endDateVal).getTime() ||
               time.getTime() < Date.now() - 8.64e7
-            );
+            )
           } else {
-            return time.getTime() < Date.now() - 8.64e7;
+            return time.getTime() < Date.now() - 8.64e7
           }
         }
       },
       pickerOptionsEnd: {
         disabledDate: time => {
-          let beginDateVal = this.taskform.starttime;
+          const beginDateVal = this.taskform.starttime
           if (beginDateVal) {
             return (
               time.getTime() <
               new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
-            );
+            )
           } else {
-            return time.getTime() < Date.now() - 8.64e7;
+            return time.getTime() < Date.now() - 8.64e7
           }
         }
       },
       options: [
         {
           value: 0,
-          label: "设备"
+          label: '设备'
         },
         {
           value: 1,
-          label: "网关"
+          label: '网关'
         }
       ],
       date: [
         {
-          value: "day",
-          label: "日"
+          value: 'day',
+          label: '日'
         },
         {
-          value: "month",
-          label: "月"
+          value: 'month',
+          label: '月'
         },
         {
-          value: "hour",
-          label: "时"
+          value: 'hour',
+          label: '时'
         },
         {
-          value: "minute",
-          label: "分"
+          value: 'minute',
+          label: '分'
         },
-         {
-          value: "seconds",
-          label: "秒"
+        {
+          value: 'seconds',
+          label: '秒'
         }
       ],
       spacing: [],
       sendup: [
         {
           value: 0,
-          label: "物理通道"
+          label: '物理通道'
         },
         {
           value: 1,
-          label: "虚拟通道"
+          label: '虚拟通道'
         }
       ],
       senddown: [
         {
           value: 0,
-          label: "物理通道"
+          label: '物理通道'
         },
         {
           value: 1,
-          label: "虚拟通道"
+          label: '虚拟通道'
         }
       ],
       downchannel: [
         {
           type: 1,
           interval: 20,
-          unit: "seconds"
+          unit: 'seconds'
         }
       ],
-      today: "today",
+      today: 'today',
       idselete: [],
-      lunci: "",
+      lunci: '',
       loading: true,
-      taskobjectid: "",
-      resourcechannelData:[],
-      channelData:[],
-      projectlist:[],
-      productlist:[]
-    };
+      taskobjectid: '',
+      resourcechannelData: [],
+      channelData: [],
+      projectlist: [],
+      productlist: []
+    }
   },
-  watch:{
-      productId:{
-          deep:true,
-          handler(val){
-              // this.getProduct()
-              // this.search()
-              // this.getProductChannel()
-              // this.getResourceChannel()
-          }
-      },
-      isreload:{
-        deep:true,
-        handler(val){
-          this.getResourceChannel()
-        }
+  watch: {
+    productId: {
+      deep: true,
+      handler(val) {
+        // this.getProduct()
+        // this.search()
+        // this.getProductChannel()
+        // this.getResourceChannel()
       }
+    },
+    isreload: {
+      deep: true,
+      handler(val) {
+        this.getResourceChannel()
+      }
+    }
   },
   mounted() {
     this.search()
     this.Project()
   },
   methods: {
-      Project(){
-        var Project = Parse.Object.extend('Project')
-        var project = new Parse.Query(Project)
-        project.find().then(response=>{
-          this.projectlist = response
-        },error=>{
-          returnLogin(error)
-        })
-      },
-      inputChange(val){
-          console.log(val)
-      },
-      projectSelect(val){
-          var Project = Parse.Object.extend('Project')
-          var project = new Project()
-          project.id = val
-          var relation = project.relation('product')
-          var query = relation.query()
-          query.find().then(resproduct=>{
-            this.productlist = resproduct
-          },error=>{
-            returnLogin(error)
-          })
-      },
-      getProduct(val){
-          var Product = Parse.Object.extend('Product')
-          var product = new Parse.Query(Product)
-          product.get(val).then(resultes=>{
-              if(resultes.attributes.thing.properties){
-                  resultes.attributes.thing.properties.map(item=>{
-                      this.data.push({
-                        key: item.identifier,
-                        label: `${item.name +
-                        "--" +
+    Project() {
+      var Project = Parse.Object.extend('Project')
+      var project = new Parse.Query(Project)
+      project.find().then(response => {
+        this.projectlist = response
+      }, error => {
+        returnLogin(error)
+      })
+    },
+    inputChange(val) {
+      console.log(val)
+    },
+    projectSelect(val) {
+      var Project = Parse.Object.extend('Project')
+      var project = new Project()
+      project.id = val
+      var relation = project.relation('product')
+      var query = relation.query()
+      query.find().then(resproduct => {
+        this.productlist = resproduct
+      }, error => {
+        returnLogin(error)
+      })
+    },
+    getProduct(val) {
+      var Product = Parse.Object.extend('Product')
+      var product = new Parse.Query(Product)
+      product.get(val).then(resultes => {
+        if (resultes.attributes.thing.properties) {
+          resultes.attributes.thing.properties.map(item => {
+            this.data.push({
+              key: item.identifier,
+              label: `${item.name +
+                        '--' +
                         item.identifier}`
-                    });
-                  })
-              }
-              this.taskform.ftype = resultes.attributes.nodeType
-              this.getProductChannel(val)
-              this.getResourceChannel(val)
+            })
           })
-      },
-      getProductChannel(productid) {
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = productid;
-      query.equalTo("product", product);
-      query.equalTo("type", "1");
-      query.ascending("-updatedAt");
+        }
+        this.taskform.ftype = resultes.attributes.nodeType
+        this.getProductChannel(val)
+        this.getResourceChannel(val)
+      })
+    },
+    getProductChannel(productid) {
+      var Channel = Parse.Object.extend('Channel')
+      var query = new Parse.Query(Channel)
+      var Product = Parse.Object.extend('Product')
+      var product = new Product()
+      product.id = productid
+      query.equalTo('product', product)
+      query.equalTo('type', '1')
+      query.ascending('-updatedAt')
       query.find().then(res => {
-            this.channelData = res;
-        });
+        this.channelData = res
+      })
     },
     getResourceChannel(productid) {
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = productid;
-      query.equalTo("product", product);
-      query.equalTo("type", "2");
-      query.ascending("-updatedAt")
-        query.find().then(res => {
-          this.resourcechannelData = res;
-        });
+      var Channel = Parse.Object.extend('Channel')
+      var query = new Parse.Query(Channel)
+      var Product = Parse.Object.extend('Product')
+      var product = new Product()
+      product.id = productid
+      query.equalTo('product', product)
+      query.equalTo('type', '2')
+      query.ascending('-updatedAt')
+      query.find().then(res => {
+        this.resourcechannelData = res
+      })
     },
     timestampToTime(timestamp) {
-      var date = new Date(timestamp * 1000);
-      var Y = date.getFullYear() + "-";
+      var date = new Date(timestamp * 1000)
+      var Y = date.getFullYear() + '-'
       var M =
         (date.getMonth() + 1 < 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "-";
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '-'
       var D =
-        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
-        " ";
+        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+        ' '
       var h =
-        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
-        ":";
+        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+        ':'
       var m =
         (date.getMinutes() + 1 <= 10
-          ? "0" + date.getMinutes()
-          : date.getMinutes()) + ":";
+          ? '0' + date.getMinutes()
+          : date.getMinutes()) + ':'
       var s =
         date.getSeconds() + 1 <= 10
-          ? "0" + date.getSeconds()
-          : date.getSeconds();
-      return Y + M + D + h + m + s;
+          ? '0' + date.getSeconds()
+          : date.getSeconds()
+      return Y + M + D + h + m + s
     },
-    //取到dilist
+    // 取到dilist
 
     removeDomain1(item) {
-      var index = this.taskform.downchannel.indexOf(item);
+      var index = this.taskform.downchannel.indexOf(item)
       if (index !== -1) {
-        this.taskform.downchannel.splice(index, 1);
+        this.taskform.downchannel.splice(index, 1)
       }
     },
     addDomain1() {
       this.taskform.downchannel.push({
-        type: "",
-        interval: "",
-        unit: "seconds"
-      });
+        type: '',
+        interval: '',
+        unit: 'seconds'
+      })
     },
-    //删除采集轮次
+    // 删除采集轮次
     removeDomain(item) {
-      var index = this.downchannel.indexOf(item);
+      var index = this.downchannel.indexOf(item)
 
       if (index !== -1) {
-        this.downchannel.splice(index, 1);
+        this.downchannel.splice(index, 1)
       }
     },
-    //增加采集轮次
+    // 增加采集轮次
     addDownChannel() {
       this.downchannel.push({
-        type: "",
-        interval: "",
-        unit: "seconds"
-      });
+        type: '',
+        interval: '',
+        unit: 'seconds'
+      })
     },
     handleClose() {
-      this.$refs["taskform"].resetFields();
-      this.dialogVisible = false;
-      this.taskform.name = "";
-      this.taskform.frozendate = "";
-      this.taskform.starttime = "";
-      this.taskform.endtime = "";
-      this.taskform.freq = "";
-      this.taskform.unit = "";
-      taskid = Math.floor(Math.random() * 128 + 1);
-      this.taskobjectid = "";
+      this.$refs['taskform'].resetFields()
+      this.dialogVisible = false
+      this.taskform.name = ''
+      this.taskform.frozendate = ''
+      this.taskform.starttime = ''
+      this.taskform.endtime = ''
+      this.taskform.freq = ''
+      this.taskform.unit = ''
+      taskid = Math.floor(Math.random() * 128 + 1)
+      this.taskobjectid = ''
       this.taskform.downchannel = [
         {
           type: 1,
           interval: 20,
-          unit: "seconds"
+          unit: 'seconds'
         }
-      ];
-      this.diselect = [];
-      this.taskform.upchannel = [];
+      ]
+      this.diselect = []
+      this.taskform.upchannel = []
     },
-    //搜索和初始化
+    // 搜索和初始化
     search() {
-      this.loading = true;
-      var Crond = Parse.Object.extend("Crond");
-      var querycround = new Parse.Query(Crond);
-      if (this.valueforsearch != "") {
-        querycround.matches("name", this.valueforsearch,'i');
+      this.loading = true
+      var Crond = Parse.Object.extend('Crond')
+      var querycround = new Parse.Query(Crond)
+      if (this.valueforsearch != '') {
+        querycround.matches('name', this.valueforsearch, 'i')
       }
-      if(this.productId!=''){
-           querycround.equalTo('product',this.productId)
+      if (this.productId != '') {
+        querycround.equalTo('product', this.productId)
       }
       querycround.doesNotExist('app')
-      querycround.ascending("-updatedAt");
-      querycround.skip(this.start);
-      querycround.limit(this.length);
+      querycround.ascending('-updatedAt')
+      querycround.skip(this.start)
+      querycround.limit(this.length)
       querycround.count().then(
         count => {
           if (count) {
-            this.total = count;
+            this.total = count
           }
           querycround.find().then(res => {
             if (res) {
-              this.tableData3 = res;
-              this.loading = false;
+              this.tableData3 = res
+              this.loading = false
             }
-          });
+          })
         },
         error => {
-          if (error.code == "209") {
+          if (error.code == '209') {
             this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
+              type: 'warning',
+              message: '登陆权限过期，请重新登录'
+            })
             this.$router.push({
-              path: "/login"
-            });
+              path: '/login'
+            })
           } else if (error.code == 119) {
             this.$message({
-              type: "error",
-              message: "没有操作权限"
-            });
+              type: 'error',
+              message: '没有操作权限'
+            })
           }
         }
-      );
+      )
     },
-    //编辑操作
+    // 编辑操作
     editcrond(id) {
-      var Crond = Parse.Object.extend("Crond");
-      var querycround = new Parse.Query(Crond);
+      var Crond = Parse.Object.extend('Crond')
+      var querycround = new Parse.Query(Crond)
       querycround.get(id).then(response => {
-        this.dialogVisible = true;
-        this.taskform.name = response.attributes.name;
-        this.taskform.unit = response.attributes.args.unit;
-        if (typeof response.attributes.args.pns == "string") {
-          this.type = response.attributes.args.pns;
+        this.dialogVisible = true
+        this.taskform.name = response.attributes.name
+        this.taskform.unit = response.attributes.args.unit
+        if (typeof response.attributes.args.pns === 'string') {
+          this.type = response.attributes.args.pns
         } else {
         //   this.type = response.attributes.args.pns.join(",");
           this.taskform.meteraddress = response.attributes.args.pns.total
-          this.taskform.pagesize =response.attributes.args.pns.page_size
+          this.taskform.pagesize = response.attributes.args.pns.page_size
           this.taskform.pageindex = response.attributes.args.pns.page_index
         }
-        this.taskform.freq = response.attributes.args.freq;
-        this.taskform.starttime = response.attributes.args.starttime * 1000;
-        this.taskform.endtime = response.attributes.args.endtime * 1000;
-        this.taskform.downchannel = response.attributes.args.downchannel;
-        this.diselect = response.attributes.args.dis;
-        this.taskform.upchannel = response.attributes.args.upchannel;
+        this.taskform.freq = response.attributes.args.freq
+        this.taskform.starttime = response.attributes.args.starttime * 1000
+        this.taskform.endtime = response.attributes.args.endtime * 1000
+        this.taskform.downchannel = response.attributes.args.downchannel
+        this.diselect = response.attributes.args.dis
+        this.taskform.upchannel = response.attributes.args.upchannel
         if (response.attributes.args.frozendate) {
-          this.taskform.frozendate = response.attributes.args.frozendate * 1000;
+          this.taskform.frozendate = response.attributes.args.frozendate * 1000
         } else {
-          this.taskform.frozendate = "";
+          this.taskform.frozendate = ''
         }
-        this.taskobjectid = response.id;
-        this.selectchange();
-      });
+        this.taskobjectid = response.id
+        this.selectchange()
+      })
     },
-    //采集策略遍历显示
-    channelMap(downchannel){
-        var arr=[]
-        downchannel.map(value=>{
-            this.channelData.map(items=>{
-            if(items.id==value.type){
-              arr.push(items.attributes.name)
-            }
+    // 采集策略遍历显示
+    channelMap(downchannel) {
+      var arr = []
+      downchannel.map(value => {
+        this.channelData.map(items => {
+          if (items.id == value.type) {
+            arr.push(items.attributes.name)
+          }
         })
-    })
-        return arr.join(',')
+      })
+      return arr.join(',')
     },
-    channelResorceMap(updatechannel){
-        var arr=[]
-        updatechannel.map(item=>{
-            this.resourcechannelData.map(child=>{
-                if(item==child.id){
-                    arr.push(child.attributes.name)
-                }
-            })
+    channelResorceMap(updatechannel) {
+      var arr = []
+      updatechannel.map(item => {
+        this.resourcechannelData.map(child => {
+          if (item == child.id) {
+            arr.push(child.attributes.name)
+          }
         })
-        return arr.join(',')
+      })
+      return arr.join(',')
     },
-    //日期选择
+    // 日期选择
     selectchange() {
-      if (this.taskform.unit == "month" || this.taskform.unit == "day") {
+      if (this.taskform.unit == 'month' || this.taskform.unit == 'day') {
         this.spacing = [
           {
-            value: "1",
-            label: "1"
+            value: '1',
+            label: '1'
           }
-        ];
-      }else if(this.taskform.unit=='seconds'){
-        this.spacing=[
-           { value: "1", label: "1" },
-          { value: "5", label: "5" },
-          { value: "10", label: "10" },
-          { value: "15", label: "15" },
-          { value: "20", label: "20" },
-          { value: "25", label: "25" },
-          { value: "30", label: "30" },
-           { value: "35", label: "35" },
-          { value: "40", label: "40" },
-          { value: "45", label: "45" },
-          { value: "50", label: "50" },
-          { value: "55", label: "55" },
-          { value: "59", label: "59" }
         ]
-      } else if (this.taskform.unit == "hour") {
+      } else if (this.taskform.unit == 'seconds') {
         this.spacing = [
-          { value: "1", label: "1" },
-          { value: "2", label: "2" },
-          { value: "3", label: "3" },
-          { value: "4", label: "4" },
-          { value: "6", label: "6" },
-          { value: "8", label: "8" },
-          { value: "12", label: "12" }
-        ];
+          { value: '1', label: '1' },
+          { value: '5', label: '5' },
+          { value: '10', label: '10' },
+          { value: '15', label: '15' },
+          { value: '20', label: '20' },
+          { value: '25', label: '25' },
+          { value: '30', label: '30' },
+          { value: '35', label: '35' },
+          { value: '40', label: '40' },
+          { value: '45', label: '45' },
+          { value: '50', label: '50' },
+          { value: '55', label: '55' },
+          { value: '59', label: '59' }
+        ]
+      } else if (this.taskform.unit == 'hour') {
+        this.spacing = [
+          { value: '1', label: '1' },
+          { value: '2', label: '2' },
+          { value: '3', label: '3' },
+          { value: '4', label: '4' },
+          { value: '6', label: '6' },
+          { value: '8', label: '8' },
+          { value: '12', label: '12' }
+        ]
       } else {
         this.spacing = [
-          { value: "10", label: "10" },
-          { value: "20", label: "20" },
-          { value: "30", label: "30" },
-          { value: "1", label: "1" }
-        ];
+          { value: '10', label: '10' },
+          { value: '20', label: '20' },
+          { value: '30', label: '30' },
+          { value: '1', label: '1' }
+        ]
       }
     },
-    //分页
+    // 分页
     handleSelectionChange(val) {
-      this.idselete = [];
-      this.multipleSelection = val;
+      this.idselete = []
+      this.multipleSelection = val
     },
     handleSizeChange(val) {
-      this.length = val;
-      this.search();
+      this.length = val
+      this.search()
     },
     handleCurrentChange(val) {
-      this.start = (val - 1) * this.length;
-      this.search();
+      this.start = (val - 1) * this.length
+      this.search()
     },
-    //结束时间判断
+    // 结束时间判断
     enddata() {
       if (this.taskform.endtime <= this.taskform.starttime) {
-        this.$message("采集结束时间要小于开始时间");
-        this.taskform.endtime = "";
+        this.$message('采集结束时间要小于开始时间')
+        this.taskform.endtime = ''
       }
       if (this.taskform.endtime < Date.now() - 2000) {
-        this.$message("采集结束时间要大于当前时间");
-        this.taskform.endtime = "";
+        this.$message('采集结束时间要大于当前时间')
+        this.taskform.endtime = ''
       }
     },
-    //开始时间判断
+    // 开始时间判断
     testdata() {
       if (
         this.taskform.endtime <= this.taskform.starttime &&
-        this.taskform.endtime != "" &&
+        this.taskform.endtime != '' &&
         this.taskform.endtime != null
       ) {
-        this.$message("采集结束时间要小于开始时间");
-        this.taskform.starttime = "";
+        this.$message('采集结束时间要小于开始时间')
+        this.taskform.starttime = ''
       }
       if (this.taskform.starttime < Date.now() - 2000) {
-        this.$message("采集开始时间要大于当前时间");
-        this.taskform.starttime = "";
+        this.$message('采集开始时间要大于当前时间')
+        this.taskform.starttime = ''
       }
     },
-    //修改和新增提交
+    // 修改和新增提交
     convartion(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.diselect.length == 0) {
-            this.$message("请选择数据项标识");
+            this.$message('请选择数据项标识')
           } else {
-            var meter = [];
-            var vcaddr = "";
-            taskid = Math.floor(Math.random() * 128 + 1);
-            if (this.taskform.meteraddress.indexOf("all") != -1) {
-              vcaddr = "all";
+            var meter = []
+            var vcaddr = ''
+            taskid = Math.floor(Math.random() * 128 + 1)
+            if (this.taskform.meteraddress.indexOf('all') != -1) {
+              vcaddr = 'all'
             } else {
               vcaddr = {
-                  total:this.taskform.meteraddress,
-                  page_size:this.taskform.pagesize,
-                  page_index:this.taskform.pageindex
-              };
+                total: this.taskform.meteraddress,
+                page_size: this.taskform.pagesize,
+                page_index: this.taskform.pageindex
+              }
             }
-            var arr = [];
-            var unit = "";
-            if (this.taskform.unit == "day") {
-              unit = 2;
-            } else if (this.taskform.unit == "hour") {
-              unit = 1;
-            } else if (this.taskform.unit == "minute") {
-              unit = 0;
-            }
-            else if(this.taskform.unit=='seconds'){
-              unit=3
+            var arr = []
+            var unit = ''
+            if (this.taskform.unit == 'day') {
+              unit = 2
+            } else if (this.taskform.unit == 'hour') {
+              unit = 1
+            } else if (this.taskform.unit == 'minute') {
+              unit = 0
+            } else if (this.taskform.unit == 'seconds') {
+              unit = 3
             } else {
-              unit = "";
+              unit = ''
             }
 
             this.taskform.downchannel.map(items => {
-              arr.push([items.type, items.interval]);
-            });
-            var Crond = Parse.Object.extend("Crond");
-            var crond = new Crond();
-            var querycround = new Parse.Query(Crond);
-            var Product = Parse.Object.extend("Product");
-            var product = new Product();
-            if (this.taskobjectid != "") {
-              crond.id = this.taskobjectid;
+              arr.push([items.type, items.interval])
+            })
+            var Crond = Parse.Object.extend('Crond')
+            var crond = new Crond()
+            var querycround = new Parse.Query(Crond)
+            var Product = Parse.Object.extend('Product')
+            var product = new Product()
+            if (this.taskobjectid != '') {
+              crond.id = this.taskobjectid
             }
-            if (this.taskform.frozendate != "") {
-              crond.set("task", {
+            if (this.taskform.frozendate != '') {
+              crond.set('task', {
                 di: this.diselect,
                 chs: arr,
                 res: this.taskform.upchannel,
                 pns: vcaddr,
                 tertype: this.taskform.ftype,
                 fdate: this.taskform.frozendate / 1000,
-                operation:this.taskform.operation
-              });
+                operation: this.taskform.operation
+              })
             } else {
-              crond.set("task", {
+              crond.set('task', {
                 di: this.diselect,
                 chs: arr,
                 pns: vcaddr,
                 res: this.taskform.upchannel,
-                operation:this.taskform.operation
-              });
+                operation: this.taskform.operation
+              })
             }
-            crond.set("args", {
+            crond.set('args', {
               frozendate: this.taskform.frozendate / 1000,
               chs: arr,
               freq: Number(this.taskform.freq),
@@ -910,183 +915,183 @@ export default {
               downchannel: this.taskform.downchannel,
               endtime: timetounix(this.taskform.endtime),
               starttime: timetounix(this.taskform.starttime),
-              operation:this.taskform.operation
-            });
-            crond.set("active", 1);
-            crond.set("name", this.taskform.name);
-            crond.set("crond", {
+              operation: this.taskform.operation
+            })
+            crond.set('active', 1)
+            crond.set('name', this.taskform.name)
+            crond.set('crond', {
               end_time: timetounix(this.taskform.endtime),
               freq: Number(this.taskform.freq),
               unit: unit,
               start_time: timetounix(this.taskform.starttime)
-            });
-            crond.set("tid", taskid);
-            //和产品以及应用做pointer关联
-           
+            })
+            crond.set('tid', taskid)
+            // 和产品以及应用做pointer关联
+
             product.id = this.productId
-            crond.set('product',product)
-            //查询任务id是否重复
-            if (this.taskobjectid == "") {
-              querycround.equalTo("tid", taskid);
+            crond.set('product', product)
+            // 查询任务id是否重复
+            if (this.taskobjectid == '') {
+              querycround.equalTo('tid', taskid)
               querycround.find().then(response => {
                 if (response.length != 0) {
                   this.$message({
-                    message: "任务id重复",
-                    type: "error"
-                  });
-                  return;
+                    message: '任务id重复',
+                    type: 'error'
+                  })
+                  return
                 } else {
                   crond.save().then(
                     resultes => {
                       if (resultes) {
                         this.$message({
-                          message: "添加成功",
-                          type: "success"
-                        });
-                        this.$refs[formName].resetFields();
-                        this.dialogVisible = false;
-                        this.taskform.name = "";
-                        this.taskform.frozendate = "";
-                        this.taskform.starttime = "";
-                        this.taskform.endtime = "";
-                        this.taskform.freq = "";
-                        this.taskform.unit = "";
+                          message: '添加成功',
+                          type: 'success'
+                        })
+                        this.$refs[formName].resetFields()
+                        this.dialogVisible = false
+                        this.taskform.name = ''
+                        this.taskform.frozendate = ''
+                        this.taskform.starttime = ''
+                        this.taskform.endtime = ''
+                        this.taskform.freq = ''
+                        this.taskform.unit = ''
                         this.taskform.downchannel = [
                           {
                             type: 1,
                             interval: 20,
-                            unit: "seconds"
+                            unit: 'seconds'
                           }
-                        ];
+                        ]
                       }
-                      (this.taskform.frozendate = ""), (this.diselect = []);
-                      this.taskform.upchannel = [];
-                      this.search();
+                      (this.taskform.frozendate = ''), (this.diselect = [])
+                      this.taskform.upchannel = []
+                      this.search()
                     },
                     error => {
-                      if (error.code == "209") {
+                      if (error.code == '209') {
                         this.$message({
-                          type: "warning",
-                          message: "登陆权限过期，请重新登录"
-                        });
+                          type: 'warning',
+                          message: '登陆权限过期，请重新登录'
+                        })
                         this.$router.push({
-                          path: "/login"
-                        });
+                          path: '/login'
+                        })
                       } else if (error.code == 119) {
                         this.$message({
-                          type: "error",
-                          message: "没有操作权限"
-                        });
+                          type: 'error',
+                          message: '没有操作权限'
+                        })
                       }
                     }
-                  );
+                  )
                 }
-              });
+              })
             } else {
               crond.save().then(
                 resultes => {
                   if (resultes) {
                     this.$message({
-                      message: "编辑成功",
-                      type: "success"
-                    });
-                    this.$refs[formName].resetFields();
-                    this.dialogVisible = false;
-                    this.taskform.name = "";
-                    this.taskform.frozendate = "";
-                    this.taskform.starttime = "";
-                    this.taskform.endtime = "";
-                    this.taskform.freq = "";
-                    this.taskform.unit = "";
-                    taskid = Math.floor(Math.random() * 128 + 1);
-                    this.taskobjectid = "";
+                      message: '编辑成功',
+                      type: 'success'
+                    })
+                    this.$refs[formName].resetFields()
+                    this.dialogVisible = false
+                    this.taskform.name = ''
+                    this.taskform.frozendate = ''
+                    this.taskform.starttime = ''
+                    this.taskform.endtime = ''
+                    this.taskform.freq = ''
+                    this.taskform.unit = ''
+                    taskid = Math.floor(Math.random() * 128 + 1)
+                    this.taskobjectid = ''
                     this.taskform.downchannel = [
                       {
                         type: 1,
                         interval: 20,
-                        unit: "seconds"
+                        unit: 'seconds'
                       }
-                    ];
+                    ]
                   }
-                  this.diselect = [];
-                  this.taskform.upchannel = [];
-                  this.search();
+                  this.diselect = []
+                  this.taskform.upchannel = []
+                  this.search()
                 },
                 error => {
-                  if (error.code == "209") {
+                  if (error.code == '209') {
                     this.$message({
-                      type: "warning",
-                      message: "登陆权限过期，请重新登录"
-                    });
+                      type: 'warning',
+                      message: '登陆权限过期，请重新登录'
+                    })
                     this.$router.push({
-                      path: "/login"
-                    });
+                      path: '/login'
+                    })
                   } else if (error.code == 119) {
                     this.$message({
-                      type: "error",
-                      message: "没有操作权限"
-                    });
+                      type: 'error',
+                      message: '没有操作权限'
+                    })
                   }
                 }
-              );
+              )
             }
           }
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
     getfrozen() {},
     selectTime(val) {
-      if (val == "other") {
-        this.getfrozen();
+      if (val == 'other') {
+        this.getfrozen()
       }
     },
-    //异步处理删除多个任务
+    // 异步处理删除多个任务
     deletetask() {
-      var arr = [];
+      var arr = []
       if (this.multipleSelection.length != 0) {
         this.multipleSelection.map(items => {
           arr.push(
             new Promise((resolve, reject) => {
-              var Crond = Parse.Object.extend("Crond");
-              var crond = new Crond();
-              crond.id = items.id;
+              var Crond = Parse.Object.extend('Crond')
+              var crond = new Crond()
+              crond.id = items.id
               return crond.destroy().then(
                 resultes => {
-                  resolve(resultes);
+                  resolve(resultes)
                 },
                 error => {
-                  reject(error.message);
+                  reject(error.message)
                 }
-              );
+              )
             })
-          );
+          )
           Promise.all(arr)
             .then(data => {
               this.$message({
-                message: "删除成功",
-                type: "success"
-              });
+                message: '删除成功',
+                type: 'success'
+              })
               console.log(data)
               if (data.length == this.multipleSelection.length) {
-                this.search();
+                this.search()
               }
             })
             .catch(error => {
               this.$message({
                 message: error,
-                type: "error"
-              });
-            });
-        });
+                type: 'error'
+              })
+            })
+        })
       } else {
-        this.$message("请勾选要删除的任务");
+        this.$message('请勾选要删除的任务')
       }
     }
   }
-};
+}
 </script>
 <style scoped>
 .task_collection {

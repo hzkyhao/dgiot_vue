@@ -7,9 +7,9 @@
     />
     <!--第三个返回数据展示-->
     <div
+      v-if="activeName=='second'"
       class="secondcard"
       style="min-height:875px;border-left:2px solid #156FAE;background:#f6fbff"
-      v-if="activeName=='second'"
     >
       <div style="width:100%;height:auto;padding:20px;box-sizing:border-box;">
         <!--中间白色部分-->
@@ -17,96 +17,96 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline" label-width="120px">
             <el-form-item label="操作类型:">
               <el-select
-                placeholder="操作类型"
                 v-model="formInline.operation"
-                @change="firstchange"
+                placeholder="操作类型"
                 style="width:150px"
+                @change="firstchange"
               >
                 <el-option
                   v-for="(item,index) in operatetype"
                   :label="item.attributes.webtype"
                   :key="index"
                   :value="item.id"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="数据类型:">
               <el-select
-                placeholder="数据类型"
                 v-model="formInline.datatype"
-                @change="dataselect"
+                placeholder="数据类型"
                 style="width:150px"
+                @change="dataselect"
               >
                 <el-option
                   v-for="(item,index) in datatype"
                   :label="item.label"
                   :key="index"
                   :value="item.key"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="终端逻辑地址:">
-              <el-input placeholder="终端逻辑地址" v-model="formInline.vcaddr" style="width:150px"></el-input>
+              <el-input v-model="formInline.vcaddr" placeholder="终端逻辑地址" style="width:150px"/>
             </el-form-item>
             <el-form-item label="规约名称:">
               <el-select
-                placeholder="规约类型"
                 v-model="formInline.protocol"
+                placeholder="规约类型"
                 style="width:150px"
                 @change="protocolChange"
               >
-                <el-option label="南网上行通信规约" value="30"></el-option>
-                <el-option label="国网通信规约" value="20"></el-option>
+                <el-option label="南网上行通信规约" value="30"/>
+                <el-option label="国网通信规约" value="20"/>
               </el-select>
             </el-form-item>
 
             <el-form-item label="通道类型:">
-              <el-select placeholder="数据类型" v-model="formInline.route" style="width:150px">
-                <el-option label="默认" value="tcp"></el-option>
-                <el-option label="无线" value="tcp1"></el-option>
-                <el-option label="载波" value="tcp2"></el-option>
+              <el-select v-model="formInline.route" placeholder="数据类型" style="width:150px">
+                <el-option label="默认" value="tcp"/>
+                <el-option label="无线" value="tcp1"/>
+                <el-option label="载波" value="tcp2"/>
               </el-select>
             </el-form-item>
             <el-form-item label="开始测量点号:">
               <el-input
-                placeholder="开始测量点号"
-                type="number"
                 v-model="formInline.start"
                 :min="1"
                 :max="2048"
+                placeholder="开始测量点号"
+                type="number"
                 style="width:150px"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="结束测量点号:">
               <el-input
-                placeholder="结束测量点号"
-                type="number"
                 v-model="formInline.end"
                 :min="1"
                 :max="2048"
+                placeholder="结束测量点号"
+                type="number"
                 style="width:150px"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="开始时间:">
               <el-date-picker
                 v-model="formInline.starttime"
                 :type="datatimetype"
+                :picker-options="pickerBeginDateBefore"
                 placeholder="选择开始时间"
                 value-format="timestamp"
-                :picker-options="pickerBeginDateBefore"
                 style="width:150px"
-              ></el-date-picker>
+              />
             </el-form-item>
             <el-form-item label="结束时间:">
               <el-date-picker
                 v-model="formInline.endtime"
                 :type="datatimetype"
+                :picker-options="pickerBeginDateAfter"
                 placeholder="选择结束时间"
                 value-format="timestamp"
-                :picker-options="pickerBeginDateAfter"
                 style="width:150px"
-              ></el-date-picker>
-              <!-- <el-form-item label="日期" v-show="formInline.protocol==20&&formInline.operation=='历史月数据'"> 
+              />
+              <!-- <el-form-item label="日期" v-show="formInline.protocol==20&&formInline.operation=='历史月数据'">
                   <el-date-picker
                     v-model="value1"
                     type="monthrange"
@@ -123,29 +123,29 @@
           <el-button type="primary" @click="getValue">召测</el-button>
           <el-button type="primary" @click="test">重置</el-button>
         </div>
-        <div style="height:8px;width:100%;background:#ffffff"></div>
+        <div style="height:8px;width:100%;background:#ffffff"/>
         <div class="blockall" style="text-align:center;height:auto">
           <el-transfer
-            style="text-align: left; display: inline-block;margin-top:20px"
             v-model="value"
             :render-content="renderFunc"
             :titles="['数据标识DI', '选定查询数据项']"
             :button-texts="['删除', '添加']"
             :format="{
-                        noChecked: '${total}',
-                        hasChecked: '${checked}/${total}'
-                    }"
-            @change="handleChange"
+              noChecked: '${total}',
+              hasChecked: '${checked}/${total}'
+            }"
             :data="data1"
-          ></el-transfer>
+            style="text-align: left; display: inline-block;margin-top:20px"
+            @change="handleChange"
+          />
         </div>
       </div>
     </div>
     <el-dialog
-      title="召测数据"
       :visible.sync="dialogTableVisible"
       :close-on-click-modal="false"
       :before-close="handleClose"
+      title="召测数据"
       width="82%"
     >
       <el-table
@@ -153,45 +153,45 @@
         style="width:100%;margin-top:10px;"
         height="400"
       >
-        <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
-        <el-table-column property="vcaddr" label="终端逻辑地址" width="120" align="center"></el-table-column>
-        <el-table-column property="pn" label="测量点号" width="100" align="center"></el-table-column>
-        <el-table-column property="meteraddr" label="电表地址" align="center"></el-table-column>
-        <el-table-column property="diname" label="数据项标识" width="250" align="center"></el-table-column>
-        <el-table-column property="value" label="数据" align="center"></el-table-column>
+        <el-table-column label="序号" type="index" width="50" align="center"/>
+        <el-table-column property="vcaddr" label="终端逻辑地址" width="120" align="center"/>
+        <el-table-column property="pn" label="测量点号" width="100" align="center"/>
+        <el-table-column property="meteraddr" label="电表地址" align="center"/>
+        <el-table-column property="diname" label="数据项标识" width="250" align="center"/>
+        <el-table-column property="value" label="数据" align="center"/>
         <el-table-column label="冻结日期" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             <span v-if="scope.row.time">
-               <span
-              v-if="scope.row.time.length==8"
-            >{{scope.row.time.toString().substring(0,4)+'-'+scope.row.time.toString().substring(4,6)+'-'+scope.row.time.toString().substring(6,8)}}</span>
-            <span v-else>{{scope.row.time.toString().substring(0,4)+'-'+scope.row.time.toString().substring(4,6)}}</span>
+              <span
+                v-if="scope.row.time.length==8"
+              >{{ scope.row.time.toString().substring(0,4)+'-'+scope.row.time.toString().substring(4,6)+'-'+scope.row.time.toString().substring(6,8) }}</span>
+              <span v-else>{{ scope.row.time.toString().substring(0,4)+'-'+scope.row.time.toString().substring(4,6) }}</span>
             </span>
-            <span v-else></span>
+            <span v-else/>
           </template>
         </el-table-column>
 
-        <el-table-column property="ts" label="时间" width="200" align="center"></el-table-column>
+        <el-table-column property="ts" label="时间" width="200" align="center"/>
         <el-table-column label="状态" align="center">
           <template slot-scope="scope">
-            <span style="color:green" v-if="scope.row.status==1">完成</span>
-            <span style="color:green" v-else-if="scope.row.status==0">召测中</span>
-            <span style="color:red" v-else-if="scope.row.status==3">无档案</span>
-            <span style="color:red" v-else>超时</span>
+            <span v-if="scope.row.status==1" style="color:green">完成</span>
+            <span v-else-if="scope.row.status==0" style="color:green">召测中</span>
+            <span v-else-if="scope.row.status==3" style="color:red">无档案</span>
+            <span v-else style="color:red">超时</span>
           </template>
         </el-table-column>
       </el-table>
       <div class="block" style="margin-top:15px;">
         <el-pagination
-          align="center"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-sizes="[1,5,10,20]"
           :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
           :total="gridData1.length"
-        ></el-pagination>
+          align="center"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </el-dialog>
   </div>
@@ -203,23 +203,23 @@
 }
 </style>
 <script>
-import Parse from "parse";
-import { Mainstationvalue } from "@/api/mainstation";
-import Mainstation from "@/components/mainstation";
-import Resource1 from "@/components/resource/resource";
-import { Websocket, didata } from "@/utils/wxscoket.js";
-import { eventBus } from "@/api/eventBus";
-import { timestampToTime } from "@/api/login";
-import { resolve } from "q";
-import Cookies from "js-cookie";
+import Parse from 'parse'
+import { Mainstationvalue } from '@/api/mainstation'
+import Mainstation from '@/components/mainstation'
+import Resource1 from '@/components/resource/resource'
+import { Websocket, didata } from '@/utils/wxscoket.js'
+import { eventBus } from '@/api/eventBus'
+import { timestampToTime } from '@/api/login'
+import { resolve } from 'q'
+import Cookies from 'js-cookie'
 export default {
   components: {
     Resource1
   },
   data() {
     return {
-      value1: "",
-      datatimetype: "datetime",
+      value1: '',
+      datatimetype: 'datetime',
       operatetype: [],
       isSelecttime: true,
       isCollapse: true,
@@ -227,31 +227,31 @@ export default {
       value: [],
       // loading:true,
       renderFunc(h, option) {
-        return <span>{option.label}</span>;
+        return <span>{option.label}</span>
       },
       currentPage: 1, // 当前页码
       total: 20, // 总条数
       pageSize: 10, // 每页的数据条数
-      activeName: "second",
+      activeName: 'second',
       formInline: {
-        protocol: "30",
-        user: "",
-        vcaddr: "",
-        datatype: "",
-        operation: "",
-        start: "1",
-        end: "1",
-        jiange: "",
-        starttime: "",
-        endtime: "",
-        route: "tcp"
+        protocol: '30',
+        user: '',
+        vcaddr: '',
+        datatype: '',
+        operation: '',
+        start: '1',
+        end: '1',
+        jiange: '',
+        starttime: '',
+        endtime: '',
+        route: 'tcp'
       },
       pickerBeginDateBefore: {
         disabledDate: time => {
           if (this.formInline.endtime) {
-            return time.getTime() > new Date(this.formInline.endtime).getTime();
+            return time.getTime() > new Date(this.formInline.endtime).getTime()
           } else {
-            return time.getTime() > Date.now() - 8.64e6;
+            return time.getTime() > Date.now() - 8.64e6
           }
         }
       },
@@ -261,102 +261,102 @@ export default {
             return (
               time.getTime() > Date.now() ||
               time.getTime() < new Date(this.formInline.starttime).getTime()
-            );
+            )
           } else {
-            return time.getTime() > Date.now() - 8.64e6;
+            return time.getTime() > Date.now() - 8.64e6
           }
         }
       },
-      operation: "",
+      operation: '',
       datatype: [],
       dialogTableVisible: false,
       radio: 3,
       data: [],
       defaultProps: {
-        children: "children",
-        label: "name",
-        isLeaf: "leaf"
+        children: 'children',
+        label: 'name',
+        isLeaf: 'leaf'
       },
       tableData1: [],
-      searchvalue: "",
-      departmentid: "",
+      searchvalue: '',
+      departmentid: '',
       userForm: {
-        usertype: "",
-        searchtype: "",
-        userhh: "",
-        username: "",
-        zdjh: "",
-        ljdz: ""
+        usertype: '',
+        searchtype: '',
+        userhh: '',
+        username: '',
+        zdjh: '',
+        ljdz: ''
       },
       selectdata: [],
-      session: "",
+      session: '',
       data2: {},
       originrecivedata: [],
       gridData1: []
-    };
+    }
   },
   computed: {
     treeData() {
-      let cloneData = JSON.parse(JSON.stringify(this.data)); // 对源数据深度克隆
+      const cloneData = JSON.parse(JSON.stringify(this.data)) // 对源数据深度克隆
       return cloneData.filter(father => {
-        let branchArr = cloneData.filter(
+        const branchArr = cloneData.filter(
           child => father.objectId == child.ParentId
-        ); //返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : ""; //如果存在子级，则给父级添加一个children属性，并赋值
-        branchArr.length > 0 ? (father.leaf = true) : false;
-        return father.ParentId == 0; //返回第一层
-      });
+        ) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+        branchArr.length > 0 ? (father.leaf = true) : false
+        return father.ParentId == 0 // 返回第一层
+      })
     }
   },
 
   mounted() {
-    this.getOperate();
-    this.session = sessionStorage.getItem("token");
-    console.log(this.datatype);
+    this.getOperate()
+    this.session = sessionStorage.getItem('token')
+    console.log(this.datatype)
   },
   methods: {
-    //规约类型选择
+    // 规约类型选择
     protocolChange(val) {
       if (val == 20 && this.formInline.operation != this.operatetype[3].id) {
-        this.datatimetype = "date";
-        this.formInline.operation = this.operatetype[2].id;
-        this.firstchange(this.operatetype[2].id);
+        this.datatimetype = 'date'
+        this.formInline.operation = this.operatetype[2].id
+        this.firstchange(this.operatetype[2].id)
       } else if (
         val == 20 &&
         this.formInline.operation == this.operatetype[3].id
       ) {
-        this.datatimetype = "month";
-        this.formInline.starttime = new Date() - 30 * 86400000;
+        this.datatimetype = 'month'
+        this.formInline.starttime = new Date() - 30 * 86400000
         this.firstchange(this.operatetype[3].id)
       } else {
-        this.datatimetype = "datetime";
-        this.formInline.operation = this.operatetype[1].id;
-        this.firstchange(this.operatetype[1].id);
+        this.datatimetype = 'datetime'
+        this.formInline.operation = this.operatetype[1].id
+        this.firstchange(this.operatetype[1].id)
       }
     },
-    //获取操作类型
+    // 获取操作类型
     getOperate() {
-      var Mainstation = Parse.Object.extend("MainStationIndex");
-      var mainstation = new Parse.Query(Mainstation);
-      mainstation.startsWith("name", "C.");
-      mainstation.ascending("name");
+      var Mainstation = Parse.Object.extend('MainStationIndex')
+      var mainstation = new Parse.Query(Mainstation)
+      mainstation.startsWith('name', 'C.')
+      mainstation.ascending('name')
       mainstation.find().then(resultes => {
-        this.operatetype = resultes;
-        this.formInline.operation = resultes[1].id;
-        this.firstchange(resultes[1].id);
-      });
+        this.operatetype = resultes
+        this.formInline.operation = resultes[1].id
+        this.firstchange(resultes[1].id)
+      })
     },
     handleClick() {},
     handleClose() {
-      this.dialogTableVisible = false;
+      this.dialogTableVisible = false
     },
-    //获取数据类型
+    // 获取数据类型
     firstchange(val) {
-      this.formInline.datatype = "";
-      this.datatype = [];
-      var Mainstation = Parse.Object.extend("MainStationIndex");
-      var mainstation = new Parse.Query(Mainstation);
-      mainstation.equalTo("objectId", val);
+      this.formInline.datatype = ''
+      this.datatype = []
+      var Mainstation = Parse.Object.extend('MainStationIndex')
+      var mainstation = new Parse.Query(Mainstation)
+      mainstation.equalTo('objectId', val)
       mainstation.find().then(resultes => {
         resultes.map(items => {
           items.attributes.leafs.map(child => {
@@ -364,75 +364,75 @@ export default {
               label: child,
               modelindex: items.attributes.sendtype,
               key: child
-            };
-            this.datatype.push(obj);
-          });
-          this.formInline.datatype = this.datatype[0].key;
-          this.dataselect(this.datatype[0].key);
-        });
-      });
+            }
+            this.datatype.push(obj)
+          })
+          this.formInline.datatype = this.datatype[0].key
+          this.dataselect(this.datatype[0].key)
+        })
+      })
       if (
         this.formInline.protocol == 20 &&
         this.formInline.operation != this.operatetype[3].id
       ) {
-        this.datatimetype = "date";
+        this.datatimetype = 'date'
       } else if (
         this.formInline.protocol == 20 &&
         this.formInline.operation == this.operatetype[3].id
       ) {
-        this.datatimetype = "month";
-        this.formInline.starttime = new Date() - 30 * 86400000;
+        this.datatimetype = 'month'
+        this.formInline.starttime = new Date() - 30 * 86400000
       } else {
-        this.datatimetype = "datetime";
+        this.datatimetype = 'datetime'
       }
     },
     getcheck(data, node) {
-      this.getMainstation(data.objectId);
+      this.getMainstation(data.objectId)
     },
     test() {
       this.formInline = {
-        protocol: "30",
-        user: "",
-        vcaddr: "",
-        datatype: "",
-        operation: "",
-        start: "1",
-        end: "1",
-        jiange: "",
+        protocol: '30',
+        user: '',
+        vcaddr: '',
+        datatype: '',
+        operation: '',
+        start: '1',
+        end: '1',
+        jiange: '',
         starttime: new Date(),
         endtime: new Date(),
-        route: "tcp"
-      };
-      this.getOperate();
+        route: 'tcp'
+      }
+      this.getOperate()
     },
-    //数据推送得到value
+    // 数据推送得到value
     getValue() {
-      console.log(this.value1);
-      this.gridData1.length = 0;
+      console.log(this.value1)
+      this.gridData1.length = 0
       if (this.selectdata.length == 0) {
         this.$message({
-          type: "warning",
-          message: "请选择数据项标识"
-        });
+          type: 'warning',
+          message: '请选择数据项标识'
+        })
       } else if (Websocket.connState == false) {
         this.$message({
-          type: "warning",
-          message: "正在重新连接，请稍后"
-        });
-      } else if (this.formInline.vcaddr == "") {
+          type: 'warning',
+          message: '正在重新连接，请稍后'
+        })
+      } else if (this.formInline.vcaddr == '') {
         this.$message({
-          type: "warning",
-          message: "请挑选集中器或电表"
-        });
+          type: 'warning',
+          message: '请挑选集中器或电表'
+        })
       } else {
-        var _this = this;
-        Websocket.originrecivedata = [];
-        var ranNum = Math.ceil(Math.random() * 25);
+        var _this = this
+        Websocket.originrecivedata = []
+        var ranNum = Math.ceil(Math.random() * 25)
         var operation =
-          String.fromCharCode(65 + ranNum) + Math.ceil(Math.random() * 100000);
-        //eventBus事件分发
+          String.fromCharCode(65 + ranNum) + Math.ceil(Math.random() * 100000)
+        // eventBus事件分发
         eventBus.$on(operation, data => {
-          _this.gridData1 = [];
+          _this.gridData1 = []
           data.data.map(items => {
             didata.map(child => {
               if (items.di == child.key) {
@@ -446,13 +446,13 @@ export default {
                   diname: child.label,
                   time: items.time,
                   status: items.status
-                });
+                })
               }
-            });
-          });
+            })
+          })
           console.log(_this.gridData1)
-        });
-        this.formInline.route = "tcp";
+        })
+        this.formInline.route = 'tcp'
         Mainstationvalue(
           this.formInline.vcaddr,
           this.session,
@@ -468,156 +468,156 @@ export default {
         )
           .then(resultes => {
             if (resultes) {
-              this.dialogTableVisible = true;
+              this.dialogTableVisible = true
             }
           })
           .catch(error => {
             this.$message({
-              type: "error",
+              type: 'error',
               message: error.error
-            });
-          });
+            })
+          })
       }
     },
     handleChange(value) {
-      this.selectdata = value;
+      this.selectdata = value
     },
-    //树形控件点击事件
+    // 树形控件点击事件
     meterdetail(row) {
-      if (row.icon != "集中器" && row.icon != "电表") {
+      if (row.icon != '集中器' && row.icon != '电表') {
         this.$message({
-          type: "warning",
-          message: "请挑选集中器或电表"
-        });
-      } else if (row.icon == "集中器") {
-        this.formInline.vcaddr = row.alias;
-        this.formInline.start = 1;
-        this.formInline.end = 1;
-      } else if (row.icon == "电表") {
-        var Smartmeter = Parse.Object.extend("Smartmeter");
-        var smartmeter = new Parse.Query(Smartmeter);
+          type: 'warning',
+          message: '请挑选集中器或电表'
+        })
+      } else if (row.icon == '集中器') {
+        this.formInline.vcaddr = row.alias
+        this.formInline.start = 1
+        this.formInline.end = 1
+      } else if (row.icon == '电表') {
+        var Smartmeter = Parse.Object.extend('Smartmeter')
+        var smartmeter = new Parse.Query(Smartmeter)
         smartmeter.get(row.objectId).then(
           resultes => {
-            this.formInline.vcaddr = resultes.attributes.vcaddr_web;
-            this.formInline.start = resultes.attributes.pn;
-            this.formInline.end = resultes.attributes.pn;
+            this.formInline.vcaddr = resultes.attributes.vcaddr_web
+            this.formInline.start = resultes.attributes.pn
+            this.formInline.end = resultes.attributes.pn
           },
           error => {
             this.$message({
-              type: "error",
+              type: 'error',
               message: error.error
-            });
+            })
           }
-        );
+        )
       }
     },
-    //分页
+    // 分页
     handleSizeChange(val) {
-      this.currentPage = 1;
-      this.pageSize = val;
+      this.currentPage = 1
+      this.pageSize = val
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
+      this.currentPage = val
     },
-    //根据点击的树去department挑选
+    // 根据点击的树去department挑选
     getMainstation(objectId) {
       // this.data = [];
-      this.session = Parse.User.current().attributes.sessionToken;
-      var Department = Parse.Object.extend("Department");
-      var department = new Parse.Query(Department);
-      department.equalTo("ParentId", objectId);
-      department.limit(10000);
+      this.session = Parse.User.current().attributes.sessionToken
+      var Department = Parse.Object.extend('Department')
+      var department = new Parse.Query(Department)
+      department.equalTo('ParentId', objectId)
+      department.limit(10000)
       department.find().then(
         resultes => {
           resultes.map(items => {
-            var obj = {};
+            var obj = {}
             items.createtime = new Date(
               items.attributes.createdAt
             ).toLocaleDateString();
             (obj.name = items.attributes.name),
-              (obj.ParentId = items.attributes.ParentId);
-            obj.objectId = items.id;
-            obj.level = items.attributes.level;
-            obj.createtime = items.createtime;
-            obj.alias = items.attributes.alias;
-            obj.leaf = items.attributes.leafnode;
-            obj.icon = items.attributes.org_type;
-            this.data.push(obj);
-          });
+            (obj.ParentId = items.attributes.ParentId)
+            obj.objectId = items.id
+            obj.level = items.attributes.level
+            obj.createtime = items.createtime
+            obj.alias = items.attributes.alias
+            obj.leaf = items.attributes.leafnode
+            obj.icon = items.attributes.org_type
+            this.data.push(obj)
+          })
         },
         error => {
-          if (error.code == "209") {
+          if (error.code == '209') {
             this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
+              type: 'warning',
+              message: '登陆权限过期，请重新登录'
+            })
             this.$router.push({
-              path: "/login"
-            });
+              path: '/login'
+            })
           } else {
-            this.$message(error.message);
+            this.$message(error.message)
           }
         }
-      );
+      )
     },
-    //数据标识选择
+    // 数据标识选择
     dataselect(val) {
-      didata.length = 0;
-      this.value = [];
-      this.data1 = [];
+      didata.length = 0
+      this.value = []
+      this.data1 = []
       this.datatype.map(items => {
         if (val == items.label) {
-          this.operation = items.modelindex;
+          this.operation = items.modelindex
         }
-      });
+      })
       if (this.formInline.protocol == 30) {
-        var DataItem = Parse.Object.extend("DataItem");
-        var dataitem = new Parse.Query(DataItem);
-        dataitem.equalTo("leafname", val);
-        dataitem.limit(1000);
-        dataitem.ascending("itemCode");
+        var DataItem = Parse.Object.extend('DataItem')
+        var dataitem = new Parse.Query(DataItem)
+        dataitem.equalTo('leafname', val)
+        dataitem.limit(1000)
+        dataitem.ascending('itemCode')
         dataitem.find().then(res => {
           res.map(items => {
             var obj = {
               label: items.attributes.itemName,
               key: items.attributes.itemCode
-            };
-            this.data1.push(obj);
-            didata.push(obj);
-          });
-        });
+            }
+            this.data1.push(obj)
+            didata.push(obj)
+          })
+        })
       } else {
-        var DataItemGw = Parse.Object.extend("DataItemGW");
-        var dataitemgw = new Parse.Query(DataItemGw);
-        dataitemgw.equalTo("leafname", val);
-        dataitemgw.limit(1000);
-        dataitemgw.ascending("itemCode");
+        var DataItemGw = Parse.Object.extend('DataItemGW')
+        var dataitemgw = new Parse.Query(DataItemGw)
+        dataitemgw.equalTo('leafname', val)
+        dataitemgw.limit(1000)
+        dataitemgw.ascending('itemCode')
         dataitemgw.find().then(res => {
           res.map(items => {
             var obj = {
               label: items.attributes.itemName,
               key: items.attributes.itemCode
-            };
-            this.data1.push(obj);
-            didata.push(obj);
-          });
-        });
+            }
+            this.data1.push(obj)
+            didata.push(obj)
+          })
+        })
       }
 
-      if (this.operation == "c.3" || this.operation == "c.4") {
-        this.isSelecttime = false;
+      if (this.operation == 'c.3' || this.operation == 'c.4') {
+        this.isSelecttime = false
         this.formInline.starttime = new Date(
           new Date().setHours(0, 0, 0, 0) - 24 * 60 * 60 * 1000
-        );
-        this.formInline.endtime = new Date();
-      } else if (this.operation == "c.2") {
-        this.isSelecttime = true;
-        this.formInline.endtime = new Date().getTime();
-        this.formInline.starttime = this.formInline.endtime - 3 * 84600000;
+        )
+        this.formInline.endtime = new Date()
+      } else if (this.operation == 'c.2') {
+        this.isSelecttime = true
+        this.formInline.endtime = new Date().getTime()
+        this.formInline.starttime = this.formInline.endtime - 3 * 84600000
       }
     }
   }
-};
+}
 </script>
 <style scoped>
 .mainstations {

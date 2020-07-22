@@ -1,21 +1,21 @@
 
 const test = {
   state: {
-    userId:''
+    userId: ''
   },
 
   mutations: {
-    set_User_Id(state,userId){ 
-        state.userId = userId
+    set_User_Id(state, userId) {
+      state.userId = userId
     }
   },
 
   actions: {
-    getUserId({dispatch},userid){
-        dispatch('setUserId',userid)
+    getUserId({ dispatch }, userid) {
+      dispatch('setUserId', userid)
     },
-    setUserId({commit},userid){
-        commit('set_User_Id',userid)
+    setUserId({ commit }, userid) {
+      commit('set_User_Id', userid)
     }
   }
 }

@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 // Flattened array
 export default function treeToArray(data, children = 'children') {
-  let tmp = []
+  const tmp = []
   data.forEach((item, index) => {
     Vue.set(item, '_index', index)
     tmp.push(item)

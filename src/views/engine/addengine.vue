@@ -5,25 +5,25 @@
         <el-form
           ref="formInline"
           :model="formInline"
-          label-width="80px"
           :rules="formlinerule"
+          label-width="80px"
           size="medium"
         >
           <div class="form-block__title">
-            {{$t('rule.condtion')}}
-            <div class="form-block__title-tips">{{$t('rule.Processing')}}</div>
+            {{ $t('rule.condtion') }}
+            <div class="form-block__title-tips">{{ $t('rule.Processing') }}</div>
           </div>
           <el-row :gutter="20">
             <el-col :span="row1">
               <!--触发事件-->
               <el-form-item>
                 <!-- <el-select v-model="formInline.region" :placeholder="$t('rule.TriggerEvent')" @change="selectRegion">
-                  <el-option  
+                  <el-option
                     v-for="(item,index) in originlist"
                     :key="index"
                     :label="item.title.zh+'('+item.event+')'"
                     :value="item.event">
-                  
+
                   </el-option>
                 </el-select> -->
                 <!-- <el-input v-model="formInline.region" ></el-input> -->
@@ -41,95 +41,95 @@
                   <div
                     class="code"
                   >当前版本取消对 payload 的自动 JSON 解码，选择 payload 中的字段请使用 json_decode 解码，如 SQL 示例。</div> -->
-                  <p>{{$t('rule.RuleSQLexample')}}</p>
+                  <p>{{ $t('rule.RuleSQLexample') }}</p>
                   <div class="code">
                     <code
                       style="font-size: 12px;"
-                    >{{sqlexample}}</code>
+                    >{{ sqlexample }}</code>
                   </div>
                 </div>
               </el-form-item>
               <!--编写SQL-->
               <el-form-item :label="$t('rule.RuleSQL')" prop="enginesql">
-                <pre id="editor1" class="ace_editor" style="min-height:300px"><el-input class="ace_text-input" type="textarea" v-model="formInline.enginesql"></el-input></pre>
+                <pre id="editor1" class="ace_editor" style="min-height:300px"><el-input v-model="formInline.enginesql" class="ace_text-input" type="textarea"/></pre>
               </el-form-item>
               <!--备注-->
               <el-form-item :label="$t('rule.Remarks')">
-                <el-input type="text" v-model="formInline.remarks"></el-input>
+                <el-input v-model="formInline.remarks" type="text"/>
               </el-form-item>
               <!--SQL测试-->
               <el-form-item :label="$t('rule.SQLtest')">
                 <el-switch
                   v-model="formInline.sqltest"
                   active-color="#13ce66"
-                  @change="getEditor2"
                   inactive-color="gray"
-                ></el-switch>
+                  @change="getEditor2"
+                />
                 <el-popover
                   placement="top-start"
                   width="200"
                   trigger="hover"
                   content="自定义模拟数据进行 SQL 命令测试，仅用于测试功能"
                 >
-                  <i class="el-icon-question" slot="reference" style="color:#71737d"></i>
+                  <i slot="reference" class="el-icon-question" style="color:#71737d"/>
                 </el-popover>
               </el-form-item>
               <!--其他信息-->
             </el-col>
             <!--中间间隔-->
-            <el-col :span="4"></el-col>
+            <el-col :span="4"/>
             <el-col :span="row2" class="animated fadeInRightBig">
               <el-form-item
+                v-show="formInline.sqltest==true"
+                :rules="[
+                { required: true, message: &quot;clientid 不能为空&quot;, trigger: &quot;blur&quot; }]"
                 label="clientid"
-                v-show="formInline.sqltest==true"
                 prop="clientid"
-                :rules='[
-              { required: true, message: "clientid 不能为空", trigger: "blur" }]'
               >
-                <el-input v-model="formInline.clientid"></el-input>
+                <el-input v-model="formInline.clientid"/>
               </el-form-item>
               <el-form-item
+                v-show="formInline.sqltest==true"
+                :rules="[
+                { required: true, message: &quot;username 不能为空&quot;, trigger: &quot;blur&quot; }]"
                 label="username"
-                v-show="formInline.sqltest==true"
                 prop="username"
-                :rules='[
-              { required: true, message: "username 不能为空", trigger: "blur" }]'
               >
-                <el-input v-model="formInline.username"></el-input>
+                <el-input v-model="formInline.username"/>
               </el-form-item>
               <el-form-item
+                v-show="formInline.sqltest==true"
+                :rules="[
+                { required: true, message: &quot;topic 不能为空&quot;, trigger: &quot;blur&quot; }]"
                 label="topic"
-                v-show="formInline.sqltest==true"
                 prop="topic"
-                :rules='[
-              { required: true, message: "topic 不能为空", trigger: "blur" }]'
               >
-                <el-input v-model="formInline.topic"></el-input>
+                <el-input v-model="formInline.topic"/>
               </el-form-item>
               <el-form-item
-                label="qos"
                 v-if="formInline.sqltest==true"
+                :rules="[
+                { required: true, message: &quot;qos 不能为空&quot;, trigger: &quot;blur&quot; }]"
+                label="qos"
                 prop="qos"
-                :rules='[
-              { required: true, message: "qos 不能为空", trigger: "blur" }]'
               >
-                <el-input v-model.number="formInline.qos"></el-input>
+                <el-input v-model.number="formInline.qos"/>
               </el-form-item>
               <el-form-item
-                label="payload"
                 v-show="formInline.sqltest==true"
+                :rules="[
+                { required: true, message: &quot;请填写payload&quot;, trigger: &quot;blur&quot; }]"
+                label="payload"
                 prop="payload"
-                :rules='[
-              { required: true, message: "请填写payload", trigger: "blur" }]'
               >
-              <el-input type="text" v-model="formInline.payload" style="visibility:hidden"></el-input>
-                <pre id="editor2" class="ace_editor" style="min-height:300px"><el-input class="ace_text-input" type="textarea" v-model="formInline.payload"></el-input></pre>
+                <el-input v-model="formInline.payload" type="text" style="visibility:hidden"/>
+                <pre id="editor2" class="ace_editor" style="min-height:300px"><el-input v-model="formInline.payload" class="ace_text-input" type="textarea"/></pre>
               </el-form-item>
-              <el-form-item label=" " v-show="formInline.sqltest==true">
-                <el-button type="success" @click="testRule('formInline')">{{$t('rule.Test')}}</el-button>
+              <el-form-item v-show="formInline.sqltest==true" label=" ">
+                <el-button type="success" @click="testRule('formInline')">{{ $t('rule.Test') }}</el-button>
               </el-form-item>
-              <el-form-item :label="$t('rule.TestJie')" v-show="formInline.sqltest==true">
-                <el-input type="textarea" v-model="formInline.result" :rows="4"></el-input>
+              <el-form-item v-show="formInline.sqltest==true" :label="$t('rule.TestJie')">
+                <el-input v-model="formInline.result" :rows="4" type="textarea"/>
               </el-form-item>
             </el-col>
           </el-row>
@@ -137,24 +137,24 @@
           <div class="tablebottom">
             <div class="form-block__title">
               <span style="color: rgb(255, 109, 109);">*</span>
-              {{$t('rule.ResponseAction')}}
-              <div class="form-block__title-tips">{{$t('rule.Processing')}}</div>
+              {{ $t('rule.ResponseAction') }}
+              <div class="form-block__title-tips">{{ $t('rule.Processing') }}</div>
             </div>
             <div class="bottomtable" style="padding-left:20px">
               <div class="tableaction">
                 <el-table :data="actionData" style="width: 100%">
-                  <el-table-column prop="name" :label="$t('rule.Type')" width="180"></el-table-column>
+                  <el-table-column :label="$t('rule.Type')" prop="name" width="180"/>
                   <el-table-column :label="$t('rule.Parameter')">
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.params.$resource"
-                      >{{'关联资源:'+scope.row.params.$resource}}</span>
-                      <span v-else></span>
+                      >{{ '关联资源:'+scope.row.params.$resource }}</span>
+                      <span v-else/>
                     </template>
                   </el-table-column>
-                  <el-table-column width="180" :label="$t('developer.operation')">
+                  <el-table-column :label="$t('developer.operation')" width="180">
                     <template slot-scope="scope">
-                      <el-button type="danger" @click="deleteOneData(scope.$index)" size="mini">删除</el-button>
+                      <el-button type="danger" size="mini" @click="deleteOneData(scope.$index)">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -166,7 +166,7 @@
                     size="small"
                     style="margin-top:20px;"
                     @click="addresouce"
-                  >{{$t('rule.Addto')}}</el-button>
+                  >{{ $t('rule.Addto') }}</el-button>
                 </div>
               </div>
             </div>
@@ -174,15 +174,15 @@
               <el-dialog
                 :title="$t('rule.ResponseAction')"
                 :visible.sync="dialogFormVisible"
+                :close-on-click-modal="false"
                 width="60%"
                 top="1vh"
-                :close-on-click-modal="false"
               >
                 <!-- <el-form :model="form" :rules="formrule" ref="form">
                   <el-row style="border:0">
                     <el-col :span="20">
                       <el-form-item label="动作" prop="action">
-                      
+
                         <el-popover
                           placement="top-start"
                           width="200"
@@ -191,19 +191,18 @@
                         >
                           <i class="el-icon-question" slot="reference" style="color:#71737d;"></i>
                         </el-popover>
-                      
+
                         <el-select v-model="form.action" @change="selectaction" disabled>
-                        
+
                           <el-option v-for="(action,index) in actionslist" :key="index" :label="action.description.zh" :value="action.name"></el-option>
-                         
+
                         </el-select>
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" style="margin-left:20px;min-width:100px">
                       <el-link type="primary" :underline="false" style="line-height:8" @click="openDialog">新建资源</el-link>
                     </el-col>
-                  
-                   
+
                   </el-row>
                   <el-row style="border:0">
                      <el-col
@@ -225,23 +224,23 @@
                             :value="item.id"
                           ></el-option>
                         </el-select>
-                        
+
                       </el-form-item>
                     </el-col>
                   </el-row>
                 </el-form> -->
-               <el-table :data="channellist" height="400" style="width: 100%">
-                <el-table-column :label="$t('developer.channelnumber')"  align="center">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.id}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('developer.channelname')"  align="center">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.attributes.name}}</span>
-                  </template>
-                </el-table-column>
-                <!-- <el-table-column :label="$t('developer.channeladdr')" width="200" align="center">
+                <el-table :data="channellist" height="400" style="width: 100%">
+                  <el-table-column :label="$t('developer.channelnumber')" align="center">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.id }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('developer.channelname')" align="center">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.attributes.name }}</span>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column :label="$t('developer.channeladdr')" width="200" align="center">
                   <template slot-scope="scope">
                     <span>{{'channel/'+scope.row.id}}</span>
                   </template>
@@ -252,31 +251,31 @@
                     <span v-else>{{$t('developer.resourcechannel')}}</span>
                   </template>
                 </el-table-column> -->
-                <el-table-column :label="$t('developer.servicetype')" align="center">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.attributes.cType}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('developer.operation')" align="center">
-                  <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      @click="relationChannel(scope.row.id)"
-                      type="primary"
-                    >{{$t('developer.add')}}</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <div class="elpagination" style="margin-top:20px;">
-                <el-pagination
-                  @size-change="allChannelSizeChange"
-                  @current-change="allChannelCurrentChange"
-                  :page-sizes="[10, 20, 30, 50]"
-                  :page-size="allChannellength"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="allChanneltotal"
-                ></el-pagination>
-              </div>
+                  <el-table-column :label="$t('developer.servicetype')" align="center">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.attributes.cType }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column :label="$t('developer.operation')" align="center">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="relationChannel(scope.row.id)"
+                      >{{ $t('developer.add') }}</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="elpagination" style="margin-top:20px;">
+                  <el-pagination
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="allChannellength"
+                    :total="allChanneltotal"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    @size-change="allChannelSizeChange"
+                    @current-change="allChannelCurrentChange"
+                  />
+                </div>
                 <!-- <div slot="footer" class="dialog-footer">
                   <el-button @click="dialogFormVisible = false">取 消</el-button>
                   <el-button type="primary" @click="addData">确 定</el-button>
@@ -296,14 +295,14 @@
             <el-row style="border:0">
               <el-col :span="11">
             <el-form-item label="通道类别" prop="region">
-              
+
               <el-select v-model="resourceform.region" placeholder="请选择通道类型" style="width:100%">
                 <el-option label="资源/采集通道" value="data_resource"></el-option>
               </el-select>
             </el-form-item>
               </el-col>
               </el-row>
-             
+
              <el-row style="border:0">
               <el-col :span="11">
             <el-form-item label="通道编号" prop="objectId">
@@ -327,70 +326,70 @@
   </div>
 </template>
 <script>
-var editor1;
-var editor2;
-var editormodel;
-var editorcreate;
-var editorinsert;
-var editorsubtable;
+var editor1
+var editor2
+var editormodel
+var editorcreate
+var editorinsert
+var editorsubtable
 // import datalist from "./datalist";
-import { addRule, ruleTest, getActions,getResource,postResource } from "@/api/rules";
-import Parse from "parse";
+import { addRule, ruleTest, getActions, getResource, postResource } from '@/api/rules'
+import Parse from 'parse'
 
-import { returnLogin } from "@/utils/return";
+import { returnLogin } from '@/utils/return'
 export default {
   data() {
     return {
       dialogVisible: false,
       resourceform: {
-        objectId: "",
-        region: "data_resource",
-        desc: ""
+        objectId: '',
+        region: 'data_resource',
+        desc: ''
       },
       resourcerule: {
         objectId: [
-          { required: true, message: "请填写通道编号", trigger: "blur" }
+          { required: true, message: '请填写通道编号', trigger: 'blur' }
         ],
-        desc: [{ required: true, message: "请填写通道描述", trigger: "blur" }]
+        desc: [{ required: true, message: '请填写通道描述', trigger: 'blur' }]
       },
       row1: 24,
       row2: 0,
       dialogFormVisible: false,
-      title: "",
+      title: '',
       formInline: {
-        user: "",
-        region: "",
-        enginesql: "",
-        remarks: "",
+        user: '',
+        region: '',
+        enginesql: '',
+        remarks: '',
         sqltest: false,
-        clientid: "c_swqx",
-        username: "u_swqx",
+        clientid: 'c_swqx',
+        username: 'u_swqx',
         qos: 1,
-        topic: "t/a",
-        payload: "",
+        topic: 't/a',
+        payload: '',
 
-        result: ""
+        result: ''
       },
       formlinerule: {
         region: [
-          { required: true, message: "请选择触发事件", trigger: "change" }
+          { required: true, message: '请选择触发事件', trigger: 'change' }
         ],
         enginesql: [
-          { required: true, message: "请填写规则SQL", trigger: "blur" }
+          { required: true, message: '请填写规则SQL', trigger: 'blur' }
         ]
       },
       actionData: [],
       form: {
-        action: "data_to_resource",
-        resource: ""
+        action: 'data_to_resource',
+        resource: ''
       },
       formrule: {
-        action: [{ required: true, message: "请选择动作", trigger: "change" }]
+        action: [{ required: true, message: '请选择动作', trigger: 'change' }]
       },
-      productid: "",
+      productid: '',
       resourcelist: [],
-      channellist:[],
-      ctype: "",
+      channellist: [],
+      ctype: '',
       // originlist: datalist,
       client: [],
       sqlexample: `SELECT
@@ -402,41 +401,41 @@ export default {
       actionslist: [],
       allChannelstart: 0,
       allChannellength: 10,
-      allChanneltotal: 0,
-    };
+      allChanneltotal: 0
+    }
   },
   mounted() {
-    this.title = this.$route.query.title;
-    this.productid = this.$route.query.productid;
-    editor1 = ace.edit("editor1");
-    editor1.session.setMode("ace/mode/sql"); // 设置语言
-    editor1.setTheme("ace/theme/eclipse"); // 设置主题
+    this.title = this.$route.query.title
+    this.productid = this.$route.query.productid
+    editor1 = ace.edit('editor1')
+    editor1.session.setMode('ace/mode/sql') // 设置语言
+    editor1.setTheme('ace/theme/eclipse') // 设置主题
     editor1.setOptions({
       enableBasicAutocompletion: true,
       enableSnippets: true,
       enableLiveAutocompletion: true // 设置自动提示
-    });
+    })
     editor1.setValue(`SELECT
         payload.msg as msg
       FROM
         "t/#"
       WHERE
-        msg = 'hello'`);
-    editor2 = ace.edit("editor2");
-    editor2.session.setMode("ace/mode/json"); // 设置语言
-    editor2.setTheme("ace/theme/eclipse"); // 设置主题
+        msg = 'hello'`)
+    editor2 = ace.edit('editor2')
+    editor2.session.setMode('ace/mode/json') // 设置语言
+    editor2.setTheme('ace/theme/eclipse') // 设置主题
     editor2.setOptions({
       enableBasicAutocompletion: true,
       enableSnippets: true,
       enableLiveAutocompletion: true // 设置自动提示
-    });
-    editor2.setValue(`{"msg":"hello"}`);
+    })
+    editor2.setValue(`{"msg":"hello"}`)
     // this.formInline.topic = "thing/" + this.$route.query.productid;
     // this.client = this.originlist[0].columns;
     // this.sqlexample = this.originlist[0].sql_example;
   },
   methods: {
-    //规则选择
+    // 规则选择
     // selectRegion(val) {
     //   this.originlist.map(item => {
     //     if (item.event == val) {
@@ -445,17 +444,17 @@ export default {
     //     }
     //   });
     // },
-    //布局调整
+    // 布局调整
     getEditor2(val) {
       if (val == true) {
-        this.row1 = 12;
-        this.row2 = 12;
+        this.row1 = 12
+        this.row2 = 12
       } else {
-        this.row1 = 24;
-        this.row2 = 0;
+        this.row1 = 24
+        this.row2 = 0
       }
     },
-    //资源通道选择
+    // 资源通道选择
     selectResource(val) {
       // this.resourcelist.map(item => {
       //   if (val == item.id) {
@@ -514,7 +513,7 @@ export default {
       // }
     },
     openDialog() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     addData() {
       // this.$refs[forName].validate(valid => {
@@ -533,112 +532,109 @@ export default {
       //         params: {}
       //       });
       //     }
-          // if (this.form.resource != "") {
-          // this.resourcelist.map(item => {
-          //   if (item.id == this.form.resource) {
-          //     for (var key in item.attributes.config) {
-          //       obj[key] = item.attributes.config[key];
-          //     }
-          //   }
-          // });
-          // var Channel = Parse.Object.extend("Channel");
-          // var channel = new Channel();
-          // obj.insert = editorinsert.getValue();
-          // channel.id = this.form.resource;
-          // obj.subtable = editorsubtable.getValue();
-          // obj.datamodel = editorcreate.getValue();
-          // channel.set("config", obj);
-          // console.log(obj);
-          // channel.save().then(
-          //   response => {
-          //     if (response) {
-          //       this.$message("添加成功");
-          //       this.dialogFormVisible = false;
-          //     }
-          //   },
-          //   error => {
-          //     returnLogin(error);
-          //   }
-          // );
-          // } else {
-          this.dialogFormVisible = false;
-          // }
-        // }
+      // if (this.form.resource != "") {
+      // this.resourcelist.map(item => {
+      //   if (item.id == this.form.resource) {
+      //     for (var key in item.attributes.config) {
+      //       obj[key] = item.attributes.config[key];
+      //     }
+      //   }
+      // });
+      // var Channel = Parse.Object.extend("Channel");
+      // var channel = new Channel();
+      // obj.insert = editorinsert.getValue();
+      // channel.id = this.form.resource;
+      // obj.subtable = editorsubtable.getValue();
+      // obj.datamodel = editorcreate.getValue();
+      // channel.set("config", obj);
+      // console.log(obj);
+      // channel.save().then(
+      //   response => {
+      //     if (response) {
+      //       this.$message("添加成功");
+      //       this.dialogFormVisible = false;
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error);
+      //   }
+      // );
+      // } else {
+      this.dialogFormVisible = false
+      // }
+      // }
       // });
     },
-    relationChannel(id){
-   
-          this.actionData.push({
-            name: 'data_to_resource',
-            params: {
-              $resource: "channel:"+id,
-              // type: this.ctype
-            }
-          });
+    relationChannel(id) {
+      this.actionData.push({
+        name: 'data_to_resource',
+        params: {
+          $resource: 'channel:' + id
+          // type: this.ctype
+        }
+      })
     },
-     allChannelSizeChange(val) {
-      this.allChannellength = val;
-      this.showAllChannel();
+    allChannelSizeChange(val) {
+      this.allChannellength = val
+      this.showAllChannel()
     },
     allChannelCurrentChange(val) {
-      this.allChannelstart = (val - 1) * this.allChannellength;
-      this.showAllChannel();
+      this.allChannelstart = (val - 1) * this.allChannellength
+      this.showAllChannel()
     },
-    showAllChannel(){
-       var Channel = Parse.Object.extend('Channel')
-        var channel = new Parse.Query(Channel)
-        channel.skip(this.allChannelstart);
-        channel.limit(this.allChannellength);
-        channel.count().then(count=>{
-          this.allChanneltotal = count
-            channel.find().then(resultes => {
-            this.channellist = resultes;
-          });
-        },error=>{
-          returnLogin(error)
+    showAllChannel() {
+      var Channel = Parse.Object.extend('Channel')
+      var channel = new Parse.Query(Channel)
+      channel.skip(this.allChannelstart)
+      channel.limit(this.allChannellength)
+      channel.count().then(count => {
+        this.allChanneltotal = count
+        channel.find().then(resultes => {
+          this.channellist = resultes
         })
-       
-       
+      }, error => {
+        returnLogin(error)
+      })
     },
     testRule(forName) {
-      this.formInline.result=''
-      this.formInline.payload = editor2.getValue();
-      this.formInline.enginesql = editor1.getValue();
+      this.formInline.result = ''
+      this.formInline.payload = editor2.getValue()
+      this.formInline.enginesql = editor1.getValue()
       this.$refs[forName].validate(valid => {
         if (valid) {
-          var regex = /from[^"]+?"([^"]+)"/im;
+          var regex = /from[^"]+?"([^"]+)"/im
           var ctx = {
             clientid: this.formInline.clientid,
             payload: editor2.getValue(),
             qos: this.formInline.qos,
             topic: this.formInline.topic,
             username: this.formInline.username
-          };
+          }
           ruleTest(
             this.actionData,
             ctx,
             this.formInline.remarks,
             editor1.getValue().match(regex)[1],
-            "",
+            '',
             editor1.getValue()
           )
             .then(response => {
-              this.formInline.result = JSON.stringify(response, null, 4);
+              this.formInline.result = JSON.stringify(response, null, 4)
             })
             .catch(error => {
-              this.$message(error.error);
-            });
+              this.$message(error.error)
+            })
         }
-      });
+      })
     },
     addrules(forName) {
-      this.formInline.payload = editor2.getValue();
-      this.formInline.enginesql = editor1.getValue();
+      this.formInline.payload = editor2.getValue()
+      this.formInline.enginesql = editor1.getValue()
       this.$refs[forName].validate(valid => {
         if (valid) {
           if (this.actionData.length == 0) {
-            this.$message("动作不能为空");
-            return;
+            this.$message('动作不能为空')
+            return
           }
           var ctx = {
             clientid: this.formInline.clientid,
@@ -646,8 +642,8 @@ export default {
             qos: this.formInline.qos,
             topic: this.formInline.topic,
             username: this.formInline.username
-          };
-          var regex = /from[^"]+?"([^"]+)"/im;
+          }
+          var regex = /from[^"]+?"([^"]+)"/im
           addRule(
             this.actionData,
             ctx,
@@ -657,60 +653,58 @@ export default {
           )
             .then(resultes => {
               if (resultes) {
-                this.$message("创建成功");
+                this.$message('创建成功')
                 this.$router.push({
-                  path: "/rules_engine/engine",
+                  path: '/rules_engine/engine'
                   // query: {
                   //   id: this.productid,
                   //   activeName: "sixeth"
                   // }
-                });
+                })
               }
             })
             .catch(error => {
-              this.$message(error);
-            });
+              this.$message(error)
+            })
         } else {
-          this.$message("有必填项未填写");
+          this.$message('有必填项未填写')
         }
-      });
+      })
     },
-    //初始化resource通道
+    // 初始化resource通道
     addresouce() {
-      this.dialogFormVisible = true;
+      this.dialogFormVisible = true
       this.showAllChannel()
-       
     },
-    addRes(formName){
-       this.$refs[formName].validate((valid) => {
-          if (valid) {
-           postResource({channel:this.resourceform.objectId},this.resourceform.desc,'','data_resource').then(response=>{
-             if(response){
-               this.$message('创建成功')
-               this.$refs[formName].resetFields();
-               this.dialogVisible = false
-                // getResource().then(response=>{
-                //   if(response){
-                //       this.resourcelist = response;
-                //   }
-                // }).catch(error=>{
-                //   this.$message(error)
-                // })
-             }
-           })
-          } else {
-           this.$message,error('error submit!!');
-            return false;
-          }
-        });
-      
+    addRes(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          postResource({ channel: this.resourceform.objectId }, this.resourceform.desc, '', 'data_resource').then(response => {
+            if (response) {
+              this.$message('创建成功')
+              this.$refs[formName].resetFields()
+              this.dialogVisible = false
+              // getResource().then(response=>{
+              //   if(response){
+              //       this.resourcelist = response;
+              //   }
+              // }).catch(error=>{
+              //   this.$message(error)
+              // })
+            }
+          })
+        } else {
+          this.$message, error('error submit!!')
+          return false
+        }
+      })
     },
-    //删除通道关联
+    // 删除通道关联
     deleteOneData(index) {
-      this.actionData.splice(index, 1);
+      this.actionData.splice(index, 1)
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .addengine {

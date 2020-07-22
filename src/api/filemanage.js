@@ -18,23 +18,23 @@ export function addmeterforuser(meterdata) {
     url: '/yhgx',
     method: 'post',
     data: {
-     yhabh:meterdata.yhabh,
-     ccbh:meterdata.ccbh,
-     vcaddr:meterdata.vcaddr,
-     pn:parseInt(meterdata.pn),
-     addr:meterdata.addr,
-     organization:meterdata.organization,
-     city:meterdata.city,
-     country: meterdata.country,
-     province: meterdata.province,
-     mod:meterdata.mod,
-     version: meterdata.version
+      yhabh: meterdata.yhabh,
+      ccbh: meterdata.ccbh,
+      vcaddr: meterdata.vcaddr,
+      pn: parseInt(meterdata.pn),
+      addr: meterdata.addr,
+      organization: meterdata.organization,
+      city: meterdata.city,
+      country: meterdata.country,
+      province: meterdata.province,
+      mod: meterdata.mod,
+      version: meterdata.version
     }
   })
 }
 export function CountAll(path) {
   return request({
-    url: '/count/'+path,
+    url: '/count/' + path,
     method: 'get',
     data: {}
   })

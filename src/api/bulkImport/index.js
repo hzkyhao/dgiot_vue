@@ -4,7 +4,7 @@ export function Upload(data) {
   return request({
     url: '/yhgx/transaction/add',
     method: 'post',
-    data:{
+    data: {
       addr: data.addr_web,
       appeui: data.appeui,
       deveui: data.deveui,
@@ -13,7 +13,7 @@ export function Upload(data) {
       others: data.others,
       pn: data.pn,
       vcaddr: data.vcaddr_web,
-      yhabh: data.yhabh,
+      yhabh: data.yhabh
     }
   })
 }
@@ -23,7 +23,7 @@ export function RollBack(data) {
   return request({
     url: '/yhgx/transaction/rollback',
     method: 'post',
-    data:{
+    data: {
       data
     }
   })
@@ -34,7 +34,7 @@ export function Verify(data) {
   return request({
     url: '/yhgx/transaction/check',
     method: 'post',
-    data:{
+    data: {
       data
     }
   })
@@ -53,7 +53,7 @@ export function Import(data) {
   return request({
     url: '/yhgx/transaction/commit',
     method: 'post',
-    data:{
+    data: {
       data
     }
   })

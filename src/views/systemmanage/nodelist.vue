@@ -1,20 +1,20 @@
 <template>
   <div class="nodelist">
     <div class="operation">
-      <el-button type="primary" icon="el-icon-search"></el-button>
-      <el-button type="danger" icon="el-icon-delete"></el-button>
-      <el-button type="danger" icon="el-icon-date"></el-button>
+      <el-button type="primary" icon="el-icon-search"/>
+      <el-button type="danger" icon="el-icon-delete"/>
+      <el-button type="danger" icon="el-icon-date"/>
     </div>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {}
   },
   mounted() {},
   methods: {}
-};
+}
 </script>
 <style scoped>
 .nodelist {

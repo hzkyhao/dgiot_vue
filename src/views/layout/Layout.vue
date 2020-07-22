@@ -9,16 +9,16 @@
     </div> -->
     <!-- <sidebar class="sidebar-container" style="background:#004998;text-align:center"/> -->
     <div class="main-container">
-     
+
       <app-main />
       <TagsView />
     </div>
-    
+
   </div>
 </template>
 
 <script>
-import { Sidebar, AppMain,TagsView } from './components'
+import { Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import Navbar from './Navbar'
 export default {
@@ -41,11 +41,11 @@ export default {
       return {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
+        withoutAnimation: this.sidebar.withoutAnimation
         // mobile: this.device === 'mobile'
       }
     }
-  },
+  }
 }
 </script>
 

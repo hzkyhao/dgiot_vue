@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="tableData" :row-style="showRow" v-bind="$attrs" v-on="$listeners" row-key="objectId" ref="multipleTable">
+  <el-table ref="multipleTable" :data="tableData" :row-style="showRow" v-bind="$attrs" row-key="objectId" v-on="$listeners">
     <slot name="selection" />
     <slot name="pre-column" />
     <el-table-column
@@ -14,10 +14,9 @@
         <slot :scope="scope" :name="item.key">
           <template v-if="item.expand">
             <span :style="{'padding-left':20+ 'px'} " />
-            <span v-show="showSperadIcon(scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
-            </span>
+            <span v-show="showSperadIcon(scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)"/>
             <i v-if="(!scope.row._expand)&&(!scope.row.children)" class="el-icon-minus" style="margin-right:5px;"/>
-             <!-- <i v-if="scope.row._expand" class="el-icon-plus"/>
+            <!-- <i v-if="scope.row._expand" class="el-icon-plus"/>
               <i v-else class="el-icon-minus" /> -->
           </template>
           <template v-if="item.checkbox">
@@ -74,17 +73,13 @@ export default {
       guard: 1
     }
   },
-  mounted() {
-    console.log(this.defaultExpandAll)
-  },
   computed: {
     children() {
-      
       return this.defaultChildren
     },
     tableData() {
       const data = this.data
-     
+
       if (this.data.length === 0) {
         return []
       }
@@ -93,9 +88,12 @@ export default {
         children: this.defaultChildren
       })
       const retval = treeToArray(data, this.defaultChildren)
-      
+
       return retval
     }
+  },
+  mounted() {
+    console.log(this.defaultExpandAll)
   },
   methods: {
     addBrother(row, data) {
