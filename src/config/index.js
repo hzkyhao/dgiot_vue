@@ -9,7 +9,8 @@
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
 //  var serverURL = "http://192.168.2.44:5080/iotapi"
 // var serverURL = "http://192.168.2.51:5080/iotapi"
-var serverURL = 'http://192.168.2.7:5080/iotapi'
+var serverURL = "http://192.168.2.7:5080/iotapi";
+// var serverURL = "http://132.232.121.164:5080/iotapi";
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
 //  var serverURL = "http://192.168.2.26:5080/iotapi"
 //  var serverURL = "http://pump.iotn2n.com:5080/iotapi"
@@ -17,26 +18,26 @@ var serverURL = 'http://192.168.2.7:5080/iotapi'
 // var serverURL = "http://120.25.171.26:5080/iotapi"
 // var serverURL =  'http://shapes.iotn2n.com:5080/iotapi'
 
-var localTopoUrl = 'http://192.168.2.18:8339'
+var localTopoUrl = "http://192.168.2.18:8339";
 
 try {
   // 判断是否为生产环境
-  if (process.env.NODE_ENV === 'production' || serverURL == '/') {
-    var hostname = null
-    var serverURL = '/iotapi'
+  if (process.env.NODE_ENV === "production" || serverURL == "/") {
+    var hostname = null;
+    var serverURL = "/iotapi";
   } else {
-    var reg = /^http(s)?:\/\/(.*?)\//
-    var hval = reg.exec(serverURL)[2]
-    var i = hval.lastIndexOf('\:')
-    var hostname = hval.substr(0, i)
+    var reg = /^http(s)?:\/\/(.*?)\//;
+    var hval = reg.exec(serverURL)[2];
+    var i = hval.lastIndexOf(":");
+    var hostname = hval.substr(0, i);
   }
 } catch (error) {
-  var hostname = null
-  var serverURL = '/iotapi'
-  console.log('process error ###', error)
+  var hostname = null;
+  var serverURL = "/iotapi";
+  console.log("process error ###", error);
 }
 
-console.log('process ###', process.env)
+console.log("process ###", process.env);
 // process.env.NODE_ENV === "development"
 
 // 导出es6模块
@@ -64,11 +65,11 @@ module.exports = {
   /**
    * @description 此处修改网站名称
    */
-  webName: 'eladmin',
+  webName: "eladmin",
   /**
    * @description token key
    */
-  TokenKey: 'EL-ADMIN-TOEKN',
+  TokenKey: "EL-ADMIN-TOEKN",
 
   /**
    * @description 请求超时时间，毫秒（默认2分钟）
@@ -77,4 +78,4 @@ module.exports = {
   hostname: hostname,
   serverURL: serverURL,
   localTopoUrl: localTopoUrl
-}
+};

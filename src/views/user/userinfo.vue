@@ -4,37 +4,16 @@
       <h3>个人信息</h3>
       <ul>
         <li>
-          用户姓名:
-          <span>{{ userinfo.name }}</span>
+          用户姓名:<span>{{ userinfo.name }}</span>
         </li>
         <li>
-          用户ID:
-          <span>{{ userinfo.id }}</span>
+          用户ID:<span>{{ userinfo.id }}</span>
         </li>
         <li>
-          用户描述:
-          <span>{{ userinfo.nick }}</span>
+          用户描述:<span>{{ userinfo.nick }}</span>
         </li>
         <li>
-          操作权限:
-          <span>{{ roles.join(",") }}</span>
-        </li>
-        <li>
-          高级功能:
-          <el-upload
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :limit="3"
-            :on-exceed="handleExceed"
-            :file-list="fileList"
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple
-          >
-            <el-button size="small" type="primary">导入菜单</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传json文件</div>
-          </el-upload>
+          操作权限:<span>{{ roles.join(",") }}</span>
         </li>
       </ul>
     </div>
@@ -50,7 +29,6 @@ export default {
   name: "Userinfo",
   data() {
     return {
-      fileList: [],
       userid: "",
       userinfo: {
         name: "",
@@ -99,34 +77,7 @@ export default {
     //    }).catch(error=>{
     //       console.log(error)
     //    })
-
     // }
-    importMenu() {
-      this.$axios
-        .post("/menu")
-        .then(res => {
-          console.log(res);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 3 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-      );
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
-    }
   }
 };
 </script>
@@ -138,7 +89,7 @@ export default {
   box-sizing: border-box;
   background: #fff;
   .userdetail {
-    // height: 500px;
+    height: 500px;
     width: 1000px;
     background: #f9fafc;
     margin: 0 auto;
