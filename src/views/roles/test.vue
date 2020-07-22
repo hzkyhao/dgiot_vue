@@ -405,7 +405,13 @@ export default {
               type: "success",
               message: "菜单导入成功"
             });
-            this.getMenu();
+            setTimeout(() => {
+              this.file = "";
+              this.inputDOM = "";
+              this.size = "";
+              this.formData = "";
+              this.getMenu();
+            }, 1500);
           })
           .catch(e => {
             console.log(e);
