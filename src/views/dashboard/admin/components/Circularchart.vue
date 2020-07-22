@@ -3,28 +3,28 @@
 </template>
 
 <script>
-import echarts from "echarts";
-require("echarts/theme/macarons"); // echarts theme
-import { debounce } from "@/utils";
+import echarts from 'echarts'
+require('echarts/theme/macarons') // echarts theme
+import { debounce } from '@/utils'
 
 export default {
   props: {
     className: {
       type: String,
-      default: "chart"
+      default: 'chart'
     },
     width: {
       type: String,
-      default: "100%"
+      default: '100%'
     },
     height: {
       type: String,
-      default: "350px"
+      default: '350px'
     },
     autoResize: {
       type: Boolean,
       default: true
-    },
+    }
     // chartData: {
     //   type: Array,
     //   required: true
@@ -34,7 +34,7 @@ export default {
     return {
       chart: null,
       sidebarElm: null
-    };
+    }
   },
   // watch: {
   //   chartData: {
@@ -45,57 +45,57 @@ export default {
   //   }
   // },
   mounted() {
-    this.initChart();
+    this.initChart()
     if (this.autoResize) {
       this.__resizeHandler = debounce(() => {
         if (this.chart) {
-          this.chart.resize();
+          this.chart.resize()
         }
-      }, 100);
-      window.addEventListener("resize", this.__resizeHandler);
+      }, 100)
+      window.addEventListener('resize', this.__resizeHandler)
     }
 
     // 监听侧边栏的变化
-    this.sidebarElm = document.getElementsByClassName("sidebar-container")[0];
+    this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     this.sidebarElm &&
       this.sidebarElm.addEventListener(
-        "transitionend",
+        'transitionend',
         this.sidebarResizeHandler
-      );
+      )
   },
   beforeDestroy() {
     if (!this.chart) {
-      return;
+      return
     }
     if (this.autoResize) {
-      window.removeEventListener("resize", this.__resizeHandler);
+      window.removeEventListener('resize', this.__resizeHandler)
     }
 
     this.sidebarElm &&
       this.sidebarElm.removeEventListener(
-        "transitionend",
+        'transitionend',
         this.sidebarResizeHandler
-      );
+      )
 
-    this.chart.dispose();
-    this.chart = null;
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     sidebarResizeHandler(e) {
-      if (e.propertyName === "width") {
-        this.__resizeHandler();
+      if (e.propertyName === 'width') {
+        this.__resizeHandler()
       }
     },
     setOptions() {
-      var data = [100, 80, 60, 40];
+      var data = [100, 80, 60, 40]
       var titlename = [
-        "拱墅区",
-        "余杭区",
-        "西湖区",
-        "江干区",
-      ];
-      var valdata = [683,523,240,234];
-    //   var myColor = ["#1089E7", "#F57474", "#56D0E3", "#F8B448"];
+        '拱墅区',
+        '余杭区',
+        '西湖区',
+        '江干区'
+      ]
+      var valdata = [683, 523, 240, 234]
+      //   var myColor = ["#1089E7", "#F57474", "#56D0E3", "#F8B448"];
       this.chart.setOption({
         // backgroundColor: "#0e2147",
         xAxis: {
@@ -116,29 +116,29 @@ export default {
               show: false
             },
             axisLabel: {
-              color: "black",
+              color: 'black',
               formatter: function(value, index) {
-                return [value].join("\n");
+                return [value].join('\n')
               },
               show: true,
-                margin: -10,
-                align: 'left',
-                verticalAlign: 'bottom',
-                padding: [0, 0,15, 0],
-                fontSize:16,
+              margin: -10,
+              align: 'left',
+              verticalAlign: 'bottom',
+              padding: [0, 0, 15, 0],
+              fontSize: 16,
               rich: {
                 lg: {
-                  backgroundColor: "#339911",
-                  color: "green",
+                  backgroundColor: '#339911',
+                  color: 'green',
                   borderRadius: 10,
-                  align: "center",
+                  align: 'center',
                   width: 15,
                   height: 15
                 }
               }
             }
           },
-          //数字显示大小
+          // 数字显示大小
           {
             show: true,
             inverse: true,
@@ -146,7 +146,7 @@ export default {
             axisLabel: {
               textStyle: {
                 fontSize: 20,
-                color: "#339911"
+                color: '#339911'
               }
             },
             axisLine: {
@@ -162,8 +162,8 @@ export default {
         ],
         series: [
           {
-            name: "条",
-            type: "bar",
+            name: '条',
+            type: 'bar',
             yAxisIndex: 0,
             data: data,
             barWidth: 30,
@@ -172,34 +172,34 @@ export default {
                 barBorderRadius: 30,
                 color: function(value) {
                   return (
-                    "#" +
+                    '#' +
                     (
-                      "00000" +
+                      '00000' +
                       ((Math.random() * 16777215 + 0.5) >> 0).toString(16)
                     ).slice(-6)
-                  );
+                  )
                 }
               }
             },
             label: {
               normal: {
                 show: false,
-                position: "inside",
-                formatter: "{c}%"
+                position: 'inside',
+                formatter: '{c}%'
               }
             }
           },
           {
-            name: "框",
-            type: "bar",
+            name: '框',
+            type: 'bar',
             yAxisIndex: 1,
-            barGap: "-100%",
+            barGap: '-100%',
             data: [100, 100, 100, 100],
             barWidth: 30,
             itemStyle: {
               normal: {
-                color: "none",
-                borderColor:"#cccccc",
+                color: 'none',
+                borderColor: '#cccccc',
                 // function(value) {
                 //   return (
                 //     "#" +
@@ -209,19 +209,19 @@ export default {
                 //     ).slice(-6)
                 //   );
                 // },
-                margin:[10,0],
+                margin: [10, 0],
                 borderWidth: 2,
                 barBorderRadius: 15
               }
             }
           }
         ]
-      });
+      })
     },
     initChart() {
-      this.chart = echarts.init(this.$el, "macarons");
-      this.setOptions();
+      this.chart = echarts.init(this.$el, 'macarons')
+      this.setOptions()
     }
   }
-};
+}
 </script>

@@ -2,16 +2,16 @@
   <div class="login-container">
     <div class="loginbanner">
       <el-form
-        :model="ruleForm2"
-        status-icon
-        :rules="rules2"
         ref="ruleForm2"
+        :model="ruleForm2"
+        :rules="rules2"
+        status-icon
         label-width="100px"
         class="login-form"
       >
-         <div class="logo">
+        <div class="logo">
           <img :src="logosrc" alt="logo" style="width:80px;height:80px;">
-          <p>{{title}}</p>
+          <p>{{ title }}</p>
         </div>
 
         <!-- <el-input v-model="ruleForm2.diqu" type="text"></el-input> -->
@@ -23,44 +23,44 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-              ></el-option>
+              />
             </el-select>
           </span>
           <el-input
-            v-model="ruleForm2.phone"
             ref="phonerole"
+            v-model="ruleForm2.phone"
+            :maxlength="11"
             name="phone"
             type="text"
             auto-complete="on"
-            :maxlength="11"
             placeholder="请输入手机号"
             style="width:250px"
-           
+
           />
         </el-form-item>
         <div class="yzm" style="height:50px;margin-left:20px;margin-bottom:20px;">
           <span class="svg-container" style="float:left;width:25%">
             <el-input
-              type="text"
               v-model="phonesms"
+              type="text"
               disabled
               style="border:1px solid #cccccc;border-radius:5px;width:100%;border-radius:0;border-right:0px"
-            ></el-input>
+            />
           </span>
           <el-input
+            v-model.number="code"
             type="text"
             placeholder="请输入验证码"
             class="yzm"
-            v-model.number="code"
             style="width:50%;float:left;border:1px solid #cccccc;border-radius:0;"
-          ></el-input>
+          />
           <el-button
-            @click="send"
             :disabled="sendMsgDisabled"
             style="float:right;padding:12px 15px 12px 15px;width:25%;border-radius:0;height:47px;"
             type="primary"
+            @click="send"
           >
-            <span v-if="sendMsgDisabled">{{time+'秒后获取'}}</span>
+            <span v-if="sendMsgDisabled">{{ time+'秒后获取' }}</span>
             <span v-if="!sendMsgDisabled">发送验证码</span>
           </el-button>
         </div>
@@ -73,7 +73,7 @@
         </el-form-item>
         <div class="hasuser">
           <span style="color:#409EFF;font-size:14px;cursor:pointer" @click="login">账号密码登陆</span>
-         
+
           <span style="color:#777777;font-size:14px;cursor:pointer;float:right" @click="skip">进入</span>
         </div>
       </el-form>
@@ -81,248 +81,248 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
-let Base64 = require("js-base64").Base64;
-import { Phonelogin, Verify } from "@/api/login";
-import Cookies from "js-cookie";
+import Parse from 'parse'
+const Base64 = require('js-base64').Base64
+import { Phonelogin, Verify } from '@/api/login'
+import Cookies from 'js-cookie'
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
         if (!/^\w{6,10}$/.test(value)) {
-          callback(new Error("密码格式不正确"));
+          callback(new Error('密码格式不正确'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     var validatecheckPass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm2.password) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
 
     return {
-      phonesms: "手机验证码",
+      phonesms: '手机验证码',
       time: 60, // 发送验证码倒计时
       sendMsgDisabled: false,
-      code: "",
-      actions: "",
+      code: '',
+      actions: '',
       routes: [],
       logosrc: '',
-      title:'',
+      title: '',
       ruleForm2: {
-        account: "",
-        phone: "",
-        username: "",
-        password: "",
-        email: "",
-        checkPass: "",
+        account: '',
+        phone: '',
+        username: '',
+        password: '',
+        email: '',
+        checkPass: '',
         diqu: [],
-        value: "+86/中国",
-        time:0
+        value: '+86/中国',
+        time: 0
       },
       origin: [
-        "+86/中国",
-        "+886/中国台湾",
-        "+852/中国香港",
-        "+91/India",
-        "+244/Angola",
-        "+54/Argentina",
-        "+1/American Samoa",
-        "+880/Bangladesh",
-        "+56/Chile",
-        "+855/Cambodia",
-        "+20/Egypt",
-        "+33/France",
-        "+49/Germany",
-        "+62/Indonesia",
-        "+353/Ireland",
-        "+972/Israel",
-        "+39/Italy",
-        "+81/Japan",
-        "+60/Malaysia",
-        "+63/Philippines",
-        "+92/Pakistan",
-        "+82/South Korea",
-        "+46/Sweden",
-        "+65/Singapore",
-        "+27/South Africa",
-        "+66/Thailand",
-        "+971/United Arab Emirates",
-        "+44/United Kingdom",
-        "+1/United States",
-        "+84/Vietnam",
-        "+967/Yemen",
-        "+260/Zambia"
+        '+86/中国',
+        '+886/中国台湾',
+        '+852/中国香港',
+        '+91/India',
+        '+244/Angola',
+        '+54/Argentina',
+        '+1/American Samoa',
+        '+880/Bangladesh',
+        '+56/Chile',
+        '+855/Cambodia',
+        '+20/Egypt',
+        '+33/France',
+        '+49/Germany',
+        '+62/Indonesia',
+        '+353/Ireland',
+        '+972/Israel',
+        '+39/Italy',
+        '+81/Japan',
+        '+60/Malaysia',
+        '+63/Philippines',
+        '+92/Pakistan',
+        '+82/South Korea',
+        '+46/Sweden',
+        '+65/Singapore',
+        '+27/South Africa',
+        '+66/Thailand',
+        '+971/United Arab Emirates',
+        '+44/United Kingdom',
+        '+1/United States',
+        '+84/Vietnam',
+        '+967/Yemen',
+        '+260/Zambia'
       ],
       rules2: {
         account: [
-          { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 1, max: 10, message: "长度在 1到 10 个字符", trigger: "blur" }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在 1到 10 个字符', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           {
             validator: function(rule, value, callback) {
-              var MobileRegex = /^1[34578]\d{9}$/;
+              var MobileRegex = /^1[34578]\d{9}$/
               if (!MobileRegex.test(value)) {
-                callback(new Error("手机号码格式不正确！"));
+                callback(new Error('手机号码格式不正确！'))
               } else {
-                callback();
+                callback()
               }
             },
-            trigger: "blur"
+            trigger: 'blur'
           }
         ],
         password: [
-          { validator: validatePass, trigger: "blur", required: true }
+          { validator: validatePass, trigger: 'blur', required: true }
         ],
         checkPass: [
-          { validator: validatecheckPass, trigger: "blur", required: true }
+          { validator: validatecheckPass, trigger: 'blur', required: true }
         ],
         username: [
-          { required: true, message: "请输入姓名", trigger: "blur" },
-          { min: 2, max: 5, message: "姓名格式不正确", trigger: "blur" }
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { min: 2, max: 5, message: '姓名格式不正确', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change']
           }
         ]
       },
-      phonetoken:''
-    };
+      phonetoken: ''
+    }
   },
   mounted() {
-    var MobileRegex = /^1[34578]\d{9}$/;
-    if (this.$route.query.phone&&MobileRegex.test(Base64.decode(this.$route.query.phone))) {
-      this.ruleForm2.phone = Base64.decode(this.$route.query.phone);
-      
-      this.$refs['phonerole'].$refs.input.disabled=true
-    }else{
-      
+    var MobileRegex = /^1[34578]\d{9}$/
+    if (this.$route.query.phone && MobileRegex.test(Base64.decode(this.$route.query.phone))) {
+      this.ruleForm2.phone = Base64.decode(this.$route.query.phone)
+
+      this.$refs['phonerole'].$refs.input.disabled = true
+    } else {
+
     }
-    this.ruleForm2.diqu = [];
-    this.actions = this.$route.query.action;
+    this.ruleForm2.diqu = []
+    this.actions = this.$route.query.action
     this.origin.map(items => {
       this.ruleForm2.diqu.push({
         label: items,
         value: items.toString()
-      });
-    });
-     this.title = sessionStorage.getItem('product_title')
-    this.logosrc =  sessionStorage.getItem('imgsrc')
+      })
+    })
+    this.title = sessionStorage.getItem('product_title')
+    this.logosrc = sessionStorage.getItem('imgsrc')
     this.phonetoken = Cookies.get('sessionToken')
   },
   methods: {
     showPwd() {
-      if (this.pwdType === "password") {
-        this.pwdType = "";
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
       } else {
-        this.pwdType = "password";
+        this.pwdType = 'password'
       }
     },
     login() {
       this.$router.push({
-        path: "/login"
-      });
+        path: '/login'
+      })
     },
     submitForm(formName) {
-      var MobileRegex = /^1[34578]\d{9}$/;
-      var _this=this
+      var MobileRegex = /^1[34578]\d{9}$/
+      var _this = this
       _this.$refs[formName].validate(valid => {
         if (valid && MobileRegex.test(_this.ruleForm2.phone)) {
           Verify(_this.actions, _this.ruleForm2.phone, _this.code)
             .then(result => {
               // Parse.User.become(result.sessionToken)
-             this.postToken(result.sessionToken)
-          
-                  // The token could not be validated.
-        }).catch(error=>{
-          _this.$message(error)
-        })    
+              this.postToken(result.sessionToken)
+
+              // The token could not be validated.
+            }).catch(error => {
+              _this.$message(error)
+            })
         } else {
           _this.$message({
-            message: "信息错误",
-            type: "error"
-          });
-          return false;
+            message: '信息错误',
+            type: 'error'
+          })
+          return false
         }
-      });
+      })
     },
     send() {
-      var MobileRegex = /^1[34578]\d{9}$/;
-      let _this = this;
+      var MobileRegex = /^1[34578]\d{9}$/
+      const _this = this
       if (MobileRegex.test(_this.ruleForm2.phone)) {
-        _this.sendMsgDisabled = true;
+        _this.sendMsgDisabled = true
         Phonelogin(
           _this.ruleForm2.phone,
           encodeURIComponent(_this.ruleForm2.value)
         )
           .then(res => {
             this.$message({
-              message: "发送成功",
-              type: "success"
-            });
+              message: '发送成功',
+              type: 'success'
+            })
             this.time = res.expire
           })
           .catch(error => {
             this.$message(error)
-          });
-        let interval = window.setInterval(function() {
+          })
+        const interval = window.setInterval(function() {
           if (_this.time-- <= 0) {
-            _this.time = this.time*60;
-            _this.sendMsgDisabled = false;
-            window.clearInterval(interval);
+            _this.time = this.time * 60
+            _this.sendMsgDisabled = false
+            window.clearInterval(interval)
           }
-        }, 1000);
+        }, 1000)
       } else {
         this.$message({
-          message: "请输入正确的手机号",
-          type: "warning"
-        });
+          message: '请输入正确的手机号',
+          type: 'warning'
+        })
       }
     },
-    postToken(sessionToken){
+    postToken(sessionToken) {
       var _this = this
-       Parse.User.become(sessionToken).then(
-            function(user) {
-              var Menu = Parse.Object.extend("Navigation");
-              var menu = new Parse.Query(Menu);
-              menu.find().then(menu => {
-                var menu1 = menu;
-                menu1.map(items => {
-                  if (items.attributes.parent) {
-                     _this.routes.push(items);
-                  }
-                });
-                _this.$message({
-                  message: "成功登录",
-                  type: "success"
-                });
-                sessionStorage.setItem("username",user.attributes.username);
-                localStorage.setItem("list", JSON.stringify(_this.routes));
-                sessionStorage.setItem("token", sessionToken);
-                Cookies.set("sessionToken", sessionToken)
-                Cookies.set('username',user.attributes.username)
-                _this.$router.push({ path: _this.redirect || "/dashboard" });
-              });
-            })      // The current user is now set to user.
+      Parse.User.become(sessionToken).then(
+        function(user) {
+          var Menu = Parse.Object.extend('Navigation')
+          var menu = new Parse.Query(Menu)
+          menu.find().then(menu => {
+            var menu1 = menu
+            menu1.map(items => {
+              if (items.attributes.parent) {
+                _this.routes.push(items)
+              }
+            })
+            _this.$message({
+              message: '成功登录',
+              type: 'success'
+            })
+            sessionStorage.setItem('username', user.attributes.username)
+            localStorage.setItem('list', JSON.stringify(_this.routes))
+            sessionStorage.setItem('token', sessionToken)
+            Cookies.set('sessionToken', sessionToken)
+            Cookies.set('username', user.attributes.username)
+            _this.$router.push({ path: _this.redirect || '/dashboard' })
+          })
+        }) // The current user is now set to user.
     },
-    skip(){
+    skip() {
       this.postToken(this.phonetoken)
     }
   }
-};
+}
 </script>
 <style rel="stylesheet/scss" lang="scss">
 $light_gray: rgba(0, 0, 0, 0.247058823529412);

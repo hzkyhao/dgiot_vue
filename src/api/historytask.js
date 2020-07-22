@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function HistoryTask(start, length, di, datetime,searchvalue) {
+export function HistoryTask(start, length, di, datetime, searchvalue) {
   return request({
     url: '/shuwa_task/historyVcaddr',
     method: 'get',
@@ -54,7 +54,7 @@ export function Alltasks(start, length, draw, searchvalue) {
     }
   })
 }
-export function Addtasks(name, frozendate, downchannel,starttime,endtime, meter, freq, unit,upchannel) {
+export function Addtasks(name, frozendate, downchannel, starttime, endtime, meter, freq, unit, upchannel) {
   return request({
     url: '/shuwa_task/task',
     method: 'post',
@@ -63,15 +63,15 @@ export function Addtasks(name, frozendate, downchannel,starttime,endtime, meter,
       frozendate: frozendate,
       downchannel: downchannel,
       starttime: starttime,
-      endtime:endtime,
+      endtime: endtime,
       meter: meter,
       freq: freq,
       unit: unit,
-      upchannel:upchannel
+      upchannel: upchannel
     }
   })
 }
-export function Taskdetail(start, length, tid,rid, starttime,freq,search) {
+export function Taskdetail(start, length, tid, rid, starttime, freq, search) {
   return request({
     url: '/shuwa_task/vcaddr',
     method: 'get',
@@ -79,25 +79,25 @@ export function Taskdetail(start, length, tid,rid, starttime,freq,search) {
       start: start,
       length: length,
       tid: tid,
-      rid:rid,
-      starttime:starttime,
-      freq:freq,
-      search:search
+      rid: rid,
+      starttime: starttime,
+      freq: freq,
+      search: search
     }
   })
 }
-export function Taskmeterdetail(tid,rid,starttime,vcaddr,freq,fdate,di) {
+export function Taskmeterdetail(tid, rid, starttime, vcaddr, freq, fdate, di) {
   return request({
     url: 'shuwa_task/meter',
     method: 'get',
-    params:{
-      tid:tid,
-      rid:rid,
-      starttime:starttime,
-      vcaddr:vcaddr,
-      freq:freq,
-      fdate:fdate,
-      di:di
+    params: {
+      tid: tid,
+      rid: rid,
+      starttime: starttime,
+      vcaddr: vcaddr,
+      freq: freq,
+      fdate: fdate,
+      di: di
     }
   })
 }
@@ -110,7 +110,7 @@ export function Removetask(id) {
     }
   })
 }
-//抄表
+// 抄表
 export function Supporttask(data) {
   return request({
     url: '/shuwa_task/readMeter',
@@ -121,7 +121,7 @@ export function Supporttask(data) {
       pn: data.pn,
       taskid: data.taskid,
       vcaddr: data.vcaddr,
-      tattr:data.tattr
+      tattr: data.tattr
     }
   })
 }

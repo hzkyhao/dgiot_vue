@@ -3,26 +3,26 @@
 </template>
 
 <script>
-import echarts from "echarts";
-require("echarts/theme/macarons"); // echarts theme
-import { debounce } from "@/utils";
-import { regionData } from "element-china-area-data";
+import echarts from 'echarts'
+require('echarts/theme/macarons') // echarts theme
+import { debounce } from '@/utils'
+import { regionData } from 'element-china-area-data'
 
-const animationDuration = 6000;
+const animationDuration = 6000
 
 export default {
   props: {
     className: {
       type: String,
-      default: "chart"
+      default: 'chart'
     },
     width: {
       type: String,
-      default: "100%"
+      default: '100%'
     },
     height: {
       type: String,
-      default: "250px"
+      default: '250px'
     },
     regionpdata: {
       type: Object,
@@ -30,66 +30,66 @@ export default {
         return {
           xdata: [],
           data: [],
-          title: "",
-          formatter: "",
-          name: "",
-          color: ""
-        };
+          title: '',
+          formatter: '',
+          name: '',
+          color: ''
+        }
       }
     }
   },
   data() {
     return {
       chart: null
-    };
+    }
   },
   watch: {
     regionpdata: {
       deep: true,
       handler(val) {
-        this.initChart(val);
+        this.initChart(val)
       }
     }
   },
   mounted() {
-    this.initChart(this.regionpdata);
+    this.initChart(this.regionpdata)
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
-        this.chart.resize();
+        this.chart.resize()
       }
-    }, 100);
-    window.addEventListener("resize", this.__resizeHandler);
+    }, 100)
+    window.addEventListener('resize', this.__resizeHandler)
   },
   beforeDestroy() {
     if (!this.chart) {
-      return;
+      return
     }
-    window.removeEventListener("resize", this.__resizeHandler);
-    this.chart.dispose();
-    this.chart = null;
+    window.removeEventListener('resize', this.__resizeHandler)
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     initChart(regionpdata) {
-      this.chart = echarts.init(this.$el, "macarons");
+      this.chart = echarts.init(this.$el, 'macarons')
       this.chart.setOption({
         tooltip: {
-          trigger: "axis",
+          trigger: 'axis',
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
-            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
           },
           formatter: regionpdata.formatter
         },
         grid: {
           //   top:20,
-          left: "10%",
-          right: "2%",
-          bottom: "3%",
+          left: '10%',
+          right: '2%',
+          bottom: '3%',
           containLabel: true
         },
         xAxis: [
           {
-            type: "category",
+            type: 'category',
             data: regionpdata.xdata,
             axisTick: {
               alignWithLabel: true,
@@ -104,42 +104,42 @@ export default {
         legend: {
           data: [regionpdata.title],
           textStyle: {
-            color: "#ffffff"
+            color: '#ffffff'
           }
         },
         yAxis: [
           {
             name: regionpdata.name,
-            type: "value",
+            type: 'value',
             axisTick: {
               show: false
             },
             axisLabel: {
               textStyle: {
-                color: "#fff" //坐标值得具体的颜色
+                color: '#fff' // 坐标值得具体的颜色
               }
             },
-            nameTextStyle:{
-                color:"#ffffff",
-                padding:10,
-                fontSize:14
+            nameTextStyle: {
+              color: '#ffffff',
+              padding: 10,
+              fontSize: 14
             }
           }
         ],
         series: [
           {
             name: regionpdata.title,
-            type: "bar",
-            stack: "vistors",
-            barWidth: "40%",
+            type: 'bar',
+            stack: 'vistors',
+            barWidth: '40%',
             data: regionpdata.data,
             itemStyle: {
               normal: {
                 color: regionpdata.color
-              },
-            
+              }
+
             },
-            
+
             animationDuration
           }
           // {
@@ -151,8 +151,8 @@ export default {
           //   animationDuration
           // }
         ]
-      });
+      })
     }
   }
-};
+}
 </script>

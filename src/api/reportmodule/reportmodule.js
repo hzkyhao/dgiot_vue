@@ -1,8 +1,8 @@
 import request from '@/utils/request'
-//获取模板
-export function getReport(start,len) {
+// 获取模板
+export function getReport(start, len) {
   return request({
-    url: '/pump/templet?dataType=pump_report&start='+start+'&len='+len,
+    url: '/pump/templet?dataType=pump_report&start=' + start + '&len=' + len,
     method: 'GET',
     data: {
     }
@@ -10,22 +10,22 @@ export function getReport(start,len) {
 }
 export function getReportdetail(id) {
   return request({
-    url: '/pump/templet/'+id+'',
+    url: '/pump/templet/' + id + '',
     method: 'GET',
     data: {
-    	
+
     }
   })
 }
-//新增模板
-export function addReport(reportdata,id) {
+// 新增模板
+export function addReport(reportdata, id) {
   return request({
     url: '/pump/templet',
     method: 'POST',
     data: {
-      data:reportdata, 
-      id:id,
-      dataType:'pump_report'
+      data: reportdata,
+      id: id,
+      dataType: 'pump_report'
     }
   })
 }
@@ -40,7 +40,7 @@ export function getModule() {
 }
 export function deriveReport(reportId) {
   return request({
-    url: '/pump/report/config?reportId='+reportId,
+    url: '/pump/report/config?reportId=' + reportId,
     method: 'GET',
     data: {}
   })

@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { regionData } from 'element-china-area-data';
+import { regionData } from 'element-china-area-data'
 
 const animationDuration = 6000
 
@@ -24,17 +24,17 @@ export default {
       type: String,
       default: '250px'
     },
-    regionpdata:{
-        type:Object,
-        default:()=>{
-            return {
-            xdata:[],
-            data:[],
-            alldata:[],
-            title1:'',
-            title2:'',
-            }
+    regionpdata: {
+      type: Object,
+      default: () => {
+        return {
+          xdata: [],
+          data: [],
+          alldata: [],
+          title1: '',
+          title2: ''
         }
+      }
     }
   },
   data() {
@@ -42,13 +42,13 @@ export default {
       chart: null
     }
   },
-  watch:{
-      regionpdata:{
-          deep:true,
-          handler(val){
-              this.initChart(val)
-          }
+  watch: {
+    regionpdata: {
+      deep: true,
+      handler(val) {
+        this.initChart(val)
       }
+    }
   },
   mounted() {
     this.initChart(this.regionpdata)
@@ -76,7 +76,7 @@ export default {
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
           },
-           formatter: regionpdata.formatter
+          formatter: regionpdata.formatter
         },
         grid: {
         //   top:20,
@@ -90,17 +90,17 @@ export default {
           data: regionpdata.xdata,
           axisTick: {
             alignWithLabel: true,
-            show:false,
-          },
+            show: false
+          }
         //   axisLabel:{
         //         interval:0,//横轴信息全部显示
         //         rotate:-30,//-30度角倾斜显示
         //     },
         }],
-         legend: {
+        legend: {
           data: [regionpdata.title2],
-           textStyle:{
-            color:'#ffffff'
+          textStyle: {
+            color: '#ffffff'
           }
         },
         // title: {
@@ -110,69 +110,69 @@ export default {
         //   }
         // },
         yAxis: [{
-          name:'水泵流量分布',
+          name: '水泵流量分布',
           type: 'value',
           axisTick: {
             show: false
           },
-           axisLabel: {
-              textStyle: {
-                color: "#fff" //坐标值得具体的颜色
-              }
-            },
-            nameTextStyle:{
-                color:"#ffffff",
-                padding:10,
-                fontSize:14
+          axisLabel: {
+            textStyle: {
+              color: '#fff' // 坐标值得具体的颜色
             }
+          },
+          nameTextStyle: {
+            color: '#ffffff',
+            padding: 10,
+            fontSize: 14
+          }
         }],
         series: [
-             {
+          {
             name: regionpdata.title2,
             type: 'bar',
             markLine: {
-                symbol:'none',//去掉箭头
-                silent: false,
-                data: [{
-                    name:'告警线',
-                    yAxis: 1.2,
-                    label:{
-                      show:false,
-                      position:'middle',
-                    },
-                    lineStyle:{
-                      type:'solid',
-                      color:'green'
-                    }
+              symbol: 'none', // 去掉箭头
+              silent: false,
+              data: [{
+                name: '告警线',
+                yAxis: 1.2,
+                label: {
+                  show: false,
+                  position: 'middle'
                 },
-                {
-                    name:'111',
-                    yAxis: 1.104,
-                    label:{
-                      show:true,
-                      position:'middle',
-                      
-                    },
-                     lineStyle:{
-                      type:'dashed',
-                      color:'green'
-                    }
+                lineStyle: {
+                  type: 'solid',
+                  color: 'green'
+                }
+              },
+              {
+                name: '111',
+                yAxis: 1.104,
+                label: {
+                  show: true,
+                  position: 'middle'
+
                 },
-                {
-                    name:'111',
-                    yAxis: 1.296,
-                    label:{
-                      show:false,
-                      position:'middle',
-                    },
-                     lineStyle:{
-                      type:'dashed',
-                      color:'green'
-                    }
-                }]
+                lineStyle: {
+                  type: 'dashed',
+                  color: 'green'
+                }
+              },
+              {
+                name: '111',
+                yAxis: 1.296,
+                label: {
+                  show: false,
+                  position: 'middle'
+                },
+                lineStyle: {
+                  type: 'dashed',
+                  color: 'green'
+                }
+              }]
             },
             barWidth: '40%',
-            barGap:'-100%',
+            barGap: '-100%',
             data: regionpdata.alldata,
             animationDuration
           }

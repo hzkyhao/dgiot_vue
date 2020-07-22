@@ -3,9 +3,9 @@
     <!-- <h2>添加角色</h2> -->
     <div class="from">
       <el-form
+        ref="ruleForm"
         :model="ruleForm"
         :rules="rules"
-        ref="ruleForm"
         label-width="100px"
         class="demo-ruleForm"
       >
@@ -21,13 +21,12 @@
               :key="index"
               :value="item.objectId"
               :label="item.name + ':' + item.desc"
-            >
-            </el-option>
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="角色名" prop="name">
-          <el-input v-model="ruleForm.name" style="width:200px;"></el-input>
+          <el-input v-model="ruleForm.name" style="width:200px;"/>
         </el-form-item>
         <el-form-item label="部门" prop="departmentid">
           <!-- <el-cascader
@@ -41,39 +40,37 @@
             @change="changeOption('tree')"
           ></el-cascader> -->
           <el-input
-            placeholder="请输入部门名称"
             v-model="ruleForm.depname"
+            placeholder="请输入部门名称"
             style="width:200px"
-          >
-          </el-input>
+          />
         </el-form-item>
 
         <el-form-item label="角色模版" prop="role">
           <el-select
             v-model="ruleForm.dictvalue"
+            :clearable="clearFlag"
             placeholder="请选择角色模版"
             style="width:200px;"
-            :clearable="clearFlag"
           >
             <el-option
               v-for="(item, index) in Option.dictOption"
               :key="index"
               :value="item.key"
               change="changeOption('dict',item.name)"
-            >
-            </el-option>
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="description">
           <el-input
+            v-model="ruleForm.description"
             placeholder="备注项为必填项"
             type="textarea"
-            v-model="ruleForm.description"
             style="width:200px;"
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item class="el_btn">
-          <el-form-item label="操作" prop="desc"> </el-form-item>
+          <el-form-item label="操作" prop="desc"/>
           <el-button type="warning" @click="resetFrom()">重置</el-button>
           <!-- <el-button
             v-if="insert==0||insert==1"
@@ -84,7 +81,7 @@
             v-if="insert == 0 || insert == 1"
             type="success"
             @click="addroles()"
-            >确定</el-button
+          >确定</el-button
           >
         </el-form-item>
       </el-form>
@@ -92,249 +89,248 @@
   </div>
 </template>
 <script>
-import { Parse } from "parse";
+import { Parse } from 'parse'
 export default {
-  computed: {
-    treeData() {
-      let cloneData = JSON.parse(JSON.stringify(this.data));
-      return cloneData.filter(father => {
-        let branchArr = cloneData.filter(
-          child => father.objectId == child.ParentId
-        );
-        branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.ParentId == 0;
-      });
-    },
-    deptInfo() {
-      return this.$store.getters.deptInfo;
-    }
-  },
   data() {
     return {
       treeModu: [],
       data: [],
       treeprops: {
-        value: "name",
-        label: "name"
+        value: 'name',
+        label: 'name'
       },
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: 'children',
+        label: 'label'
       },
       originrole: [],
       needdelarr: [],
       parentrole: [],
-      userid: "",
-      roleId: "",
-      insert: "",
+      userid: '',
+      roleId: '',
+      insert: '',
       Option: {
-        deptvalue: "",
+        deptvalue: '',
         deptOption: [],
-        dictvalue: "",
+        dictvalue: '',
         dictOption: [],
         objectId: 0,
         ParentId: 0
       },
       clearFlag: true,
       ruleForm: {
-        parentId: "",
-        name: "",
-        phoneNum: "",
-        mail: "",
-        department: "",
-        duty: "",
-        gender: "男",
-        role: "",
-        description: "",
-        region: "",
+        parentId: '',
+        name: '',
+        phoneNum: '',
+        mail: '',
+        department: '',
+        duty: '',
+        gender: '男',
+        role: '',
+        description: '',
+        region: '',
         delivery: false,
         type: [],
-        resource: "",
+        resource: '',
         data2: [],
         list: [],
-        parentrole: "",
+        parentrole: '',
         defaultProps: {
-          children: "children",
-          label: "label"
+          children: 'children',
+          label: 'label'
         },
-        dictvalue: ""
+        dictvalue: ''
       },
       rules: {
         name: [
-          { required: true, message: "请输入角色名", trigger: "blur" },
-          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
+          { required: true, message: '请输入角色名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
         ],
         description: [
-          { required: true, message: "请输入权限描述", trigger: "blur" },
-          { min: 3, message: "最少三个字符", trigger: "blur" }
+          { required: true, message: '请输入权限描述', trigger: 'blur' },
+          { min: 3, message: '最少三个字符', trigger: 'blur' }
         ],
         type: [
           {
-            type: "array",
+            type: 'array',
             required: true,
-            message: "请至少选择一个权限",
-            trigger: "change"
+            message: '请至少选择一个权限',
+            trigger: 'change'
           }
         ],
         roledetail: [
-          { required: true, message: "请输入角色描述", trigger: "blur" }
+          { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
       orderresultes: [],
-      parentid: "",
+      parentid: '',
       roles: [],
       roleList: []
-    };
+    }
+  },
+  computed: {
+    treeData() {
+      const cloneData = JSON.parse(JSON.stringify(this.data))
+      return cloneData.filter(father => {
+        const branchArr = cloneData.filter(
+          child => father.objectId == child.ParentId
+        )
+        branchArr.length > 0 ? (father.children = branchArr) : ''
+        return father.ParentId == 0
+      })
+    },
+    deptInfo() {
+      return this.$store.getters.deptInfo
+    }
+  },
+  mounted() {
+    this.ruleForm.ParentId = this.$store.state.user.departmentObj.objectId
+    // this.getMenu();
+    // this.nodetree()
+    console.log(this.deptInfo, 'this.deptInfo')
+    this.searchAllOption()
   },
   methods: {
     changeOption(key, val) {
       switch (key) {
-        case "tree":
-          this.Option.deptvalue = this.$refs["cascaderAddr"].currentLabels[1];
-          let fatheOptions = this.$refs["cascaderAddr"].options;
-          console.log(this.Option.deptvalue, fatheOptions);
+        case 'tree':
+          this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1]
+          const fatheOptions = this.$refs['cascaderAddr'].options
+          console.log(this.Option.deptvalue, fatheOptions)
           fatheOptions.forEach(val => {
-            if (this.$refs["cascaderAddr"].currentLabels[0] === val.name)
-              this.Option.objectId = val.children[0].objectId;
-            this.Option.ParentId = val.objectId;
-          });
-          break;
-        case "dict":
-          this.Option.dictvalue = val;
-          break;
+            if (this.$refs['cascaderAddr'].currentLabels[0] === val.name) { this.Option.objectId = val.children[0].objectId }
+            this.Option.ParentId = val.objectId
+          })
+          break
+        case 'dict':
+          this.Option.dictvalue = val
+          break
       }
-      console.log(this.Option.dictvalue);
+      console.log(this.Option.dictvalue)
     },
-    //查询部门  角色
+    // 查询部门  角色
     searchAllOption() {
       this.$axiosWen
-        .get("/classes/Dict", {
+        .get('/classes/Dict', {
           params: {
             where: {
-              type: "roletemp"
+              type: 'roletemp'
             }
           }
         })
         .then(res => {
-          console.log(res);
-          this.Option.dictOption = res.results;
-        });
-      this.$axiosWen.get("/classes/_Role").then(res => {
-        const results = res.results;
-        console.log(results);
+          console.log(res)
+          this.Option.dictOption = res.results
+        })
+      this.$axiosWen.get('/classes/_Role').then(res => {
+        const results = res.results
+        console.log(results)
         results.forEach((key, val) => {
-          var obj = {};
-          obj.ParentId = key.ParentId;
-          obj.name = key.name;
-          obj.objectId = key.objectId;
-          obj.org_type = key.org_type;
-          obj.createdAt = key.createdAt;
-          this.data.push(obj);
-        });
+          var obj = {}
+          obj.ParentId = key.ParentId
+          obj.name = key.name
+          obj.objectId = key.objectId
+          obj.org_type = key.org_type
+          obj.createdAt = key.createdAt
+          this.data.push(obj)
+        })
         if (res.results) {
-          this.roleList = res.results;
-          this.Option.deptOption = res.results;
+          this.roleList = res.results
+          this.Option.deptOption = res.results
         } else {
-          this.roleList = [];
-          this.$message("部门列表获取失败");
-          this.Option.deptOption = [];
+          this.roleList = []
+          this.$message('部门列表获取失败')
+          this.Option.deptOption = []
         }
-      });
+      })
     },
     // 重置
     resetFrom() {
       (this.ruleForm = {
-        name: "",
-        phoneNum: "",
-        mail: "",
-        department: "",
-        duty: "",
-        gender: "男",
-        role: "",
-        description: "",
-        alias: ""
+        name: '',
+        phoneNum: '',
+        mail: '',
+        department: '',
+        duty: '',
+        gender: '男',
+        role: '',
+        description: '',
+        alias: ''
       }),
-        (this.Option.deptvalue = "");
-      this.Option.dictvalue = "";
-      this.Option.objectId = 0;
-      this.Option.ParentId = 0;
-      this.data = [];
-      this.treeModu = [];
+      (this.Option.deptvalue = '')
+      this.Option.dictvalue = ''
+      this.Option.objectId = 0
+      this.Option.ParentId = 0
+      this.data = []
+      this.treeModu = []
       setTimeout(() => {
-        this.searchAllOption();
-      }, 1000);
+        this.searchAllOption()
+      }, 1000)
     },
     diguiquchu(datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
       arr.map(item => {
         if (item.key == v && item.children.length > 0) {
           // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
-          needdelarr.push(v);
-          this.diguiquchu(datas, item.children, v, needdelarr);
+          needdelarr.push(v)
+          this.diguiquchu(datas, item.children, v, needdelarr)
         } else if (item.key != v && item.children.length > 0) {
-          this.diguiquchu(datas, item.children, v, needdelarr);
+          this.diguiquchu(datas, item.children, v, needdelarr)
         }
-      });
+      })
     },
     addroles() {
-      let params = {
+      const params = {
         depname: this.ruleForm.depname,
         desc: this.ruleForm.description,
         name: this.ruleForm.name,
         parent: this.ruleForm.ParentId,
         tempname: this.ruleForm.dictvalue
-      };
+      }
       this.$axiosWen
-        .post("/role", params)
+        .post('/role', params)
         .then(res => {
-          console.log(res);
+          console.log(res)
           this.$message({
-            message: "新增成功",
-            type: "success"
-          });
+            message: '新增成功',
+            type: 'success'
+          })
           // this.$router.push({
           //   path: "/roles/roles"
           // });
-          this.$store.dispatch("setDialogFlag", false);
+          this.$store.dispatch('setDialogFlag', false)
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     nodetree() {
-      this.userid = Parse.User.current().id;
-      var User = Parse.Object.extend("_User");
-      var user = new Parse.Query(User);
+      this.userid = Parse.User.current().id
+      var User = Parse.Object.extend('_User')
+      var user = new Parse.Query(User)
       user.find(this.userid).then(resultes => {
-        var Role = Parse.Object.extend("_Role");
-        var query = new Parse.Query(Role);
-        var user = new User();
-        query.addAscending("createdAt");
+        var Role = Parse.Object.extend('_Role')
+        var query = new Parse.Query(Role)
+        var user = new User()
+        query.addAscending('createdAt')
         query.find().then(resultes => {
-          user.set("objectId", this.userid);
-          query.equalTo("users", user);
+          user.set('objectId', this.userid)
+          query.equalTo('users', user)
           query.find().then(result => {
-            console.log(result);
-            this.parentrole = result;
-          });
-        });
-      });
+            console.log(result)
+            this.parentrole = result
+          })
+        })
+      })
     },
     getdetail() {
-      this.insert = this.$route.query.insert;
-      console.log(this.insert);
-      this.roleId = this.$route.query.roleId;
-      console.log(this.insert, "insert");
+      this.insert = this.$route.query.insert
+      console.log(this.insert)
+      this.roleId = this.$route.query.roleId
+      console.log(this.insert, 'insert')
     }
-  },
-  mounted() {
-    this.ruleForm.ParentId = this.$store.state.user.departmentObj.objectId;
-    // this.getMenu();
-    // this.nodetree()
-    console.log(this.deptInfo, "this.deptInfo");
-    this.searchAllOption();
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .from /deep/ .el-form-item {

@@ -5,8 +5,8 @@
         <span
           v-if="item.redirect==='noredirect'||index==levelList.length-1"
           class="no-redirect"
-        >{{generateTitle(item.meta.title)}}</span>
-        <a v-else @click.prevent="handleLink(item)">{{generateTitle(item.meta.title)}}</a>
+        >{{ generateTitle(item.meta.title) }}</span>
+        <a v-else @click.prevent="handleLink(item)">{{ generateTitle(item.meta.title) }}</a>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
@@ -14,52 +14,51 @@
 
 <script>
 import { generateTitle } from '@/utils/i18n'
-import pathToRegexp from "path-to-regexp";
-
+import pathToRegexp from 'path-to-regexp'
 
 export default {
   data() {
     return {
       levelList: null
-    };
+    }
   },
   watch: {
     $route() {
-      this.getBreadcrumb();
+      this.getBreadcrumb()
     }
   },
   created() {
-    this.getBreadcrumb();
+    this.getBreadcrumb()
   },
   methods: {
     generateTitle,
     getBreadcrumb() {
       let matched = this.$route.matched.filter(item => {
         if (item.name) {
-          return true;
+          return true
         }
-      });
-      const first = matched[0];
-      if (first && first.name !== "dashboard") {
-        matched = [{ path: "/dashboard", meta: { title: "" } }].concat(matched);
+      })
+      const first = matched[0]
+      if (first && first.name !== 'dashboard') {
+        matched = [{ path: '/dashboard', meta: { title: '' }}].concat(matched)
       }
-      this.levelList = matched;
+      this.levelList = matched
     },
     pathCompile(path) {
-      const { params } = this.$route;
-      var toPath = pathToRegexp.compile(path);
-      return toPath(params);
+      const { params } = this.$route
+      var toPath = pathToRegexp.compile(path)
+      return toPath(params)
     },
     handleLink(item) {
-      const { redirect, path } = item;
+      const { redirect, path } = item
       if (redirect) {
-        this.$router.push(redirect);
-        return;
+        this.$router.push(redirect)
+        return
       }
-      this.$router.push(this.pathCompile(path));
+      this.$router.push(this.pathCompile(path))
     }
   }
-};
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

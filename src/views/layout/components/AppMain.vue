@@ -3,13 +3,13 @@
     <transition name="fade-transform" mode="out-in">
       <!-- or name="fade" -->
       <!-- <keep-alive> -->
-         <router-view :key="key"></router-view>
+      <router-view :key="key"/>
       <!-- </keep-alive> -->
-     
+
       <!-- <router-view/> -->
     </transition>
     <!-- <div class="copyright" style="text-align:center;margin:0 auto;color:#999999;font-size:12px;padding:20px 0;" v-html="copyright">
-      
+
     </div> -->
   </section>
 </template>
@@ -20,21 +20,17 @@ import {
   sendInfo,
   TOPIC_EMPTY,
   MSG_EMPTY,
-  DISCONNECT_MSG,
-} from "@/utils/wxscoket.js";
+  DISCONNECT_MSG
+} from '@/utils/wxscoket.js'
 import Parse from 'parse'
-import { eventBus } from '@/api/eventBus';
+import { eventBus } from '@/api/eventBus'
 export default {
   name: 'AppMain',
-  data(){
+  data() {
     return {
-      session:'',
-      datasource:'',
-      copyright:''
-    }
-  },
-  watch:{
-    $route(to,from){
+      session: '',
+      datasource: '',
+      copyright: ''
     }
   },
   computed: {
@@ -45,28 +41,31 @@ export default {
       return this.$route.name !== undefined ? this.$route.name + +new Date() : this.$route + +new Date()
     }
   },
+  watch: {
+    $route(to, from) {
+    }
+  },
   mounted() {
-   
-    //websocket更新方法  
-      if(!(window.location.pathname.indexOf('suke')!=-1)){
-      if(this.$globalConfig.hostname){        
+    // websocket更新方法
+    if (!(window.location.pathname.indexOf('suke') != -1)) {
+      if (this.$globalConfig.hostname) {
         Websocket.cInfo.host = this.$globalConfig.hostname
       } else {
         Websocket.cInfo.host = location.hostname
       }
 
       Websocket.subInfo = {
-        topic: "web/" + this.$Cookies('sessionToken'), 
-        qos: 2,
-      };
-      Websocket.newClient();
-      Websocket.connect();
-      Websocket.add_hook(/web\/.+/, function(Msg){
+        topic: 'web/' + this.$Cookies('sessionToken'),
+        qos: 2
+      }
+      Websocket.newClient()
+      Websocket.connect()
+      Websocket.add_hook(/web\/.+/, function(Msg) {
         this.datasource = JSON.parse(Msg)
-         if(this.datasource){
-          eventBus.$emit(this.datasource.type, this.datasource);
-         }
-      });
+        if (this.datasource) {
+          eventBus.$emit(this.datasource.type, this.datasource)
+        }
+      })
       // Websocket.recive = function(Msg){
       //   this.datasource = JSON.parse(Msg)
       //   console.log(Msg)
@@ -75,21 +74,19 @@ export default {
       //    }else{
 
       //    }
-         
+
       // }
     }
-     
-      this.getCopyright()
+
+    this.getCopyright()
   },
-  methods:{
-     getCopyright(){
-       this.copyright = sessionStorage.getItem('copyright')
-   },
+  created() {
+
   },
-  created(){
-    
-      
-       
+  methods: {
+    getCopyright() {
+      this.copyright = sessionStorage.getItem('copyright')
+    }
   }
 }
 </script>

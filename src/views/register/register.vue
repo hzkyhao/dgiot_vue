@@ -2,28 +2,28 @@
   <div class="login-container">
     <div class="loginbanner">
       <el-form
-        :model="ruleForm2"
-        status-icon
-        :rules="rules2"
         ref="ruleForm2"
+        :model="ruleForm2"
+        :rules="rules2"
+        status-icon
         label-width="100px"
         class="login-form"
       >
-       <div class="logo">
+        <div class="logo">
           <img :src="logosrc" alt="logo" style="width:80px;height:80px;">
-          <p>{{title}}</p>
+          <p>{{ title }}</p>
         </div>
-      
+
         <el-form-item prop="phone">
           <span class="svg-container">
             <svg-icon icon-class="user"/>
           </span>
           <el-input
             v-model="ruleForm2.phone"
+            :maxlength="11"
             name="phone"
             type="text"
             auto-complete="on"
-            :maxlength="11"
             clearable
             placeholder="请输入手机号"
           />
@@ -34,11 +34,11 @@
           </span>
           <el-input
             v-model="ruleForm2.password"
+            :type="pwdType"
             name="password"
             auto-complete="on"
             placeholder="请输入密码"
-            :type="pwdType"
-            
+
           />
           <span class="show-pwd" @click="showPwd">
             <svg-icon icon-class="eye"/>
@@ -51,10 +51,10 @@
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
+            :type="pwdType"
             auto-complete="on"
             placeholder="请再次输入密码"
-            :type="pwdType"
-            
+
           />
           <span class="show-pwd" @click="showPwd">
             <svg-icon icon-class="eye"/>
@@ -62,13 +62,13 @@
         </el-form-item>
         <el-form-item style="margin-top:50px;">
           <el-button
+            v-loading.fullscreen.lock="fullscreenLoading"
             type="primary"
             style="width:100%;letter-spacing:10px;"
-            @click="submitForm('ruleForm2')"
             element-loading-text="正在初始化环境,请稍后"
             element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.5)"
-            v-loading.fullscreen.lock="fullscreenLoading"
+            @click="submitForm('ruleForm2')"
           >立即注册</el-button>
         </el-form-item>
         <div class="hasuser">
@@ -79,174 +79,173 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
-import Cookies from 'js-cookie';
-let Base64 = require('js-base64').Base64;
+import Parse from 'parse'
+import Cookies from 'js-cookie'
+const Base64 = require('js-base64').Base64
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
+      if (value === '') {
+        callback(new Error('请输入密码'))
       } else {
         if (!/^\w{8,20}/.test(value)) {
-          callback(new Error("密码长度为8-20位"));
+          callback(new Error('密码长度为8-20位'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     var validatecheckPass = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.ruleForm2.password) {
-        callback(new Error("两次输入密码不一致!"));
+        callback(new Error('两次输入密码不一致!'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       fullscreenLoading: false,
       time: 60, // 发送验证码倒计时
       sendMsgDisabled: false,
-      logosrc:'',
-      title:'',
+      logosrc: '',
+      title: '',
       ruleForm2: {
-        account: "",
-        phone: "",
-        username: "",
-        password: "",
-        email: "",
-        checkPass: "",
-        roles:'',
+        account: '',
+        phone: '',
+        username: '',
+        password: '',
+        email: '',
+        checkPass: '',
+        roles: ''
       },
-      pwdType:'password',
-      protype:'',
+      pwdType: 'password',
+      protype: '',
       rules2: {
         account: [
-          { required: true, message: "请输入账号", trigger: "blur" },
-          { min: 1, max: 10, message: "长度在 1到 10 个字符", trigger: "blur" }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在 1到 10 个字符', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           {
             validator: function(rule, value, callback) {
-              var MobileRegex = /^1[3-9]\d{9}$/;
+              var MobileRegex = /^1[3-9]\d{9}$/
               if (!MobileRegex.test(value)) {
-                callback(new Error("手机号码格式不正确！"));
+                callback(new Error('手机号码格式不正确！'))
               } else {
-                callback();
+                callback()
               }
             },
-            trigger: "blur"
+            trigger: 'blur'
           }
         ],
         password: [
-          { validator: validatePass, trigger: "blur", required: true }
+          { validator: validatePass, trigger: 'blur', required: true }
         ],
         checkPass: [
-          { validator: validatecheckPass, trigger: "blur", required: true }
+          { validator: validatecheckPass, trigger: 'blur', required: true }
         ],
         username: [
-          { required: true, message: "请输入姓名", trigger: "blur" },
-          { min: 2, max: 5, message: "姓名格式不正确", trigger: "blur" }
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { min: 2, max: 5, message: '姓名格式不正确', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change']
           }
         ],
         roles: [
-            { required: true, message: '请选择平台', trigger: 'change' }
-          ],
+          { required: true, message: '请选择平台', trigger: 'change' }
+        ]
       }
-    };
+    }
   },
   mounted() {
     this.protype = sessionStorage.getItem('roletype')
     this.title = sessionStorage.getItem('product_title')
-    this.logosrc =  sessionStorage.getItem('imgsrc')
+    this.logosrc = sessionStorage.getItem('imgsrc')
   },
   methods: {
     showPwd() {
-      if (this.pwdType === "password") {
-        this.pwdType = "";
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
       } else {
-        this.pwdType = "password";
+        this.pwdType = 'password'
       }
     },
     login() {
       this.$router.push({
-        path: "/login"
-      });
+        path: '/login'
+      })
     },
     submitForm(formName) {
-      var MobileRegex = /^1[3-9]\d{9}$/;
+      var MobileRegex = /^1[3-9]\d{9}$/
       this.$refs[formName].validate(valid => {
         if (valid) {
-          
-          var user = new Parse.User();
-          user.set("username", this.ruleForm2.phone.toString());
-          user.set("password", this.ruleForm2.password);
-          if(MobileRegex.test(this.ruleForm2.phone)){
-             user.set("phone", this.ruleForm2.phone.toString());
-          }else{
-             user.set("phone", '');
+          var user = new Parse.User()
+          user.set('username', this.ruleForm2.phone.toString())
+          user.set('password', this.ruleForm2.password)
+          if (MobileRegex.test(this.ruleForm2.phone)) {
+            user.set('phone', this.ruleForm2.phone.toString())
+          } else {
+            user.set('phone', '')
           }
-         this.fullscreenLoading = true;
-          user.set('productId',this.protype)
-          let acl = new Parse.ACL();
+          this.fullscreenLoading = true
+          user.set('productId', this.protype)
+          const acl = new Parse.ACL()
           user
             .save()
             .then(resultes => {
               console.log(resultes.attributes.sessionToken)
-              Cookies.set('sessionToken',resultes.attributes.sessionToken)
+              Cookies.set('sessionToken', resultes.attributes.sessionToken)
               this.$router.push({
-                path: "/phonelogin",
-                query:{
-                  phone:Base64.encode(this.ruleForm2.phone),
-                  action:'register'
+                path: '/phonelogin',
+                query: {
+                  phone: Base64.encode(this.ruleForm2.phone),
+                  action: 'register'
                 }
-              });
+              })
               this.fullscreenLoading = false
             })
-            .catch(error=>{
-              if(error.code==202){
+            .catch(error => {
+              if (error.code == 202) {
                 this.$message({
-                message: '用户名已存在',
-                type: "error"
-              });
-              }else{
+                  message: '用户名已存在',
+                  type: 'error'
+                })
+              } else {
                 this.$message({
-                message: error.message,
-                type: "error"
-              });
+                  message: error.message,
+                  type: 'error'
+                })
               }
               this.fullscreenLoading = false
-            });
+            })
         } else {
           this.$message({
-            message: "信息错误",
-            type: "error"
-          });
-          return false;
+            message: '信息错误',
+            type: 'error'
+          })
+          return false
         }
-      });
+      })
     },
     send() {
-      let _this = this;
-      _this.sendMsgDisabled = true;
-      let interval = window.setInterval(function() {
+      const _this = this
+      _this.sendMsgDisabled = true
+      const interval = window.setInterval(function() {
         if (_this.time-- <= 0) {
-          _this.time = 60;
-          _this.sendMsgDisabled = false;
-          window.clearInterval(interval);
+          _this.time = 60
+          _this.sendMsgDisabled = false
+          window.clearInterval(interval)
         }
-      }, 1000);
+      }, 1000)
     }
   }
-};
+}
 </script>
 <style rel="stylesheet/scss" lang="scss">
 $light_gray: rgba(0, 0, 0, 0.247058823529412);
@@ -324,7 +323,7 @@ $light_gray: #eee;
     border-radius: 5px;
   }
   .login_bottom {
-    position: absolute; 
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 20px;

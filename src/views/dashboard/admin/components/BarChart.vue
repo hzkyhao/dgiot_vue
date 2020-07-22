@@ -23,10 +23,10 @@ export default {
       type: String,
       default: '250px'
     },
-    barchartdata:{
-      type:Array,
-      default:()=>{
-        data:[]
+    barchartdata: {
+      type: Array,
+      default: () => {
+        []
       }
     }
   },
@@ -35,11 +35,11 @@ export default {
       chart: null
     }
   },
-  watch:{
-    barchartdata:{
-      deep:true,
-       handler(val) {
-      this.initChart(val)
+  watch: {
+    barchartdata: {
+      deep: true,
+      handler(val) {
+        this.initChart(val)
       }
     }
   },
@@ -69,7 +69,7 @@ export default {
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
           },
-           formatter: '{a} <br/>{b} : {c}%'
+          formatter: '{a} <br/>{b} : {c}%'
         },
         grid: {
           // top:20,
@@ -80,34 +80,34 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['2012年', '2013年', '2014年', '2015年', '2016年','2017年'],
+          data: ['2012年', '2013年', '2014年', '2015年', '2016年', '2017年'],
           axisTick: {
             alignWithLabel: true,
-            show:false,
+            show: false
           }
         }],
-         legend: {
+        legend: {
           data: ['销售增长'],
-           textStyle:{
-            color:'#ffffff'
+          textStyle: {
+            color: '#ffffff'
           }
         },
         yAxis: [{
-          name:'销售增长(%)',
+          name: '销售增长(%)',
           type: 'value',
           axisTick: {
             show: false
           },
           axisLabel: {
-              textStyle: {
-                color: "#fff" //坐标值得具体的颜色
-              }
-            },
-            nameTextStyle:{
-                color:"#ffffff",
-                padding:10,
-                fontSize:14
+            textStyle: {
+              color: '#fff' // 坐标值得具体的颜色
             }
+          },
+          nameTextStyle: {
+            color: '#ffffff',
+            padding: 10,
+            fontSize: 14
+          }
         }],
         series: [{
           name: '销售增长',
@@ -115,13 +115,13 @@ export default {
           // stack: 'vistors',
           barWidth: '40%',
           itemStyle: {
-              normal: {
-                color: "#e67070"
-              }
-            },
+            normal: {
+              color: '#e67070'
+            }
+          },
           data: barchartdata.data,
           animationDuration
-        } 
+        }
         // {
         //   name: 'pageB',
         //   type: 'bar',

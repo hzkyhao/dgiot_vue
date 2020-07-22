@@ -3,8 +3,8 @@
     <div class="licenseleft">
       <el-row>
         <el-col :span="12">
-          <img :src="originimgsrc" alt srcset v-if="isend==false" />
-          <img :src="originimgsrc" alt srcset v-if="isend==true" />
+          <img v-if="isend==false" :src="originimgsrc" alt srcset >
+          <img v-if="isend==true" :src="originimgsrc" alt srcset >
         </el-col>
         <el-col :span="12">
           <div v-if="isend==false" class="originupdate">
@@ -21,7 +21,7 @@
       <el-row style="margin-top:50px;">
         <el-col :span="12" class="originupdate">
           <p>当前时间:</p>
-          <span>{{updatetime}}</span>
+          <span>{{ updatetime }}</span>
         </el-col>
         <el-col :span="12" class="originupdate">
           <p>服务器状态</p>
@@ -34,9 +34,9 @@
       <div class="righttop">
         <p style="font-size:20px;">部署进度</p>
         <el-steps :active="active" finish-status="success">
-          <el-step title="基础服务部署"></el-step>
-          <el-step title="数据库部署"></el-step>
-          <el-step title="完成"></el-step>
+          <el-step title="基础服务部署"/>
+          <el-step title="数据库部署"/>
+          <el-step title="完成"/>
         </el-steps>
       </div>
       <div class="rightcenter">
@@ -59,13 +59,13 @@
                  <span>{{configdata.natIP+'(私)'}}</span>
                  <span>{{configdata.wlanIp+'(公)'}}</span>
               </span>
-             
+
             </el-col>
             <el-col :span="12">
               <span style="margin-right:20px;">服务器连接状态:</span>
               <el-switch v-model="value2" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
             </el-col>
-           
+
           </el-row>
           <el-row>
             <el-col :span="12">
@@ -98,51 +98,51 @@
               </el-select>
             </el-col>
           </el-row>
-          
+
         </div> -->
         <el-form ref="form" :model="configdata" label-width="140px">
           <el-form-item label="用户名:">
-            <span>{{configdata.hostName}}</span>
+            <span>{{ configdata.hostName }}</span>
           </el-form-item>
           <el-form-item label="计算机信息:">
-            <span>{{configdata.computerConfig}}</span>
+            <span>{{ configdata.computerConfig }}</span>
           </el-form-item>
           <el-form-item label="IP地址(公):">
-            <span>{{configdata.wlanIp}}</span>
+            <span>{{ configdata.wlanIp }}</span>
           </el-form-item>
           <el-form-item label="IP地址(私):">
-            <span>{{configdata.natIP}}</span>
+            <span>{{ configdata.natIP }}</span>
           </el-form-item>
-           <el-form-item label="授权状态:">
-            <span>{{configdata.computerAuth}}</span>
+          <el-form-item label="授权状态:">
+            <span>{{ configdata.computerAuth }}</span>
           </el-form-item>
           <el-form-item label="服务器连接状态:">
-            <el-switch v-model="value2" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch v-model="value2" active-color="#13ce66" inactive-color="#ff4949"/>
           </el-form-item>
-         
-           <el-form-item label="数据库是否部署:">
+
+          <el-form-item label="数据库是否部署:">
             <span v-if="configdata.dbInstalled==true">是</span>
             <span v-else>否</span>
           </el-form-item>
           <el-form-item label="机器码:">
-            <span>{{configdata.computerKey}}</span>
+            <span>{{ configdata.computerKey }}</span>
           </el-form-item>
           <el-form-item label="数据中心地址:">
-            <el-input placeholder="请输入数据中心地址" v-model="configdata.infomation"></el-input>
+            <el-input v-model="configdata.infomation" placeholder="请输入数据中心地址"/>
           </el-form-item>
           <el-form-item label="授权码:">
-            <el-input placeholder="请输入授权码" v-model="configdata.authorizenumber"></el-input>
+            <el-input v-model="configdata.authorizenumber" placeholder="请输入授权码"/>
           </el-form-item>
           <el-form-item label="服务版本:">
-            <el-select placeholder="请输入服务版本" v-model="configdata.standard">
-                <el-option label="标准版" value="standard"></el-option>
-                <el-option label="企业版" value="enterprise"></el-option>
-                <el-option label="旗舰版" value="ultimate"></el-option>
-              </el-select>
+            <el-select v-model="configdata.standard" placeholder="请输入服务版本">
+              <el-option label="标准版" value="standard"/>
+              <el-option label="企业版" value="enterprise"/>
+              <el-option label="旗舰版" value="ultimate"/>
+            </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="success" style="margin-right:100px;" @click="uploadHub" v-if="dbinstall">部 署</el-button>
-            <el-button type="success" style="margin-right:100px;" @click="uploadDb" v-else>数据库部署</el-button>
+            <el-button v-if="dbinstall" type="success" style="margin-right:100px;" @click="uploadHub">部 署</el-button>
+            <el-button v-else type="success" style="margin-right:100px;" @click="uploadDb">数据库部署</el-button>
             <el-button type="primary" @click="update">刷新</el-button>
           </el-form-item>
         </el-form>
@@ -151,147 +151,146 @@
   </div>
 </template>
 <script>
-import { hardInfo,iotHub,iotApp } from "@/api/license";
+import { hardInfo, iotHub, iotApp } from '@/api/license'
 import Cookies from 'js-cookie'
-import axios from 'axios';
+import axios from 'axios'
 export default {
   data() {
     return {
       value2: false,
       isarrange: false,
       isend: false,
-      originimgsrc: require("../imgages/license3.png"),
-      successimgsrc: require("../imgages/license4.png"),
+      originimgsrc: require('../imgages/license3.png'),
+      successimgsrc: require('../imgages/license4.png'),
       timer: null,
-      updatetime: "",
+      updatetime: '',
       active: 1,
-      authorizenumber: "",
-      dbinstall:true,
-      configdata:{
-          computerAuth:'',
-          natIP:'',
-          wlanIp:'',
-          computerKey:'',
-          computerConfig:'',
-          hostName:'',
-          infomation:'localhost',
-          standard:'standard',
-          authorizenumber:'',
-          dbInstalled:'',
+      authorizenumber: '',
+      dbinstall: true,
+      configdata: {
+        computerAuth: '',
+        natIP: '',
+        wlanIp: '',
+        computerKey: '',
+        computerConfig: '',
+        hostName: '',
+        infomation: 'localhost',
+        standard: 'standard',
+        authorizenumber: '',
+        dbInstalled: ''
       },
-      standard:'standard'
-    };
+      standard: 'standard'
+    }
   },
   mounted() {
-    window.clearInterval(this.timer);
-    this.timeUpdate();
-    this.getHardInfo();
-    if(Cookies.get('authorizenumber')){
+    window.clearInterval(this.timer)
+    this.timeUpdate()
+    this.getHardInfo()
+    if (Cookies.get('authorizenumber')) {
       this.configdata.authorizenumber = Cookies.get('authorizenumber')
-    }else{
+    } else {
       this.configdata.authorizenumber = ''
     }
   },
+  beforeDestroy() {
+    window.clearInterval(this.timer)
+    this.timer = null
+  },
   methods: {
     nowtime() {
-      var timestamp3 = Date.parse(new Date());
-      var date = new Date(timestamp3);
-      var Y = date.getFullYear() + "-";
+      var timestamp3 = Date.parse(new Date())
+      var date = new Date(timestamp3)
+      var Y = date.getFullYear() + '-'
       var M =
         (date.getMonth() + 1 <= 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "-";
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '-'
       var D =
-        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
-        " ";
+        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+        ' '
       var h =
-        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
-        ":";
+        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+        ':'
       var m =
         (date.getMinutes() + 1 <= 10
-          ? "0" + date.getMinutes()
-          : date.getMinutes()) + ":";
+          ? '0' + date.getMinutes()
+          : date.getMinutes()) + ':'
       var s =
         date.getSeconds() + 1 <= 10
-          ? "0" + date.getSeconds()
-          : date.getSeconds();
-      this.updatetime = Y + M + D + h + m + s;
+          ? '0' + date.getSeconds()
+          : date.getSeconds()
+      this.updatetime = Y + M + D + h + m + s
     },
     timeUpdate() {
-      var _this = this;
+      var _this = this
       _this.timer = window.setInterval(() => {
-        _this.nowtime();
-      }, 1000);
+        _this.nowtime()
+      }, 1000)
     },
     getHardInfo() {
       hardInfo().then(resultes => {
-          this.configdata.computerAuth=resultes.computerAuth
-          this.configdata.natIP = resultes.natIP
-          this.configdata.wlanIp =resultes.wlanIp
-          this.configdata.computerKey =resultes.computerKey
-          this.configdata.hostName = resultes.hostName
-          this.configdata.computerConfig = resultes.computerConfig
-          this.configdata.dbInstalled = resultes.dbInstalled
-          this.value2 = resultes.serverHealth
-      });
+        this.configdata.computerAuth = resultes.computerAuth
+        this.configdata.natIP = resultes.natIP
+        this.configdata.wlanIp = resultes.wlanIp
+        this.configdata.computerKey = resultes.computerKey
+        this.configdata.hostName = resultes.hostName
+        this.configdata.computerConfig = resultes.computerConfig
+        this.configdata.dbInstalled = resultes.dbInstalled
+        this.value2 = resultes.serverHealth
+      })
     },
-    uploadHub(){
-      if(this.configdata.infomation==''){
+    uploadHub() {
+      if (this.configdata.infomation == '') {
         this.$message('请填写数据中心地址')
         return
       }
-      if(this.configdata.authorizenumber==''){
+      if (this.configdata.authorizenumber == '') {
         this.$message('请填写授权码')
         return
       }
-      
-      iotHub(this.configdata.standard,this.configdata.authorizenumber,this.configdata.infomation).then(resultes=>{
-        if(resultes.result==true){
-          this.active=3
+
+      iotHub(this.configdata.standard, this.configdata.authorizenumber, this.configdata.infomation).then(resultes => {
+        if (resultes.result == true) {
+          this.active = 3
           this.$router.push('/login')
-        }else{
-          if(resultes.status=='license_failed'){
+        } else {
+          if (resultes.status == 'license_failed') {
             this.$message('授权码错误，请重新填写')
-            return 
-          }else if(resultes.status=='server_disconnected'){
+            return
+          } else if (resultes.status == 'server_disconnected') {
             this.$message('服务器未连接')
             return
-          }else if(resultes.status=='database_uninstalled'){
-             this.active=2
+          } else if (resultes.status == 'database_uninstalled') {
+            this.active = 2
             this.$message('服务器部署完成，请完成下一步数据库部署')
-            this.dbinstall=false
-            Cookies.set('authorizenumber',this.configdata.authorizenumber)
+            this.dbinstall = false
+            Cookies.set('authorizenumber', this.configdata.authorizenumber)
           }
-         
         }
       })
     },
-    uploadDb(){
+    uploadDb() {
       // this.$axios.get('http://192.168.2.9:5080/iotapi/iotapp?license='+this.configdata.authorizenumber,{timeout:120000}).then(resultes=>{
       //   console.log(resultes)
       // })
-      iotApp(this.configdata.authorizenumber).then(response=>{
-        if(response.result==true){
+      iotApp(this.configdata.authorizenumber).then(response => {
+        if (response.result == true) {
           this.$message('数据库部署完成')
-           this.active=3
+          this.active = 3
           this.$router.push('/login')
-        }else{
-            this.$message('部署失败')
+        } else {
+          this.$message('部署失败')
         }
-      }).catch(error=>{
+      }).catch(error => {
         this.$messge.error(error)
       })
     },
-    update(){
+    update() {
       // console.log(window.location)
       window.open(`${window.location.origin}`)
     }
-  },
-  beforeDestroy() {
-    window.clearInterval(this.timer);
-    this.timer = null;
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .license {
@@ -300,7 +299,7 @@ export default {
   display: flex;
   .licenseleft {
     width: 400px;
-  
+
     background: url("../imgages/license2.png");
     padding: 40px 20px;
     box-sizing: border-box;
@@ -361,7 +360,7 @@ export default {
   /deep/ .el-col {
         @media screen and (max-width: 1350px) {
           width: 100%;
-          margin-bottom: 20px 
+          margin-bottom: 20px
         }
       }
   /deep/ .el-form-item__label{

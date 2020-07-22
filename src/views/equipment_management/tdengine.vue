@@ -13,119 +13,117 @@
         @row-click="handleCurrentChange"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55">
-        </el-table-column>
-        <el-table-column label="序号" type="index" width="50" ></el-table-column>
+        <el-table-column type="selection" width="55"/>
+        <el-table-column label="序号" type="index" width="50" />
         <el-table-column label="应用名称" >
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.date"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
-            <span v-else>{{scope.row.date}}</span>
+            <span v-else>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
         <el-table-column label="数据库名称" >
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.date"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
-            <span v-else>{{scope.row.date}}</span>
+            <span v-else>{{ scope.row.date }}</span>
           </template>
         </el-table-column>
         <el-table-column label="超级表名称" >
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.name"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
-            <span v-else>{{scope.row.name}}</span>
+            <span v-else>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="字段集">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.address"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
 
-            <span v-else>{{scope.row.address}}</span>
+            <span v-else>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="标签集" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.address"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
 
-            <span v-else>{{scope.row.address}}</span>
+            <span v-else>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="创建语句" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.address"
+                size="small"
                 placeholder="请输入内容"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
 
-            <span v-else>{{scope.row.address}}</span>
+            <span v-else>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="插入语句" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-input
-                size="small"
                 v-model="scope.row.address"
+                :rows="5"
+                size="small"
                 placeholder="请输入内容"
                 type="textarea"
-                :rows="5"
                 @change="handleEdit(scope.$index, scope.row)"
-              ></el-input>
+              />
             </template>
 
-            <span v-else>{{scope.row.address}}</span>
+            <span v-else>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="address" label="更新时间">
           <template slot-scope="scope">
-           
 
-            <span>{{scope.row.address}}</span>
+            <span>{{ scope.row.address }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作类型" width="200">
           <template slot-scope="scope">
             <el-button
+              v-if="!scope.row.edit"
               type="primary"
               size="small"
-              v-if="!scope.row.edit"
               @click="scope.row.edit=!scope.row.edit"
             >编 辑</el-button>
             <el-button
@@ -147,32 +145,32 @@ export default {
     return {
       tableData: [
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄',
           edit: false
         },
         {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄',
           edit: false
         },
         {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄',
           edit: false
         },
         {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄',
           edit: false
         }
       ],
-      multipleSelection:[],//表格多选数据集
-    };
+      multipleSelection: []// 表格多选数据集
+    }
   },
   mounted() {},
   methods: {
@@ -186,15 +184,15 @@ export default {
       //   console.log(index, row);
     },
     handleSuccess(index, row) {
-      row.edit = false;
-      var obj = row;
+      row.edit = false
+      var obj = row
       this.$set(this.tableData, index, obj)
     },
-    handleSelectionChange(val){
-        this.multipleSelection = val
+    handleSelectionChange(val) {
+      this.multipleSelection = val
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .tdengine {

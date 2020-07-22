@@ -34,14 +34,14 @@ import Cookies from 'js-cookie'
 import BaiduMap from 'vue-baidu-map'
 import 'echarts-liquidfill'
 Vue.use(BaiduMap, {
-    ak: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG' //官方提供的ak秘钥
-}) 
+  ak: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG' // 官方提供的ak秘钥
+})
 // import './mock'
 
 import { ApolloClient } from 'apollo-client'
 
 import { HttpLink } from 'apollo-link-http'
-//帮助1-3经验年前端开发人员，提升技术，思维
+// 帮助1-3经验年前端开发人员，提升技术，思维
 import { InMemoryCache } from 'apollo-cache-inmemory'
 // import {ApolloLink} from 'apollo-link'
 
@@ -51,7 +51,7 @@ const httpLink = new HttpLink({
 
   // You should use an absolute URL here
 
-  //config.js 代理设置
+  // config.js 代理设置
 
   // '/graphql': {
 
@@ -67,7 +67,7 @@ const httpLink = new HttpLink({
 
   // },
 
-  uri: '/iotapi/graphql',//访问地址,在这里使用代理
+  uri: '/iotapi/graphql'// 访问地址,在这里使用代理
 
 })
 // const middlewareLink = new ApolloLink((operation, forward) => {
@@ -88,26 +88,26 @@ const apolloClient = new ApolloClient({
 
   cache: new InMemoryCache(),
 
-  connectToDevTools: true,
+  connectToDevTools: true
 
 })
 
 // Install the vue plugin
 
-Vue.use(utilwen);
+Vue.use(utilwen)
 
 Vue.use(VueApollo)
 
 // 若是没有开启Devtools工具，在开发环境中开启，在生产环境中关闭
 if (process.env.NODE_ENV == 'development') {
-  Vue.config.devtools = true;
+  Vue.config.devtools = true
 } else {
-  Vue.config.devtools = false;
+  Vue.config.devtools = false
 }
 
 const apolloProvider = new VueApollo({
 
-  defaultClient: apolloClient,
+  defaultClient: apolloClient
 
 })
 Vue.prototype.$echarts = echarts
@@ -119,30 +119,29 @@ Vue.prototype.$Cookies = Cookies
 
 // 全局重写 element 的$message 弹框事件
 Vue.prototype.$message = function(msg) {
-
-    if(!msg){
-        return
+  if (!msg) {
+    return
+  }
+  if (typeof msg === 'object') {
+    if (!msg.message) {
+      var jsonString = JSON.stringify(msg)
     }
-    if(typeof msg == 'object'){
-      if(!msg.message){
-        var jsonString = JSON.stringify(msg)
-      }
-      var param = {
-        type:msg.type?msg.type:'warn',
-        message:msg.message?msg.message:jsonString,
-        duration:msg.duration ? msg.duration:800,
-        showClose:msg.showClose ? msg.showClose:true
-      }
-    } else {
-      var param = {
-        message:msg,
-        duration:800,
-        showClose:true
-      }
+    var param = {
+      type: msg.type ? msg.type : 'warn',
+      message: msg.message ? msg.message : jsonString,
+      duration: msg.duration ? msg.duration : 800,
+      showClose: msg.showClose ? msg.showClose : true
     }
+  } else {
+    var param = {
+      message: msg,
+      duration: 800,
+      showClose: true
+    }
+  }
   ElementUI.Message(param)
 }
- 
+
 Vue.use(VueResource)
 
 /* Vue.use(ElementUI,{
@@ -156,13 +155,13 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
   }
-  NProgress.start();
+  NProgress.start()
   next()
-});
+})
 
 router.afterEach(transition => {
-  NProgress.done();
-});
+  NProgress.done()
+})
 
 // 2020 04.15 hughwang 修改 provide: apolloProvider.provide(), <ApolloProvider>.provide() is deprecated. Use the 'apolloProvider' option instead
 new Vue({

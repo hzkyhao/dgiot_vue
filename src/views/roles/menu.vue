@@ -1,6 +1,7 @@
 <template>
   <div class="menu">
     <el-table
+      id="out-table"
       :data="tableData3"
       tooltip-effect="dark"
       style="width:100%;text-align:center;margin-top:30px"
@@ -9,58 +10,57 @@
       border
       stripe
       height="500"
-      id="out-table"
     >
-      <el-table-column prop :label="$t('concentrator.status')" align="center" width="100">
+      <el-table-column :label="$t('concentrator.status')" prop align="center" width="100">
         <template slot-scope="scope">
           <div
             v-if="scope.row.is_online==true"
             style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#00cc33;margin-right:10px"
-          ></div>
+          />
           <span
             v-if="scope.row.is_online==true"
             style="color:#00cc33"
-          >{{$t('concentrator.isonline')}}</span>
+          >{{ $t('concentrator.isonline') }}</span>
           <div
             v-if="scope.row.is_online==false"
             style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#f00;margin-right:10px"
-          ></div>
+          />
           <span
             v-if="scope.row.is_online==false"
             style="color:#f00"
-          >{{$t('concentrator.notonline')}}</span>
+          >{{ $t('concentrator.notonline') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('concentrator.concentrator')" prop="vcaddr" align="center"></el-table-column>
-      <el-table-column prop="address" :label="$t('concentrator.courts')" align="center"></el-table-column>
+      <el-table-column :label="$t('concentrator.concentrator')" prop="vcaddr" align="center"/>
+      <el-table-column :label="$t('concentrator.courts')" prop="address" align="center"/>
       <el-table-column :label="$t('concentrator.onlinemeter')" sortable align="center">
         <template slot-scope="scope">
-          <span>{{(scope.row.dev_total - scope.row.dev_offline)+"/"+scope.row.dev_total}}</span>
+          <span>{{ (scope.row.dev_total - scope.row.dev_offline)+"/"+scope.row.dev_total }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop :label="$t('concentrator.connection')" align="center" width="100">
+      <el-table-column :label="$t('concentrator.connection')" prop align="center" width="100">
         <template slot-scope="scope">
-          <el-switch v-model="value6" active-color="#13ce66" v-if="scope.row.iscon==true" disabled></el-switch>
-          <el-switch v-if="scope.row.iscon!=true" v-model="value7" active-color="#cccccc" disabled></el-switch>
+          <el-switch v-if="scope.row.iscon==true" v-model="value6" active-color="#13ce66" disabled/>
+          <el-switch v-if="scope.row.iscon!=true" v-model="value7" active-color="#cccccc" disabled/>
         </template>
       </el-table-column>
-      <el-table-column prop="vctime" :label="$t('concentrator.time')" align="center"></el-table-column>
-      <el-table-column prop :label="$t('concentrator.operation')" align="center" width="300">
+      <el-table-column :label="$t('concentrator.time')" prop="vctime" align="center"/>
+      <el-table-column :label="$t('concentrator.operation')" prop align="center" width="300">
         <template slot-scope="scope">
           <el-button
             plain
             size="mini"
             @click="connect(scope.row.vcaddr)"
-          >{{$t('concentrator.connect')}}</el-button>
+          >{{ $t('concentrator.connect') }}</el-button>
           <el-button
             size="mini"
             @click="handleEdit(scope.$index,scope.row)"
-          >{{$t('concentrator.edit')}}</el-button>
+          >{{ $t('concentrator.edit') }}</el-button>
           <el-button
             size="mini"
             type="primary"
             @click="handledetail(scope.$index, scope.row)"
-          >{{$t('concentrator.detail')}}</el-button>
+          >{{ $t('concentrator.detail') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,9 +74,9 @@
   </div>
 </template>
 <script>
-import { Parse } from "parse";
-import PagingQuery from "@/components/Pagination";
-import { eventBus } from "@/api/eventBus";
+import { Parse } from 'parse'
+import PagingQuery from '@/components/Pagination'
+import { eventBus } from '@/api/eventBus'
 import {
   timestampToTime,
   gettables,
@@ -88,7 +88,7 @@ import {
   timetounix,
   startconnect,
   addcon
-} from "@/api/login";
+} from '@/api/login'
 export default {
   components: { PagingQuery },
   data() {
@@ -97,33 +97,33 @@ export default {
         count: 0,
         page: 1,
         rows: 10,
-        name:'111'
+        name: '111'
       },
       draw: 1,
-      vcaddr: "",
+      vcaddr: '',
       tableData3: [],
       obj: {
-        is_online: "状态",
-        vcaddr: "集中器",
-        address: "台区名称",
-        dev_online: "在线电表",
-        iscon: "连接状态",
-        vctime: "集中器时间"
+        is_online: '状态',
+        vcaddr: '集中器',
+        address: '台区名称',
+        dev_online: '在线电表',
+        iscon: '连接状态',
+        vctime: '集中器时间'
       }
-    };
+    }
   },
   mounted() {
-    this.getinformation();
+    this.getinformation()
   },
   methods: {
     setup(item) {
-      this.getinformation();
+      this.getinformation()
     },
     getinformation(item) {
-      console.log(item);
+      console.log(item)
       if (item) {
-        this.pager.page = item.page;
-        this.pager.rows = item.rows;
+        this.pager.page = item.page
+        this.pager.rows = item.rows
       }
       gettables(
         this.vcaddr,
@@ -133,14 +133,14 @@ export default {
       )
         .then(res => {
           res.data.map(item => {
-            item.vctime = timestampToTime(item.vctime);
-          });
-          this.tableData3 = res.data;
-          this.pager.count = res.recordsTotal;
+            item.vctime = timestampToTime(item.vctime)
+          })
+          this.tableData3 = res.data
+          this.pager.count = res.recordsTotal
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     getdeive(data) {
       gettables(
@@ -151,21 +151,21 @@ export default {
       )
         .then(res => {
           res.data.map(item => {
-            item.vctime = timestampToTime(item.vctime);
-          });
+            item.vctime = timestampToTime(item.vctime)
+          })
           // console.log(res);
           // this.tableData3 = res.data;
           // this.pager.count = res.recordsTotal;
           // console.log(obj);
-          eventBus.$emit("drive", { json: res.data, obj: this.obj });
+          eventBus.$emit('drive', { json: res.data, obj: this.obj })
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     setup2(item) {
       // console.log(item)
-      this.get_now(item);
+      this.get_now(item)
     },
     // 当页请求
     get_now(item) {
@@ -179,19 +179,19 @@ export default {
         .then(res => {
           // console.log(res);
           res.data.map(item => {
-            item.vctime = timestampToTime(item.vctime);
-          });
-          this.tableData3 = res.data;
-          this.pager.count = res.recordsTotal;
-          console.log(this.tableData3, this.pager.count);
-          eventBus.$emit("drive", { json: this.tableData3, obj: this.obj });
+            item.vctime = timestampToTime(item.vctime)
+          })
+          this.tableData3 = res.data
+          this.pager.count = res.recordsTotal
+          console.log(this.tableData3, this.pager.count)
+          eventBus.$emit('drive', { json: this.tableData3, obj: this.obj })
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     }
   }
-};
+}
 </script>
 <style scoped>
 .menu {

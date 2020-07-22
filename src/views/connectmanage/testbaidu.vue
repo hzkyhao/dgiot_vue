@@ -1,16 +1,14 @@
 <template>
-<div style="width:100%;display:flex">
-  <div class="left" style="height:100vh;width:300px;">
+  <div style="width:100%;display:flex">
+    <div class="left" style="height:100vh;width:300px;"/>
+    <div class="right" style="width:1000px;height:1000px">
+      <div ref="map" class="map"/>
+    </div>
 
   </div>
-  <div class="right" style="width:1000px;height:1000px">
-    <div ref="map" class="map"></div>
-  </div>
-   
-</div>
- 
+
 </template>
- 
+
 <script>
 
 import 'echarts/extension/bmap/bmap'
@@ -18,7 +16,7 @@ import linesData from './data.json'
 import mapConfig from './map-config.json'
 export default {
   name: 'Map',
-  data () {
+  data() {
     return {
       chart: this.$echarts.ECharts,
       bmap: {},
@@ -29,19 +27,19 @@ export default {
       trainIcon: `path://M30.9,53.2C16.8,53.2,5.3,41.7,5.3,27.6S16.8,2,30.9,2C45,2,56.4,13.5,56.4,27.6S45,53.2,30.9,53.2z M30.9,3.5C17.6,3.5,6.8,14.4,6.8,27.6c0,13.3,10.8,24.1,24.101,24.1C44.2,51.7,55,40.9,55,27.6C54.9,14.4,44.1,3.5,30.9,3.5z M36.9,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H36c0.5,0,0.9,0.4,0.9,1V35.8z M27.8,35.8 c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H27c0.5,0,0.9,0.4,0.9,1L27.8,35.8L27.8,35.8z`
     }
   },
-  mounted () {
+  mounted() {
     // this.initMap()
-   this.chart.on('click',function(params){
-       
-   })
+    this.chart.on('click', function(params) {
+
+    })
   },
   methods: {
-    initMap () { // echarts配置
+    initMap() { // echarts配置
       this.chart = this.$echarts.init(this.$refs.map)
       this.getLineSeries()
       this.getScatterSeries()
       this.getEffectScatterSeries()
- 
+
       this.chart.setOption({
         animation: false,
         legend: {
@@ -68,7 +66,7 @@ export default {
           center: [104.114129, 37.550339],
           zoom: 6, // 地图当前的缩放比例
           roam: true, // 开启鼠标缩放和平移漫游
-          scaleLimit: { min: 6, max: 12 }, // echarts设置地图最小最大缩放比例的接口不起作用，要使用百度地图的接口设置
+          scaleLimit: { min: 6, max: 12 } // echarts设置地图最小最大缩放比例的接口不起作用，要使用百度地图的接口设置
         //   mapStyle: {
         //     styleId:'7b93b720528698c2c2cfe0294dd45eed'
         //   }
@@ -87,15 +85,15 @@ export default {
       this.bmap.addControl(new BMap.ScaleControl({ anchor: BMAP_ANCHOR_BOTTOM_LEFT })) // 在左下角显示比例尺控件
       const _this = this
       // 监听地图比例缩放， 可以根据缩放等级控制某些图标的显示
-      this.bmap.addEventListener('zoomend', function () {
+      this.bmap.addEventListener('zoomend', function() {
         _this.mapZoom = _this.bmap.getZoom()
       })
       this.bmap.setMapStyleV2({
         styleId: '7b93b720528698c2c2cfe0294dd45eed'
-        });
+      })
     },
-    getLineSeries () {
-      let series = []
+    getLineSeries() {
+      const series = []
       linesData.forEach(line => {
         series.push({
           name: line.name,
@@ -107,25 +105,25 @@ export default {
           z: 3,
           data: [
             { // 浅色底线
-              coords: line.stations.map((v,index) => v.value),
+              coords: line.stations.map((v, index) => v.value),
               lineStyle: { // 单个数据（单条线）的样式设置。
                 normal: {
                   type: 'solid',
                   color: line.bgColor,
                   width: 4,
-                  opacity: 0.6,
-                  
+                  opacity: 0.6
+
                 }
-              },
-            },
-          ],
+              }
+            }
+          ]
         })
       })
- 
+
       this.linesSeries = series
     },
-    getScatterSeries () {
-      let series = []
+    getScatterSeries() {
+      const series = []
       linesData.forEach(line => {
         series.push({
           name: line.name,
@@ -155,12 +153,12 @@ export default {
           data: line.stations
         })
       })
- 
+
       this.scatterSeries = series
     },
-    getEffectScatterSeries () {
-      let series = []
-      const points = 
+    getEffectScatterSeries() {
+      const series = []
+      const points =
       [
         {
           id: 1,
@@ -171,22 +169,22 @@ export default {
           travlled: 0.3
         }
       ]
- 
+
       const getMiddlePoint = (start, end, percent) => {
         const x = start[0] + (end[0] - start[0]) * percent
         const y = start[1] + (end[1] - start[1]) * percent
         return [x, y]
-      };
+      }
 
       linesData.forEach(line => {
-        const  pointsOnLine = points.filter(v => v.lineId === line.id)
-        if ( pointsOnLine &&  pointsOnLine.length > 0) {
-          const data =  points.map(train => {
+        const pointsOnLine = points.filter(v => v.lineId === line.id)
+        if (pointsOnLine && pointsOnLine.length > 0) {
+          const data = points.map(train => {
             const formatter = `{p2|${train.name}}
                               {p3|\n当前位置：${train.pre.name}}
                               {p4|\n即将到达：${train.next.name}}`
             return {
-              name:train.name,
+              name: train.name,
               itemStyle: {
                 normal: {
                   color: 'red'
@@ -239,12 +237,12 @@ export default {
                 shadowOffsetX: 0,
                 shadowOffsetY: 3,
                 width: 200,
-                rich: { // 富文本标签样式 
+                rich: { // 富文本标签样式
                   p2: {
                     fontSize: 16,
                     color: '#222222',
                     fontWeight: 'bolder',
-                    lineHeight: 40,
+                    lineHeight: 40
                   },
                   p3: {
                     fontSize: 14,
@@ -267,11 +265,11 @@ export default {
         }
       })
       this.effectScatterSeries = series
-    },
+    }
   }
 }
 </script>
- 
+
 <style scoped>
 .map {
   width: 100%;

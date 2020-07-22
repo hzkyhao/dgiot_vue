@@ -6,37 +6,37 @@
         <div class="firsttable">
           <el-form :inline="true" :model="channelformsearch" class="demo-form-inline" size="small">
             <el-form-item>
-              <el-input v-model="channelformsearch.name" :placeholder="$t('resource.name')"></el-input>
+              <el-input v-model="channelformsearch.name" :placeholder="$t('resource.name')"/>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="Get_Re_Channel(0)">{{$t('developer.search')}}</el-button>
+              <el-button type="primary" @click="Get_Re_Channel(0)">{{ $t('developer.search') }}</el-button>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="addchanneltype">{{$t('developer.selectchannel')}}</el-button>
+              <el-button type="primary" @click="addchanneltype">{{ $t('developer.selectchannel') }}</el-button>
             </el-form-item>
           </el-form>
           <!----------------------------------------------------资源通道表格------------------>
-          <el-table :data="tableData" style="width: 100%;" :row-class-name="getChannelEnable">
+          <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;">
             <el-table-column :label="$t('developer.channelnumber')">
               <template slot-scope="scope">
-                <span>{{scope.row.id}}</span>
+                <span>{{ scope.row.id }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channelname')">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.name}}</span>
+                <span>{{ scope.row.attributes.name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channeltype')">
               <template slot-scope="scope">
-                <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-                <span v-else-if="scope.row.attributes.type==2">{{$t('developer.resourcechannel')}}</span>
-                 <span v-else>任务通道</span>
+                <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
+                <span v-else-if="scope.row.attributes.type==2">{{ $t('developer.resourcechannel') }}</span>
+                <span v-else>任务通道</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.servicetype')">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.cType}}</span>
+                <span>{{ scope.row.attributes.cType }}</span>
               </template>
             </el-table-column>
 
@@ -48,47 +48,47 @@
             </el-table-column>
             <el-table-column :label="$t('developer.channeladdr')" width="200">
               <template slot-scope="scope">
-                <span>{{'channel/'+scope.row.id}}</span>
+                <span>{{ 'channel/'+scope.row.id }}</span>
               </template>
             </el-table-column>
 
             <el-table-column :label="$t('developer.describe')">
               <template slot-scope="scope">
-                <span>{{scope.row.attributes.desc}}</span>
+                <span>{{ scope.row.attributes.desc }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.operation')" width="350">
               <template slot-scope="scope">
-                <el-button type="primary" size="mini" slot="reference" @click="editorChannel(scope.row)">编辑</el-button>
+                <el-button slot="reference" type="primary" size="mini" @click="editorChannel(scope.row)">编辑</el-button>
                 <el-button
-                  type="success"
                   v-if="scope.row.attributes.isEnable==false"
+                  type="success"
                   size="mini"
                   @click="qyChannel(scope.row,'enable')"
-                >{{$t('developer.enable')}}</el-button>
-                
+                >{{ $t('developer.enable') }}</el-button>
+
                 <el-button
-                  type="danger"
                   v-else
+                  type="danger"
                   size="mini"
                   @click="qyChannel(scope.row,'disable')"
-                >{{$t('developer.prohibit')}}</el-button>
+                >{{ $t('developer.prohibit') }}</el-button>
                 <el-button type="primary" size="mini" @click="updateChannel(scope.row)">详情</el-button>
-                <el-popover placement="top" width="300" :ref="`popover-${scope.$index}`">
-                  <p>确定删除这个{{scope.row.attributes.name}}通道吗？</p>
+                <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
+                  <p>确定删除这个{{ scope.row.attributes.name }}通道吗？</p>
                   <div style="text-align: right; margin: 0">
                     <el-button
                       size="mini"
                       @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                    >{{$t('developer.cancel')}}</el-button>
+                    >{{ $t('developer.cancel') }}</el-button>
                     <el-button
                       type="primary"
                       size="mini"
                       @click="deleteChannel(scope)"
-                    >{{$t('developer.determine')}}</el-button>
+                    >{{ $t('developer.determine') }}</el-button>
                   </div>
-                  <el-button type="danger" size="mini" slot="reference">{{$t('developer.delete')}}</el-button>
-                  
+                  <el-button slot="reference" type="danger" size="mini">{{ $t('developer.delete') }}</el-button>
+
                 </el-popover>
                 <!-- <el-popover
                 placement="top-start"
@@ -98,22 +98,22 @@
                 content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
-                <el-tooltip class="item" effect="dark" content="请先启用通道" placement="top" :disabled="scope.row.attributes.status!='OFFLINE'">
-                  <el-button type="primary" size="mini" @click="subProTopic(scope.row)" style="width:100px;height:10px;opacity:0;position:absolute"></el-button>
-                 </el-tooltip>
-                <el-button type="primary" size="mini" @click="subProTopic(scope.row)" :disabled="scope.row.attributes.status=='OFFLINE'">订阅日志</el-button>
+                <el-tooltip :disabled="scope.row.attributes.status!='OFFLINE'" class="item" effect="dark" content="请先启用通道" placement="top">
+                  <el-button type="primary" size="mini" style="width:100px;height:10px;opacity:0;position:absolute" @click="subProTopic(scope.row)"/>
+                </el-tooltip>
+                <el-button :disabled="scope.row.attributes.status=='OFFLINE'" type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div class="elpagination" style="margin-top:20px;">
             <el-pagination
-              @size-change="channelSizeChange"
-              @current-change="channelCurrentChange"
               :page-sizes="[10, 20, 30, 50]"
               :page-size="length"
-              layout="total, sizes, prev, pager, next, jumper"
               :total="total"
-            ></el-pagination>
+              layout="total, sizes, prev, pager, next, jumper"
+              @size-change="channelSizeChange"
+              @current-change="channelCurrentChange"
+            />
           </div>
         </div>
       </el-tab-pane>
@@ -121,74 +121,73 @@
       <el-dialog
         :title="channelupdated+'通道'"
         :visible.sync="channelForm"
-        width="40%"
-        top="0"
         :close-on-click-modal="false"
         :before-close="handleClose"
+        width="40%"
+        top="0"
       >
-        <el-form :model="addchannel" label-width="120px" ref="addchannel" :rules="addrules">
+        <el-form ref="addchannel" :model="addchannel" :rules="addrules" label-width="120px">
           <el-form-item label="通道类型" prop="region">
             <el-select
               v-model="addchannel.region"
+              :disabled="resourceid!=''"
               placeholder="通道类型"
               @change="removeauto"
-              :disabled="resourceid!=''"
             >
               <el-option
                 v-for="(item,index) in channelregion"
                 :label="item.title.zh"
                 :key="index"
                 :value="item.cType"
-              ></el-option>
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('developer.channelname')" prop="name">
             <el-input
               v-model="addchannel.name"
-              autocomplete="off"
               :placeholder="$t('developer.channelname')"
-            ></el-input>
+              autocomplete="off"
+            />
           </el-form-item>
 
-           <!-- 所属应用(角色) app -->
-              <el-form-item
-                :label="$t('application.applicationtype')"               
-                :rules="[
-                    { required: true, message: '请选择所属应用',trigger: 'blur'},
-                ]"
-              >    
-          <el-select  v-model="addchannel.applicationtText" :placeholder="$t('application.applicationtype')">
-            <el-option
-              v-for="item in applicationList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name">
-            </el-option>
-          </el-select>          
+          <!-- 所属应用(角色) app -->
+          <el-form-item
+            :label="$t('application.applicationtype')"
+            :rules="[
+              { required: true, message: '请选择所属应用',trigger: 'blur'},
+            ]"
+          >
+            <el-select v-model="addchannel.applicationtText" :placeholder="$t('application.applicationtype')">
+              <el-option
+                v-for="item in applicationList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"/>
+            </el-select>
           </el-form-item>
 
-          <el-col :span="12" v-for="(item,index) in arrlist" :key="index">
+          <el-col v-for="(item,index) in arrlist" :span="12" :key="index">
             <el-form-item
               :label="item.title.zh"
               :required="item.required"
               :prop="item.showname"
             >
               <el-input
-                v-model="addchannel[item.showname]"
                 v-if="item.type=='string'"
-              ></el-input>
-               <el-input
-                v-model.number="addchannel[item.showname]"
-                v-else-if="item.type=='integer'"
-              ></el-input>
-              <el-select
                 v-model="addchannel[item.showname]"
+              />
+              <el-input
+                v-else-if="item.type=='integer'"
+                v-model.number="addchannel[item.showname]"
+              />
+              <el-select
                 v-else-if="item.type=='boolean'"
+                v-model="addchannel[item.showname]"
                 class="notauto"
                 readonly
               >
-                <el-option label="是" :value="true"></el-option>
-                <el-option label="否" :value="false"></el-option>
+                <el-option :value="true" label="是"/>
+                <el-option :value="false" label="否"/>
               </el-select>
             </el-form-item>
           </el-col>
@@ -196,41 +195,41 @@
           <el-form-item :label="$t('developer.describe')">
             <el-input
               v-model="addchannel.desc"
+              :rows="3"
+              :placeholder="$t('developer.describe')"
               autocomplete="off"
               type="textarea"
-              :rows="3"
               @change="inputChange"
-              :placeholder="$t('developer.describe')"
-            ></el-input>
+            />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="handleClose">{{$t('developer.cancel')}}</el-button>
+          <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
           <el-button
             type="primary"
             @click="addchannelForm('addchannel')"
-          >{{$t('developer.determine')}}</el-button>
+          >{{ $t('developer.determine') }}</el-button>
         </div>
       </el-dialog>
       <!--详情展示-->
-      <el-dialog title="通道详情" :visible.sync="dialogVisible" width="50%" >
+      <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%" >
         <div>
           <el-row>
             <el-col :span="12">ID:</el-col>
-            <el-col :span="12">{{resourceid}}</el-col>
+            <el-col :span="12">{{ resourceid }}</el-col>
           </el-row>
           <el-row>
             <el-col :span="12">Resource Type:</el-col>
-            <el-col :span="12">{{resoucetype}}</el-col>
+            <el-col :span="12">{{ resoucetype }}</el-col>
           </el-row>
           <el-row>
             <el-col :span="12">Description:</el-col>
-            <el-col :span="12">{{description}}</el-col>
+            <el-col :span="12">{{ description }}</el-col>
           </el-row>
 
           <el-row v-for="(key,value) in detailchannel" :key="key">
-            <el-col :span="12">{{value}}</el-col>
-            <el-col :span="12">{{key}}</el-col>
+            <el-col :span="12">{{ value }}</el-col>
+            <el-col :span="12">{{ key }}</el-col>
           </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -239,532 +238,531 @@
       </el-dialog>
       <!--订阅日志-->
       <el-dialog :title="channelname+'日志'" :visible.sync="subdialog" :before-close="handleCloseSubdialog" width="85%">
-              <div style="margin-top:20px;">
-             
-                <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
-                      <textarea class="ace_text-input" style="overflow:scroll"></textarea>
-                      </pre>
-              </div>
-              <span slot="footer" class="dialog-footer" style="height:30px;">
-                 <el-switch
-                  style="display: inline-block;margin-right:10px;"
-                  v-model="value4"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                  inactive-text="自动刷新"
-                  @change="stopsub"
-                ></el-switch>
-              </span>
-            </el-dialog>
+        <div style="margin-top:20px;">
+
+          <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
+                      <textarea class="ace_text-input" style="overflow:scroll"/>
+          </pre>
+        </div>
+        <span slot="footer" class="dialog-footer" style="height:30px;">
+          <el-switch
+            v-model="value4"
+            style="display: inline-block;margin-right:10px;"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            inactive-text="自动刷新"
+            @change="stopsub"
+          />
+        </span>
+      </el-dialog>
     </el-tabs>
   </div>
 </template>
 <script>
-import Parse from "parse";
-import { setInterval } from "timers";
+import Parse from 'parse'
+import { setInterval } from 'timers'
 import {
   channelConnect,
   updateConnect,
   deleteConnect
-} from "@/api/testchannel";
-import { subupadte } from "@/api/systemmanage/system";
-import { resourceTypes } from "@/api/rules";
-import { returnLogin } from '@/utils/return';
-var subdialog;
+} from '@/api/testchannel'
+import { subupadte } from '@/api/systemmanage/system'
+import { resourceTypes } from '@/api/rules'
+import { returnLogin } from '@/utils/return'
+var subdialog
 import {
   Websocket,
   sendInfo,
   TOPIC_EMPTY,
   MSG_EMPTY,
   DISCONNECT_MSG
-} from "@/utils/wxscoket.js";
+} from '@/utils/wxscoket.js'
 export default {
-  inject:['reload'],
+  inject: ['reload'],
   data() {
     return {
       dialogVisible: false,
-      isopen: "suo",
-      pwdType: "password",
+      isopen: 'suo',
+      pwdType: 'password',
       tableData: [],
       channelForm: false,
-      channelupdated: "新增",
-      activeName: "first",
-      channelId: "",
+      channelupdated: '新增',
+      activeName: 'first',
+      channelId: '',
       channelformsearch: {
-        name: ""
+        name: ''
       },
       channelregion: [],
       addchannel: {
-        region: "",
-        desc: "",
-        applicationtText:''
+        region: '',
+        desc: '',
+        applicationtText: ''
       },
-      applicationList:[],
+      applicationList: [],
       addrules: {
-        name: [{ required: true, message: "请输入通道名称", trigger: "blur" }],
+        name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
-          { required: true, message: "请选择服务类型", trigger: "change" }
+          { required: true, message: '请选择服务类型', trigger: 'change' }
         ]
       },
       length: 10,
       start: 0,
       total: 0,
       selectregion: {},
-      resourceid: "",
-      resoucetype: "",
-      description: "",
-      detailchannel: "",
-      //订阅日志
-      subdialog:false,
-      value4:'',
-      subdialogid:'',
-      subdialogtimer:null,
-      channelname:'',
-      arrlist:[],
-      channelId:'',
-      channelrow:[]
-    };
+      resourceid: '',
+      resoucetype: '',
+      description: '',
+      detailchannel: '',
+      // 订阅日志
+      subdialog: false,
+      value4: '',
+      subdialogid: '',
+      subdialogtimer: null,
+      channelname: '',
+      arrlist: [],
+      channelId: '',
+      channelrow: []
+    }
   },
   mounted() {
-    this.Get_Re_Channel(0);
-    this.dialogType();
-    this.getApplication();
+    this.Get_Re_Channel(0)
+    this.dialogType()
+    this.getApplication()
   },
   methods: {
     inputChange(val) {
-      console.log(val);
+      console.log(val)
     },
-    //验证
+    // 验证
     validUrl(rule, value, callback) {
-      let reg = /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
+      const reg = /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
       if (!reg.test(value)) {
-        callback(new Error("需要输入正确的url"));
+        callback(new Error('需要输入正确的url'))
       } else {
-        callback();
+        callback()
       }
     },
     validPort(rule, value, callback) {
-      let reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/;
+      const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
       if (!reg.test(value)) {
-        callback(new Error("需要输入正确的端口号"));
+        callback(new Error('需要输入正确的端口号'))
       } else {
-        callback();
+        callback()
       }
     },
-    //初始化数据
+    // 初始化数据
     Get_Re_Channel(start) {
       if (start == 0) {
-        this.start = 0;
+        this.start = 0
       }
-      var Channel = Parse.Object.extend("Channel");
-      var channel = new Parse.Query(Channel);
-      channel.skip(this.start);
-      channel.limit(this.length);
-      channel.ascending("-updatedAt");
-      if (this.channelformsearch.name != "") {
-        channel.contains("name", this.channelformsearch.name);
+      var Channel = Parse.Object.extend('Channel')
+      var channel = new Parse.Query(Channel)
+      channel.skip(this.start)
+      channel.limit(this.length)
+      channel.ascending('-updatedAt')
+      if (this.channelformsearch.name != '') {
+        channel.contains('name', this.channelformsearch.name)
       }
       channel.count().then(count => {
-        this.total = count;
+        this.total = count
         channel.find().then(
           resultes => {
             if (resultes) {
-              this.tableData = resultes;
+              this.tableData = resultes
             }
           },
           error => {
-            if (error.code == "209") {
+            if (error.code == '209') {
               this.$message({
-                type: "warning",
-                message: "登陆权限过期，请重新登录"
-              });
+                type: 'warning',
+                message: '登陆权限过期，请重新登录'
+              })
               this.$router.push({
-                path: "/login"
-              });
+                path: '/login'
+              })
             } else if (error.code == 119) {
               this.$message({
-                type: "error",
-                message: "没有操作权限"
-              });
+                type: 'error',
+                message: '没有操作权限'
+              })
             }
-          },error=>{
+          }, error => {
             returnLogin(error)
           }
-        );
-      },error=>{
+        )
+      }, error => {
         returnLogin(error)
-      });
+      })
     },
     // 获取应用列表
     getApplication() {
-      var App = Parse.Object.extend("App");
-      var query = new Parse.Query(App);
-      var _this = this;
-      query.limit(100);
+      var App = Parse.Object.extend('App')
+      var query = new Parse.Query(App)
+      var _this = this
+      query.limit(100)
       query.find().then(
         response => {
-          console.log("### response", response);
+          console.log('### response', response)
           // this.$objGet
           if (response) {
             response.map(item => {
-              var obj = {};
-              obj.id = item.id;
-              obj.name = item.attributes.desc;
-              _this.applicationList.push(obj);
-            });
+              var obj = {}
+              obj.id = item.id
+              obj.name = item.attributes.desc
+              _this.applicationList.push(obj)
+            })
           }
         },
         error => {
-          this.$message(error.message);
+          this.$message(error.message)
         }
-      );
+      )
     },
-    //初始化弹框数据
+    // 初始化弹框数据
     dialogType() {
       resourceTypes().then(resultes => {
-        this.channelregion = resultes;
-      });
+        this.channelregion = resultes
+      })
     },
-    //更新状态
+    // 更新状态
     qyChannel(row, action) {
       subupadte(row.id, action)
         .then(resultes => {
           if (resultes) {
             this.$message({
-              type: "success",
-              message: `${action == "enable" ? "启用成功" : "禁用成功"}`
-            });
+              type: 'success',
+              message: `${action == 'enable' ? '启用成功' : '禁用成功'}`
+            })
           }
-          this.Get_Re_Channel(0);
+          this.Get_Re_Channel(0)
         })
         .catch(error => {
-          this.$message(error.error);
-        });
+          this.$message(error.error)
+        })
     },
-    //编辑设备
+    // 编辑设备
     updateChannel(row) {
       console.log(row)
-      this.dialogVisible = true;
-      this.resourceid = row.id;
-      this.detailchannel = row.attributes.config;
+      this.dialogVisible = true
+      this.resourceid = row.id
+      this.detailchannel = row.attributes.config
       this.resoucetype = row.attributes.cType
       this.description = row.attributes.desc
     },
     addchannelForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var obj = {};
+          var obj = {}
           for (var key in this.addchannel) {
-            obj[key] = this.addchannel[key];
+            obj[key] = this.addchannel[key]
           }
-          delete obj.region;
+          delete obj.region
           delete obj.desc
           delete obj.type
           delete obj.isEnable
           delete obj.name
-          var Channel = Parse.Object.extend("Channel");
-          var channel = new Channel();
+          var Channel = Parse.Object.extend('Channel')
+          var channel = new Channel()
           // var userid = Parse.User.current().id;
-          var acl = new Parse.ACL();
+          var acl = new Parse.ACL()
           // 设置权限控制列表
-          acl.setRoleReadAccess(this.addchannel.applicationtText, true);
-          acl.setRoleWriteAccess(this.addchannel.applicationtText, true);
+          acl.setRoleReadAccess(this.addchannel.applicationtText, true)
+          acl.setRoleWriteAccess(this.addchannel.applicationtText, true)
 
-          if (this.resourceid != "") {
-            channel.id = this.resourceid;
+          if (this.resourceid != '') {
+            channel.id = this.resourceid
           }
-          channel.set("config", obj);
-          channel.set("ACL", acl);
-          channel.set("name", this.addchannel.name);
-          channel.set("cType", this.addchannel.region);
-          channel.set("desc", this.addchannel.desc);
-          if(this.addchannel.type){
-              channel.set("type", this.addchannel.type.toString());
+          channel.set('config', obj)
+          channel.set('ACL', acl)
+          channel.set('name', this.addchannel.name)
+          channel.set('cType', this.addchannel.region)
+          channel.set('desc', this.addchannel.desc)
+          if (this.addchannel.type) {
+            channel.set('type', this.addchannel.type.toString())
           }
-          channel.set("isEnable", this.addchannel.isEnable);
+          channel.set('isEnable', this.addchannel.isEnable)
           channel.save().then(resultes => {
             if (resultes) {
               this.$message({
-                type: "success",
-                message: this.channelupdated == "编辑" ? "编辑成功" : "创建成功"
-              });
-              this.$refs["addchannel"].resetFields();
-              this.addchannel={}
-              // this.reload()
-              this.channelForm = false;
-              
-              this.resourceid=''
-              this.Get_Re_Channel(0);
-            }
-          });
-        }
-      },error=>{
-        returnLogin(error)
-      });
-    },
-    //删除通道
-    deleteChannel(scope) {
-      var Channel = Parse.Object.extend("Channel");
-      var channel = new Channel();
-      channel.id = scope.row.id;
-      channel.destroy().then(
-        resultes => {
-          this.$message({
-            type: "success",
-            message: "删除成功"
-          });
-          scope._self.$refs[`popover-${scope.$index}`].doClose();
-          this.Get_Re_Channel(0);
-        },
-        error => {
-          this.$message({
-            type: "error",
-            message: error.message
-          });
-        }
-      );
-    },
-    addchanneltype() {
-      this.channelForm = true;
-      this.channelupdated = "新增";
-    },
-    //关闭弹窗
-    handleClose() {
-      this.addchannel = {};
-      this.channelForm = false;
-      this.$refs["addchannel"].resetFields();
-      this.resourceid = "";
-    },
-    getChannelEnable(row, rowIndex) {
-      if (row.row.attributes.isEnable == true) {
-        return "green_active";
-      } else {
-        return "red_active";
-      }
-    },
-    //分页
-    channelSizeChange(val) {
-      this.length = val;
-      this.Get_Re_Channel()
-    },
-    channelCurrentChange(val) {
-      this.start = (val - 1) * this.length;
-      this.Get_Re_Channel()
-    },
-    arrSort(a,b){
-      var val1 = a.order;
-      var val2 = b.order;
-      if (val1 < val2) {
-      return -1;
-      } else if (val1 > val2) {
-      return 1;
-      } else {
-      return 0;
-      }  
-    },
-    orderObject(object){
-      var arr=[]
-      var obj = {};
-      var obj1 = {
-        name: [{ required: true, message: "请输入通道名称", trigger: "blur" }],
-        region: [
-          { required: true, message: "请选择服务类型", trigger: "change" }
-        ]
-      };
-      for(var key in object){
-        object[key].showname = key
-        arr.push(object[key])
-      }
-       return arr.sort(this.arrSort)
-     
-    },
-    removeauto(val) {
-      var obj = {};
-      var obj1 = {
-        name: [{ required: true, message: "请输入通道名称", trigger: "blur" }],
-        region: [
-          { required: true, message: "请选择服务类型", trigger: "change" }
-        ]
-      };
-        if(this.resourceid==''){
-          this.channelregion.map(item => {
-              if (item.cType == val) {
-                this.selectregion = item;
-                  this.arrlist=this.orderObject(this.selectregion.params)
-                this.arrlist.map(item=>{
-                  if(item.default){
-                    obj[item.showname]=item.default
-                  }else{
-                    obj[item.showname]=''
-                  }
-                  if(item.required){
-                    if(item.type=='string'||item.type=='integer'){
-                      obj1[item.showname] = [{ required: true, trigger: "blur" }]
-                    }else{
-                      obj1[item.showname] = [{ required: true, trigger: "change" }];
-                    }
-                  }
-                })
-                obj.region = val;
-                obj.desc = "";
-                obj.name = "";
-                obj.type = this.selectregion.type
-                obj.isEnable = false;
-              }
-            });
-        }else{
-          this.channelregion.map(item => {
-            if(item.cType==val){
-              this.selectregion = item
-              this.arrlist = this.orderObject(this.selectregion.params)
-              this.arrlist.map(item=>{
-                for(var key in this.channelrow.attributes.config){
-                  if(item.showname==key){
-                   obj[item.showname]=this.channelrow.attributes.config[key]
-                  }
-                  if(item.required){
-                    if(item.type=='string'||item.type=='integer'){
-                      obj1[item.showname] = [{ required: true, trigger: "blur" }]
-                    }else{
-                      obj1[item.showname] = [{ required: true, trigger: "change" }];
-                    }
-                  }
-                   obj.region = val;
-                    obj.desc = this.channelrow.attributes.desc;
-                    obj.name = this.channelrow.attributes.name;
-                    obj.type = this.selectregion.type
-                    obj.isEnable = this.channelrow.attributes.isEnable;
-                }
+                type: 'success',
+                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
               })
+              this.$refs['addchannel'].resetFields()
+              this.addchannel = {}
+              // this.reload()
+              this.channelForm = false
+
+              this.resourceid = ''
+              this.Get_Re_Channel(0)
             }
           })
         }
-      //读取acl列表,获取所属应用名称
-      if(this.channelrow && this.channelrow.attributes){
-          for (var key in this.channelrow.attributes.ACL.permissionsById) {
-          obj.applicationtText = key?key.substr(5):'';
+      }, error => {
+        returnLogin(error)
+      })
+    },
+    // 删除通道
+    deleteChannel(scope) {
+      var Channel = Parse.Object.extend('Channel')
+      var channel = new Channel()
+      channel.id = scope.row.id
+      channel.destroy().then(
+        resultes => {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          scope._self.$refs[`popover-${scope.$index}`].doClose()
+          this.Get_Re_Channel(0)
+        },
+        error => {
+          this.$message({
+            type: 'error',
+            message: error.message
+          })
+        }
+      )
+    },
+    addchanneltype() {
+      this.channelForm = true
+      this.channelupdated = '新增'
+    },
+    // 关闭弹窗
+    handleClose() {
+      this.addchannel = {}
+      this.channelForm = false
+      this.$refs['addchannel'].resetFields()
+      this.resourceid = ''
+    },
+    getChannelEnable(row, rowIndex) {
+      if (row.row.attributes.isEnable == true) {
+        return 'green_active'
+      } else {
+        return 'red_active'
+      }
+    },
+    // 分页
+    channelSizeChange(val) {
+      this.length = val
+      this.Get_Re_Channel()
+    },
+    channelCurrentChange(val) {
+      this.start = (val - 1) * this.length
+      this.Get_Re_Channel()
+    },
+    arrSort(a, b) {
+      var val1 = a.order
+      var val2 = b.order
+      if (val1 < val2) {
+        return -1
+      } else if (val1 > val2) {
+        return 1
+      } else {
+        return 0
+      }
+    },
+    orderObject(object) {
+      var arr = []
+      var obj = {}
+      var obj1 = {
+        name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
+        region: [
+          { required: true, message: '请选择服务类型', trigger: 'change' }
+        ]
+      }
+      for (var key in object) {
+        object[key].showname = key
+        arr.push(object[key])
+      }
+      return arr.sort(this.arrSort)
+    },
+    removeauto(val) {
+      var obj = {}
+      var obj1 = {
+        name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
+        region: [
+          { required: true, message: '请选择服务类型', trigger: 'change' }
+        ]
+      }
+      if (this.resourceid == '') {
+        this.channelregion.map(item => {
+          if (item.cType == val) {
+            this.selectregion = item
+            this.arrlist = this.orderObject(this.selectregion.params)
+            this.arrlist.map(item => {
+              if (item.default) {
+                obj[item.showname] = item.default
+              } else {
+                obj[item.showname] = ''
+              }
+              if (item.required) {
+                if (item.type == 'string' || item.type == 'integer') {
+                  obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                } else {
+                  obj1[item.showname] = [{ required: true, trigger: 'change' }]
+                }
+              }
+            })
+            obj.region = val
+            obj.desc = ''
+            obj.name = ''
+            obj.type = this.selectregion.type
+            obj.isEnable = false
+          }
+        })
+      } else {
+        this.channelregion.map(item => {
+          if (item.cType == val) {
+            this.selectregion = item
+            this.arrlist = this.orderObject(this.selectregion.params)
+            this.arrlist.map(item => {
+              for (var key in this.channelrow.attributes.config) {
+                if (item.showname == key) {
+                  obj[item.showname] = this.channelrow.attributes.config[key]
+                }
+                if (item.required) {
+                  if (item.type == 'string' || item.type == 'integer') {
+                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                  } else {
+                    obj1[item.showname] = [{ required: true, trigger: 'change' }]
+                  }
+                }
+                obj.region = val
+                obj.desc = this.channelrow.attributes.desc
+                obj.name = this.channelrow.attributes.name
+                obj.type = this.selectregion.type
+                obj.isEnable = this.channelrow.attributes.isEnable
+              }
+            })
+          }
+        })
+      }
+      // 读取acl列表,获取所属应用名称
+      if (this.channelrow && this.channelrow.attributes) {
+        for (var key in this.channelrow.attributes.ACL.permissionsById) {
+          obj.applicationtText = key ? key.substr(5) : ''
         }
       }
-    
-      this.addchannel = obj;
-      this.addchannel.region = val;
-      this.addrules = obj1;
+
+      this.addchannel = obj
+      this.addchannel.region = val
+      this.addrules = obj1
     },
-    editorChannel(row){
+    editorChannel(row) {
       this.channelrow = row
       this.resourceid = row.id
-      this.channelForm = true;
-      this.channelupdated = "编辑";
+      this.channelForm = true
+      this.channelupdated = '编辑'
       this.removeauto(row.attributes.cType)
     },
-    //弹窗订阅日志
+    // 弹窗订阅日志
     nowtime() {
-      var timestamp3 = Date.parse(new Date());
-      var date = new Date(timestamp3);
-      var Y = date.getFullYear() + "年";
+      var timestamp3 = Date.parse(new Date())
+      var date = new Date(timestamp3)
+      var Y = date.getFullYear() + '年'
       var M =
         (date.getMonth() + 1 <= 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月";
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '月'
       var D =
-        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
-        "日  ";
+        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+        '日  '
       var h =
-        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
-        ":";
+        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+        ':'
       var m =
         (date.getMinutes() + 1 <= 10
-          ? "0" + date.getMinutes()
-          : date.getMinutes()) + ":";
+          ? '0' + date.getMinutes()
+          : date.getMinutes()) + ':'
       var s =
         date.getSeconds() + 1 <= 10
-          ? "0" + date.getSeconds()
-          : date.getSeconds();
-      return h + m + s+" ";
+          ? '0' + date.getSeconds()
+          : date.getSeconds()
+      return h + m + s + ' '
     },
     subProTopic(row) {
-      this.subdialog = true;
-      this.subdialogid = row.id;
-      this.channelname = row.id;
+      this.subdialog = true
+      this.subdialogid = row.id
+      this.channelname = row.id
       setTimeout(() => {
-        subdialog = ace.edit("subdialog");
-        subdialog.session.setMode("ace/mode/text"); // 设置语言
-        subdialog.setTheme("ace/theme/gob"); // 设置主题
-        subdialog.setReadOnly(true);
+        subdialog = ace.edit('subdialog')
+        subdialog.session.setMode('ace/mode/text') // 设置语言
+        subdialog.setTheme('ace/theme/gob') // 设置主题
+        subdialog.setReadOnly(true)
         subdialog.setOptions({
           enableBasicAutocompletion: false,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        });
-      });
+        })
+      })
       var info = {
-        topic: "log/channel/"+ row.id,
+        topic: 'log/channel/' + row.id,
         qos: 2
-      };
-      var channeltopic = new RegExp("log/channel/"+ row.id);
-      var submessage = "";
-      var _this = this;
+      }
+      var channeltopic = new RegExp('log/channel/' + row.id)
+      var submessage = ''
+      var _this = this
       Websocket.add_hook(channeltopic, function(Msg) {
-        //判断长度
+        // 判断长度
         if (subdialog.session.getLength() >= 1000) {
-          submessage = "";
+          submessage = ''
         } else {
-          submessage += _this.nowtime() + Msg + `\n`;
+          submessage += _this.nowtime() + Msg + `\n`
         }
-        subdialog.setValue(submessage);
+        subdialog.setValue(submessage)
         subdialog.gotoLine(subdialog.session.getLength())
-      });
-      //订阅
-      var text0 = JSON.stringify({ action: "start_logger" });
+      })
+      // 订阅
+      var text0 = JSON.stringify({ action: 'start_logger' })
       Websocket.subscribe(info, function(res) {
         if (res.result) {
           console.log(info)
-          console.log("订阅成功");
+          console.log('订阅成功')
           var sendInfo = {
-            topic: "channel/" + row.id,
+            topic: 'channel/' + row.id,
             text: text0,
             retained: true,
             qos: 2
-          };
-          Websocket.sendMessage(sendInfo);
+          }
+          Websocket.sendMessage(sendInfo)
           _this.subdialogtimer = window.setInterval(() => {
-            Websocket.sendMessage(sendInfo);
-          }, 600000);
+            Websocket.sendMessage(sendInfo)
+          }, 600000)
         }
-      });
+      })
     },
-     stopsub(value) {
+    stopsub(value) {
       var text0
-      if(value==false){
+      if (value == false) {
         // this.subaction = 'start'
-         text0 = JSON.stringify({ action: "stop_logger" });
-      }else{
+        text0 = JSON.stringify({ action: 'stop_logger' })
+      } else {
         // this.subaction = 'stop'
-        text0 = JSON.stringify({ action: "start_logger" });
+        text0 = JSON.stringify({ action: 'start_logger' })
       }
       var sendInfo = {
-        topic: "channel/" + this.subdialogid,
+        topic: 'channel/' + this.subdialogid,
         text: text0,
         retained: true,
         qos: 2
-      };
-      Websocket.sendMessage(sendInfo);
+      }
+      Websocket.sendMessage(sendInfo)
     },
-     handleCloseSubdialog() {
-      var text0 = JSON.stringify({ action: "stop_logger" });
+    handleCloseSubdialog() {
+      var text0 = JSON.stringify({ action: 'stop_logger' })
       var sendInfo = {
-        topic: "channel/" + this.subdialogid,
+        topic: 'channel/' + this.subdialogid,
         text: text0,
         retained: true,
         qos: 2
-      };
-      Websocket.sendMessage(sendInfo);
-      this.subdialog = false;
-      window.clearInterval(this.subdialogtimer);
-      this.subdialogtimer = null;
-    },
+      }
+      Websocket.sendMessage(sendInfo)
+      this.subdialog = false
+      window.clearInterval(this.subdialogtimer)
+      this.subdialogtimer = null
+    }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .resourcechannel {
@@ -780,7 +778,7 @@ export default {
   }
   /deep/ .el-button + .el-button {
     margin-left: 0;
-    
+
   }
   /deep/ .el-tabs__item {
     font-size: 16px;

@@ -6,15 +6,15 @@
           <el-tree
             :data="deptTreeData"
             :props="roleProps"
-            @node-click="handleNodeClick"
+            :expand-on-click-node="false"
             node-key="index"
             default-expand-all
-            :expand-on-click-node="false"
+            @node-click="handleNodeClick"
           >
-            <div class="custom-tree-node"  slot-scope="{ node, data }">
-              <span  :class="{ selected: data.objectId == curDepartmentId}" >{{ node.label }}</span>
+            <div slot-scope="{ node, data }" class="custom-tree-node">
+              <span :class="{ selected: data.objectId == curDepartmentId}" >{{ node.label }}</span>
               <span>
-                <i class="el-icon-circle-plus-outline" @click="setDialogRole(data)" title="添加角色"></i>
+                <i class="el-icon-circle-plus-outline" title="添加角色" @click="setDialogRole(data)"/>
               </span>
             </div>
           </el-tree>
@@ -23,7 +23,7 @@
       <el-col :span="9">
         <div class="rightTable">
           <div class="search">
-            <el-input :placeholder="$t('user.name')" size="mini" v-model="search" clearable></el-input>
+            <el-input :placeholder="$t('user.name')" v-model="search" size="mini" clearable/>
             <el-button
               type="primary"
               size="mini"
@@ -32,7 +32,7 @@
               @click="gettable(0)"
             >{{ $t("developer.search") }}</el-button>
             <!-- icon="el-icon-plus" -->
-  <!--           <el-button type="primary" size="mini" @click="add">
+            <!--           <el-button type="primary" size="mini" @click="add">
               {{
               $t("developer.add")
               }}
@@ -43,11 +43,11 @@
           <div class="tableroles" style="margin-top:20px">
             <el-table
               :data="tableData"
-              style="width: 100%;text-align:center"
-              @row-click="getDetailmenu"
-              size="small"
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
+              style="width: 100%;text-align:center"
+              size="small"
+              @row-click="getDetailmenu"
             >
               <el-table-column :label="$t('user.name')" align="center">
                 <template slot-scope="scope">
@@ -101,14 +101,14 @@
             <!--分页-->
             <div class="rightPagination">
               <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
+                v-show="total > 2"
                 :page-sizes="[1, 5, 10]"
                 :page-size="pagesize"
-                layout="total, sizes, prev, pager, next, jumper"
                 :total="total"
-                v-show="total > 2"
-              ></el-pagination>
+                layout="total, sizes, prev, pager, next, jumper"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
             </div>
           </div>
         </div>
@@ -127,12 +127,12 @@
               <el-tree
                 ref="permissionTree"
                 :data="permissionTreeData"
+                :default-checked-keys="rolePermissonList"
+                :expand-on-click-node="false"
                 show-checkbox
                 node-key="objectId"
                 default-props
                 accordion
-                :default-checked-keys="rolePermissonList"
-                :expand-on-click-node="false"
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
@@ -151,12 +151,12 @@
               <el-tree
                 ref="menusTree"
                 :data="menuTreeData"
+                :default-checked-keys="roleMenuList"
+                :expand-on-click-node="false"
                 show-checkbox
                 node-key="objectId"
                 default-props
                 accordion
-                :default-checked-keys="roleMenuList"
-                :expand-on-click-node="false"
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
@@ -168,7 +168,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog title="添加角色" :visible="centerDialogRole" @close="closeDialogRole" width="30%" center>
+    <el-dialog :visible="centerDialogRole" title="添加角色" width="30%" center @close="closeDialogRole">
       <div style="height:420px">
         <addroles />
       </div>
@@ -180,12 +180,12 @@
     </el-dialog>
     <el-dialog :title="$t('developer.add')" :visible.sync="dialogVisible" width="50%">
       <el-table
+        ref="multipleTable"
         :data="tableDataroles"
         style="width: 100%;text-align:center"
         @selection-change="handleSelectionChange"
-        ref="multipleTable"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="selection" width="55"/>
         <el-table-column :label="$t('user.name')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.attributes.name }}</span>
@@ -205,12 +205,12 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">
           {{
-          $t("developer.cancel")
+            $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="addacl">
           {{
-          $t("developer.determine")
+            $t("developer.determine")
           }}
         </el-button>
       </span>
@@ -220,30 +220,30 @@
     <el-dialog :title="$t('developer.edit')" :visible.sync="roleEdit">
       <el-form :model="form">
         <el-form-item :label="$t('user.name')" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled></el-input>
+          <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled/>
         </el-form-item>
         <el-form-item :label="$t('user.Remarks')" :label-width="formLabelWidth">
-          <el-input v-model="form.alias" autocomplete="off" style="width:300px;"></el-input>
+          <el-input v-model="form.alias" autocomplete="off" style="width:300px;"/>
         </el-form-item>
         <el-form-item :label="$t('developer.describe')" :label-width="formLabelWidth">
           <el-input
             v-model="form.desc"
+            :rows="2"
             autocomplete="off"
             style="width:300px;"
             type="textarea"
-            :rows="2"
-          ></el-input>
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleEdit = false">
           {{
-          $t("developer.cancel")
+            $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="updaterole">
           {{
-          $t("developer.determine")
+            $t("developer.determine")
           }}
         </el-button>
       </div>
@@ -251,33 +251,33 @@
   </div>
 </template>
 <script>
-import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
-import { Parse } from "parse";
-import { returnLogin } from "@/utils/return";
-import addroles from "@/views/roles/rolelist/addroles";
+import { page, UpdatedMenu, UpdatedRole } from '@/api/login'
+import { Parse } from 'parse'
+import { returnLogin } from '@/utils/return'
+import addroles from '@/views/roles/rolelist/addroles'
 export default {
   data() {
     return {
       deptTreeData: [],
-      curDepartmentId:"",
-      formLabelWidth: "120px",
+      curDepartmentId: '',
+      formLabelWidth: '120px',
       roleEdit: false,
       form: {
-        name: "",
-        alias: "",
-        desc: ""
+        name: '',
+        alias: '',
+        desc: ''
       },
       data: [],
       dialogVisible: false,
       multipleSelection: [],
-      search: "",
+      search: '',
       total: 0,
       pagesize: 10,
       start: 0,
       tableData: [],
       update: 0,
-      id: "",
-      row: "",
+      id: '',
+      row: '',
       insert: [],
       roles1: [],
       tableDataroles: [],
@@ -286,17 +286,17 @@ export default {
       orderresultes: [],
       depandmenu: [],
       rolemenu: [],
-      rolemenuname: "",
-      roleobjectid: "",
+      rolemenuname: '',
+      roleobjectid: '',
       rolecontrol: true,
       roledata: [],
       rolecontroldata: [],
       data1: [],
-      editroleid: "",
-      currentSelectIndex: "",
+      editroleid: '',
+      currentSelectIndex: '',
       roleProps: {
-        children: "children",
-        label: "name"
+        children: 'children',
+        label: 'name'
       },
       roleData: [],
       DialogRoleFlag: true,
@@ -308,14 +308,14 @@ export default {
       rolePermissonList: [],
       loadingService: {},
       roleItem: []
-    };
+    }
   },
   computed: {
     centerDialogRole() {
-      return this.$store.getters.DialogFlag;
+      return this.$store.getters.DialogFlag
     },
     permissionTreeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions));
+      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
       return cloneData.filter(father => {
         /* eslint-disable */
         const branchArr = cloneData.filter(

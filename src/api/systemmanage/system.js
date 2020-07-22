@@ -13,46 +13,46 @@ export function Getapp(node, start, length) {
 }
 export function Getmodule(app) {
   return request({
-    url: '/plugin/'+app,
+    url: '/plugin/' + app,
     method: 'post',
     params: {
-     Action:'modules'
+      Action: 'modules'
     }
   })
 }
 export function Getmodule1(app) {
   return request({
-    url: '/plugin/'+app,
+    url: '/plugin/' + app,
     method: 'post',
     params: {
-     Action:'modules'
+      Action: 'modules'
     }
   })
 }
 export function Getstart(app) {
   return request({
-    url: '/plugin/'+app,
+    url: '/plugin/' + app,
     method: 'post',
     params: {
-      Action:'start'
+      Action: 'start'
     }
   })
 }
 export function Getstop(app) {
   return request({
-    url: '/plugin/'+app,
+    url: '/plugin/' + app,
     method: 'post',
     params: {
-      Action:'stop'
+      Action: 'stop'
     }
   })
 }
 export function GetReload(app) {
   return request({
-    url: '/plugin/'+app,
+    url: '/plugin/' + app,
     method: 'post',
     params: {
-     Action:'reload'
+      Action: 'reload'
     }
   })
 }
@@ -61,26 +61,26 @@ export function Compile(code) {
     url: '/compile',
     method: 'post',
     data: {
-      code:code
+      code: code
     }
   })
 }
-export function getDev(addr,productId) {
+export function getDev(addr, productId) {
   return request({
     url: `/device/${productId}/${addr}?keys=last_row(*)`,
     method: 'get',
     params: {
-      
+
     }
   })
 }
-export function subupadte(channelId,action) {
+export function subupadte(channelId, action) {
   return request({
     url: `/control/channel`,
     method: 'post',
     params: {
-      id:channelId,
-      action:action
+      id: channelId,
+      action: action
     }
   })
 }

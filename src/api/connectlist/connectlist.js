@@ -10,7 +10,7 @@ export function report(start, length, concentrator) {
             draw: 1,
             start: start,
             length: length,
-            'search[regex]': concentrator,
+            'search[regex]': concentrator
 
         }
   })
@@ -24,7 +24,7 @@ export function connectlist(start, length, concentrator) {
             draw: 1,
             start: start,
             length: length,
-            'search[regex]': concentrator,
+            'search[regex]': concentrator
         }
   })
 }

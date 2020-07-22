@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { format } from 'path';
+import { format } from 'path'
 
 export default {
   props: {
@@ -29,13 +29,13 @@ export default {
     chartData: {
       type: Object,
       required: true,
-      default:()=>{
-            return {
-              expectedData: [],
-              expectedData1: [],
-              actualData: [],
-              title:'1'
-          }
+      default: () => {
+        return {
+          expectedData: [],
+          expectedData1: [],
+          actualData: [],
+          title: '1'
+        }
       }
     }
   },
@@ -84,7 +84,7 @@ export default {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, expectedData1,actualData,title } = {}) {
+    setOptions({ expectedData, expectedData1, actualData, title } = {}) {
       this.chart.setOption({
         xAxis: {
           data: ['2019-00001', '2019-00002', '2019-00003', '2019-00004', '2019-00005', '2019-00006', '2019-00007', '2019-00008', '2019-00009', '2019-00010', '2019-00011'],
@@ -101,16 +101,16 @@ export default {
         },
         title: {
           text: title,
-          textStyle:{
-            color:"white"
+          textStyle: {
+            color: 'white'
           }
         },
         legend: {
           data: ['扬程'],
-           textStyle:{
-            color:'#ffffff',
-            fontSize:14
-          },
+          textStyle: {
+            color: '#ffffff',
+            fontSize: 14
+          }
         },
         tooltip: {
           trigger: 'axis',
@@ -129,32 +129,32 @@ export default {
             show: false
           },
           axisLabel: {
-            formatter: "{value}%",
+            formatter: '{value}%',
             textStyle: {
-                color: "#fff" //坐标值得具体的颜色
-           },
-            nameTextStyle:{
-                color:"#ffffff",
-                padding:10,
-                fontSize:14
+              color: '#fff' // 坐标值得具体的颜色
+            },
+            nameTextStyle: {
+              color: '#ffffff',
+              padding: 10,
+              fontSize: 14
             }
-        }
-          
+          }
+
         },
-//        visualMap: {//区间内控制显示颜色 折线点的颜色变化
-// 　　　　show: false,
-// 　　　　dimension: 1,
-// 　　　　pieces: [{
-//         gte: 0, lte: 50, color: 'green' //表示0-36.9之间的数值，是这个#7EF57C颜色，大于这个140，则#ff0000颜色。　　　　　　
-//         }],
-// 　　　　　outOfRange: {
-// 　　　　　　color: 'red'
-// 　　　　}
-// 　　  },
+        //        visualMap: {//区间内控制显示颜色 折线点的颜色变化
+        // 　　　　show: false,
+        // 　　　　dimension: 1,
+        // 　　　　pieces: [{
+        //         gte: 0, lte: 50, color: 'green' //表示0-36.9之间的数值，是这个#7EF57C颜色，大于这个140，则#ff0000颜色。
+        //         }],
+        // 　　　　　outOfRange: {
+        // 　　　　　　color: 'red'
+        // 　　　　}
+        // 　　  },
         series: [{
-          name: '扬程', 
-        //  symbol: 'circle',
-            symbolSize: 4,
+          name: '扬程',
+          //  symbol: 'circle',
+          symbolSize: 4,
           itemStyle: {
             normal: {
               color: '#e67070',
@@ -168,52 +168,52 @@ export default {
             }
           },
           markLine: {
-                symbol:'none',//去掉箭头
-                silent: false,
-                data: [{
-                    name:'告警线',
-                    yAxis: 50,
-                    label:{
-                      show:false,
-                      position:'middle',
-                    },
-                    lineStyle:{
-                      type:'solid',
-                      color:'green'
-                    }
-                },
-                {
-                    name:'111',
-                    yAxis: 46,
-                    label:{
-                      show:false,
-                      position:'middle',
-                    },
-                     lineStyle:{
-                      type:'dashed',
-                      color:'green'
-                    }
-                },
-                {
-                    name:'111',
-                    yAxis: 54,
-                    label:{
-                      show:false,
-                      position:'middle',
-                    },
-                     lineStyle:{
-                      type:'dashed',
-                      color:'green'
-                    }
-                }]
+            symbol: 'none', // 去掉箭头
+            silent: false,
+            data: [{
+              name: '告警线',
+              yAxis: 50,
+              label: {
+                show: false,
+                position: 'middle'
+              },
+              lineStyle: {
+                type: 'solid',
+                color: 'green'
+              }
             },
+            {
+              name: '111',
+              yAxis: 46,
+              label: {
+                show: false,
+                position: 'middle'
+              },
+              lineStyle: {
+                type: 'dashed',
+                color: 'green'
+              }
+            },
+            {
+              name: '111',
+              yAxis: 54,
+              label: {
+                show: false,
+                position: 'middle'
+              },
+              lineStyle: {
+                type: 'dashed',
+                color: 'green'
+              }
+            }]
+          },
           smooth: true,
           type: 'line',
           data: [46.95, 46.95, 53.2, 48.0, 52.5, 47.8, 47.8, 47.8, 45.6, 47.55, 49.5],
           tooltip: true,
           animationDuration: 2800,
-          animationEasing: 'cubicInOut',
-        },
+          animationEasing: 'cubicInOut'
+        }
         // {
         //   name: '数据1',
         //   symbol: 'circle',
@@ -240,11 +240,10 @@ export default {
       })
     },
     initChart() {
-      setTimeout(()=>{
-         this.chart = echarts.init(this.$el, 'macarons')
-         this.setOptions(this.chartData)
-      },1000)
-     
+      setTimeout(() => {
+        this.chart = echarts.init(this.$el, 'macarons')
+        this.setOptions(this.chartData)
+      }, 1000)
     }
   }
 }

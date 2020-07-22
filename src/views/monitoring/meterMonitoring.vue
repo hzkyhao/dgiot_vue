@@ -7,33 +7,33 @@
           <el-form-item label="终端类型">
             <el-select
               v-model="form.terminal_type"
-              @change="handleTypeChange"
               placeholder="请选择终端类型"
+              @change="handleTypeChange"
             >
-              <el-option label="集中器" :value="1"></el-option>
-              <el-option label="电能表" :value="2"></el-option>
+              <el-option :value="1" label="集中器"/>
+              <el-option :value="2" label="电能表"/>
             </el-select>
           </el-form-item>
           <el-form-item label="终端型号">
             <el-select
               v-model="form.terminal_model"
-              @change="handleModelChange"
               placeholder="请选择终端型号"
+              @change="handleModelChange"
             >
-              <el-option label="全部"   :value="0" v-show="form.terminal_type==2"></el-option>
-              <el-option label="单相智能电表" :value="1" v-show="form.terminal_type==2"></el-option>
-              <el-option label="三相智能电表" :value="2" v-show="form.terminal_type==2"></el-option>
-              <el-option label="电力集中器" :value="3" v-show="form.terminal_type==1"></el-option>
+              <el-option v-show="form.terminal_type==2" :value="0" label="全部"/>
+              <el-option v-show="form.terminal_type==2" :value="1" label="单相智能电表"/>
+              <el-option v-show="form.terminal_type==2" :value="2" label="三相智能电表"/>
+              <el-option v-show="form.terminal_type==1" :value="3" label="电力集中器"/>
             </el-select>
           </el-form-item>
           <el-form-item label="终端地址">
-            <el-input v-model="form.terminal_addr" placeholder="请选择终端地址"></el-input>
+            <el-input v-model="form.terminal_addr" placeholder="请选择终端地址"/>
           </el-form-item>
           <el-form-item label="在线状态">
             <el-select v-model="form.isOnline" placeholder="请选择在线状态">
-              <el-option label="全部" :value="2"></el-option>
-              <el-option label="在线" :value="1"></el-option>
-              <el-option label="离线" :value="0"></el-option>
+              <el-option :value="2" label="全部"/>
+              <el-option :value="1" label="在线"/>
+              <el-option :value="0" label="离线"/>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -42,11 +42,11 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="noData" v-if="!noData">
+      <div v-if="!noData" class="noData">
         <p>暂无数据</p>
       </div>
-      <div class="detail animated fadeIn" v-if="form.terminal_type=='2'">
-        <div class="operation" v-show="operation.tq">
+      <div v-if="form.terminal_type=='2'" class="detail animated fadeIn">
+        <div v-show="operation.tq" class="operation">
           <div class="summarize">
             <el-card shadow="hover">
               <div slot="header">
@@ -56,55 +56,55 @@
                 <li>
                   台区总数：
                   <span>
-                    <strong>{{operation.tq}}</strong>个
+                    <strong>{{ operation.tq }}</strong>个
                   </span>
                 </li>
                 <li>
                   集中器总数：
                   <span>
-                    <strong>{{operation.vcaddr}}</strong>台
+                    <strong>{{ operation.vcaddr }}</strong>台
                   </span>
                 </li>
                 <li>
                   电能表总数：
                   <span>
-                    <strong>{{operation.addr}}</strong>台
+                    <strong>{{ operation.addr }}</strong>台
                   </span>
                 </li>
                 <li>
                   单相电能表总数：
                   <span>
-                    <strong>{{operation.single_meter}}</strong>台
+                    <strong>{{ operation.single_meter }}</strong>台
                   </span>
                 </li>
                 <li>
                   三相电能表总数：
                   <span>
-                    <strong>{{operation.triple_meter}}</strong>台
+                    <strong>{{ operation.triple_meter }}</strong>台
                   </span>
                 </li>
                 <li>
                   当日冻结电量：
                   <span>
-                    <strong>{{operation.count_day}}</strong>KWh
+                    <strong>{{ operation.count_day }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   上日用电总量：
                   <span>
-                    <strong>{{operation.day}}</strong>KWh
+                    <strong>{{ operation.day }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   当月冻结电量：
                   <span>
-                    <strong>{{operation.count_month}}</strong>KWh
+                    <strong>{{ operation.count_month }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   当上月用电总量：
                   <span>
-                    <strong>{{operation.month}}</strong>KWh
+                    <strong>{{ operation.month }}</strong>KWh
                   </span>
                 </li>
               </ul>
@@ -116,10 +116,10 @@
                 <span>状态统计</span>
               </div>
               <ul class="con">
-                <li ref="pie1" style="height:120px;"></li>
-                <li ref="pie2" style="height:120px;"></li>
-                <li ref="pie3" style="height:120px;"></li>
-                <li ref="pie4" style="height:120px;"></li>
+                <li ref="pie1" style="height:120px;"/>
+                <li ref="pie2" style="height:120px;"/>
+                <li ref="pie3" style="height:120px;"/>
+                <li ref="pie4" style="height:120px;"/>
               </ul>
             </el-card>
           </div>
@@ -127,41 +127,41 @@
         <ul class="table">
           <li v-for="item of electricity" :key="item.id" :class="{offLine_border:!item.status}">
             <div class="img">
-              <svg-icon icon-class="electricEnergyMeter4" v-if="item.sblx=='1'"></svg-icon>
-              <svg-icon icon-class="electricEnergyMeter5" v-else></svg-icon>
+              <svg-icon v-if="item.sblx=='1'" icon-class="electricEnergyMeter4"/>
+              <svg-icon v-else icon-class="electricEnergyMeter5"/>
             </div>
             <div class="info">
               <p>
-                {{item.sblx | type}}:
-                <span :class="[item.status?'normal':'offLine']">({{item.addr}})</span>
+                {{ item.sblx | type }}:
+                <span :class="[item.status?'normal':'offLine']">({{ item.addr }})</span>
               </p>
               <p>
-                pn值:{{item.pn}}
-                
-                <span :class="[item.status?'normal':'offLine']">{{item.status | Online}}</span>
+                pn值:{{ item.pn }}
+
+                <span :class="[item.status?'normal':'offLine']">{{ item.status | Online }}</span>
               </p>
               <div>
                 <p>
                   当日冻结电量：
                   <span
-                    style="line-height:25px"
                     :class="[item.status?'normal':'offLine']"
-                  >{{item.freeze_day}}KWh</span>
+                    style="line-height:25px"
+                  >{{ item.freeze_day }}KWh</span>
                 </p>
                 <p>
                   当月冻结电量：
                   <span
-                    style="line-height:25px"
                     :class="[item.status?'normal':'offLine']"
-                  >{{item.freeze_month}}KWh</span>
+                    style="line-height:25px"
+                  >{{ item.freeze_month }}KWh</span>
                 </p>
               </div>
             </div>
           </li>
         </ul>
       </div>
-      <div class="detail animated fadeInUp" v-if="form.terminal_type=='1'">
-        <div class="operation" v-show="operation.tq">
+      <div v-if="form.terminal_type=='1'" class="detail animated fadeInUp">
+        <div v-show="operation.tq" class="operation">
           <div class="summarize">
             <el-card shadow="hover">
               <div slot="header">
@@ -171,55 +171,55 @@
                 <li>
                   台区总数：
                   <span>
-                    <strong>{{operation.tq}}</strong>个
+                    <strong>{{ operation.tq }}</strong>个
                   </span>
                 </li>
                 <li>
                   集中器总数：
                   <span>
-                    <strong>{{operation.vcaddr}}</strong>台
+                    <strong>{{ operation.vcaddr }}</strong>台
                   </span>
                 </li>
                 <li>
                   电能表总数：
                   <span>
-                    <strong>{{operation.addr}}</strong>台
+                    <strong>{{ operation.addr }}</strong>台
                   </span>
                 </li>
                 <li>
                   单相电能表总数：
                   <span>
-                    <strong>{{operation.single_meter}}</strong>台
+                    <strong>{{ operation.single_meter }}</strong>台
                   </span>
                 </li>
                 <li>
                   三相电能表总数：
                   <span>
-                    <strong>{{operation.triple_meter}}</strong>台
+                    <strong>{{ operation.triple_meter }}</strong>台
                   </span>
                 </li>
                 <li>
                   当日冻结电量：
                   <span>
-                    <strong>{{operation.count_day}}</strong>KWh
+                    <strong>{{ operation.count_day }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   上日用电总量：
                   <span>
-                    <strong>{{operation.day}}</strong>KWh
+                    <strong>{{ operation.day }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   当月冻结电量：
                   <span>
-                    <strong>{{operation.count_month}}</strong>KWh
+                    <strong>{{ operation.count_month }}</strong>KWh
                   </span>
                 </li>
                 <li>
                   当上月用电总量：
                   <span>
-                    <strong>{{operation.month}}</strong>KWh
+                    <strong>{{ operation.month }}</strong>KWh
                   </span>
                 </li>
               </ul>
@@ -231,46 +231,46 @@
                 <span>状态统计</span>
               </div>
               <ul class="con">
-                <li ref="pie1" style="height:120px;"></li>
-                <li ref="pie2" style="height:120px;"></li>
-                <li ref="pie3" style="height:120px;"></li>
-                <li ref="pie4" style="height:120px;"></li>
+                <li ref="pie1" style="height:120px;"/>
+                <li ref="pie2" style="height:120px;"/>
+                <li ref="pie3" style="height:120px;"/>
+                <li ref="pie4" style="height:120px;"/>
               </ul>
             </el-card>
           </div>
         </div>
         <ul class="table">
-          <li class="con" v-for="item of vcon" :key="item.id">
+          <li v-for="item of vcon" :key="item.id" class="con">
             <div class="img">
-              <svg-icon icon-class="electricEnergyMeter3"></svg-icon>
+              <svg-icon icon-class="electricEnergyMeter3"/>
             </div>
             <div class="info">
               <p>
-                {{item.name}}
-                <strong :class="[item.online ? 'normal' : 'offLine']">({{item.addr}})</strong>
-                <span  v-if="item.online" class="breathe-btn" style="display:inline-block;float:right;" :style="{'background-image':item.online ? '-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(green))': '-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(red))'}"></span>
-                <span  v-if="!item.online" :class="[item.online ? 'normal' : 'offLine']">{{item.online | Online}}</span>
+                {{ item.name }}
+                <strong :class="[item.online ? 'normal' : 'offLine']">({{ item.addr }})</strong>
+                <span v-if="item.online" :style="{'background-image':item.online ? '-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(green))': '-webkit-gradient(linear,left top,left bottom,from(#ffffff),to(red))'}" class="breathe-btn" style="display:inline-block;float:right;"/>
+                <span v-if="!item.online" :class="[item.online ? 'normal' : 'offLine']">{{ item.online | Online }}</span>
               </p>
-              <p>所属台区：{{item.tq}}</p>
-              <p>终端通信地址：{{item.host}}</p>
+              <p>所属台区：{{ item.tq }}</p>
+              <p>终端通信地址：{{ item.host }}</p>
               <p
                 :class="[item.masterstation ? 'normal' : 'offLine']"
-              >主站连接状态：{{item.masterstation | Master}}</p>
-              <p style="color:#4B8BF4;">本地时钟：{{readtime}}</p>
-              <p >实时采集电量：<i class="bounceIn" style="font-style:normal">{{(item.data/2).toFixed(2)+'/kWh'}}</i></p>
+              >主站连接状态：{{ item.masterstation | Master }}</p>
+              <p style="color:#4B8BF4;">本地时钟：{{ readtime }}</p>
+              <p >实时采集电量：<i class="bounceIn" style="font-style:normal">{{ (item.data/2).toFixed(2)+'/kWh' }}</i></p>
               <div>
-                <p>在线电表：{{item.count_online_meter}}/{{item.count_meter}}</p>
-                <p class="mr-30">当日抄表情况:{{item.count_online_meter}}/{{item.count_meter}}</p>
-                <p class="mr-30" style="color:#57b12b;">成功率：{{item.success_rate}}</p>
-                <p class="mr-30" style="color:#57b12b;">上报成功率：{{item.report_rate}}</p>
+                <p>在线电表：{{ item.count_online_meter }}/{{ item.count_meter }}</p>
+                <p class="mr-30">当日抄表情况:{{ item.count_online_meter }}/{{ item.count_meter }}</p>
+                <p class="mr-30" style="color:#57b12b;">成功率：{{ item.success_rate }}</p>
+                <p class="mr-30" style="color:#57b12b;">上报成功率：{{ item.report_rate }}</p>
               </div>
               <div>
-                <p style="color:#EB3941">告警记录：{{item.alarm_record}}</p>
-                <p style="color:#e8c052" class="mr-30">事件记录：{{item.event_record}}</p>
+                <p style="color:#EB3941">告警记录：{{ item.alarm_record }}</p>
+                <p style="color:#e8c052" class="mr-30">事件记录：{{ item.event_record }}</p>
               </div>
               <div>
-                <p style="color:#EB3941">重要告警：{{item.important_alarm_record}}</p>
-                <p style="color:#e8c052" class="mr-30">重点事件：{{item.important_event_record}}</p>
+                <p style="color:#EB3941">重要告警：{{ item.important_alarm_record }}</p>
+                <p style="color:#e8c052" class="mr-30">重点事件：{{ item.important_event_record }}</p>
               </div>
             </div>
           </li>
@@ -281,14 +281,14 @@
       <PagingQuery
         v-if="form.terminal_type=='2'"
         :pager="Mpager"
-        :pageShow="false"
+        :page-show="false"
         @setPager="getElectricityData(objId)"
       />
       <!-- 集中器分页 -->
       <PagingQuery
         v-if="form.terminal_type=='1'"
         :pager="Vpager"
-        :pageShow="false"
+        :page-show="false"
         @setPager="getVconData(objId)"
       />
     </div>
@@ -296,18 +296,46 @@
 </template>
 
 <script>
-import Resource1 from "@/components/resource/resource";
-import Parse from "parse";
-import { utc2beijing } from "@/utils/index";
-import PagingQuery from "@/components/Pagination";
+import Resource1 from '@/components/resource/resource'
+import Parse from 'parse'
+import { utc2beijing } from '@/utils/index'
+import PagingQuery from '@/components/Pagination'
 import {
   getMeterStatistic,
   getElectricity,
   getVcon,
   QueryMeter,
   QueryVcon
-} from "@/api/meterMonitoring";
+} from '@/api/meterMonitoring'
 export default {
+  // 过滤器
+  filters: {
+    // 在线和离线
+    Online(value) {
+      if (value) {
+        return '运行正常'
+      } else {
+        return '设备离线'
+      }
+    },
+    // 主站连接状态
+    Master(value) {
+      if (value) {
+        return '已连接'
+      } else {
+        return '未连接'
+      }
+    },
+    // 终端型号
+    type(value) {
+      if (value == '1') {
+        return '单相智能电表'
+      } else {
+        return '三相智能电表'
+      }
+    }
+  },
+  components: { Resource1, PagingQuery },
   data() {
     return {
       noData: true,
@@ -315,10 +343,10 @@ export default {
       data: [],
       // 电表分页
       Mpager: {
-        count: 0, //总数
-        page: 1, //当前页
-        rows: 25, //每页数量
-        pages: [25] //分页数组
+        count: 0, // 总数
+        page: 1, // 当前页
+        rows: 25, // 每页数量
+        pages: [25] // 分页数组
       },
       // 集中器分页
       Vpager: {
@@ -328,62 +356,67 @@ export default {
         pages: [9]
       },
       form: {
-        terminal_type: 1, //终端类型
-        terminal_addr: "", //终端地址
-        terminal_model:3, //终端型号
-        isOnline: 2 //在线状态
+        terminal_type: 1, // 终端类型
+        terminal_addr: '', // 终端地址
+        terminal_model: 3, // 终端型号
+        isOnline: 2 // 在线状态
       },
       // 运行信息
       operation: {},
       operationShow: false,
-      electricity: [], //电能表数据
-      vcon: [], //集中器数据
+      electricity: [], // 电能表数据
+      vcon: [], // 集中器数据
       // 饼状图数据
-      data1: ["已覆盖", "未覆盖"],
-      data2: ["在线", "离线"],
-      data3: ["成功", "失败"],
-      data4: ["及时", "超时"],
+      data1: ['已覆盖', '未覆盖'],
+      data2: ['在线', '离线'],
+      data3: ['成功', '失败'],
+      data4: ['及时', '超时'],
       value1: [],
       value2: [],
       value3: [],
       value4: [],
-      time: parseInt(new Date().getTime() / 1000), //时间，默认当天时间,秒
-      objId: "", //当然选中的树id
-      Time: "",
-      timer: [], //定时器组,
-      readtime:'',
-      timeronce:null
-    };
+      time: parseInt(new Date().getTime() / 1000), // 时间，默认当天时间,秒
+      objId: '', // 当然选中的树id
+      Time: '',
+      timer: [], // 定时器组,
+      readtime: '',
+      timeronce: null
+    }
   },
   mounted() {
-   
-    this.getTree();
-     this.$nextTick(function () {
-        setInterval(this.nowtime, 1000);
+    this.getTree()
+    this.$nextTick(function() {
+      setInterval(this.nowtime, 1000)
     })
     window.clearInterval(this.timeronce)
     this.settime()
   },
+  beforeDestroy() {
+    // 清除定时器
+    this.clearTimer()
+    window.clearInterval(this.timeronce)
+    this.timeronce = null
+  },
   methods: {
-     nowtime(){
-            var timestamp3 = Date.parse(new Date());
-            var date = new Date(timestamp3) 
-            var Y = date.getFullYear() + '-';
-            var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-            var D = (date.getDate()+1 <= 10 ? '0'+(date.getDate()) : date.getDate()) + ' ';
-            var h = (date.getHours()+1 <= 10 ? '0'+(date.getHours()) : date.getHours())  + ':';
-            var m = (date.getMinutes()+1 <= 10 ? '0'+(date.getMinutes()) : date.getMinutes())  + ':';
-            var s = (date.getSeconds()+1 <= 10 ? '0'+(date.getSeconds()) : date.getSeconds());
-            this.readtime=(Y+M+D+h+m+s); 
-      },
-      settime(){
-      this.timeronce = window.setInterval(()=>{
+    nowtime() {
+      var timestamp3 = Date.parse(new Date())
+      var date = new Date(timestamp3)
+      var Y = date.getFullYear() + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+      var D = (date.getDate() + 1 <= 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+      var h = (date.getHours() + 1 <= 10 ? '0' + (date.getHours()) : date.getHours()) + ':'
+      var m = (date.getMinutes() + 1 <= 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':'
+      var s = (date.getSeconds() + 1 <= 10 ? '0' + (date.getSeconds()) : date.getSeconds())
+      this.readtime = (Y + M + D + h + m + s)
+    },
+    settime() {
+      this.timeronce = window.setInterval(() => {
         this.query()
-        },5000)
-      },
+      }, 5000)
+    },
     query() {
-      //查询
-      let time = parseInt(new Date().getTime() / 1000);
+      // 查询
+      const time = parseInt(new Date().getTime() / 1000)
       // if (this.form.terminal_type == 1) {
       //   this.Vpager.page = 1;
       //   QueryVcon(
@@ -470,95 +503,94 @@ export default {
       //     });
       // }
       if (this.form.terminal_type == 1) {
-          this.form.terminal_model = 3;
-        if(this.form.terminal_addr!=''){ 
+        this.form.terminal_model = 3
+        if (this.form.terminal_addr != '') {
           var Vcon = Parse.Object.extend('Vcon')
           var vcon = new Parse.Query(Vcon)
-          vcon.equalTo('vcaddr',this.form.terminal_addr)
-          vcon.find().then(resultes=>{
+          vcon.equalTo('vcaddr', this.form.terminal_addr)
+          vcon.find().then(resultes => {
             this.objId = resultes[0].id
-            this.getVconData(this.objId);
-          },error=>{
+            this.getVconData(this.objId)
+          }, error => {
             console.log(error.message)
           })
-        }else{
-          this.getVconData(this.objId);
+        } else {
+          this.getVconData(this.objId)
         }
       } else {
-        if(this.form.terminal_addr!=''){ 
+        if (this.form.terminal_addr != '') {
           var Vcon = Parse.Object.extend('Vcon')
           var vcon = new Parse.Query(Vcon)
-          vcon.equalTo('vcaddr',this.form.terminal_addr)
-          vcon.find().then(resultes=>{
+          vcon.equalTo('vcaddr', this.form.terminal_addr)
+          vcon.find().then(resultes => {
             this.objId = resultes[0].id
             // this.form.terminal_model = 0;
-            this.getElectricityData(this.objId);
-          },error=>{
+            this.getElectricityData(this.objId)
+          }, error => {
             console.log(error.message)
           })
-        }else{
+        } else {
           // this.form.terminal_model = 0;
-          this.getElectricityData(this.objId);
+          this.getElectricityData(this.objId)
         }
-       
       }
     },
     reset() {
-      //重置
-      this.form.terminal_type = 2;
-      this.form.addr = "";
-      this.form.terminal_model = 0;
-      this.form.isOnline = 2;
+      // 重置
+      this.form.terminal_type = 2
+      this.form.addr = ''
+      this.form.terminal_model = 0
+      this.form.isOnline = 2
     },
     // 饼状图
     pie_chart(el, title, data, value) {
-      let pie = this.$echarts.init(el);
+      const pie = this.$echarts.init(el)
       pie.setOption(
         {
           title: {
             text: title,
-            x: "40%",
+            x: '40%',
             textStyle: {
-              fontSize: "15",
-              fontWeight: "bold"
+              fontSize: '15',
+              fontWeight: 'bold'
             }
           },
           tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c} ({d}%)",
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)',
             textStyle: {
-              fontSize: "12"
+              fontSize: '12'
             },
-            position: ["50%", "50%"]
+            position: ['50%', '50%']
           },
           legend: {
-            orient: "vertical",
-            x: "left",
+            orient: 'vertical',
+            x: 'left',
             data
           },
           calculable: true,
           series: [
             {
-              type: "pie",
-              radius: ["40%", "60%"],
-              center: ["60%", "50%"],
-              selectedMode: "single",
+              type: 'pie',
+              radius: ['40%', '60%'],
+              center: ['60%', '50%'],
+              selectedMode: 'single',
               label: {
                 normal: {
-                  position: "center",
+                  position: 'center',
                   formatter(params) {
                     if (params.dataIndex == 0) {
-                      return params.percent + "%";
+                      return params.percent + '%'
                     } else {
-                      return " ";
+                      return ' '
                     }
                   }
                 },
                 emphasis: {
                   show: true,
                   textStyle: {
-                    fontSize: "13",
-                    fontWeight: "bold"
+                    fontSize: '13',
+                    fontWeight: 'bold'
                   }
                 }
               },
@@ -572,139 +604,138 @@ export default {
           ]
         },
         true
-      );
+      )
     },
     pie_data() {
-      this.pie_chart(this.$refs.pie1, "台区覆盖率", this.data1, this.value1);
-      this.pie_chart(this.$refs.pie2, "终端在线率", this.data2, this.value2);
-      this.pie_chart(this.$refs.pie3, "抄表成功率", this.data3, this.value3);
-      this.pie_chart(this.$refs.pie4, "抄表及时率", this.data4, this.value4);
+      this.pie_chart(this.$refs.pie1, '台区覆盖率', this.data1, this.value1)
+      this.pie_chart(this.$refs.pie2, '终端在线率', this.data2, this.value2)
+      this.pie_chart(this.$refs.pie3, '抄表成功率', this.data3, this.value3)
+      this.pie_chart(this.$refs.pie4, '抄表及时率', this.data4, this.value4)
     },
     // 分页
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
-      this.Mpager.page = val;
-      this.getElectricityData(this.objId);
+      this.Mpager.page = val
+      this.getElectricityData(this.objId)
     },
     handleCurrentChange2(val) {
       // console.log(`当前页: ${val}`);
-      this.Vpager.page = val;
-      this.getVconData(this.objId);
+      this.Vpager.page = val
+      this.getVconData(this.objId)
     },
     // 切换类型
     handleTypeChange() {
       if (this.form.terminal_type == 1) {
-          this.form.terminal_model = 3;
-        if(this.form.terminal_addr!=''){ 
+        this.form.terminal_model = 3
+        if (this.form.terminal_addr != '') {
           var Vcon = Parse.Object.extend('Vcon')
           var vcon = new Parse.Query(Vcon)
-          vcon.equalTo('vcaddr',this.form.terminal_addr)
-          vcon.find().then(resultes=>{
+          vcon.equalTo('vcaddr', this.form.terminal_addr)
+          vcon.find().then(resultes => {
             this.objId = resultes[0].id
-            this.getVconData(this.objId);
-          },error=>{
+            this.getVconData(this.objId)
+          }, error => {
             console.log(error.message)
           })
-        }else{
-          this.getVconData(this.objId);
+        } else {
+          this.getVconData(this.objId)
         }
       } else {
-        if(this.form.terminal_addr!=''){ 
+        if (this.form.terminal_addr != '') {
           var Vcon = Parse.Object.extend('Vcon')
           var vcon = new Parse.Query(Vcon)
-          vcon.equalTo('vcaddr',this.form.terminal_addr)
-          vcon.find().then(resultes=>{
+          vcon.equalTo('vcaddr', this.form.terminal_addr)
+          vcon.find().then(resultes => {
             this.objId = resultes[0].id
-            this.form.terminal_model = 0;
-            this.getElectricityData(this.objId);
-          },error=>{
+            this.form.terminal_model = 0
+            this.getElectricityData(this.objId)
+          }, error => {
             console.log(error.message)
           })
-        }else{
-          this.form.terminal_model = 0;
-          this.getElectricityData(this.objId);
+        } else {
+          this.form.terminal_model = 0
+          this.getElectricityData(this.objId)
         }
-       
       }
     },
     // 切换型号
     handleModelChange() {
       if (this.form.terminal_type == 1) {
-        this.getVconData(this.objId);
+        this.getVconData(this.objId)
       } else {
-        this.getElectricityData(this.objId);
+        this.getElectricityData(this.objId)
       }
     },
     // 获取资源树初始化数据
     getTree() {
-      var Department = Parse.Object.extend("Department");
-      var department = new Parse.Query(Department);
+      var Department = Parse.Object.extend('Department')
+      var department = new Parse.Query(Department)
       // department.limit(10000);
-      department.equalTo("ParentId", "0");
+      department.equalTo('ParentId', '0')
       department.find().then(
         resultes => {
-          this.data = [];
-          this.objId = resultes[0].id;
+          this.data = []
+          this.objId = resultes[0].id
           resultes.map(items => {
-            var obj = {};
+            var obj = {}
             items.createtime = utc2beijing(items.attributes.createdAt);
             (obj.name = items.attributes.name),
-              (obj.ParentId = items.attributes.ParentId);
-            obj.objectId = items.id;
-            obj.createtime = items.createtime;
-            obj.icon = items.attributes.org_type;
-            obj.is_show = items.attributes.leafnode;
-            this.data.push(obj);
-          });
-          this.list_loading = false;
-           this.query();
+            (obj.ParentId = items.attributes.ParentId)
+            obj.objectId = items.id
+            obj.createtime = items.createtime
+            obj.icon = items.attributes.org_type
+            obj.is_show = items.attributes.leafnode
+            this.data.push(obj)
+          })
+          this.list_loading = false
+          this.query()
           // this.getVconData(this.objId);
         },
         error => {
-          if (error.code == "209") {
+          if (error.code == '209') {
             this.$message({
-              type: "alarm_record",
-              message: "登陆权限过期，请重新登录"
-            });
+              type: 'alarm_record',
+              message: '登陆权限过期，请重新登录'
+            })
             this.$router.push({
-              path: "/login"
-            });
+              path: '/login'
+            })
           }
         }
-      );
+      )
     },
     // 获取树id
     getRows(row) {
       // console.log(row)
-      this.form.terminal_addr = "";
-      if (this.objId != "") {
-        this.clearTimer();
-        this.objId = row.objectId;
-        if (row.icon == "集中器") {
-          this.form.terminal_type = 1;
-          this.form.terminal_model = 3;
-          this.form.terminal_addr = row.name;
-           if (this.form.terminal_type == 1) {
-          this.query();
+      this.form.terminal_addr = ''
+      if (this.objId != '') {
+        this.clearTimer()
+        this.objId = row.objectId
+        if (row.icon == '集中器') {
+          this.form.terminal_type = 1
+          this.form.terminal_model = 3
+          this.form.terminal_addr = row.name
+          if (this.form.terminal_type == 1) {
+            this.query()
+          } else {
+            this.getElectricityData(row.objectId)
+          }
         } else {
-          this.getElectricityData(row.objectId);
+          this.query()
         }
-        }else{
-          this.query();
-        }
-       
+
         // this.query();
-      } 
+      }
     },
     // 修改统计数据
     setVlaue(arr_name, arr_val, ...vals) {
-      let color = [{ color: "#0CA394" }, { color: "#D73948" }];
+      const color = [{ color: '#0CA394' }, { color: '#D73948' }]
       for (let i = 0; i < arr_name.length; i++) {
-        let obj = {};
-        obj.name = arr_name[i];
-        obj.value = vals[i];
-        obj.itemStyle = color[i];
-        arr_val.push(obj);
+        const obj = {}
+        obj.name = arr_name[i]
+        obj.value = vals[i]
+        obj.itemStyle = color[i]
+        arr_val.push(obj)
       }
     },
     // 获取统计数据
@@ -713,56 +744,56 @@ export default {
         .then(res => {
           // console.log(res);
           if (res.status_statistic) {
-            let Stat = res.status_statistic;
-            let all_meter = Stat.all_meter; //总表数
-            this.operation = res.survey; //运行概况
+            const Stat = res.status_statistic
+            const all_meter = Stat.all_meter // 总表数
+            this.operation = res.survey // 运行概况
             setTimeout(() => {
               if (this.operation.tq) {
-                this.value1 = [];
-                this.value2 = [];
-                this.value3 = [];
-                this.value4 = [];
+                this.value1 = []
+                this.value2 = []
+                this.value3 = []
+                this.value4 = []
                 this.setVlaue(
                   this.data1,
                   this.value1,
                   Stat.all_tq,
                   Stat.all_tq - Stat.online_tq
-                );
+                )
                 this.setVlaue(
                   this.data2,
                   this.value2,
                   all_meter,
                   all_meter - Stat.online_tq
-                );
+                )
                 this.setVlaue(
                   this.data3,
                   this.value3,
                   Stat.success_meter,
                   all_meter
-                );
+                )
                 this.setVlaue(
                   this.data4,
                   this.value4,
                   Stat.intime_meter,
                   all_meter - Stat.intime_meter
-                );
-                this.pie_data();
+                )
+                this.pie_data()
               }
-            }, 1);
+            }, 1)
           }
         })
         .catch(error => {
-          this.$message(error.error);
-        });
+          this.$message(error.error)
+        })
     },
     // 获取电表信息
     getElectricityData(objId) {
-      let metertype = "all";
+      let metertype = 'all'
       // 判断是单相还是三相
       if (this.form.terminal_model == 1) {
-        metertype = "single_meter";
+        metertype = 'single_meter'
       } else if (this.form.terminal_model == 2) {
-        metertype = "triple_meter";
+        metertype = 'triple_meter'
       }
       getElectricity(
         objId,
@@ -774,36 +805,36 @@ export default {
         .then(res => {
           // console.log(res);
           if (res.data.length == 0) {
-            this.noData = false;
+            this.noData = false
           } else {
-            this.noData = true;
+            this.noData = true
           }
-          let r = res.data;
-          this.Mpager.count = res.count;
-          this.electricity = [];
-          if (metertype == "single_meter") {
-            this.Mpager.count = res.count;
+          const r = res.data
+          this.Mpager.count = res.count
+          this.electricity = []
+          if (metertype == 'single_meter') {
+            this.Mpager.count = res.count
           } else {
-            this.Vpager.count = res.count;
+            this.Vpager.count = res.count
           }
           for (let i = 0; i < r.length; i++) {
-            let obj = {};
-            obj.id = i;
-            obj.addr = r[i].addr;
-            obj.status = r[i].online;
-            if (!obj.status) obj.status = false;
-            obj.pn = r[i].pn;
-            obj.freeze_day = r[i].day_data;
-            obj.freeze_month = r[i].month_data;
-            obj.sblx = r[i].sblx;
-            if (obj.freeze_day === null) obj.freeze_day = 0;
-            if (obj.freeze_month === null) obj.freeze_month = 0;
-            this.electricity.push(obj);
+            const obj = {}
+            obj.id = i
+            obj.addr = r[i].addr
+            obj.status = r[i].online
+            if (!obj.status) obj.status = false
+            obj.pn = r[i].pn
+            obj.freeze_day = r[i].day_data
+            obj.freeze_month = r[i].month_data
+            obj.sblx = r[i].sblx
+            if (obj.freeze_day === null) obj.freeze_day = 0
+            if (obj.freeze_month === null) obj.freeze_month = 0
+            this.electricity.push(obj)
           }
         })
         .catch(error => {
-          this.$message(error.error);
-        });
+          this.$message(error.error)
+        })
     },
     // 获取集中器信息
     getVconData(objId) {
@@ -815,86 +846,52 @@ export default {
       )
         .then(res => {
           if (res.count == 0) {
-            this.noData = false;
+            this.noData = false
           } else {
-            this.noData = true;
+            this.noData = true
           }
-          this.vcon = [];
-          this.Vpager.count = res.count;
-          let r = res.data;
+          this.vcon = []
+          this.Vpager.count = res.count
+          const r = res.data
           for (let i = 0; i < r.length; i++) {
-            let obj = {};
-            obj.name = "电力集中器";
-            obj.img = 3;
-            obj.id = i;
-            obj.status = r[i].online;
-            if (!obj.status) obj.status = false;
-            obj.tq = r[i].tq;
-            obj.addr = r[i].vcaddr;
-            obj.host = r[i].host;
-            obj.report_rate = 100.00 + "%";
-            obj.success_rate = 100.00 + "%";
-            obj.day_data = r[i].day_data;
-            if (!obj.day_data) obj.day_data = 0;
-            obj.alarm_record = r[i].alarm_record;
-            obj.event_record = r[i].event_record;
+            const obj = {}
+            obj.name = '电力集中器'
+            obj.img = 3
+            obj.id = i
+            obj.status = r[i].online
+            if (!obj.status) obj.status = false
+            obj.tq = r[i].tq
+            obj.addr = r[i].vcaddr
+            obj.host = r[i].host
+            obj.report_rate = 100.00 + '%'
+            obj.success_rate = 100.00 + '%'
+            obj.day_data = r[i].day_data
+            if (!obj.day_data) obj.day_data = 0
+            obj.alarm_record = r[i].alarm_record
+            obj.event_record = r[i].event_record
             obj.masterstation = 'normal'
-            obj.important_alarm_record = r[i].important_alarm_record;
-            obj.important_event_record = r[i].important_event_record;
-            obj.count_meter = r[i].count_meter;
-            obj.online = 'normal';
+            obj.important_alarm_record = r[i].important_alarm_record
+            obj.important_event_record = r[i].important_event_record
+            obj.count_meter = r[i].count_meter
+            obj.online = 'normal'
             obj.data = r[i].data
-            obj.count_online_meter = r[i].count_online_meter;
-            if (!obj.count_online_meter) obj.count_online_meter = 0;
-            this.vcon.push(obj);
+            obj.count_online_meter = r[i].count_online_meter
+            if (!obj.count_online_meter) obj.count_online_meter = 0
+            this.vcon.push(obj)
           }
         })
         .catch(error => {
-          this.$message(error.error);
-        });
+          this.$message(error.error)
+        })
     },
     // 清除定时器
     clearTimer() {
-      for (let i in this.timer) {
-        clearInterval(this.timer[i]);
+      for (const i in this.timer) {
+        clearInterval(this.timer[i])
       }
     }
-  },
-  beforeDestroy() {
-    // 清除定时器
-    this.clearTimer();
-    window.clearInterval(this.timeronce)
-    this.timeronce=null
-  },
-  // 过滤器
-  filters: {
-    // 在线和离线
-    Online(value) {
-      if (value) {
-        return "运行正常";
-      } else {
-        return "设备离线";
-      }
-    },
-    // 主站连接状态
-    Master(value) {
-      if (value) {
-        return "已连接";
-      } else {
-        return "未连接";
-      }
-    },
-    // 终端型号
-    type(value) {
-      if (value == "1") {
-        return "单相智能电表";
-      } else {
-        return "三相智能电表";
-      } 
-    }
-  },
-  components: { Resource1, PagingQuery }
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>

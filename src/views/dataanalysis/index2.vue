@@ -9,26 +9,26 @@
     height: 100px;
     color: white;
     z-index: 100;"
-    >{{this.readtime}}</div>
+    >{{ this.readtime }}</div>
     <div class="index2content">
       <div class="contentheader">
         <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
           <el-form-item>
             <el-select v-model="formInline.region" placeholder="全部地区">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option label="区域一" value="shanghai"/>
+              <el-option label="区域二" value="beijing"/>
             </el-select>
           </el-form-item>
           <el-form-item>
             <el-select v-model="formInline.region" placeholder="全部企业">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option label="区域一" value="shanghai"/>
+              <el-option label="区域二" value="beijing"/>
             </el-select>
           </el-form-item>
           <el-form-item>
             <el-select v-model="formInline.region" placeholder="检验批次">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option label="区域一" value="shanghai"/>
+              <el-option label="区域二" value="beijing"/>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -47,7 +47,7 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                <div class="grid-content bg-purple"></div>
+                <div class="grid-content bg-purple"/>
                 <div
                   style="width:100%;height:100%;padding:20px 0;display:flex;align-items:center;justify-content:center;"
                 >
@@ -95,7 +95,7 @@
         <!--中间-->
         <div class="contentchartcenter">
           <div class="centerheader">
-            <img src="../../imgages/pumpdata.png" alt />
+            <img src="../../imgages/pumpdata.png" alt >
           </div>
           <div class="centerbottom">
             <div style="height:50px;width:100%;display:flex;justify-content: space-between;">
@@ -103,30 +103,30 @@
               <span>
                 <el-button-group>
                   <el-button
-                    type="primary"
-                    @click="isshowtable=false"
-                    plain
                     :class="!isshowtable ? 'buttonactive':''"
+                    type="primary"
+                    plain
                     size="small"
+                    @click="isshowtable=false"
                   >本期</el-button>
                   <el-button
-                    type="primary"
-                    @click="isshowtable=true"
-                    plain
                     :class="isshowtable ? 'buttonactive':''"
+                    type="primary"
+                    plain
                     size="small"
+                    @click="isshowtable=true"
                   >上一期</el-button>
                 </el-button-group>
               </span>
             </div>
             <div class="centerbottomtable">
-              <el-table :data="tableData" style="width: 100%;text-align:center" height="300" :row-class-name="getChannelEnable">
-                <el-table-column label="企业排名" type="index" width="100" align="center"></el-table-column>
-                <el-table-column prop="address" label="企业名称" align="center" width="250"></el-table-column>
-                <el-table-column prop="name" label="合格率" align="center"></el-table-column>
-                <el-table-column  label="排名变化" align="center" >
+              <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;text-align:center" height="300">
+                <el-table-column label="企业排名" type="index" width="100" align="center"/>
+                <el-table-column prop="address" label="企业名称" align="center" width="250"/>
+                <el-table-column prop="name" label="合格率" align="center"/>
+                <el-table-column label="排名变化" align="center" >
                   <template slot-scope="scope">
-                    <span :style="{'color':(scope.$index%2 ? 'red' :'green')}">{{scope.row.date}}</span>
+                    <span :style="{'color':(scope.$index%2 ? 'red' :'green')}">{{ scope.row.date }}</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -182,20 +182,20 @@
             <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
               <el-form-item>
                 <el-select v-model="formInline.region" placeholder="全部地区">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                  <el-option label="区域一" value="shanghai"/>
+                  <el-option label="区域二" value="beijing"/>
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-select v-model="formInline.region" placeholder="全部企业">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                  <el-option label="区域一" value="shanghai"/>
+                  <el-option label="区域二" value="beijing"/>
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-select v-model="formInline.region" placeholder="检验批次">
-                  <el-option label="区域一" value="shanghai"></el-option>
-                  <el-option label="区域二" value="beijing"></el-option>
+                  <el-option label="区域一" value="shanghai"/>
+                  <el-option label="区域二" value="beijing"/>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -210,13 +210,13 @@
   </div>
 </template>
 <script>
-import yangcheng from "@/components/zhiliang/yangcheng";
-import liuliang from "@/components/zhiliang/liuliang";
-import liuliang1 from "@/components/zhiliang/liuliang1";
-import xiaolv from "@/components/zhiliang/xiaolv";
-import xiaolv1 from "@/components/zhiliang/xiaolv1";
+import yangcheng from '@/components/zhiliang/yangcheng'
+import liuliang from '@/components/zhiliang/liuliang'
+import liuliang1 from '@/components/zhiliang/liuliang1'
+import xiaolv from '@/components/zhiliang/xiaolv'
+import xiaolv1 from '@/components/zhiliang/xiaolv1'
 
-import xingneng from "@/components/zhiliang/xingneng";
+import xingneng from '@/components/zhiliang/xingneng'
 export default {
   components: {
     yangcheng,
@@ -224,139 +224,139 @@ export default {
     liuliang1,
     xiaolv,
     xiaolv1,
-    xingneng,
-    
+    xingneng
+
   },
   data() {
     return {
       formInline: {
-        user: "",
-        region: ""
+        user: '',
+        region: ''
       },
       yangchengdata: {},
       regionpdata3: {},
       xiaolv1data: {},
-      readtime: "",
+      readtime: '',
       isshowtable: false,
       tableData: [{
-          date: '上升一位',
-          name: '98.95%',
-          address: '浙江东音泵业有限公司',
-        }, {
-          date: '下降一位',
-          name: '98.92%',
-          address: '新界泵业集团股份有限公司'
-        }, {
-          date: '上升一位',
-          name: '98.75%',
-          address: '浙江格凌实业有限公司',
-        }, {
-          date: '下降一位',
-          name: '98.60%',
-          address: '浙江大世纪泵业有限公司'
-        },
-        {
-          date: '上升一位',
-          name: '98.31%',
-          address: '浙江远东泵业有限公司'
-        },
-        {
-          date: '下降一位',
-          name: '98.20%',
-          address: '台州福蛙机电有限公司'
-        },
-        {
-          date: '上升一位',
-          name: '97.95%',
-          address: '台州金步泵业有限公司'
-        },
-        {
-          date: '下降一位',
-          name: '97.65%',
-          address: '浙江巨龙泵业有限公司'
-        },
-        {
-          date: '上升一位',
-          name: '97.25%',
-          address: '温岭市宇森机电有限公司'
-        }
-        ]
-    };
+        date: '上升一位',
+        name: '98.95%',
+        address: '浙江东音泵业有限公司'
+      }, {
+        date: '下降一位',
+        name: '98.92%',
+        address: '新界泵业集团股份有限公司'
+      }, {
+        date: '上升一位',
+        name: '98.75%',
+        address: '浙江格凌实业有限公司'
+      }, {
+        date: '下降一位',
+        name: '98.60%',
+        address: '浙江大世纪泵业有限公司'
+      },
+      {
+        date: '上升一位',
+        name: '98.31%',
+        address: '浙江远东泵业有限公司'
+      },
+      {
+        date: '下降一位',
+        name: '98.20%',
+        address: '台州福蛙机电有限公司'
+      },
+      {
+        date: '上升一位',
+        name: '97.95%',
+        address: '台州金步泵业有限公司'
+      },
+      {
+        date: '下降一位',
+        name: '97.65%',
+        address: '浙江巨龙泵业有限公司'
+      },
+      {
+        date: '上升一位',
+        name: '97.25%',
+        address: '温岭市宇森机电有限公司'
+      }
+      ]
+    }
   },
   mounted() {
     this.yangchengdata = {
       expectedData: [1875, 200, 500, 2500, 2608, 2970],
       expectedData1: [1600, 1700, 1800, 1200, 2608, 2970],
-      actualData: ["2012", "2013", "2014", "2015", "2016", "2017"],
-      title: "水泵扬程分布"
-    };
+      actualData: ['2012', '2013', '2014', '2015', '2016', '2017'],
+      title: '水泵扬程分布'
+    }
     this.regionpdata3 = {
       xdata: ['2019-00001', '2019-00002', '2019-00003', '2019-00004', '2019-00005', '2019-00006', '2019-00007', '2019-00008', '2019-00009', '2019-00010', '2019-00011'],
-      alldata: [0.9895, .9892, 0.9875, 0.9860, 0.9832, 0.9820, 0.9795, 0.9765, 0.9725, 0.9720, 0.9712],
-      title2: "流量",
+      alldata: [0.9895, 0.9892, 0.9875, 0.9860, 0.9832, 0.9820, 0.9795, 0.9765, 0.9725, 0.9720, 0.9712],
+      title2: '流量',
       formatter: function(datas) {
-        return `${datas[0].name}<br/>流量：${datas[0].value}<br/>`;
+        return `${datas[0].name}<br/>流量：${datas[0].value}<br/>`
       }
-    };
+    }
     this.xiaolv1data = {
-      title: "效率",
+      title: '效率',
       data: [
-        { value: 25, name: "001" },
-        { value: 30, name: "002" },
-        { value: 51, name: "003" },
-        { value: 15, name: "004" }
+        { value: 25, name: '001' },
+        { value: 30, name: '002' },
+        { value: 51, name: '003' },
+        { value: 15, name: '004' }
       ]
-    };
+    }
 
     this.$nextTick(function() {
-      setInterval(this.nowtime, 1000);
-    });
+      setInterval(this.nowtime, 1000)
+    })
   },
   methods: {
     nowtime() {
-      var timestamp3 = Date.parse(new Date());
-      var date = new Date(timestamp3);
-      var Y = date.getFullYear() + "年";
+      var timestamp3 = Date.parse(new Date())
+      var date = new Date(timestamp3)
+      var Y = date.getFullYear() + '年'
       var M =
         (date.getMonth() + 1 <= 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月";
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1) + '月'
       var D =
-        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
-        "日  ";
+        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+        '日  '
       var h =
-        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
-        ":";
+        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+        ':'
       var m =
         (date.getMinutes() + 1 <= 10
-          ? "0" + date.getMinutes()
-          : date.getMinutes()) + ":";
+          ? '0' + date.getMinutes()
+          : date.getMinutes()) + ':'
       var s =
         date.getSeconds() + 1 <= 10
-          ? "0" + date.getSeconds()
-          : date.getSeconds();
-      var mydate = new Date();
-      var myddy = mydate.getDay(); //获取存储当前日期
+          ? '0' + date.getSeconds()
+          : date.getSeconds()
+      var mydate = new Date()
+      var myddy = mydate.getDay() // 获取存储当前日期
       var weekday = [
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六"
-      ];
-      this.readtime = Y + M + D + h + m + s + "　" + weekday[myddy];
+        '星期日',
+        '星期一',
+        '星期二',
+        '星期三',
+        '星期四',
+        '星期五',
+        '星期六'
+      ]
+      this.readtime = Y + M + D + h + m + s + '　' + weekday[myddy]
     },
     getChannelEnable(row) {
       if (row.rowIndex % 2 == 0) {
-        return "green_active";
+        return 'green_active'
       } else {
-        return "red_active";
+        return 'red_active'
       }
-    },
+    }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .index2 {

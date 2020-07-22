@@ -24,7 +24,7 @@ export default {
       this.$message({
         message: 'Switch Language Success',
         type: 'success',
-        duration:1000
+        duration: 1000
       })
     }
   }

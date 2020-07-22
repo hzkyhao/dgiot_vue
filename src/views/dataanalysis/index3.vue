@@ -1,18 +1,16 @@
 <template>
-    <div class="index3">
-
-    </div>
+  <div class="index3"/>
 </template>
 <script>
 export default {
-   data() {
-      return {
-      }
-   },
-   mounted() {
-   },
-   methods: {
-   }
+  data() {
+    return {
+    }
+  },
+  mounted() {
+  },
+  methods: {
+  }
 }
 </script>
 <style scoped>

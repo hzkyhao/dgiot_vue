@@ -2,61 +2,50 @@
   <el-menu class="navbar" style="background:#549ce6">
     <!-- <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/> -->
     <!-- <breadcrumb  class="breadcrumb-container"/> -->
-     <div class="systitle">
+    <div class="systitle">
       <img v-if="imgsrc" :src="imgsrc">
-      <h2>{{title || ''}}</h2>
+      <h2>{{ title || '' }}</h2>
       <!-- <h2 v-if="type=='pump'">水泵智能检测大数据平台</h2> -->
     </div>
     <sidebar/>
     <el-tooltip :content="isscreenfull" effect="dark" placement="bottom" style="height:20px">
-          <screenfull class="screenfull right-menu-item"/>
-         
+      <screenfull class="screenfull right-menu-item"/>
+
     </el-tooltip>
     <!--中英文切换-->
     <div class="language">
       <lang-select class="international right-menu-item"/>
     </div>
-     <div class="username" @click="userDetail">
+    <div class="username" @click="userDetail">
       <!-- <span class="user" style="color:#ffffff">欢迎您：{{roles}}</span> -->
       <img src="../../imgages/tou.png">
-      <p style="height:40px">{{$t('navbar.userinfo')}}</p>
+      <p style="height:40px">{{ $t('navbar.userinfo') }}</p>
     </div>
     <div class="loginout" style="font-size:25px;color:#ffffff;cursor:pointer;" @click="logout">
-       <el-tooltip class="item" effect="dark" content="注销登录" placement="top-start">
-        <i class="el-icon-switch-button"></i>
+      <el-tooltip class="item" effect="dark" content="注销登录" placement="top-start">
+        <i class="el-icon-switch-button"/>
       </el-tooltip>
-      <p style="height:40px">{{$t('navbar.logOut')}}</p>
+      <p style="height:40px">{{ $t('navbar.logOut') }}</p>
     </div>
-    
+
   </el-menu>
 </template>
- 
+
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import {logoutBtn} from '@/api/login'
+import { logoutBtn } from '@/api/login'
 import Cookies from 'js-cookie'
-import { Sidebar} from './components'
+import { Sidebar } from './components'
 import LangSelect from '@/components/LangSelect'
 import Screenfull from '@/components/Screenfull'
 import Parse from 'parse'
 // import SizeSelect from '@/components/SizeSelect'
-import { eventBus } from '@/api/eventBus';
-import { Websocket } from '@/utils/wxscoket.js';
+import { eventBus } from '@/api/eventBus'
+import { Websocket } from '@/utils/wxscoket.js'
 export default {
-  name:'Navbar',
-  data(){
-   return{
-     imgsrc:require('../../imgages/banner.png'),
-     username:'',
-     roles:'',
-     type:'',
-     isscreenfull:'全屏',
-     title:'',
-     usernameid:''
-   }
-  },
+  name: 'Navbar',
   components: {
     Breadcrumb,
     Hamburger,
@@ -64,38 +53,55 @@ export default {
     Sidebar,
     LangSelect
   },
+  data() {
+    return {
+      imgsrc: require('../../imgages/banner.png'),
+      username: '',
+      roles: '',
+      type: '',
+      isscreenfull: '全屏',
+      title: '',
+      usernameid: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ]),
-     
+    ])
+
   },
-  created(){
-   this.getTitle()
+  created() {
+    this.getTitle()
   //  var _self = this
     // this.$nextTick(function () {
     //   document.addEventListener('keyup', function (e) {
     //   //此处填写你的业务逻辑即可
     //    if (e.keyCode == 27) {
-         
+
     //         _self.isscreenfull = '全屏'
     //         console.log(_self.isscreenfull)
     //       }
     //     })
     //   })
   },
+  mounted() {
+    this.username = sessionStorage.getItem('username')
+    this.type = sessionStorage.getItem('type')
+    this.roles = sessionStorage.getItem('roles')
+    this.getsccreen()
+  },
   methods: {
-    getTitle(){
-     this.title = sessionStorage.getItem('product_title')
-     this.imgsrc = sessionStorage.getItem('imgsrc')
-     if(Parse.User.current() && Parse.User.current().id){
+    getTitle() {
+      this.title = sessionStorage.getItem('product_title')
+      this.imgsrc = sessionStorage.getItem('imgsrc')
+      if (Parse.User.current() && Parse.User.current().id) {
         this.usernameid = Parse.User.current().id
-     }
+      }
     },
-    getsccreen(){
-      eventBus.$on('isshow',data=>{
-        this.isscreenfull = data;
+    getsccreen() {
+      eventBus.$on('isshow', data => {
+        this.isscreenfull = data
       })
     },
     toggleSideBar() {
@@ -107,17 +113,15 @@ export default {
       Cookies.remove('username')
       Cookies.remove('sessionToken')
       try {
-
-          Parse.User.logOut(this.username).then(res=>{
-        
+        Parse.User.logOut(this.username).then(res => {
           this.$router.push('/login')
           sessionStorage.removeItem('username')
           sessionStorage.removeItem('token')
           localStorage.removeItem('list')
-         
+
           this.$store.dispatch('delAllViews')
         }
-  /*      (error=>{
+          /*      (error=>{
           this.$router.push('/login')
           sessionStorage.removeItem('username')
           sessionStorage.removeItem('token')
@@ -126,42 +130,32 @@ export default {
           localStorage.removeItem('list')
           this.$store.dispatch('delAllViews')
         }) */
-      
-      )
-        
+
+        )
       } catch (error) {
+        console.log('logout err', error)
 
-        console.log('logout err',error);       
-
-           this.$router.push('/login')
-          sessionStorage.removeItem('username')
-          sessionStorage.removeItem('token')
-          Cookies.set('username',''-1)
-          Cookies.set('sessionToken',''-1)
-          localStorage.removeItem('list')
-          this.$store.dispatch('delAllViews')
-        
+        this.$router.push('/login')
+        sessionStorage.removeItem('username')
+        sessionStorage.removeItem('token')
+        Cookies.set('username', '' - 1)
+        Cookies.set('sessionToken', '' - 1)
+        localStorage.removeItem('list')
+        this.$store.dispatch('delAllViews')
       }
-
     },
-    userDetail(){
+    userDetail() {
       this.$router.push({
-        name:'userinfo',
-        params:{
-          userid:this.usernameid
+        name: 'userinfo',
+        params: {
+          userid: this.usernameid
         }
       })
     }
-  },
-  mounted() {
-    this.username = sessionStorage.getItem('username')
-    this.type = sessionStorage.getItem('type')
-    this.roles = sessionStorage.getItem('roles')
-    this.getsccreen()   
-  },
+  }
 }
 </script>
- 
+
 <style rel="stylesheet/scss" lang="scss" scoped>
 .navbar {
   height: 40px;
@@ -308,7 +302,7 @@ export default {
     .el-submenu__title .svg-icon {
       margin-right: 0.3rem;
     }
-  } 
+  }
   /deep/ .el-dropdown{
     left: -100px;
     top: -10px;

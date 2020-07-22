@@ -15,9 +15,7 @@
         <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
-    <div class="copyright" style="color:#999999;font-size:12px;position:absolute;top:10px;right:10px" v-html="copyright">
-       
-    </div>
+    <div class="copyright" style="color:#999999;font-size:12px;position:absolute;top:10px;right:10px" v-html="copyright"/>
   </div>
 </template>
 
@@ -32,7 +30,7 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      copyright:''
+      copyright: ''
     }
   },
   computed: {
@@ -59,9 +57,9 @@ export default {
     this.getCopyright()
   },
   methods: {
-     getCopyright(){
-       this.copyright = sessionStorage.getItem('copyright')
-     },
+    getCopyright() {
+      this.copyright = sessionStorage.getItem('copyright')
+    },
     generateTitle, // generateTitle by vue-i18n
     isActive(route) {
       return route.path === this.$route.path
@@ -191,7 +189,7 @@ export default {
           }
         }
     }
-    
+
   }
   .contextmenu {
     margin: 0;

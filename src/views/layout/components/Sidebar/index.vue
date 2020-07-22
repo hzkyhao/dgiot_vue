@@ -12,24 +12,24 @@
     </el-menu>
   </el-scrollbar>
 </template>
- 
+
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
-import Cookies from 'js-cookie';
- 
+import Cookies from 'js-cookie'
+
 export default {
   components: { SidebarItem },
- 
-  data(){
-    return{
-      route:[],
-      originroute:[],
-      comparroute:[],
-        username:'',
-        token:'',
-        type:'',
-        dashboard:''
+
+  data() {
+    return {
+      route: [],
+      originroute: [],
+      comparroute: [],
+      username: '',
+      token: '',
+      type: '',
+      dashboard: ''
     }
   },
   computed: {
@@ -37,45 +37,43 @@ export default {
       'sidebar'
     ]),
     routes() {
-      this.username=Cookies.get('username')
+      this.username = Cookies.get('username')
       this.token = Cookies.get('sessionToken')
       this.dashboard = Cookies.get('dashboard_url')
       // this.type = sessionStorage.getItem('type')
-      if(!this.token||this.token==-1){
+      if (!this.token || this.token == -1) {
         this.$router.push('/login')
-      }else{
+      } else {
       // this.originroute = this.$router.options.routes
 
-       let cloneData = JSON.parse(localStorage.getItem('list'))
-      // let cloneData = JSON.parse(JSON.stringify(this.routes1)); // 对源数据深度克隆
+        const cloneData = JSON.parse(localStorage.getItem('list'))
+        // let cloneData = JSON.parse(JSON.stringify(this.routes1)); // 对源数据深度克隆
 
-       cloneData.unshift({
-          name:'首页',
-          icon:'dashboard',
-          url:this.dashboard ? this.dashboard :'/dashboard'
+        cloneData.unshift({
+          name: '首页',
+          icon: 'dashboard',
+          url: this.dashboard ? this.dashboard : '/dashboard'
         })
 
-     let newArr =  cloneData.filter((item,index)=>{    
-        if(['实验仪器管理','取证设备列表'].includes(item.name)){
-          // console.log('去除');          
+        const newArr = cloneData.filter((item, index) => {
+          if (['实验仪器管理', '取证设备列表'].includes(item.name)) {
+          // console.log('去除');
             return false
-        } else {
-          return true
-        }
+          } else {
+            return true
+          }
+        })
 
-      })
-  
-      return newArr
-      
+        return newArr
       }
     },
     isCollapse() {
       return !this.sidebar.opened
-    },
-   
+    }
+
   },
-  mounted(){
-  },
+  mounted() {
+  }
 }
 </script>
 <style>
@@ -91,7 +89,7 @@ export default {
     margin: 0;
     border-bottom: 2px solid transparent;
     color: #909399;
-} 
+}
 .el-submenu__icon-arrow{
   right:0 !important;
 }

@@ -23,25 +23,25 @@ export default {
       type: String,
       default: '250px'
     },
-    persondata:{
-        type:Object,
-        default:()=>{
-            data:[]
-        }
+    persondata: {
+      type: Object,
+      default: () => {
+        []
+      }
     }
   },
   data() {
     return {
-      chart: null,
+      chart: null
     }
   },
-  watch:{
-      persondata:{
-          deep:true,
-          handler(val){
-              this.initChart(val)
-          }
+  watch: {
+    persondata: {
+      deep: true,
+      handler(val) {
+        this.initChart(val)
       }
+    }
   },
   mounted() {
     this.initChart(this.persondata)
@@ -68,11 +68,11 @@ export default {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
             type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          },
+          }
         //   formatter: '{a} <br/>{b} : {c}个'
         },
         grid: {
-          top:20,
+          top: 20,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -82,23 +82,23 @@ export default {
         //   text:'日用量趋势'
         // },
         xAxis: [{
-          name:'(家)',
+          name: '(家)',
           type: 'value',
           boundaryGap: [0, 0.01],
           axisTick: {
             alignWithLabel: true,
-            show:false,
+            show: false
           }
         }],
-         legend: {
-          data: ['水泵企业数量','上市企业数量'],
-           textStyle:{
-            color:'#ffffff'
+        legend: {
+          data: ['水泵企业数量', '上市企业数量'],
+          textStyle: {
+            color: '#ffffff'
           }
         },
         yAxis: [{
           type: 'category',
-          data: ['2012年', '2013年', '2014年', '2015年', '2016年','2017年'],
+          data: ['2012年', '2013年', '2014年', '2015年', '2016年', '2017年'],
           inverse: true,
           axisTick: {
             show: false
@@ -110,23 +110,23 @@ export default {
           stack: 'vistors',
           barWidth: '60%',
           data: persondata.data,
-          itemStyle:{
-              normal:{
-                  color:'#0066FF'
-              }
+          itemStyle: {
+            normal: {
+              color: '#0066FF'
+            }
           },
           animationDuration
-        }, 
+        },
         {
           name: '上市企业数量',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [2,2,2,2,3,4],
-          itemStyle:{
-              normal:{
-                  color:'#33FFFF'
-              }
+          data: [2, 2, 2, 2, 3, 4],
+          itemStyle: {
+            normal: {
+              color: '#33FFFF'
+            }
           },
           animationDuration
         }

@@ -1,8 +1,8 @@
 <template>
   <div v-if="!item.hidden" class="menu-wrapper" style="height:40px;">
     <!--根据取回来菜单生成-->
-     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&(!item.children)" >
-       <!-- 一级菜单 -->
+    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&(!item.children)" >
+      <!-- 一级菜单 -->
       <app-link v-if="onlyOneChild.name" :to="resolvePath(onlyOneChild.url)" >
         <el-menu-item :index="resolvePath(onlyOneChild.url)" :class="{'submenu-title-noDropdown':!isNest}" @click.native="reloadnow(onlyOneChild.url,onlyOneChild.name)">
           <item :icon="onlyOneChild.icon||(item.name&&item.icon)" :title="generateTitle(onlyOneChild.name)"/>
@@ -11,7 +11,7 @@
     </template>
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.url)" :key="item.id" popper-append-to-body>
-        
+
       <template slot="title">
         <!-- 多级菜单 -->
         <item v-if="item.name" :icon="item.name && item.icon" :title="generateTitle(item.name)" />
@@ -41,7 +41,7 @@ import AppLink from './Link'
 export default {
   name: 'SidebarItem',
   components: { Item, AppLink },
-  inject:['reload'],
+  inject: ['reload'],
   props: {
     // route object
     item: {
@@ -69,7 +69,7 @@ export default {
           return false
         } else {
           // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item  
+          this.onlyOneChild = item
           return true
         }
       })
@@ -92,12 +92,12 @@ export default {
       }
       return path.resolve(this.basePath, routePath)
     },
-    reloadnow(url,name){
-        if(url.indexOf('http')==-1){
-          this.$router.push({
-          path:url,
-          query:{
-            reload:true
+    reloadnow(url, name) {
+      if (url.indexOf('http') == -1) {
+        this.$router.push({
+          path: url,
+          query: {
+            reload: true
           }
         })
       }

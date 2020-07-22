@@ -3,7 +3,7 @@
     <div>
       <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
         <el-form-item>
-          <el-input v-model="formInline.name" placeholder="请输入指令名称" style="width:500px"></el-input>
+          <el-input v-model="formInline.name" placeholder="请输入指令名称" style="width:500px"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getInstruct(0)">查询</el-button>
@@ -28,7 +28,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="selection" width="55"/>
         <el-table-column label="指令名称" align="center" sortable width="200">
           <template slot-scope="scope">{{ scope.row.attributes.name }}</template>
         </el-table-column>
@@ -37,17 +37,16 @@
         </el-table-column>-->
         <el-table-column label="指令类型" align="center" width="100">
           <template slot-scope="scope">
-            <el-tag type="primary" v-if=" scope.row.attributes.op=='Read'">读</el-tag>
-            <el-tag type="success" v-else>写</el-tag>
+            <el-tag v-if=" scope.row.attributes.op=='Read'" type="primary">读</el-tag>
+            <el-tag v-else type="success">写</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="指令标识" align="center">
           <template slot-scope="scope">{{ scope.row.attributes.di }}</template>
         </el-table-column>
-        <el-table-column label="指令序号" align="center" prop="attributes.order">
-        </el-table-column>
+        <el-table-column label="指令序号" align="center" prop="attributes.order"/>
         <el-table-column label="超时时长" align="center" >
-          <template slot-scope="scope">{{ scope.row.attributes.duration+'秒'}}</template>
+          <template slot-scope="scope">{{ scope.row.attributes.duration+'秒' }}</template>
         </el-table-column>
         <el-table-column label="子网编号" align="center" width="200">
           <template slot-scope="scope">{{ scope.row.attributes.pn }}</template>
@@ -58,8 +57,8 @@
 
         <el-table-column label="是否启用" align="center" width="100">
           <template slot-scope="scope">
-            <el-tag type="success" v-if=" scope.row.attributes.enable">是</el-tag>
-            <el-tag type="danger" v-else>否</el-tag>
+            <el-tag v-if=" scope.row.attributes.enable" type="success">是</el-tag>
+            <el-tag v-else type="danger">否</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="200">
@@ -70,32 +69,32 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        style="margin-top:20px"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="pagesize"
+        :total="total"
+        style="margin-top:20px"
         background
         layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
     <!--指令弹窗-->
     <el-dialog :title="dialogTitle+'指令'" :visible.sync="dialogFormVisible" @open="openDialog">
-      <el-form ref="form" :model="form" size="small" :rules="formrule">
+      <el-form ref="form" :model="form" :rules="formrule" size="small">
         <h4 >&nbsp;&nbsp;指令信息</h4>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="指令名称" :label-width="formLabelWidth" prop="name">
-              <el-input v-model="form.name" autocomplete="off" placeholder="请输入指令名称"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="指令名称" prop="name">
+              <el-input v-model="form.name" autocomplete="off" placeholder="请输入指令名称"/>
             </el-form-item>
-            <el-form-item label="操作类型" :label-width="formLabelWidth" prop="type">
+            <el-form-item :label-width="formLabelWidth" label="操作类型" prop="type">
               <el-select v-model="form.type" placeholder="请选择操作类型">
-                <el-option label="读" value="r"></el-option>
-                <el-option label="写" value="w"></el-option>
+                <el-option label="读" value="r"/>
+                <el-option label="写" value="w"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否启用" :label-width="formLabelWidth" prop="enable">
+            <el-form-item :label-width="formLabelWidth" label="是否启用" prop="enable">
               <el-radio-group v-model="form.enable">
                 <el-radio :label="true">是</el-radio>
                 <el-radio :label="false">否</el-radio>
@@ -103,23 +102,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="指令指标" :label-width="formLabelWidth" prop="pointer">
-              <el-input v-model="form.pointer" autocomplete="off" placeholder="请输入指令指标"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="指令指标" prop="pointer">
+              <el-input v-model="form.pointer" autocomplete="off" placeholder="请输入指令指标"/>
             </el-form-item>
-            <el-form-item label="指令序号" :label-width="formLabelWidth" prop="order">
-              <el-input v-model="form.order" autocomplete="off" placeholder="请输入指令序号"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="指令序号" prop="order">
+              <el-input v-model="form.order" autocomplete="off" placeholder="请输入指令序号"/>
             </el-form-item>
           </el-col>
         </el-row>
         <h4 >&nbsp;&nbsp;指令下发策略</h4>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="超时时长" :label-width="formLabelWidth" prop="duration">
+            <el-form-item :label-width="formLabelWidth" label="超时时长" prop="duration">
               <el-input v-model.number="form.duration" autocomplete="off" placeholder="请输入超时时长">
                 <template slot="append">秒</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="生效轮次" :label-width="formLabelWidth" prop="rotation">
+            <el-form-item :label-width="formLabelWidth" label="生效轮次" prop="rotation">
               <el-select
                 v-model="form.rotation"
                 filterable
@@ -133,7 +132,7 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                ></el-option>
+                />
               </el-select>
               <p
                 style="color:black;margin:0;position:absolute;top:40px;font-size:12px"
@@ -141,10 +140,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12 ">
-            <el-form-item label="子网编号" :label-width="formLabelWidth" prop="subnet">
-              <el-input v-model="form.subnet" autocomplete="off" placeholder="请输入子网编号"></el-input>
+            <el-form-item :label-width="formLabelWidth" label="子网编号" prop="subnet">
+              <el-input v-model="form.subnet" autocomplete="off" placeholder="请输入子网编号"/>
             </el-form-item>
-            <el-form-item label="发送间隔" :label-width="formLabelWidth" prop="interval">
+            <el-form-item :label-width="formLabelWidth" label="发送间隔" prop="interval">
               <el-input v-model.number="form.interval" autocomplete="off" placeholder="请输入发送间隔">
                 <template slot="append">秒</template>
               </el-input>
@@ -160,82 +159,82 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
-import { returnLogin } from "@/utils/return";
-import { getIndustry } from "@/api/applicationManagement";
+import Parse from 'parse'
+import { returnLogin } from '@/utils/return'
+import { getIndustry } from '@/api/applicationManagement'
 export default {
-  name: "Instruct",
+  name: 'Instruct',
   props: {
     productId: {
       type: String,
-      default: ""
+      default: ''
     },
     devicesId: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {   
+  data() {
     return {
       formInline: {
-        name: ""
+        name: ''
       },
-      options:[{value:'first',label:'第一轮'},{value:'last',label:'最后一轮'},{value:'all',label:'全部'},],
+      options: [{ value: 'first', label: '第一轮' }, { value: 'last', label: '最后一轮' }, { value: 'all', label: '全部' }],
       instructData: [],
       multipleTable: [],
       pagesize: 10,
       start: 0,
       total: 0,
       dialogFormVisible: false,
-      formLabelWidth: "120px",
+      formLabelWidth: '120px',
       form: {
-        name: "",
-        pointer: "",
-        type: "",
-        enable: "",
-        duration: "",
-        order: "",
-        interval: "",
-        rotation: "",
-        subnet: ""
+        name: '',
+        pointer: '',
+        type: '',
+        enable: '',
+        duration: '',
+        order: '',
+        interval: '',
+        rotation: '',
+        subnet: ''
       },
       formrule: {
         duration: [
-          { required: true,  message: "请输入",trigger: "blur" }
+          { required: true, message: '请输入', trigger: 'blur' }
         ],
         interval: [
-          { required: true,  message: "请输入",trigger: "blur" }
+          { required: true, message: '请输入', trigger: 'blur' }
         ],
         name: [
-          { required: true, message: "指标名称不能为空", trigger: "blur" }
+          { required: true, message: '指标名称不能为空', trigger: 'blur' }
         ],
-        type: [{ required: true, message: "请选择操作类型", trigger: "blur" }],
+        type: [{ required: true, message: '请选择操作类型', trigger: 'blur' }],
         enable: [
-          { required: true, message: "指标是否启用不能为空", trigger: "change" }
+          { required: true, message: '指标是否启用不能为空', trigger: 'change' }
         ],
         order: [
-          { required: true, message: "指标序号不能为空", trigger: "blur" } //指令序号     
+          { required: true, message: '指标序号不能为空', trigger: 'blur' } // 指令序号
         ],
         rotation: [
-          { required: true, message: "生效轮次不能为空", trigger: "change" }
+          { required: true, message: '生效轮次不能为空', trigger: 'change' }
         ],
         subnet: [
-          { required: true, message: "子网编号不能为空", trigger: "blur" }
+          { required: true, message: '子网编号不能为空', trigger: 'blur' }
         ],
         pointer: [
-          { required: true, message: "指令指标不能为空", trigger: "blur" }
+          { required: true, message: '指令指标不能为空', trigger: 'blur' }
         ]
       },
-      instructid: "",
-      dialogTitle:'新增'
-    };
+      instructid: '',
+      dialogTitle: '新增'
+    }
   },
   watch: {
     dialogFormVisible: {
       handler(val) {
         if (!val) {
-            this.$refs.form.resetFields();
-            console.log(val)
+          this.$refs.form.resetFields()
+          console.log(val)
         }
       },
       deep: true
@@ -248,212 +247,209 @@ export default {
     }
   },
   mounted() {
-      this.getInstruct()
+    this.getInstruct()
   },
   updated() {},
   methods: {
-      dialogClosed(){
-         
-          this.dialogFormVisible = false
-      },
-      openDialog(formName,type,data){
-        this.$nextTick(() => {
-        if(this.$refs[formName]){
-            this.$refs[formName].resetFields();
-        }
-        switch(type){//1：查看，2：编辑，3：新增
-        case '2':this.dialogTitle='编辑';this.form= data;break;
-        case '3':this.dialogTitle='添加';
-        break;
-        default:break;
-        }
-    });
-      },
-    getInstruct(start) {
-        if(start==0){
-            this.start=0
-        }
-      var Instruct = Parse.Object.extend("Instruct");
-      var instruct = new Parse.Query(Instruct);
-      instruct.equalTo("device", this.devicesId);
-      instruct.skip(this.start);
-      instruct.limit(this.pagesize);
-      if(this.formInline.name){
-          instruct.matches('name',this.formInline.name,'i')
-      }
-      instruct.ascending('order')
-      instruct.count().then(count => {
-        this.total = count;
-        instruct.find().then(resultes => {
-          if (resultes) {
-            this.instructData = resultes;
-          }
-        });
-      });
+    dialogClosed() {
+      this.dialogFormVisible = false
     },
-    addInstruct() {
-      this.dialogFormVisible = true;
-      this.$refs.form.resetFields()
-    },
-    check(formName) {
-      this.$refs[formName].validate(valid => {    
-        if (valid) {
-          var Instruct = Parse.Object.extend("Instruct");
-          var instruct = new Instruct();
-          if (this.instructid != "") {
-            instruct.id = this.instructid;
-          }
-          var Devices = Parse.Object.extend("Device");
-          var devices = new Devices();
-          devices.id = this.devicesId;
-          var Product = Parse.Object.extend("Product");
-          var product = new Product();
-          product.id = this.productId;
-          instruct.set("device", devices);
-          instruct.set("product", product);
-          // instruct.set("instruct", this.form);
-          instruct.set('name',this.form.name)
-          instruct.set('enable',this.form.enable)
-          instruct.set('op',this.form.type)
-          instruct.set('rotation',this.form.rotation)
-          instruct.set('duration',this.form.duration)
-          instruct.set('order',this.form.order)
-          instruct.set('interval',this.form.interval)
-          instruct.set('di',this.form.pointer)
-          instruct.set('pn',this.form.subnet)
-          instruct.set('devaddr',this.form.lowerhair)
-          instruct.save().then(resultes => {
-            if (resultes) {
-              this.$message({
-                  type:'success',
-                  message:`${this.dialogTitle}成功`
-              });
-               this.$refs.form.resetFields();
-              this.dialogClosed()
-              this.instructid = "";
-              this.getInstruct()
-            }
-          },error=>{
-              console.log(error)
-          });
-        } else {
-          this.$message("有必填项未填写");
-          return false;
+    openDialog(formName, type, data) {
+      this.$nextTick(() => {
+        if (this.$refs[formName]) {
+          this.$refs[formName].resetFields()
+        }
+        switch (type) { // 1：查看，2：编辑，3：新增
+          case '2':this.dialogTitle = '编辑'; this.form = data; break
+          case '3':this.dialogTitle = '添加'
+            break
+          default:break
         }
       })
     },
-     handleSizeChange(val) {
-        this.pagesize=val
-        this.getInstruct()
-      },
-      handleCurrentChange(val) {
-       this.start = (val-1)*this.pagesize
-       this.getInstruct()
-      },
-    //编辑
-    dialogBtn_em(formName,type,data){
-        this.dialogFormVisible=true;
-        //此处最好声明一个新的变量来接收数据去赋值弹框，避免影响源数据
-        let opt={}
-        let opt1
-        if(type==2){
-            opt1={
-              name: data.attributes.name,
-              pointer: data.attributes.di,
-              type: data.attributes.op,
-              enable: data.attributes.enable,
-              duration: data.attributes.duration,
-              order: data.attributes.order,
-              interval: data.attributes.interval,
-              lowerhair: data.attributes.devaddr,
-              rotation: data.attributes.rotation,
-              subnet: data.attributes.pn
+    getInstruct(start) {
+      if (start == 0) {
+        this.start = 0
+      }
+      var Instruct = Parse.Object.extend('Instruct')
+      var instruct = new Parse.Query(Instruct)
+      instruct.equalTo('device', this.devicesId)
+      instruct.skip(this.start)
+      instruct.limit(this.pagesize)
+      if (this.formInline.name) {
+        instruct.matches('name', this.formInline.name, 'i')
+      }
+      instruct.ascending('order')
+      instruct.count().then(count => {
+        this.total = count
+        instruct.find().then(resultes => {
+          if (resultes) {
+            this.instructData = resultes
+          }
+        })
+      })
+    },
+    addInstruct() {
+      this.dialogFormVisible = true
+      this.$refs.form.resetFields()
+    },
+    check(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          var Instruct = Parse.Object.extend('Instruct')
+          var instruct = new Instruct()
+          if (this.instructid != '') {
+            instruct.id = this.instructid
+          }
+          var Devices = Parse.Object.extend('Device')
+          var devices = new Devices()
+          devices.id = this.devicesId
+          var Product = Parse.Object.extend('Product')
+          var product = new Product()
+          product.id = this.productId
+          instruct.set('device', devices)
+          instruct.set('product', product)
+          // instruct.set("instruct", this.form);
+          instruct.set('name', this.form.name)
+          instruct.set('enable', this.form.enable)
+          instruct.set('op', this.form.type)
+          instruct.set('rotation', this.form.rotation)
+          instruct.set('duration', this.form.duration)
+          instruct.set('order', this.form.order)
+          instruct.set('interval', this.form.interval)
+          instruct.set('di', this.form.pointer)
+          instruct.set('pn', this.form.subnet)
+          instruct.set('devaddr', this.form.lowerhair)
+          instruct.save().then(resultes => {
+            if (resultes) {
+              this.$message({
+                type: 'success',
+                message: `${this.dialogTitle}成功`
+              })
+              this.$refs.form.resetFields()
+              this.dialogClosed()
+              this.instructid = ''
+              this.getInstruct()
             }
-              opt = Object.assign({},opt1)
-              this.instructid = data.id
-        }else{
-              opt = Object.assign({},data)
+          }, error => {
+            console.log(error)
+          })
+        } else {
+          this.$message('有必填项未填写')
+          return false
         }
-        this.openDialog(formName,type,opt)
+      })
     },
-    //单个删除指令
-    deleteInstruct(id){
-        
-        this.$confirm('此操作将永久删除该指令, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            var Instruct = Parse.Object.extend("Instruct");
-            var instruct = new Instruct();
-            instruct.id = id
-            instruct.destroy().then(response=>{
-                if(response){
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    this.getInstruct()
-                }
-            },error=>{
-                returnLogin(error)
+    handleSizeChange(val) {
+      this.pagesize = val
+      this.getInstruct()
+    },
+    handleCurrentChange(val) {
+      this.start = (val - 1) * this.pagesize
+      this.getInstruct()
+    },
+    // 编辑
+    dialogBtn_em(formName, type, data) {
+      this.dialogFormVisible = true
+      // 此处最好声明一个新的变量来接收数据去赋值弹框，避免影响源数据
+      let opt = {}
+      let opt1
+      if (type == 2) {
+        opt1 = {
+          name: data.attributes.name,
+          pointer: data.attributes.di,
+          type: data.attributes.op,
+          enable: data.attributes.enable,
+          duration: data.attributes.duration,
+          order: data.attributes.order,
+          interval: data.attributes.interval,
+          lowerhair: data.attributes.devaddr,
+          rotation: data.attributes.rotation,
+          subnet: data.attributes.pn
+        }
+        opt = Object.assign({}, opt1)
+        this.instructid = data.id
+      } else {
+        opt = Object.assign({}, data)
+      }
+      this.openDialog(formName, type, opt)
+    },
+    // 单个删除指令
+    deleteInstruct(id) {
+      this.$confirm('此操作将永久删除该指令, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var Instruct = Parse.Object.extend('Instruct')
+        var instruct = new Instruct()
+        instruct.id = id
+        instruct.destroy().then(response => {
+          if (response) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
             })
-          
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+            this.getInstruct()
+          }
+        }, error => {
+          returnLogin(error)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
-    handleSelectionChange(val){
-        this.multipleTable = val
+    handleSelectionChange(val) {
+      this.multipleTable = val
     },
-    //批量删除
-    deleteAll(){
-      if(this.multipleTable.length==0){
-           this.$message({
+    // 批量删除
+    deleteAll() {
+      if (this.multipleTable.length == 0) {
+        this.$message({
           message: '请挑选要删除的指令',
           type: 'warning'
-        });
-      }else{
-          var arr=[]
-          this.multipleTable.map(item=>{
-              arr.push(
-                  new Promise((resolve,reject)=>{
-                       var Instruct = Parse.Object.extend("Instruct");
-                        var instruct = new Instruct();
-                        instruct.id = item.id
-                        return instruct.destroy().then(resultes=>{
-                            if(resultes){
-                                resolve(resultes)
-                            }
-                        },error=>{
-                            reject(error)
-                        })
-                  })
-              )
-          })
-          Promise.all(arr)
-                .then(data => {
-                this.$message({
-                    message: "删除成功",
-                    type: "success"
-                });
-                if (data.length == this.multipleTable.length) {
-                    this.getInstruct();
+        })
+      } else {
+        var arr = []
+        this.multipleTable.map(item => {
+          arr.push(
+            new Promise((resolve, reject) => {
+              var Instruct = Parse.Object.extend('Instruct')
+              var instruct = new Instruct()
+              instruct.id = item.id
+              return instruct.destroy().then(resultes => {
+                if (resultes) {
+                  resolve(resultes)
                 }
-                })
-                .catch(error => {
-                    this.$message({
-                        message: error,
-                        type: "error"
-                    });
-                });
+              }, error => {
+                reject(error)
+              })
+            })
+          )
+        })
+        Promise.all(arr)
+          .then(data => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            if (data.length == this.multipleTable.length) {
+              this.getInstruct()
+            }
+          })
+          .catch(error => {
+            this.$message({
+              message: error,
+              type: 'error'
+            })
+          })
       }
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .instruct {

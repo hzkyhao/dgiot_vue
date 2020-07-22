@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { format } from 'path';
+import { format } from 'path'
 
 export default {
   props: {
@@ -56,14 +56,14 @@ export default {
         legend: {
           left: 'vertical',
           bottom: '10',
-          data: ['2012年', '2013年', '2014年', '2015年', '2016年','2017年'],
-          textStyle:{
-            color:'#ffffff'
+          data: ['2012年', '2013年', '2014年', '2015年', '2016年', '2017年'],
+          textStyle: {
+            color: '#ffffff'
           }
         },
         calculable: true,
-         grid: {
-          top:100,
+        grid: {
+          top: 100,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -71,11 +71,11 @@ export default {
         },
         series: [
           {
-            name:'111',
+            name: '111',
             type: 'pie',
             // roseType: 'radius',//饼图形状扇形
             // radius: '55%',
-             radius: ['50%', '30%'],//扇形变圆形
+            radius: ['50%', '30%'], // 扇形变圆形
             center: ['50%', '40%'],
             // label: {
             //     normal: {
@@ -90,7 +90,7 @@ export default {
               { value: 2.9, name: '2014年' },
               { value: 3, name: '2015年' },
               { value: 3.2, name: '2016年' },
-               { value: 3.3, name: '2017年' }
+              { value: 3.3, name: '2017年' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600

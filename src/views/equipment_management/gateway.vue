@@ -1,31 +1,29 @@
 <template>
-    <div class="gateway">
-         <el-card shadow="always" class="wayheader">
-            <div class="wayheaderone">
-                <span class="oneheader">
-                    网络设备
-                </span>
-                <span class="twoheader">
-                    网络层级:{{cengji}}
-                </span>
-                <span class="threeheader">
-
-                </span>
-            </div>
-         </el-card>
-    </div>
+  <div class="gateway">
+    <el-card shadow="always" class="wayheader">
+      <div class="wayheaderone">
+        <span class="oneheader">
+          网络设备
+        </span>
+        <span class="twoheader">
+          网络层级:{{ cengji }}
+        </span>
+        <span class="threeheader"/>
+      </div>
+    </el-card>
+  </div>
 </template>
 <script>
 export default {
-   data() {
-      return {
-          cengji:2
-      }
-   },
-   mounted() {
-   },
-   methods: {
-   }
+  data() {
+    return {
+      cengji: 2
+    }
+  },
+  mounted() {
+  },
+  methods: {
+  }
 }
 </script>
 <style lang="scss" scoped>

@@ -10,7 +10,7 @@ import { lang } from '../../../../www/common/AdminLTE-2.4.2/bower_components/mom
             >终端信息</span>
             <div class="outmain">
               <label for>终端编码：</label>
-              <el-input type="text" style="display:inline-block;width:200px" v-model="msg.bianma"></el-input>
+              <el-input v-model="msg.bianma" type="text" style="display:inline-block;width:200px"/>
             </div>
           </div>
         </el-col>
@@ -20,7 +20,7 @@ import { lang } from '../../../../www/common/AdminLTE-2.4.2/bower_components/mom
               style="margin-top:-20px;margin-left:10px;position:fixed;top:-5;left:10;background:white"
             >系统时间：</span>
             <div class="outmain">
-              <el-input type="text" style="display:inline-block;width:300px" v-model="readtime"></el-input>
+              <el-input v-model="readtime" type="text" style="display:inline-block;width:300px"/>
             </div>
           </div>
         </el-col>
@@ -29,8 +29,8 @@ import { lang } from '../../../../www/common/AdminLTE-2.4.2/bower_components/mom
             <span
               style="margin-top:-20px;margin-left:10px;position:fixed;top:-5;left:10;background:white"
             >等待应答反馈时间/秒</span>
-            <div class="outmain"> 
-              <el-input type="number" style="display:inline-block;width:200px" v-model="msg.time"></el-input>
+            <div class="outmain">
+              <el-input v-model="msg.time" type="number" style="display:inline-block;width:200px"/>
             </div>
           </div>
         </el-col>
@@ -41,45 +41,45 @@ import { lang } from '../../../../www/common/AdminLTE-2.4.2/bower_components/mom
 </template>
 <script>
 export default {
-  name: "Mainstation",
+  name: 'Mainstation',
   data() {
     return {
-      msg:{
-        bianma:'',
-        time:''
+      msg: {
+        bianma: '',
+        time: ''
       },
-      readtime:'',
-        
-    }; 
+      readtime: ''
+
+    }
   },
   computed: {
-     
+
   },
   mounted() {
-       this.$nextTick(function () {
-            // setInterval(this.nowtime, 1000);
-            this.nowtime
-            // this.getinformation()
-        })
+    this.$nextTick(function() {
+      // setInterval(this.nowtime, 1000);
+      this.nowtime
+      // this.getinformation()
+    })
   },
   methods: {
-       nowtime(){
-            var timestamp3 = Date.parse(new Date());
-            var date = new Date(timestamp3) 
-            var Y = date.getFullYear() + '年';
-            var M = (date.getMonth()+1 <= 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '月';
-            var D = (date.getDate()+1 <= 10 ? '0'+(date.getDate()) : date.getDate()) + '日  ';
-            var h = (date.getHours()+1 <= 10 ? '0'+(date.getHours()) : date.getHours())  + ':';
-            var m = (date.getMinutes()+1 <= 10 ? '0'+(date.getMinutes()) : date.getMinutes())  + ':';
-            var s = (date.getSeconds()+1 <= 10 ? '0'+(date.getSeconds()) : date.getSeconds());
-            this.readtime=(Y+M+D+h+m+s); 
-             this.$emit('handback',this.msg)      
-      },
-      getinformation(){
-       
-      }
+    nowtime() {
+      var timestamp3 = Date.parse(new Date())
+      var date = new Date(timestamp3)
+      var Y = date.getFullYear() + '年'
+      var M = (date.getMonth() + 1 <= 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
+      var D = (date.getDate() + 1 <= 10 ? '0' + (date.getDate()) : date.getDate()) + '日  '
+      var h = (date.getHours() + 1 <= 10 ? '0' + (date.getHours()) : date.getHours()) + ':'
+      var m = (date.getMinutes() + 1 <= 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':'
+      var s = (date.getSeconds() + 1 <= 10 ? '0' + (date.getSeconds()) : date.getSeconds())
+      this.readtime = (Y + M + D + h + m + s)
+      this.$emit('handback', this.msg)
+    },
+    getinformation() {
+
     }
-};
+  }
+}
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 .el-row {
@@ -96,7 +96,7 @@ export default {
 }
 .bg-purple-light {
   background: #e5e9f2;
-  
+
 }
 .grid-content {
   border-radius: 4px;
@@ -114,7 +114,7 @@ export default {
 .mainstation .el-input__inner{
     background:#cccccc;
     color:black;
-    
+
 }
 .mainstation{
   padding-bottom:10px;
