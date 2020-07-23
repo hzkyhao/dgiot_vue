@@ -1,64 +1,115 @@
 <template>
   <div class="application">
-    <div class="addApplication"/>
-    <div class="appcontent" style="position:relative;display:flex;flex-direction:column;align-items:center">
+    <div class="addApplication" />
+    <div
+      class="appcontent"
+      style="position:relative;display:flex;flex-direction:column;align-items:center"
+    >
       <div class="isbutton">
         <el-button
           icon="el-icon-circle-plus-outline"
           round
-          @click="dialogVisible=true"
-        >添加新应用</el-button>
+          @click="dialogVisible = true"
+        >添加新应用</el-button
+        >
       </div>
 
-      <el-card v-for="(item,index) in appdata" :key="index" class="box-card" style="width:80%;border:1px solid #cccccc;margin-bottom:10px">
+      <el-card
+        v-for="(item, index) in appdata"
+        :key="index"
+        class="box-card"
+        style="width:80%;border:1px solid #cccccc;margin-bottom:10px"
+      >
         <el-row :gutter="24">
-          <el-col :span="4"><div class="grid-content bg-purple">
-            <i class="iconfont icon-yingyong" style="color:#666666"/>
-            <p>{{ item.attributes.config.name }}</p>
-          </div></el-col>
+          <el-col :span="4">
+            <div class="grid-content bg-purple">
+              <i class="iconfont icon-yingyong" style="color:#666666" />
+              <p>{{ item.attributes.config.name }}</p>
+            </div>
+          </el-col>
           <el-col :span="16">
-
             <div class="grid-content bg-purple">
               <dl>
-
-                <dt>App ID <el-tooltip content="在SDK调用过程中唯一的一个应用标识" placement="bottom" >
-                  <i class="el-icon-question"/>
-                </el-tooltip>
+                <dt>
+                  App ID
+                  <el-tooltip
+                    content="在SDK调用过程中唯一的一个应用标识"
+                    placement="bottom"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
                 </dt>
                 <dd>{{ item.id }}</dd>
-                <dt>App Secret <el-tooltip content="调用API时的Token,用来验证请求合法性,请注意保密" placement="bottom" >
-                  <i class="el-icon-question"/>
-                </el-tooltip></dt>
+                <dt>
+                  App Secret
+                  <el-tooltip
+                    content="调用API时的Token,用来验证请求合法性,请注意保密"
+                    placement="bottom"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </dt>
 
                 <dd v-if="item.isshow">{{ item.attributes.secret }}</dd>
-                <dd v-else>{{ item.attributes.secret.substr(0,4)+'********************'+item.attributes.secret.substr(24) }}<el-button size="samll" style="margin-left:10px;position:absolute;top:30px" round @click="xianshi(item.id)">完整密钥</el-button></dd>
+                <dd v-else>
+                  {{
+                    item.attributes.secret.substr(0, 4) +
+                      "********************" +
+                      item.attributes.secret.substr(24)
+                  }}
+                  <el-button
+                    size="samll"
+                    style="margin-left:10px;position:absolute;top:30px"
+                    round
+                    @click="xianshi(item.id)"
+                  >完整密钥</el-button
+                  >
+                </dd>
                 <dt>应用名称</dt>
                 <dd v-if="item.attributes.desc">{{ item.attributes.desc }}</dd>
                 <dd v-else>-</dd>
               </dl>
             </div>
           </el-col>
-          <el-col :span="4"><div class="grid-content bg-purple">
-            <p class="editor">
-              <strong>操作:</strong>
-            </p>
-            <p class="editor">
-              <el-link type="primary" @click="updateapp(item.id)">修改应用</el-link>
-            </p>
-            <p class="editor">
-              <el-link type="primary" @click="deleteapp(item.id)">删除应用</el-link>
-            </p>
-            <p class="editor">
-              <el-link type="primary" @click="nodeDeployment(item)">节点部署</el-link>
-            </p>
-            <p class="editor">
-              <el-link type="primary" @click="applicationDeployment(item)">应用部署</el-link>
-            </p>
-          </div></el-col>
+          <el-col :span="4">
+            <div class="grid-content bg-purple">
+              <p class="editor">
+                <strong>操作:</strong>
+              </p>
+              <p class="editor">
+                <el-link
+                  type="primary"
+                  @click="updateapp(item.id)"
+                >修改应用</el-link
+                >
+              </p>
+              <p class="editor">
+                <el-link
+                  type="primary"
+                  @click="deleteapp(item.id)"
+                >删除应用</el-link
+                >
+              </p>
+              <p class="editor">
+                <el-link
+                  type="primary"
+                  @click="nodeDeployment(item)"
+                >节点部署</el-link
+                >
+              </p>
+              <p class="editor">
+                <el-link
+                  type="primary"
+                  @click="applicationDeployment(item)"
+                >应用部署</el-link
+                >
+              </p>
+            </div>
+          </el-col>
         </el-row>
       </el-card>
       <el-pagination
-        :page-sizes="[1,5,10]"
+        :page-sizes="[1, 5, 10]"
         :page-size="pagesize"
         :total="total"
         layout="total, sizes, prev, pager, next, jumper"
@@ -68,82 +119,148 @@
     </div>
 
     <!--新建弹框-->
-    <el-dialog :visible.sync="dialogVisible" :close-on-click-modal="false" title="添加应用" width="55%">
-      <div v-loading="loading" class="block" element-loading-text="正在等待返回" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
-        <el-form ref="form" :model="form" label-width="120px">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      title="添加应用"
+      width="55%"
+    >
+      <div
+        v-loading="loading"
+        class="block"
+        element-loading-text="正在等待返回"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+      >
+        <el-form ref="form" :rules="Rule" :model="form" label-width="120px">
           <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                   <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                </el-select>
-          </el-form-item> -->
-          <el-form-item label="应用名称">
-            <el-input v-model="form.desc" style="width:80%" placheholder="请输入应用名称"/>
+          </el-form-item>-->
+          <el-form-item label="应用名称" prop="desc">
+            <el-input
+              v-model="form.desc"
+              style="width:80%"
+              placheholder="请输入应用名称"
+            />
           </el-form-item>
           <el-form-item label="Token有效时间">
-            <el-input v-model="form.time" type="number" style="width:80%" placheholder="请输入应用时间"/><span style="margin-left:5px;">秒</span>
+            <el-input
+              v-model="form.time"
+              type="number"
+              style="width:80%"
+              placheholder="请输入应用时间"
+            />
+            <span style="margin-left:5px;">秒</span>
           </el-form-item>
 
-          <el-form-item label="文件资源">
-            <el-input v-model="form.file" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="文件资源" prop="file">
+            <el-input
+              v-model="form.file"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="组态资源">
-            <el-input v-model="form.topo" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="组态资源" prop="topo">
+            <el-input
+              v-model="form.topo"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="Graphql API">
-            <el-input v-model="form.graphql" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="Graphql API" prop="graphql">
+            <el-input
+              v-model="form.graphql"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="Restful API">
-            <el-input v-model="form.rest" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="Restful API" prop="rest">
+            <el-input
+              v-model="form.rest"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
-
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="Define">确 定</el-button>
+        <el-button type="primary" @click="Define('form')">确 定</el-button>
       </span>
     </el-dialog>
 
     <!--修改应用信息-->
-    <el-dialog :visible.sync="update" :close-on-click-modal="false" title="修改应用信息" width="55%" >
+    <el-dialog
+      :visible.sync="update"
+      :close-on-click-modal="false"
+      title="修改应用信息"
+      width="55%"
+    >
       <div class="block">
-        <el-form ref="form" :model="form1" label-width="120px">
-          <el-form-item label="应用名称">
-            <el-input v-model="form1.desc" style="width:80%"/>
+        <el-form ref="form1" :rules="Rule" :model="form1" label-width="120px">
+          <el-form-item label="应用名称" prop="desc">
+            <el-input v-model="form1.desc" style="width:80%" />
           </el-form-item>
-          <el-form-item label="访问密钥" >
+          <el-form-item label="访问密钥">
             <el-input v-model="form1.secret" style="width:80%" readonly>
-              <el-button slot="append" icon="el-icon-refresh-right" @click="handleClickRefresh"/>
+              <el-button
+                slot="append"
+                icon="el-icon-refresh-right"
+                @click="handleClickRefresh"
+              />
             </el-input>
           </el-form-item>
           <el-form-item label="Token有效时间">
-            <el-input v-model="form1.time" type="number" style="width:80%" placheholder="请输入应用时间"/><span style="margin-left:5px;">秒</span>
+            <el-input
+              v-model="form1.time"
+              type="number"
+              style="width:80%"
+              placheholder="请输入应用时间"
+            />
+            <span style="margin-left:5px;">秒</span>
           </el-form-item>
 
-          <el-form-item label="文件资源">
-            <el-input v-model="form1.file" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="文件资源" prop="file">
+            <el-input
+              v-model="form1.file"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="组态资源">
-            <el-input v-model="form1.topo" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="组态资源" prop="topo">
+            <el-input
+              v-model="form1.topo"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="Graphql API">
-            <el-input v-model="form1.graphql" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="Graphql API" prop="graphql">
+            <el-input
+              v-model="form1.graphql"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
 
-          <el-form-item label="Restful API">
-            <el-input v-model="form1.rest" style="width:80%" placheholder="请输入url"/>
+          <el-form-item label="Restful API" prop="rest">
+            <el-input
+              v-model="form1.rest"
+              style="width:80%"
+              placheholder="请输入url"
+            />
           </el-form-item>
-
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="update = false">取 消</el-button>
-        <el-button type="primary" @click="updatedDefine">确 定</el-button>
+        <el-button type="primary" @click="updatedDefine('form1')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -155,6 +272,16 @@ import Parse from 'parse'
 export default {
   inject: ['reload'],
   data() {
+    const validatorUrl = (rule, value, callback) => {
+      var regStr = /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
+      if (value === '' || value === null) {
+        callback(new Error('请输入url地址'));
+      } else if (!regStr.test(value)) {
+        callback(new Error("请输入正确的url地址"));
+      } else {
+        callback();
+      }
+    };
     return {
       total: 0,
       pagesize: 10,
@@ -182,6 +309,24 @@ export default {
         topo: 'http://shapes.iotn2n.com/',
         secret: ''
 
+      },
+      Rule: {
+        desc: [
+          { required: true, message: '请输入应用名称', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (value.length === 0) {
+                callback(new Error("应用名称不能为空"));
+              } else {
+                callback();
+              }
+            }
+          }
+        ],
+        file: [{ trigger: 'blur', validator: validatorUrl }],
+        topo: [{ trigger: 'blur', validator: validatorUrl }],
+        graphql: [{ trigger: 'blur', validator: validatorUrl }],
+        rest: [{ trigger: 'blur', validator: validatorUrl }]
       },
       appdata: [],
       objectid: '',
@@ -213,7 +358,17 @@ export default {
     }
   },
   methods: {
-    Define() {
+    Define(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          this.submit()
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    submit() {
       this.loading = true
       var ranNum = Math.ceil(Math.random() * 25)
       var session = Base64.encode(String.fromCharCode(65 + ranNum) + Math.ceil(Math.random() * 10000000) + Number(new Date()))
@@ -309,7 +464,17 @@ export default {
         console.log(error)
       })
     },
-    updatedDefine() {
+    updatedDefine(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          this.updateObj()
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    updateObj() {
       var App = Parse.Object.extend('App')
       var app = new Parse.Query(App)
       // 修改
@@ -414,49 +579,48 @@ export default {
 }
 </style>
 <style>
-  .application .el-dialog__body{
-     padding: 20px;
-     border-bottom:1px solid #333333;
-  }
- .application .el-dialog__header{
-     border-bottom:1px solid #333333;
-
-  }
- .application .el-dialog__title{
-   font-size:20px;
-   font-weight:900;
-   }
-   .application .el-dialog{
-      border-radius:10px;
-   }
-   .application .grid-content{
-      text-align:center;
-   }
-   .application .grid-content dl dt{
-      font-weight: 700;
-      float: left;
-      width: 160px;
-      overflow: hidden;
-      clear: left;
-      text-align: right;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-   }
-   .application .grid-content dl dd{
-      margin-left: 180px;
-      margin-bottom: 1em;
-      text-align:left;
-   }
-   .application .grid-content .editor{
-      text-align:left;
-      margin:13px 0;
-   }
-   .application .el-card__body{
-      font-size:14px;
-   }
-   .application .appcontent .isbutton .el-button{
-      position: absolute;
-      top:-45px;
-      right:10%;
-   }
+.application .el-dialog__body {
+  padding: 20px;
+  border-bottom: 1px solid #333333;
+}
+.application .el-dialog__header {
+  border-bottom: 1px solid #333333;
+}
+.application .el-dialog__title {
+  font-size: 20px;
+  font-weight: 900;
+}
+.application .el-dialog {
+  border-radius: 10px;
+}
+.application .grid-content {
+  text-align: center;
+}
+.application .grid-content dl dt {
+  font-weight: 700;
+  float: left;
+  width: 160px;
+  overflow: hidden;
+  clear: left;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.application .grid-content dl dd {
+  margin-left: 180px;
+  margin-bottom: 1em;
+  text-align: left;
+}
+.application .grid-content .editor {
+  text-align: left;
+  margin: 13px 0;
+}
+.application .el-card__body {
+  font-size: 14px;
+}
+.application .appcontent .isbutton .el-button {
+  position: absolute;
+  top: -45px;
+  right: 10%;
+}
 </style>
