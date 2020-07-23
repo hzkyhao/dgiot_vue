@@ -359,7 +359,7 @@ export default {
       var channel = new Parse.Query(Channel)
       channel.skip(this.start)
       channel.limit(this.length)
-      channel.ascending('-updatedAt')
+      channel.ascending('-createdAt')
       if (this.channelformsearch.name != '') {
         channel.contains('name', this.channelformsearch.name)
       }
