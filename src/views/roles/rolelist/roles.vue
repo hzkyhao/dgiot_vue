@@ -619,7 +619,14 @@ export default {
         }
         query.find().then(
           res => {
-            this.tableData = res;
+            const filtterArr = res.filter(item=>{
+              if(start && start.name !='admin'){
+                return item.id === start.objectId
+              }else{
+                return item
+              }
+            })
+            this.tableData = filtterArr;
             // this.loadingService.close();
           },
           error => {
@@ -801,9 +808,9 @@ export default {
       });
     },
     handleNodeClick(data) {
-      this.gettable(data.objectId)
+      this.gettable(data)
       console.log('data ###',data);
-      
+
       this.curDepartmentId = data.objectId
     },
     // 添加子节点
@@ -876,7 +883,7 @@ export default {
   width: 100%;
   display: flex;
   margin-top: 10px;
-  
+
 }
 .footerleft,
 .footerright {
@@ -915,7 +922,7 @@ export default {
     }
   .el-tree-node {
 
-    margin-top:5px; 
+    margin-top:5px;
   }
 }
 
