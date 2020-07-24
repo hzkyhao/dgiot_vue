@@ -103,11 +103,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label-width="formLabelWidth" label="指令指标" prop="pointer">
-              <el-input v-model="form.pointer" autocomplete="off" placeholder="请输入指令指标"/>
+              <el-input v-model="form.pointer"  :disabled="true" autocomplete="off" placeholder="请输入指令指标"/>
             </el-form-item>
             <el-form-item :label-width="formLabelWidth" label="指令序号" prop="order">
               <el-input v-model="form.order" autocomplete="off" placeholder="请输入指令序号"/>
             </el-form-item>
+
+               <p
+                style="font-size:12px;padding-left:125px;line-height:20px;" >
+                1. 指令序号相同,会作为同一组消息发送 <br />
+               2. 消息的发送顺序按照指令序号排序 
+              
+              </p>
+
           </el-col>
         </el-row>
         <h4 >&nbsp;&nbsp;指令下发策略</h4>
@@ -141,7 +149,7 @@
           </el-col>
           <el-col :span="12 ">
             <el-form-item :label-width="formLabelWidth" label="子网编号" prop="subnet">
-              <el-input v-model="form.subnet" autocomplete="off" placeholder="请输入子网编号"/>
+              <el-input v-model="form.subnet" :disabled="true" autocomplete="off" placeholder="请输入子网编号"/>
             </el-form-item>
             <el-form-item :label-width="formLabelWidth" label="发送间隔" prop="interval">
               <el-input v-model.number="form.interval" autocomplete="off" placeholder="请输入发送间隔">
