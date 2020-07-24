@@ -22,14 +22,14 @@
                 type="primary"
                 @click="addproduct"
               >{{ $t('product.createproduct') }}</el-button>
-
+              <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
               <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
 
               <!-- <el-button
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-            </el-form-item>
+            </el-button></el-form-item>
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
@@ -304,6 +304,7 @@ import { getIndustry } from '@/api/applicationManagement'
 import Parse from 'parse'
 import { setTimeout } from 'timers'
 import { returnLogin } from '@/utils/return'
+import { export_txt_to_zip } from '@/utils/Export2Zip.js'
 import IconSelect from '@/components/IconSelect'
 import Cookies from 'js-cookie'
 import $ from 'jquery'
@@ -392,7 +393,8 @@ export default {
       fileServer: '',
       access_token: '',
       projectid: '',
-      projectName: ''
+      projectName: '',
+      allTableDate: []
     }
   },
   computed: {},
@@ -609,6 +611,7 @@ export default {
       datas.containedIn('type', category)
       datas.limit(1000)
       datas.find().then(response => {
+        this.allTableDate = response
         resultes.map(items => {
           response.map(category => {
             if (items.attributes.category == category.attributes.type) {
@@ -1000,6 +1003,17 @@ export default {
       // 为了兼容性,暂时传两个相同的值
       var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
       window.open(url, '__blank')
+    },
+    // 导出
+    exportpro() {
+      if (this.allTableDate) {
+        export_txt_to_zip(JSON.stringify(), 'Dict', 'Dict');
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '数据为空,无法导出'
+        })
+      }
     }
   }
 }
