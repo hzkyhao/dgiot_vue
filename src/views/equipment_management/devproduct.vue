@@ -1007,7 +1007,7 @@ export default {
     // 导出
     exportpro() {
       if (this.allTableDate) {
-        export_txt_to_zip(JSON.stringify(), 'Dict', 'Dict');
+        export_txt_to_zip(JSON.stringify(this.allTableDate), 'Dict', 'Dict');
       } else {
         this.$message({
           type: 'warning',
