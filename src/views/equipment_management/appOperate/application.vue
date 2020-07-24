@@ -186,6 +186,15 @@
               placheholder="请输入url"
             />
           </el-form-item>
+
+             <el-form-item label="home">
+            <el-input
+              v-model="form.home"
+              style="width:80%"
+              placheholder="请输入路径"
+            />
+          </el-form-item>
+
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -256,6 +265,16 @@
               placheholder="请输入url"
             />
           </el-form-item>
+
+          
+          <el-form-item label="home">
+            <el-input
+              v-model="form1.home"
+              style="width:80%"
+              placheholder="请输入路径"
+            />
+          </el-form-item>
+
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -296,7 +315,8 @@ export default {
         rest: '',
         topo: '',
         secret: '',
-        desc: ''
+        desc: '',
+        home:''
       },
       dialogVisible: false,
       form: {
@@ -307,7 +327,8 @@ export default {
         graphql: 'http://cad.iotn2n.com:5080/iotapi/graphql',
         rest: 'http://cad.iotn2n.com:5080/iotapi',
         topo: 'http://shapes.iotn2n.com/',
-        secret: ''
+        secret: '',
+        home: 'D:/shuwa/shuwa_data_center'
 
       },
       Rule: {
@@ -377,7 +398,8 @@ export default {
         file: this.form.file,
         graphql: this.form.graphql,
         rest: this.form.rest,
-        topo: this.form.topo
+        topo: this.form.topo,
+        home: this.form.home
       }
 
       Addapp(Number(this.form.time), this.form.desc, session, formParam).then(resultes => {
@@ -457,9 +479,13 @@ export default {
         this.form1.rest = res.attributes.config.rest
         this.form1.topo = res.attributes.config.topo
         this.form1.graphql = res.attributes.config.graphql
+        this.form1.home = res.attributes.config.home
+
+
 
         this.form1.secret = res.attributes.secret
         this.form1.desc = res.attributes.desc
+
       }, error => {
         console.log(error)
       })
@@ -484,7 +510,8 @@ export default {
           file: this.form1.file,
           graphql: this.form1.graphql,
           rest: this.form1.rest,
-          topo: this.form1.topo
+          topo: this.form1.topo,
+          home: this.form1.home
         }
         object.set('config', formParam)
         object.set('secret', this.form1.secret)
