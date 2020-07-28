@@ -107,7 +107,7 @@
                     node-key="id"
                     default-expand-all>
                     <span slot-scope="{ node, data }" class="custom-tree-node">
-                      <span @click="handleNodeClick(data)">
+                      <span :class="{ selected: data.objectId == curDepartmentId}" @click="handleNodeClick(data)">
                         {{ node.label }}
                       </span>
                       <span>
@@ -827,4 +827,10 @@ export default {
   .structure .el-switch__label--right {
     color: rgb(19, 206, 102) !important;
   }
+  .custom-tree-node .el-icon-circle-plus-outline:hover {
+
+color:#409EFF;
+
+}
+
 </style>

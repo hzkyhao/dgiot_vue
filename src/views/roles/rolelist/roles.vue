@@ -9,10 +9,11 @@
             :expand-on-click-node="false"
             node-key="index"
             default-expand-all
-            @node-click="handleNodeClick"
+           
           >
+           <!-- @node-click="handleNodeClick" -->
             <div slot-scope="{ node, data }" class="custom-tree-node">
-              <span :class="{ selected: data.objectId == curDepartmentId}" >{{ node.label }}</span>
+              <span :class="{ selected: data.objectId == curDepartmentId}"  @click="handleNodeClick(data)" >{{ node.label }}</span>
               <span>
                 <i class="el-icon-circle-plus-outline" title="添加角色" @click="setDialogRole(data)"/>
               </span>
@@ -924,6 +925,12 @@ export default {
 
     margin-top:5px;
   }
+  
+.custom-tree-node .el-icon-circle-plus-outline:hover {
+
+color:#409EFF;
+
+}
 }
 
 </style>
