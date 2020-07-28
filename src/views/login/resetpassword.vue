@@ -10,7 +10,7 @@
         class="login-form"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" >
+          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" />
           <p>重置密码</p>
         </div>
 
@@ -108,209 +108,213 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
-import Cookies from 'js-cookie'
-const Base64 = require('js-base64').Base64
-import { passwordreset, Phonelogin } from '@/api/login'
+import Parse from "parse";
+import Cookies from "js-cookie";
+const Base64 = require("js-base64").Base64;
+import { passwordreset, Phonelogin } from "@/api/login";
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
+      if (value === "") {
+        callback(new Error("请输入密码"));
       } else {
         if (!/^\w{6,10}$/.test(value)) {
-          callback(new Error('密码格式不正确'))
+          callback(new Error("密码格式不正确"));
         }
-        callback()
+        callback();
       }
-    }
+    };
     var validatecheckPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
       } else if (value !== this.ruleForm2.password) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error("两次输入密码不一致!"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
-      password: '',
+      password: "",
       time: 60, // 发送验证码倒计时
       sendMsgDisabled: false,
-      logosrc: '',
-      title: '',
-      phonesms: '',
-      code: '',
+      logosrc: "",
+      title: "",
+      phonesms: "",
+      code: "",
       ruleForm2: {
-        account: '',
-        phone: '',
-        password: '',
-        checkPass: '',
-        roles: '',
+        account: "",
+        phone: "",
+        password: "",
+        checkPass: "",
+        roles: "",
         diqu: [],
-        value: '+86/中国'
+        value: "+86/中国"
       },
-      protype: '',
+      protype: "",
       rules2: {
         account: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度在 1到 10 个字符', trigger: 'blur' }
+          { required: true, message: "请输入账号", trigger: "blur" },
+          { min: 1, max: 10, message: "长度在 1到 10 个字符", trigger: "blur" }
         ],
         phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { required: true, message: "请输入手机号", trigger: "blur" },
           {
             validator: function(rule, value, callback) {
-              var MobileRegex = /^1[3-9]\d{9}$/
+              var MobileRegex = /^1[3-9]\d{9}$/;
               if (!MobileRegex.test(value)) {
-                callback(new Error('手机号码格式不正确！'))
+                callback(new Error("手机号码格式不正确！"));
               } else {
-                callback()
+                callback();
               }
             },
-            trigger: 'blur'
+            trigger: "blur"
           }
         ],
         password: [
-          { validator: validatePass, trigger: 'blur', required: true }
+          { validator: validatePass, trigger: "blur", required: true }
         ],
         checkPass: [
-          { validator: validatecheckPass, trigger: 'blur', required: true }
+          { validator: validatecheckPass, trigger: "blur", required: true }
         ],
         username: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 2, max: 5, message: '姓名格式不正确', trigger: 'blur' }
+          { required: true, message: "请输入姓名", trigger: "blur" },
+          { min: 2, max: 5, message: "姓名格式不正确", trigger: "blur" }
         ],
         email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
           {
-            type: 'email',
-            message: '请输入正确的邮箱地址',
-            trigger: ['blur', 'change']
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
           }
         ],
-        roles: [{ required: true, message: '请选择平台', trigger: 'change' }]
+        roles: [{ required: true, message: "请选择平台", trigger: "change" }]
       },
-      pwdType: 'password',
+      pwdType: "password",
       origin: [
-        '+86/中国',
-        '+886/中国台湾',
-        '+852/中国香港',
-        '+91/India',
-        '+244/Angola',
-        '+54/Argentina',
-        '+1/American Samoa',
-        '+880/Bangladesh',
-        '+56/Chile',
-        '+855/Cambodia',
-        '+20/Egypt',
-        '+33/France',
-        '+49/Germany',
-        '+62/Indonesia',
-        '+353/Ireland',
-        '+972/Israel',
-        '+39/Italy',
-        '+81/Japan',
-        '+60/Malaysia',
-        '+63/Philippines',
-        '+92/Pakistan',
-        '+82/South Korea',
-        '+46/Sweden',
-        '+65/Singapore',
-        '+27/South Africa',
-        '+66/Thailand',
-        '+971/United Arab Emirates',
-        '+44/United Kingdom',
-        '+1/United States',
-        '+84/Vietnam',
-        '+967/Yemen',
-        '+260/Zambia'
+        "+86/中国",
+        "+886/中国台湾",
+        "+852/中国香港",
+        "+91/India",
+        "+244/Angola",
+        "+54/Argentina",
+        "+1/American Samoa",
+        "+880/Bangladesh",
+        "+56/Chile",
+        "+855/Cambodia",
+        "+20/Egypt",
+        "+33/France",
+        "+49/Germany",
+        "+62/Indonesia",
+        "+353/Ireland",
+        "+972/Israel",
+        "+39/Italy",
+        "+81/Japan",
+        "+60/Malaysia",
+        "+63/Philippines",
+        "+92/Pakistan",
+        "+82/South Korea",
+        "+46/Sweden",
+        "+65/Singapore",
+        "+27/South Africa",
+        "+66/Thailand",
+        "+971/United Arab Emirates",
+        "+44/United Kingdom",
+        "+1/United States",
+        "+84/Vietnam",
+        "+967/Yemen",
+        "+260/Zambia"
       ]
-    }
+    };
   },
   mounted() {
-    this.protype = sessionStorage.getItem('roletype')
-    this.title = sessionStorage.getItem('product_title')
-    this.logosrc = sessionStorage.getItem('imgsrc')
-    this.ruleForm2.diqu = []
+    this.protype = sessionStorage.getItem("roletype");
+    this.title = sessionStorage.getItem("product_title");
+    this.logosrc = sessionStorage.getItem("imgsrc");
+    this.ruleForm2.diqu = [];
     this.origin.map(items => {
       this.ruleForm2.diqu.push({
         label: items,
         value: items.toString()
-      })
-    })
+      });
+    });
   },
   methods: {
     showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
+      if (this.pwdType === "password") {
+        this.pwdType = "";
       } else {
-        this.pwdType = 'password'
+        this.pwdType = "password";
       }
     },
     login() {
       this.$router.push({
-        path: '/login'
-      })
+        path: "/login"
+      });
     },
     send() {
-      this.$refs.ruleForm2.validateField('phone', errMsg => {
+      this.$refs.ruleForm2.validateField("phone", errMsg => {
         if (errMsg) {
-          this.$message('请输入手机号')
+          this.$message("请输入手机号");
         } else {
-          const _this = this
-
-          Phonelogin(
-            _this.ruleForm2.phone,
-            encodeURIComponent(_this.ruleForm2.value)
-          )
-            .then(res => {
-              if (res) {
-                this.$message({
-                  message: '发送成功',
-                  type: 'success'
-                })
-                _this.sendMsgDisabled = true
-                this.time = res.expire
-                const interval = window.setInterval(function() {
-                  if (_this.time-- <= 0) {
-                    _this.time = this.time * 60
-                    _this.sendMsgDisabled = false
-                    window.clearInterval(interval)
-                  }
-                }, 1000)
-              }
-            })
-            .catch(error => {
-              this.$message(error.error)
-            })
+          this.findAndSendCode();
         }
-      })
+      });
+    },
+    findUserAndSendCode() {
+      const _this = this;
+      Phonelogin(
+        _this.ruleForm2.phone,
+        encodeURIComponent(_this.ruleForm2.value)
+      )
+        .then(res => {
+          if (res) {
+            this.$message({
+              message: "发送成功",
+              type: "success"
+            });
+            _this.sendMsgDisabled = true;
+            this.time = res.expire;
+            const interval = window.setInterval(function() {
+              if (_this.time-- <= 0) {
+                _this.time = this.time * 60;
+                _this.sendMsgDisabled = false;
+                window.clearInterval(interval);
+              }
+            }, 1000);
+          }
+        })
+        .catch(error => {
+          this.$message(error.error);
+        });
     },
     resetPassword(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.code == '') {
-            this.$message('请输入手机验证码')
+          if (this.code == "") {
+            this.$message("请输入手机验证码");
           } else {
             passwordreset(
               this.ruleForm2.phone,
               this.code,
               this.ruleForm2.password
-            ).then(resultes => {
-              if (resultes) {
-                this.$router.push({
-                  path: '/login'
-                })
-              }
-            }).catch(error => {
-              this.$message(error.error)
-            })
+            )
+              .then(resultes => {
+                if (resultes) {
+                  this.$router.push({
+                    path: "/login"
+                  });
+                }
+              })
+              .catch(error => {
+                this.$message(error.error);
+              });
           }
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style rel="stylesheet/scss" lang="scss">
 $light_gray: rgba(0, 0, 0, 0.247058823529412);
