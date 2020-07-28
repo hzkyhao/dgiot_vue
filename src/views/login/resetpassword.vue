@@ -257,7 +257,7 @@ export default {
         if (errMsg) {
           this.$message("请输入手机号");
         } else {
-          this.findAndSendCode();
+          this.findUserAndSendCode();
         }
       });
     },
