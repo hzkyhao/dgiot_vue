@@ -845,6 +845,9 @@ export default {
       this.centerDialogRole = true
     },
     closeDialogRole() {
+      this.centerDialogRole = false
+      this.gettable();
+      this.getMenu();
       this.$store.dispatch("setDialogFlag", false);
     }
   }
