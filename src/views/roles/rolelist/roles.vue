@@ -834,21 +834,15 @@ export default {
         </span>
       );
     },
-    // 添加用户
-    addRoleUser(parentKey) {
-      this.$store.dispatch("setDeptInfo", parentKey);
-    },
     // 显示弹窗
     setDialogRole(data) {
       this.$store.commit("set_DeptObj", data);
-      this.$store.dispatch("setDialogFlag", true);
       this.centerDialogRole = true
     },
     closeDialogRole() {
       this.centerDialogRole = false
       this.gettable();
       this.getMenu();
-      this.$store.dispatch("setDialogFlag", false);
     }
   }
 };
