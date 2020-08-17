@@ -9,11 +9,11 @@
             :expand-on-click-node="false"
             node-key="index"
             default-expand-all
-           
+
           >
-           <!-- @node-click="handleNodeClick" -->
+            <!-- @node-click="handleNodeClick" -->
             <div slot-scope="{ node, data }" class="custom-tree-node">
-              <span :class="{ selected: data.objectId == curDepartmentId}"  @click="handleNodeClick(data)" >{{ node.label }}</span>
+              <span :class="{ selected: data.objectId == curDepartmentId}" @click="handleNodeClick(data)" >{{ node.label }}</span>
               <span>
                 <i class="el-icon-circle-plus-outline" title="添加角色" @click="setDialogRole(data)"/>
               </span>
@@ -303,13 +303,11 @@ export default {
       dataPermissions: [],
       rolePermissonList: [],
       loadingService: {},
-      roleItem: []
+      roleItem: [],
+      centerDialogRole: false
     }
   },
   computed: {
-    centerDialogRole() {
-      return this.$store.getters.DialogFlag
-    },
     permissionTreeData() {
       const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
       return cloneData.filter(father => {
@@ -364,7 +362,7 @@ export default {
               this.dataMenus.push(obj);
             });
 
-          }     
+          }
         })
         .catch(error => {
           console.log(error);
@@ -844,20 +842,10 @@ export default {
     setDialogRole(data) {
       this.$store.commit("set_DeptObj", data);
       this.$store.dispatch("setDialogFlag", true);
+      this.centerDialogRole = true
     },
     closeDialogRole() {
       this.$store.dispatch("setDialogFlag", false);
-    }
-  },
-  watch: {
-    centerDialogRole: {
-      deep: true,
-      handler: function(val) {
-        if (!val) {
-          this.getMenu();
-          this.gettable();
-        }
-      }
     }
   }
 };
@@ -927,7 +915,7 @@ export default {
 
     margin-top:5px;
   }
-  
+
 .custom-tree-node .el-icon-circle-plus-outline:hover {
 
 color:#409EFF;
