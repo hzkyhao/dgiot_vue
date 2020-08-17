@@ -173,11 +173,6 @@
       <div style="height:420px">
         <addroles />
       </div>
-      <!-- <el-button @click="centerDialogRole = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="centerDialogRole = false"
-      >确 定</el-button>-->
     </el-dialog>
     <el-dialog :title="$t('developer.add')" :visible.sync="dialogVisible" width="50%">
       <el-table
@@ -294,7 +289,7 @@ export default {
       rolecontroldata: [],
       data1: [],
       editroleid: '',
-      currentSelectIndex: '',
+      currentSelectIndex: null,
       roleProps: {
         children: 'children',
         label: 'name'
@@ -356,17 +351,20 @@ export default {
       this.$axiosWen
         .get("/classes/Menu")
         .then(res => {
-          const resultes = res.results;
-          this.menuListRes = resultes;
-          resultes.map(items => {
-            var obj = {};
-            obj.label = items.name;
-            obj.objectId = items.objectId;
-            obj.parentId = items.parent.objectId;
-            obj.createtime = new Date(items.createdAt).toLocaleDateString();
-            this.data.push(obj);
-            this.dataMenus.push(obj);
-          });
+          if(res && res.results){
+
+            this.menuListRes = res.results;
+            res.results.map(items => {
+              var obj = {};
+              obj.label = items.name;
+              obj.objectId = items.objectId;
+              obj.parentId = items.parent.objectId;
+              obj.createtime = new Date(items.createdAt).toLocaleDateString();
+              this.data.push(obj);
+              this.dataMenus.push(obj);
+            });
+
+          }     
         })
         .catch(error => {
           console.log(error);
@@ -672,9 +670,6 @@ export default {
         }
       });
     },
-    // checked(){
-
-    // }
     // 获取权限
     getRoleschema() {
       this.dataPermissions = [];
@@ -693,7 +688,7 @@ export default {
             this.dataPermissions.push(obj);
           });
 
-          this.getMenu();
+          // this.getMenu();
         })
         .catch(error => {
           console.log(error);
@@ -810,9 +805,16 @@ export default {
     },
     handleNodeClick(data) {
       this.gettable(data)
-      console.log('data ###',data);
 
       this.curDepartmentId = data.objectId
+
+      // 清除选中的角色
+
+      this.currentSelectIndex = null
+
+      //清除菜单树
+
+      // this.dataMenus = []
     },
     // 添加子节点
     appendChildTree(data) {
@@ -851,7 +853,7 @@ export default {
     centerDialogRole: {
       deep: true,
       handler: function(val) {
-        if (val == false) {
+        if (!val) {
           this.getMenu();
           this.gettable();
         }

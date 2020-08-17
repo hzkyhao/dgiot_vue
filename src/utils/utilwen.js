@@ -15,7 +15,7 @@ serviceWen.interceptors.request.use(config => {
   config.headers['Content-Type'] = 'application/json'
   config.headers['Accept'] = 'application/json'
 
-  console.log('config.url', config.url)
+  // console.log('config.url', config.url)
 
   if (config.url.indexOf('classes/') != -1) {
     config.headers['sessionToken'] = Cookies.get('sessionToken')
