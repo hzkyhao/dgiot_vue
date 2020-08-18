@@ -429,10 +429,17 @@ export default {
       menu.get(this.menuid).then(resultes => {
         resultes.set("name", this.MenuForm.name);
         resultes.set("orderBy", Number(this.MenuForm.number));
+
+        //MenuForm.fathername数组最后一个元素
         parent.id = this.MenuForm.fathername[
           this.MenuForm.fathername.length - 1
-        ];
-        resultes.set("parent", parent);
+        ];  
+
+        let pid =  resultes.attributes.parent.id 
+       
+       if(pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id){
+          resultes.set("parent", parent);
+        } 
         resultes.save().then(res => {
           Promise.all([
             this.MenuForm.roles.map(items => this.getuseracl(resultes, items))
