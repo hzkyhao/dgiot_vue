@@ -185,35 +185,52 @@ export default {
       this.routes = []
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          var user = this.loginForm
-          Parse.User.logIn(this.loginForm.username, this.loginForm.password)
+          const loading = this.$loading();
+          // Parse.User.logIn(this.loginForm.username, this.loginForm.password)
+          //   .then(user => {
+          //     getsession(user.attributes.sessionToken)
+
+          //     this.$Cookies.set('sessionToken', user.attributes.sessionToken)
+          //     this.$Cookies.set('username', user.attributes.username)
+
+          //     this.$store.dispatch('setRoles', user.attributes.roles)
+          //     var Menu = Parse.Object.extend('Navigation')
+          //     var menu = new Parse.Query(Menu)
+          //     menu.find().then(menu => {
+          //       var menu1 = menu
+          //       menu1.map(items => {
+          //         if (items.attributes.parent) {
+          //           this.routes.push(items)
+          //         }
+          //       })
+          //       sessionStorage.setItem('username', user.attributes.username)
+          //       sessionStorage.setItem('roles', user.attributes.roles[0] ? user.attributes.roles[0].alias : '')
+
+          //       this.$Cookies.set('appids', user.attributes.roles[0] ? user.attributes.roles[0].name : '')
+
+          //       localStorage.setItem('list', JSON.stringify(this.routes))
+
+          //       this.$router.push({ path: '/dashboard' })
+          //     })
+          //   })
+          this.$axiosWen
+            .post("/login", {
+              username: this.loginForm.username,
+              password: this.loginForm.username
+            })
             .then(user => {
-              getsession(user.attributes.sessionToken)
-
-              this.$Cookies.set('sessionToken', user.attributes.sessionToken)
-              this.$Cookies.set('username', user.attributes.username)
-
-              this.$store.dispatch('setRoles', user.attributes.roles)
-              var Menu = Parse.Object.extend('Navigation')
-              var menu = new Parse.Query(Menu)
-              menu.find().then(menu => {
-                var menu1 = menu
-                menu1.map(items => {
-                  if (items.attributes.parent) {
-                    this.routes.push(items)
-                  }
-                })
-                sessionStorage.setItem('username', user.attributes.username)
-                sessionStorage.setItem('roles', user.attributes.roles[0] ? user.attributes.roles[0].alias : '')
-
-                this.$Cookies.set('appids', user.attributes.roles[0] ? user.attributes.roles[0].name : '')
-
-                localStorage.setItem('list', JSON.stringify(this.routes))
-
-                this.$router.push({ path: '/dashboard' })
-              })
+              loading.close();
+              getsession(user.sessionToken)
+              this.$Cookies.set('sessionToken', user.sessionToken)
+              this.$Cookies.set('username', user.username)
+              this.$store.dispatch('setRoles', user.roles)
+              sessionStorage.setItem('username', user.username)
+              sessionStorage.setItem('roles', user.roles[0] ? user.roles[0].alias : '')
+              this.$Cookies.set('appids', user.roles[0] ? user.roles[0].name : '')
+              this.getNavigation()
             })
             .catch(error => {
+              loading.close();
               if (error.code == 101) {
                 if (error.message.indexOf('Invalid') == -1) {
                   this.$message({
@@ -237,6 +254,23 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    // http://192.168.2.51:5080/swagger/#/Menu/get_classes_navigation
+    // params  可选参数 order  limit
+    getNavigation() {
+      this.$axiosWen.get('/classes/Navigation').then(res => {
+        console.log(res.results)
+        var menu = res.results
+        menu.map(items => {
+          if (items.parent) {
+            this.routes.push(items);
+          }
+        });
+        localStorage.setItem('list', JSON.stringify(this.routes))
+        this.$router.push({ path: '/dashboard' })
+      }).catch(e => {
+        console.log(e.error)
       })
     },
     resetPassword() {
