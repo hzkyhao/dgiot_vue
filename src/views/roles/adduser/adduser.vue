@@ -36,7 +36,6 @@
         <el-form-item label="姓名" prop="nick">
           <el-input
             v-model="userInfoForm.nick"
-            :maxlength="5"
             placeholder="2-5个文字"
             auto-complete="off"
           />
@@ -44,7 +43,6 @@
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="userInfoForm.password"
-            :maxlength="10"
             type="password"
             auto-complete="off"
             placeholder="请输入6-10位数字字母组合"
@@ -53,7 +51,6 @@
         <el-form-item label="确认密码" prop="checkPass">
           <el-input
             v-model="userInfoForm.checkPass"
-            :maxlength="10"
             type="password"
             auto-complete="off"
             placeholder="请再次输入密码"
