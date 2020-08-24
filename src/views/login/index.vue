@@ -205,6 +205,15 @@ export default {
                         .then(user => {
                             loading.close();
                             getsession(user.sessionToken)
+
+                            // 设置当前用户
+                            Parse.User.become(user.sessionToken).then(function (user) {
+                                console.log('当前用户设置成功', Parse.User.current());
+                            }, function (error) {
+                                console.log('当前用户设置失败');
+                            });
+
+
                             this.$Cookies.set('sessionToken', user.sessionToken)
                             this.$Cookies.set('username', user.username)
                             this.$store.dispatch('setRoles', user.roles)
