@@ -11,13 +11,14 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="账号" prop="account">
+          <el-form-item label="姓名" prop="nick">
           <el-input
-            v-model="userInfoForm.account"
-            placeholder="请输入账号"
+            v-model="userInfoForm.nick"
+            placeholder="2-5个文字"
             auto-complete="off"
           />
         </el-form-item>
+
         <el-form-item label="手机号" prop="phone">
           <el-input
             v-model="userInfoForm.phone"
@@ -33,13 +34,16 @@
             auto-complete="off"
           />
         </el-form-item>
-        <el-form-item label="姓名" prop="nick">
+
+                
+        <el-form-item label="账号" prop="account">
           <el-input
-            v-model="userInfoForm.nick"
-            placeholder="2-5个文字"
+            v-model="userInfoForm.account"
+            placeholder="请输入账号"
             auto-complete="off"
           />
         </el-form-item>
+    
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="userInfoForm.password"

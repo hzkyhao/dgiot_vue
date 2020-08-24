@@ -9,52 +9,51 @@
             :rules="userFormRules"
             status-icon
             label-width="100px"
-            class="demo-ruleForm">
-            <el-form-item label="账号" prop="account">
-              <el-input v-model="userInfoForm.account" placeholder="请输入账号" auto-complete="off" />
+            class="demo-ruleForm"
+          >
+            <el-form-item label="姓名" prop="nick">
+              <el-input v-model="userInfoForm.nick" placeholder="2-5个文字" auto-complete="off" />
             </el-form-item>
+
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="userInfoForm.phone" :maxlength="11" placeholder="请输入手机号" auto-complete="off" />
+              <el-input
+                v-model="userInfoForm.phone"
+                :maxlength="11"
+                placeholder="请输入手机号"
+                auto-complete="off"
+              />
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="userInfoForm.email" placeholder="请输入邮箱" auto-complete="off" />
             </el-form-item>
-            <el-form-item label="姓名" prop="nick">
-              <el-input v-model="userInfoForm.nick" :maxlength="5" placeholder="2-5个文字" auto-complete="off" />
+            <el-form-item label="账号" prop="account">
+              <el-input v-model="userInfoForm.account" placeholder="请输入账号" auto-complete="off" />
             </el-form-item>
+
             <el-form-item label="密码" prop="password">
               <el-input
                 v-model="userInfoForm.password"
-                :maxlength="10"
                 type="password"
                 auto-complete="off"
-                placeholder="请输入6-10位数字字母组合" />
+                placeholder="请输入6-10位数字字母组合"
+              />
             </el-form-item>
             <el-form-item label="确认密码" prop="checkPass">
               <el-input
                 v-model="userInfoForm.checkPass"
-                :maxlength="10"
                 type="password"
                 auto-complete="off"
-                placeholder="请再次输入密码" />
+                placeholder="请再次输入密码"
+              />
             </el-form-item>
             <el-form-item label="部门选择" prop="departmentid">
-              <!-- <el-cascader
-                style="width:460px"
-                placeholder="请选择部门"
-                v-model="userInfoForm.departmentid"
-                :props="treeprops"
-                :options="treeData"
-                auto-complete="off"
-                :show-all-levels="false"
-                change-on-select
-              ></el-cascader>-->
               <el-select v-model="userInfoForm.departmentid" placeholder="请选择部门">
                 <el-option
                   v-for="item in deptOption"
                   :key="item.objectId"
                   :value="item.objectId"
-                  :label="item.name + ':' + item.desc" />
+                  :label="item.name + ':' + item.desc"
+                />
               </el-select>
             </el-form-item>
           </el-form>
@@ -78,13 +77,15 @@
                   clearable
                   style="width: 200px;"
                   class="filter-item"
-                  size="small" />
+                  size="small"
+                />
                 <el-button
                   class="filter-item"
                   type="primary"
                   icon="el-icon-search"
                   size="small"
-                  @click="userFordepartment(0)">{{ $t("developer.search") }}</el-button>
+                  @click="userFordepartment(0)"
+                >{{ $t("developer.search") }}</el-button>
                 <!--               <el-button
                   class="filter-item"
                   type="primary"
@@ -92,8 +93,13 @@
                   @click="adduser"
                   size="small"
                   >{{ $t("user.newusers") }}</el-button
-                > -->
-                <el-button class="filter-item" type="primary" size="small" @click="userFordepartment()">所有用户</el-button>
+                >-->
+                <el-button
+                  class="filter-item"
+                  type="primary"
+                  size="small"
+                  @click="userFordepartment()"
+                >所有用户</el-button>
                 <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
@@ -105,11 +111,13 @@
                     :props="elTreedefaultProps"
                     :expand-on-click-node="false"
                     node-key="id"
-                    default-expand-all>
+                    default-expand-all
+                  >
                     <span slot-scope="{ node, data }" class="custom-tree-node">
-                      <span :class="{ selected: data.objectId == curDepartmentId}" @click="handleNodeClick(data)">
-                        {{ node.label }}
-                      </span>
+                      <span
+                        :class="{ selected: data.objectId == curDepartmentId}"
+                        @click="handleNodeClick(data)"
+                      >{{ node.label }}</span>
                       <span>
                         <!-- <el-button
                           type="text"
@@ -119,7 +127,11 @@
                         >
                           <i class="el-icon-plus"></i>
                         </el-button>-->
-                        <i class="el-icon-circle-plus-outline" title="添加用户" @click="addItemUser(data)" />
+                        <i
+                          class="el-icon-circle-plus-outline"
+                          title="添加用户"
+                          @click="addItemUser(data)"
+                        />
                       </span>
                     </span>
                   </el-tree>
@@ -129,15 +141,6 @@
             <el-col :span="17">
               <div class="elTable">
                 <el-table :data="tableFilterData" style="width: 90%;margin-top:20px">
-                  <!-- <el-table
-                    v-loading="pictLoading"
-                    :data="tableFilterData"
-                    element-loading-text="数据加载中"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.5)"
-                    size="small"
-                    style="width: 90%;margin-top:20px"
-                  > -->
                   <el-table-column label="用户名">
                     <template slot-scope="scope">
                       <div>{{ scope.row.username }}</div>
@@ -155,9 +158,7 @@
                   </el-table-column>
                   <el-table-column label="部门">
                     <template slot-scope="scope">
-                      <div>
-                        {{ scope.row.departmentname || departmentname }}
-                      </div>
+                      <div>{{ scope.row.departmentname || departmentname }}</div>
                     </template>
                   </el-table-column>
 
@@ -165,66 +166,44 @@
                     <template slot-scope="scope">
                       <span>
                         {{
-                          new Date(scope.row.createdAt).toLocaleDateString()
+                        new Date(scope.row.createdAt).toLocaleDateString()
                         }}
                       </span>
                     </template>
                   </el-table-column>
-                  <!-- <el-table-column label="是否启用">
-            <template slot-scope="scope">
-               <el-switch
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              :active-text="scope.row.attributes.emailVerified==true? '启用':''"
-              :inactive-text="scope.row.attributes.emailVerified==false? '禁用':''"
-              v-model="scope.row.attributes.emailVerified"
-              @change=changerole(scope.$index,scope.row)
-              />
-            </template>
-                  </el-table-column>-->
+
                   <el-table-column :label="$t('developer.operation')" align="center" width="400">
                     <template slot-scope="scope">
-                      <!-- <el-button
-                type="info"
-                size="small"
-                @click="changerole(scope.$index,scope.row)"
-                v-if="scope.row.attributes.emailVerified==true"
-              >
-                <div
-                  style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#a94442;margin-right:10px"
-                ></div>{{$t('developer.prohibit')}}
-              </el-button>
-              <el-button
-                type="success"
-                size="small"
-                @click="changerole(scope.$index,scope.row)"
-                v-else
-              >
-                <div
-                  style="width:10px;height:10px;border-radius:50%;display:inline-block;background:#00cc33;margin-right:10px"
-                ></div>{{$t('developer.enable')}}
-                      </el-button>-->
-
-                      <el-button type="success" size="small" @click="handleEditor(scope.row)">{{ $t("developer.edit") }}
-                      </el-button>
-                      <el-button type="danger" size="small" @click="handleDetele(scope.row)">
-                        {{ $t("developer.delete") }}</el-button>
-                      <el-button size="mini" type="primary" @click="editorrole(scope.row.objectId)">
-                        {{ $t("user.assignroles") }}</el-button>
+                      <el-button
+                        type="success"
+                        size="small"
+                        @click="handleEditor(scope.row)"
+                      >{{ $t("developer.edit") }}</el-button>
+                      <el-button
+                        type="danger"
+                        size="small"
+                        @click="handleDetele(scope.row)"
+                      >{{ $t("developer.delete") }}</el-button>
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="editorrole(scope.row.objectId)"
+                      >{{ $t("user.assignroles") }}</el-button>
                     </template>
                   </el-table-column>
-                </el-table>
-                <!--分页组件-->
-                <el-pagination
-                  v-show="total > 2"
-                  :total="total"
-                  :page-sizes="[1, 5, 10]"
-                  :page-size="pagesize"
-                  style="margin-top: 8px;"
-                  layout="total, prev, pager, next, sizes"
-                  class="total_pagination"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange" />
+
+                  <!--分页组件-->
+                  <el-pagination
+                    v-show="total > 2"
+                    :total="total"
+                    :page-sizes="[1, 5, 10]"
+                    :page-size="pagesize"
+                    style="margin-top: 8px;"
+                    layout="total, prev, pager, next, sizes"
+                    class="total_pagination"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                  />
                 </el-table>
               </div>
             </el-col>
@@ -232,7 +211,11 @@
         </div>
       </el-col>
       <!--分配角色-->
-      <el-dialog :title="$t('user.assignroles')" :visible.sync="roleacl" :close-on-click-modal="false">
+      <el-dialog
+        :title="$t('user.assignroles')"
+        :visible.sync="roleacl"
+        :close-on-click-modal="false"
+      >
         <el-table ref="multipleTable" :data="rolelist" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" />
           <el-table-column :label="$t('user.name')" align="center">
@@ -252,12 +235,8 @@
           </el-table-column>
         </el-table>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="roleacl = false">
-            {{ $t("developer.cancel") }}
-          </el-button>
-          <el-button type="primary" @click="adduseracl">
-            {{ $t("developer.determine") }}
-          </el-button>
+          <el-button @click="roleacl = false">{{ $t("developer.cancel") }}</el-button>
+          <el-button type="primary" @click="adduseracl">{{ $t("developer.determine") }}</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -530,12 +509,12 @@ export default {
         var relation = roles.relation("users");
         userrelation.set("objectId", this.objectId);
         relation.add(userrelation);
-        roles.save().then(resultes => { });
+        roles.save().then(resultes => {});
       } else {
         var relation = roles.relation("users");
         userrelation.set("objectId", this.objectId);
         relation.remove(userrelation);
-        roles.save().then(resultes => { });
+        roles.save().then(resultes => {});
       }
     },
     adduseracl() {
@@ -786,51 +765,48 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .elTable /deep/ .el-table th>.cell,
-  .elTable /deep/ .el-table--enable-row-transition .el-table__body td {
-    text-align: center;
-  }
+.elTable /deep/ .el-table th > .cell,
+.elTable /deep/ .el-table--enable-row-transition .el-table__body td {
+  text-align: center;
+}
 
-  .structure {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background: #ffffff;
+.structure {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #ffffff;
 
-    .tabContent {
-      .elTree {
-        margin-top: 30px;
-        margin-left: 20px;
-        float: left;
-      }
+  .tabContent {
+    .elTree {
+      margin-top: 30px;
+      margin-left: 20px;
+      float: left;
+    }
 
-      .elTable {
-        .total_pagination {
-          text-align: center;
-          width: 90%;
-          margin-top: 20px;
-        }
+    .elTable {
+      .total_pagination {
+        text-align: center;
+        width: 90%;
+        margin-top: 20px;
       }
     }
   }
+}
 </style>
 <style>
-  .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
-    background-color: #cccccc;
-  }
-
-  .structure .el-switch__label--left {
-    color: #ff4949 !important;
-  }
-
-  .structure .el-switch__label--right {
-    color: rgb(19, 206, 102) !important;
-  }
-  .custom-tree-node .el-icon-circle-plus-outline:hover {
-
-color:#409EFF;
-
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #cccccc;
 }
 
+.structure .el-switch__label--left {
+  color: #ff4949 !important;
+}
+
+.structure .el-switch__label--right {
+  color: rgb(19, 206, 102) !important;
+}
+.custom-tree-node .el-icon-circle-plus-outline:hover {
+  color: #409eff;
+}
 </style>
