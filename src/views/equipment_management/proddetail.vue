@@ -52,7 +52,7 @@
                 style="max-width:200px;height:auto;position:relative;top:-40px;"
               >
                 <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"/>
+                  <i class="el-icon-picture-outline" />
                 </div>
               </el-image>
             </div>
@@ -102,7 +102,7 @@
                       style="margin-left:5px;color:#cccccc"
                       effect="light"
                     >
-                      <i class="el-icon-question"/>
+                      <i class="el-icon-question" />
                     </el-tooltip>
                   </td>
                   <td class="notbottom">
@@ -157,7 +157,7 @@
                   <span v-if="scope.row.type=='sub'">{{ $t('product.sub') }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('developer.describe')" prop="desc" align="center"/>
+              <el-table-column :label="$t('developer.describe')" prop="desc" align="center" />
               <el-table-column :label="$t('developer.operation')" align="center">
                 <template slot-scope="scope">
                   <el-button
@@ -209,7 +209,7 @@
           >
             <div class="topiccontent">
               <div style="padding:10px;box-sizing:border-box;background:#e6f9fc;font-size:16px;">
-                <i class="el-icon-warning"/>
+                <i class="el-icon-warning" />
                 {{ $t('product.text2') }}
               </div>
               <div class="topicform">
@@ -224,12 +224,12 @@
                       v-model="topicform.type"
                       :placeholder="$t('product.selectdeviceoperationpermission')"
                     >
-                      <el-option :label="$t('product.sub')" value="sub"/>
-                      <el-option :label="$t('product.pub')" value="pub"/>
+                      <el-option :label="$t('product.sub')" value="sub" />
+                      <el-option :label="$t('product.pub')" value="pub" />
                     </el-select>
                   </el-form-item>
                   <el-form-item :label="$t('developer.describe')">
-                    <el-input v-model="topicform.desc" type="textarea"/>
+                    <el-input v-model="topicform.desc" type="textarea" />
                   </el-form-item>
                 </el-form>
               </div>
@@ -251,10 +251,12 @@
               size="small"
               @click="checkschema"
             >{{ $t('product.viewobjectmodel') }}</el-button>
+
+            <!-- 新增自定义属性 -->
             <el-button
               type="primary"
               size="small"
-              @click="wmxdialogVisible = true"
+              @click="wmxdialogVisible = true;wmxSituation = '新增'"
             >{{ $t('product.newcustomattribute') }}</el-button>
             <el-button
               type="primary"
@@ -287,11 +289,16 @@
                       </template>
                     </el-table-column>
                     <el-table-column :label="$t('product.functionaltypes')" align="center">
-                      <template slot-scope="scope">
+                      <template>
                         <span>{{ $t('product.attribute') }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column :label="$t('product.functionname')" prop="name" align="center"/>
+
+                    <el-table-column
+                      :label="$t('product.functionname')"
+                      prop="name"
+                      align="center"
+                    />
                     <el-table-column :label="$t('product.datadefinition')" align="center">
                       <template slot-scope="scope">
                         <span>{{ scope.row.dataType.type }}</span>
@@ -300,13 +307,13 @@
                   </el-table>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('product.identifier')" prop="identifier"/>
+              <el-table-column :label="$t('product.identifier')" prop="identifier" />
               <el-table-column :label="$t('product.functionaltypes')">
-                <template slot-scope="scope">
+                <template>
                   <span>{{ $t('product.attribute') }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('product.functionname')" prop="name"/>
+              <el-table-column :label="$t('product.functionname')" prop="name" />
               <el-table-column :label="$t('product.datatype')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.dataType.type }}</span>
@@ -320,9 +327,9 @@
                   <span
                     v-else-if="scope.row.dataType.type=='string'"
                   >{{ $t('product.datalength')+':'+scope.row.dataType.size+$t('product.byte') }}</span>
-                  <span v-else-if="scope.row.dataType.type=='date'"/>
+                  <span v-else-if="scope.row.dataType.type=='date'" />
                   <span v-else-if="scope.row.dataType.type!='struct'">{{ scope.row.dataType.specs }}</span>
-                  <span v-else/>
+                  <span v-else />
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')">
@@ -332,6 +339,8 @@
                     size="mini"
                     @click="deletewmx(scope.$index)"
                   >{{ $t('developer.delete') }}</el-button>
+
+                  <el-button type="primary" size="mini" @click="wmxDataFill(scope.row,scope.$index)">编辑</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -356,7 +365,7 @@
             <div>
               <div style="margin:20px 0">
                 <label for>{{ $t('product.classification') }}</label>
-                <el-cascader v-model="category" :options="treeData" @change="handleChange"/>
+                <el-cascader v-model="category" :options="treeData" @change="handleChange" />
                 <el-button
                   type="primary"
                   size="mini"
@@ -416,7 +425,7 @@
           </el-dialog>
           <!--添加物模型弹窗-->
           <el-dialog
-            :title="$t('product.newcustomattribute')"
+            :title="wmxSituation + '自定义属性'"
             :visible.sync="wmxdialogVisible"
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
@@ -430,13 +439,13 @@
                 <el-row :gutter="30">
                   <el-col :span="10">
                     <el-form-item :label="$t('product.functionname')" prop="name">
-                      <el-input v-model="sizeForm.name"/>
+                      <el-input v-model="sizeForm.name" />
                     </el-form-item>
                   </el-col>
 
                   <el-col :span="10">
                     <el-form-item :label="$t('product.identifier')" prop="identifier">
-                      <el-input v-model="sizeForm.identifier"/>
+                      <el-input v-model="sizeForm.identifier" />
                     </el-form-item>
                     <!--type-->
                   </el-col>
@@ -496,18 +505,18 @@
                       <el-form-item :label="$t('product.datatype')" prop="type">
                         <!--少个@change=selectStruct-->
                         <el-select v-model="sizeForm.type">
-                          <el-option :label="$t('product.struct')" value="STRUCT"/>
-                          <el-option :label="$t('product.init')" value="INT"/>
-                          <el-option :label="$t('product.float')" value="FLOAT"/>
-                          <el-option :label="$t('product.double')" value="DOUBLE"/>
-                          <el-option :label="$t('product.bool')" value="BOOL"/>
-                          <el-option :label="$t('product.enum')" value="ENUM"/>
-                          <el-option :label="$t('product.string')" value="STRING"/>
-                          <el-option :label="$t('product.date')" value="DATE"/>
+                          <el-option :label="$t('product.struct')" value="STRUCT" />
+                          <el-option :label="$t('product.init')" value="INT" />
+                          <el-option :label="$t('product.float')" value="FLOAT" />
+                          <el-option :label="$t('product.double')" value="DOUBLE" />
+                          <el-option :label="$t('product.bool')" value="BOOL" />
+                          <el-option :label="$t('product.enum')" value="ENUM" />
+                          <el-option :label="$t('product.string')" value="STRING" />
+                          <el-option :label="$t('product.date')" value="DATE" />
                         </el-select>
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2"/>
+                    <el-col :span="2" />
                     <el-col :span="10">
                       <!-- 单位 -->
                       <el-form-item :label="$t('product.unit')">
@@ -529,19 +538,19 @@
 
                   <h3 style="font-size:normal;">数据源配置</h3>
 
-                  <el-divider/>
+                  <el-divider />
 
                   <div name="dataIdentification">
                     <el-form-item label="数据标识" required>
                       <el-col :span="9">
                         <el-form-item prop="dis">
-                          <el-input v-model="sizeForm.dis" placeholder="数据标识"/>
+                          <el-input v-model="sizeForm.dis" placeholder="数据标识" />
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">-</el-col>
                       <el-col :span="9">
                         <el-form-item>
-                          <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数"/>
+                          <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数" />
                         </el-form-item>
                       </el-col>
                     </el-form-item>
@@ -549,18 +558,14 @@
 
                   <el-row :gutter="30">
                     <el-col :span="10">
-                      <el-form-item
-                        label="修正系数"
-                      >
-                        <el-input v-model.number="sizeForm.rate" auto-complete="off"/>
+                      <el-form-item label="修正系数">
+                        <el-input v-model.number="sizeForm.rate" auto-complete="off" />
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
-                      <el-form-item
-                        label="修正偏移"
-                      >
-                        <el-input v-model.number="sizeForm.offset" auto-complete="off"/>
+                      <el-form-item label="修正偏移">
+                        <el-input v-model.number="sizeForm.offset" auto-complete="off" />
                       </el-form-item>
                     </el-col>
 
@@ -596,7 +601,6 @@
                   </el-row>
 
                   <el-row v-show="showNewItem" :gutter="30">
-
                     <el-col :span="10">
                       <el-form-item label="寄存器状态" prop="byteorder">
                         <el-select v-model="sizeForm.operatetype" placeholder="请选择">
@@ -612,10 +616,7 @@
 
                     <el-col :span="10">
                       <el-form-item label="数据类型">
-                        <el-select
-                          v-model="sizeForm.originaltype"
-                          placeholder="请选择"
-                        >
+                        <el-select v-model="sizeForm.originaltype" placeholder="请选择">
                           <el-option
                             v-for="(item,index) in ['int16','uint16','int32','uint32','int64','uint64','float','double','string','customizedData']"
                             :key="index"
@@ -626,15 +627,11 @@
                       </el-form-item>
                     </el-col>
 
-                   <el-col :span="10">
-                      <el-form-item
-                        label="从机地址"
-                      >
-                        <el-input v-model="sizeForm.slaveid" auto-complete="off"/>
+                    <el-col :span="10">
+                      <el-form-item label="从机地址">
+                        <el-input v-model="sizeForm.slaveid" auto-complete="off" />
                       </el-form-item>
                     </el-col>
-
-
                   </el-row>
                 </div>
 
@@ -698,7 +695,7 @@
                         :prop="'specs.'+index+'.attribute'"
                         :rules="[{required: true, message: '输入属性'}]"
                       >
-                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')"/>
+                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line">-</el-col>
@@ -714,7 +711,7 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2" class="line"/>
+                    <el-col :span="2" class="line" />
                     <el-col :span="4" class="line">
                       <el-link
                         :underline="false"
@@ -780,7 +777,7 @@
                 <!--date类型添加格式-->
                 <div v-if="sizeForm.type=='DATE'">
                   <el-form-item :label="$t('product.timeformat')">
-                    <el-input v-model="sizeForm.date" readonly/>
+                    <el-input v-model="sizeForm.date" readonly />
                   </el-form-item>
                 </div>
               </el-form>
@@ -807,22 +804,22 @@
                 <el-row :gutter="30">
                   <el-col :span="10">
                     <el-form-item :label="$t('product.functionname')" prop="name">
-                      <el-input v-model="structform.name"/>
+                      <el-input v-model="structform.name" />
                     </el-form-item>
                     <el-form-item :label="$t('product.identifier')" prop="identifier">
-                      <el-input v-model="structform.identifier"/>
+                      <el-input v-model="structform.identifier" />
                     </el-form-item>
                   </el-col>
                   <el-col :span="10">
                     <el-form-item :label="$t('product.datatype')" prop="type">
                       <el-select v-model="structform.type">
-                        <el-option :label="$t('product.init')" value="INT"/>
-                        <el-option :label="$t('product.float')" value="FLOAT"/>
-                        <el-option :label="$t('product.double')" value="DOUBLE"/>
-                        <el-option :label="$t('product.bool')" value="BOOL"/>
-                        <el-option :label="$t('product.enum')" value="ENUM"/>
-                        <el-option :label="$t('product.string')" value="STRING"/>
-                        <el-option :label="$t('product.date')" value="DATE"/>
+                        <el-option :label="$t('product.init')" value="INT" />
+                        <el-option :label="$t('product.float')" value="FLOAT" />
+                        <el-option :label="$t('product.double')" value="DOUBLE" />
+                        <el-option :label="$t('product.bool')" value="BOOL" />
+                        <el-option :label="$t('product.enum')" value="ENUM" />
+                        <el-option :label="$t('product.string')" value="STRING" />
+                        <el-option :label="$t('product.date')" value="DATE" />
                       </el-select>
                     </el-form-item>
                   </el-col>
@@ -832,13 +829,13 @@
                   <el-form-item label="数据标识" required>
                     <el-col :span="11">
                       <el-form-item prop="dis">
-                        <el-input v-model="structform.dis" placeholder="数据标识"/>
+                        <el-input v-model="structform.dis" placeholder="数据标识" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2">-</el-col>
                     <el-col :span="11">
                       <el-form-item>
-                        <el-input v-model.number="structform.dinumber" placeholder="数据长度(字节)"/>
+                        <el-input v-model.number="structform.dinumber" placeholder="数据长度(字节)" />
                       </el-form-item>
                     </el-col>
                   </el-form-item>
@@ -953,7 +950,7 @@
                         :prop="'specs.'+index+'.attribute'"
                         :rules="[{required: true, message: '输入属性'}]"
                       >
-                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')"/>
+                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line">-</el-col>
@@ -969,7 +966,7 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2" class="line"/>
+                    <el-col :span="2" class="line" />
                     <el-col :span="4" class="line">
                       <el-link
                         :underline="false"
@@ -997,7 +994,7 @@
                 <!--date类型添加格式-->
                 <div v-if="structform.type=='DATE'">
                   <el-form-item :label="$t('product.timeformat')">
-                    <el-input v-model="structform.date" readonly/>
+                    <el-input v-model="structform.date" readonly />
                   </el-form-item>
                 </div>
                 <el-form-item :label="$t('product.readandwritetype')" prop="isread">
@@ -1030,13 +1027,13 @@
                 class="demo-form-inline"
               >
                 <el-form-item :label="$t('product.protocolname')" prop="name">
-                  <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')"/>
+                  <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')" />
                 </el-form-item>
                 <el-form-item :label="$t('plugins.version')">
-                  <el-input v-model="formInline.version" :placeholder="$t('plugins.version')"/>
+                  <el-input v-model="formInline.version" :placeholder="$t('plugins.version')" />
                 </el-form-item>
                 <el-form-item :label="$t('developer.describe')">
-                  <el-input v-model="formInline.desc" :placeholder="$t('developer.describe')"/>
+                  <el-input v-model="formInline.desc" :placeholder="$t('developer.describe')" />
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -1071,7 +1068,7 @@
                 style="width: 100%;"
                 @selection-change="handleSelectionChange"
               >
-                <el-table-column type="selection" width="55"/>
+                <el-table-column type="selection" width="55" />
                 <el-table-column :label="$t('developer.channelnumber')">
                   <template slot-scope="scope">
                     <span>{{ scope.row.id }}</span>
@@ -1089,7 +1086,9 @@
                 </el-table-column>
                 <el-table-column :label="$t('developer.channeltype')">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
+                    <span
+                      v-if="scope.row.attributes.type==1"
+                    >{{ $t('developer.collectionchannel') }}</span>
                     <span v-else>{{ $t('developer.resourcechannel') }}</span>
                   </template>
                 </el-table-column>
@@ -1159,11 +1158,11 @@
             </el-dialog>
             <div>
               <div style="background:#ffffff">
-                <label id="plug-name"/>
+                <label id="plug-name" />
               </div>
-              <pre id="editor" class="ace_editor" style="min-height:600px;margin-bottom:0;"><textarea class="ace_text-input"/></pre>
+              <pre id="editor" class="ace_editor" style="min-height:600px;margin-bottom:0;"><textarea class="ace_text-input" /></pre>
               <div style="background:#ffffff">
-                <label id="plug-name"/>
+                <label id="plug-name" />
               </div>
               <div
                 style="color:#c2be9e;background:#272822;border-top:1px solid #dddddd;padding:5px"
@@ -1174,7 +1173,7 @@
                 id="editor2"
                 class="ace_editor"
                 style="min-height:300px;margin-bottom:0;margin-top:0"
-              ><textarea class="ace_text-input"/></pre>
+              ><textarea class="ace_text-input" /></pre>
             </div>
           </el-tab-pane>
         </div>
@@ -1253,7 +1252,7 @@
               trigger="hover"
               @show="questionModel"
             >
-              <pre id="editorinsert" class="ace_editor" style="min-height:400px"><el-input class="ace_text-input" type="textarea"/></pre>
+              <pre id="editorinsert" class="ace_editor" style="min-height:400px"><el-input class="ace_text-input" type="textarea" /></pre>
               <el-button
                 slot="reference"
                 type="primary"
@@ -1418,9 +1417,9 @@
     >
       <div>
         <div style="background:#ffffff">
-          <label id="plug-name"/>
+          <label id="plug-name" />
         </div>
-        <pre id="editor1" class="ace_editor" style="min-height:400px"><textarea class="ace_text-input" style="overflow:scroll"/></pre>
+        <pre id="editor1" class="ace_editor" style="min-height:400px"><textarea class="ace_text-input" style="overflow:scroll" /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height:30px;">
         <el-button type="primary" @click="preserve">{{ $t('developer.determine') }}</el-button>
@@ -1494,7 +1493,7 @@
     >
       <div style="margin-top:20px;">
         <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
-                      <textarea class="ace_text-input" style="overflow:scroll"/>
+                      <textarea class="ace_text-input" style="overflow:scroll" />
         </pre>
       </div>
 
@@ -1527,14 +1526,14 @@
             <el-col :span="8">
               <div class="grid-content bg-purple">
                 <el-form-item label="物模型">
-                  <pre id="editormodel" class="ace_editor" style="min-height:600px"><el-input class="ace_text-input" type="textarea"/></pre>
+                  <pre id="editormodel" class="ace_editor" style="min-height:600px"><el-input class="ace_text-input" type="textarea" /></pre>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="16">
               <div class="grid-content bg-purple-light">
                 <el-form-item label="自定义数据模型">
-                  <pre id="editorcreate" class="ace_editor" style="min-height:600px"><el-input class="ace_text-input" type="textarea"/></pre>
+                  <pre id="editorcreate" class="ace_editor" style="min-height:600px"><el-input class="ace_text-input" type="textarea" /></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -1557,164 +1556,164 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
-import { getRule, ruleDelete } from '@/api/rules'
-import Cookies from 'js-cookie'
-var editor
-var editor1
-var editor2
-var editorgraphql
-var editor5
-var editor6
-var subdialog
-var editormodel
-var editorcreate
-var editorinsert
-var editorsubtable
-var channelrow = {}
-const Base64 = require('js-base64').Base64
-var setdata = ''
-var isallchannel = false
-var isupdatetrue = ''
-import { Compile, subupadte } from '@/api/systemmanage/system'
-import { getIndustry } from '@/api/applicationManagement'
-import { setTimeout } from 'timers'
-import gql from 'graphql-tag'
-import { postFile } from '@/api/appcontrol'
+import Parse from "parse";
+import { getRule, ruleDelete } from "@/api/rules";
+import Cookies from "js-cookie";
+var editor;
+var editor1;
+var editor2;
+var editorgraphql;
+var editor5;
+var editor6;
+var subdialog;
+var editormodel;
+var editorcreate;
+var editorinsert;
+var editorsubtable;
+var channelrow = {};
+const Base64 = require("js-base64").Base64;
+var setdata = "";
+var isallchannel = false;
+var isupdatetrue = "";
+import { Compile, subupadte } from "@/api/systemmanage/system";
+import { getIndustry } from "@/api/applicationManagement";
+import { setTimeout } from "timers";
+import gql from "graphql-tag";
+import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
   sendInfo,
   TOPIC_EMPTY,
   MSG_EMPTY,
   DISCONNECT_MSG
-} from '@/utils/wxscoket.js'
+} from "@/utils/wxscoket.js";
 // import TaskCollection1 from "./task_collection1";
-import { returnLogin } from '@/utils/return'
-import { error } from 'util'
-import $ from 'jquery'
+import { returnLogin } from "@/utils/return";
+import { error } from "util";
+import $ from "jquery";
 export default {
   // components: {
   //   TaskCollection1
   // },
   data() {
     var validCode = (rule, value, callback) => {
-      const reg = /[0-9a-zA-Z]/
+      const reg = /[0-9a-zA-Z]/;
       if (!reg.test(value)) {
-        callback(new Error('协议名称由数字和字母组合'))
+        callback(new Error("协议名称由数字和字母组合"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     var validminnumber = (rule, value, callback) => {
-      console.log(value)
-      if (value === '') {
-        callback(new Error('最小值不能为空'))
+      console.log(value);
+      if (value === "") {
+        callback(new Error("最小值不能为空"));
       } else {
         //   if(value<0){
         //   callback(new Error('最小值不能小于0'))
         // }else{
-        if (this.sizeForm.endnumber !== '') {
+        if (this.sizeForm.endnumber !== "") {
           if (value >= this.sizeForm.endnumber) {
-            callback(new Error('最小值小于最大值'))
+            callback(new Error("最小值小于最大值"));
           } else {
-            callback()
+            callback();
           }
         }
         // }
       }
-    }
+    };
     var validmaxnumber = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('最大值不能为空'))
+      if (value === "") {
+        callback(new Error("最大值不能为空"));
       } else {
-        if (this.sizeForm.startnumber !== '') {
+        if (this.sizeForm.startnumber !== "") {
           if (value <= this.sizeForm.startnumber) {
-            callback(new Error('最大值必须大于最小值'))
+            callback(new Error("最大值必须大于最小值"));
           } else {
-            callback()
+            callback();
           }
         }
         // }
       }
-    }
+    };
     var vailspecs = (rule, value, callback) => {
       if (value < 0) {
-        callback(new Error('步长大于0'))
+        callback(new Error("步长大于0"));
       } else if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
-        callback(new Error('步长必须小于最大值和最小值的差值'))
+        callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     var validstructminnumber = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('最小值不能为空'))
+      if (value === "") {
+        callback(new Error("最小值不能为空"));
       } else {
         //   if(value<0){
         //   callback(new Error('最小值不能小于0'))
         // }else{
-        if (this.structform.endnumber !== '') {
+        if (this.structform.endnumber !== "") {
           if (value >= this.structform.endnumber) {
-            callback(new Error('最小值小于最大值'))
+            callback(new Error("最小值小于最大值"));
           } else {
-            callback()
+            callback();
           }
           // }
         }
       }
-    }
+    };
     var validstructmaxnumber = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('最大值不能为空'))
+      if (value === "") {
+        callback(new Error("最大值不能为空"));
       } else {
         // if(value<0){
         //   callback(new Error('最大值不能小于0'))
         // }else{
-        if (this.structform.startnumber !== '') {
+        if (this.structform.startnumber !== "") {
           if (value <= this.structform.startnumber) {
-            callback(new Error('最大值必须大于最小值'))
+            callback(new Error("最大值必须大于最小值"));
           } else {
-            callback()
+            callback();
           }
         }
         // }
       }
-    }
+    };
     var vailstructspecs = (rule, value, callback) => {
       if (value < 0) {
-        callback(new Error('步长大于0'))
+        callback(new Error("步长大于0"));
       } else if (
         value >=
         this.structform.endnumber - this.structform.startnumber
       ) {
-        callback(new Error('步长必须小于最大值和最小值的差值'))
+        callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       // topic数据
       multipleSelection: [],
       protolchannel: [],
       protoldialog: false,
-      productimg: '',
+      productimg: "",
       topicdialogVisible: false,
       topicform: {
-        topic: '',
-        type: '',
-        desc: '',
+        topic: "",
+        type: "",
+        desc: "",
         isupdated: -1
       },
       exportDialogShow: false,
-      exportUrl: '',
-      exportName: '',
+      exportUrl: "",
+      exportName: "",
       decodertotal: 0,
       decoderstart: 0,
       decoderlength: 10,
       topicrule: {
-        topic: [{ required: true, message: '请输入Topic类', trigger: 'blur' }],
+        topic: [{ required: true, message: "请输入Topic类", trigger: "blur" }],
         type: [
-          { required: true, message: '请选择Topic权限', trigger: 'change' }
+          { required: true, message: "请选择Topic权限", trigger: "change" }
         ]
       },
       topicstart: 1,
@@ -1734,173 +1733,142 @@ export default {
       PropData: [],
       originwmx: false,
       wmxdialogVisible: false,
+      wmxSituation: "新增",
       // 自定义物模型
       allunit: [],
-      sizeForm: {
-        resource: 1,
-        identifier: '',
-        dis: '',
-        dinumber: '',
-        type: 'INT',
-        startnumber: '',
-        endnumber: '',
-        step: '',
-        true: '',
-        truevalue: 1,
-        false: '',
-        falsevalue: 0,
-        isread: 'r',
-        unit: '',
-        string: '',
-        date: 'String类型的UTC时间戳 (毫秒)',
-        specs: [
-          {
-            attribute: '',
-            attributevalue: ''
-          }
-        ],
-        struct: [],
-        rate: 1,
-        offset: 0,
-        byteorder: 'big',
-        protocol: 'normal',
-        operatetype: 'holdingRegister',
-        originaltype: 'int16',
-        slaveid:256
-
-      },
+      sizeForm: this.getFormOrginalData(),
       sizerule: {
-        step: [{ required: true, trigger: 'blur', validator: vailspecs }],
+        step: [{ required: true, trigger: "blur", validator: vailspecs }],
         string: [
-          { required: true, trigger: 'blur', message: '请输入数据长度' },
-          { type: 'number', message: '数据长度必须为数字' }
+          { required: true, trigger: "blur", message: "请输入数据长度" },
+          { type: "number", message: "数据长度必须为数字" }
         ],
         startnumber: [
-          { validator: validminnumber, required: true, trigger: 'blur' }
+          { validator: validminnumber, required: true, trigger: "blur" }
         ],
         endnumber: [
-          { validator: validmaxnumber, required: true, trigger: 'blur' }
+          { validator: validmaxnumber, required: true, trigger: "blur" }
         ],
         resource: [
-          { required: true, message: '请选择功能类型', trigger: 'change' }
+          { required: true, message: "请选择功能类型", trigger: "change" }
         ],
-        true: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        false: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
+        true: [{ required: true, message: "请输入属性值", trigger: "blur" }],
+        false: [{ required: true, message: "请输入属性值", trigger: "blur" }],
+        name: [{ required: true, message: "请输入属性名称", trigger: "blur" }],
         identifier: [
-          { required: true, message: '请输入标识符', trigger: 'blur' }
+          { required: true, message: "请输入标识符", trigger: "blur" }
         ],
-        dis: [{ required: true, message: '请输入数据标识', trigger: 'blur' }],
+        dis: [{ required: true, message: "请输入数据标识", trigger: "blur" }],
         type: [
-          { required: true, message: '请选择数据类型', trigger: 'change' }
+          { required: true, message: "请选择数据类型", trigger: "change" }
         ],
-        attribute: [{ required: true, message: '请输入属性', trigger: 'blur' }],
+        attribute: [{ required: true, message: "请输入属性", trigger: "blur" }],
         attributevalue: [
-          { required: true, message: '请输入属性值', trigger: 'blur' }
+          { required: true, message: "请输入属性值", trigger: "blur" }
         ],
         isread: [
-          { required: true, message: '请选择读写类型', trigger: 'change' }
+          { required: true, message: "请选择读写类型", trigger: "change" }
         ]
       },
       // 结构体判断规则
       structrule: {
         string: [
-          { required: true, trigger: 'blur', message: '请输入数据长度' },
-          { type: 'number', message: '数据长度必须为数字' }
+          { required: true, trigger: "blur", message: "请输入数据长度" },
+          { type: "number", message: "数据长度必须为数字" }
         ],
-        step: [{ required: true, trigger: 'blur', validator: vailstructspecs }],
+        step: [{ required: true, trigger: "blur", validator: vailstructspecs }],
         startnumber: [
-          { validator: validstructminnumber, required: true, trigger: 'blur' }
+          { validator: validstructminnumber, required: true, trigger: "blur" }
         ],
         endnumber: [
-          { validator: validstructmaxnumber, required: true, trigger: 'blur' }
+          { validator: validstructmaxnumber, required: true, trigger: "blur" }
         ],
         resource: [
-          { required: true, message: '请选择功能类型', trigger: 'change' }
+          { required: true, message: "请选择功能类型", trigger: "change" }
         ],
-        true: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        false: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
+        true: [{ required: true, message: "请输入属性值", trigger: "blur" }],
+        false: [{ required: true, message: "请输入属性值", trigger: "blur" }],
+        name: [{ required: true, message: "请输入属性名称", trigger: "blur" }],
         identifier: [
-          { required: true, message: '请输入标识符', trigger: 'blur' }
+          { required: true, message: "请输入标识符", trigger: "blur" }
         ],
-        dis: [{ required: true, message: '请输入数据标识', trigger: 'blur' }],
+        dis: [{ required: true, message: "请输入数据标识", trigger: "blur" }],
         type: [
-          { required: true, message: '请选择数据类型', trigger: 'change' }
+          { required: true, message: "请选择数据类型", trigger: "change" }
         ],
-        attribute: [{ required: true, message: '请输入属性', trigger: 'blur' }],
+        attribute: [{ required: true, message: "请输入属性", trigger: "blur" }],
         attributevalue: [
-          { required: true, message: '请输入属性值', trigger: 'blur' }
+          { required: true, message: "请输入属性值", trigger: "blur" }
         ],
         isread: [
-          { required: true, message: '请选择读写类型', trigger: 'change' }
+          { required: true, message: "请选择读写类型", trigger: "change" }
         ]
       },
       structdialog: false,
       structform: {
         resource: 1,
-        identifier: '',
-        type: 'INT',
-        startnumber: '',
-        endnumber: '',
-        step: '',
-        true: '',
+        identifier: "",
+        type: "INT",
+        startnumber: "",
+        endnumber: "",
+        step: "",
+        true: "",
         truevalue: 1,
-        false: '',
+        false: "",
         falsevalue: 0,
-        isread: 'r',
-        unit: '',
-        date: 'String类型的UTC时间戳 (毫秒)',
-        string: '',
+        isread: "r",
+        unit: "",
+        date: "String类型的UTC时间戳 (毫秒)",
+        string: "",
         specs: [],
-        dis: '',
-        dinumber: ''
+        dis: "",
+        dinumber: ""
       },
       tableData: [],
-      activeName: 'first',
+      activeName: "first",
       form: {
-        Productname: '',
-        ProductKey: '',
+        Productname: "",
+        ProductKey: "",
         ProductAll: 0
       },
-      ProductSecret: '',
+      ProductSecret: "",
       dynamicReg: false,
-      productId: '',
-      productName: '',
+      productId: "",
+      productName: "",
       productdetail: {},
       topicData: [],
       topic: [
         {
-          topic: 'thing/${ProductId}/${DevAddr}/post',
-          type: 'pub',
-          desc: '设备上报',
+          topic: "thing/${ProductId}/${DevAddr}/post",
+          type: "pub",
+          desc: "设备上报",
           isdef: true
         },
         {
-          topic: 'thing/${ProductId}/${DevAddr}',
-          type: 'sub',
-          desc: '消息下发',
+          topic: "thing/${ProductId}/${DevAddr}",
+          type: "sub",
+          desc: "消息下发",
           isdef: true
         }
       ],
       isshow: false,
       addRules: {
         name: [
-          { required: true, message: '请输入协议名称', trigger: 'blur' },
-          { validator: validCode, trigger: 'blur' }
+          { required: true, message: "请输入协议名称", trigger: "blur" },
+          { validator: validCode, trigger: "blur" }
         ]
       },
       dialogTableVisible: false,
       gridData: [],
       formInline: {
-        name: '',
-        version: '',
-        desc: '',
+        name: "",
+        version: "",
+        desc: "",
         resource: false
       },
-      objectId: '',
+      objectId: "",
       option: [],
-      CategoryKey: '',
+      CategoryKey: "",
       productstart: 0,
       productlength: 10,
       producttotal: 0,
@@ -1916,11 +1884,11 @@ export default {
       issub: false,
       subtimer: null,
       subdialog: false,
-      textarea: '',
+      textarea: "",
       subdialogtimer: null,
-      subdialogid: '',
-      subaction: 'stop',
-      channelname: '',
+      subdialogid: "",
+      subaction: "stop",
+      channelname: "",
       value4: true,
       // 规则配置
       rulepagesize: 10,
@@ -1936,19 +1904,21 @@ export default {
       // 自定义模型模板
       resourcedialogFormVisible: false,
       resourceform: {},
-      resourcechannelid: '',
+      resourcechannelid: "",
       isreload: 1,
       showNewItem: false
-    }
+    };
   },
   computed: {
     treeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.option)) // 对源数据深度克隆
+      const cloneData = JSON.parse(JSON.stringify(this.option)); // 对源数据深度克隆
       return cloneData.filter(father => {
-        const branchArr = cloneData.filter(child => father.id == child.parentid) // 返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-        return father.parentid == 0 // 返回第一层
-      })
+        const branchArr = cloneData.filter(
+          child => father.id == child.parentid
+        ); // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : ""; // 如果存在子级，则给父级添加一个children属性，并赋值
+        return father.parentid == 0; // 返回第一层
+      });
     }
   },
   watch: {
@@ -1956,128 +1926,162 @@ export default {
       deep: true,
       handler(val) {
         this.subtimer = window.setInterval(() => {
-          this.subAce('formInline', false)
-        }, 5000)
+          this.subAce("formInline", false);
+        }, 5000);
       }
     }
   },
   mounted() {
     // editor编辑器使用
-    editor2 = ace.edit('editor2')
-    editor2.session.setMode('ace/mode/text') // 设置语言
-    editor2.setTheme('ace/theme/monokai') // 设置主题
-    editor2.setReadOnly(true)
+    editor2 = ace.edit("editor2");
+    editor2.session.setMode("ace/mode/text"); // 设置语言
+    editor2.setTheme("ace/theme/monokai"); // 设置主题
+    editor2.setReadOnly(true);
     editor2.setOptions({
       enableBasicAutocompletion: true,
       enableSnippets: true,
       enableLiveAutocompletion: true // 设置自动提示
-    })
-    this.Industry()
-    this.getAllunit()
+    });
+    this.Industry();
+    this.getAllunit();
     if (this.$route.query.activeName) {
-      this.activeName = this.$route.query.activeName
+      this.activeName = this.$route.query.activeName;
     }
   },
   beforeDestroy() {
-    window.clearInterval(this.subtimer)
-    this.subtimer = null
-    window.clearInterval(this.subdialogtimer)
-    this.subdialogtimer = null
+    window.clearInterval(this.subtimer);
+    this.subtimer = null;
+    window.clearInterval(this.subdialogtimer);
+    this.subdialogtimer = null;
   },
   methods: {
+    getFormOrginalData() {
+      return {
+        resource: 1,
+        identifier: "",
+        dis: "",
+        dinumber: "",
+        type: "INT",
+        startnumber: "",
+        endnumber: "",
+        step: "",
+        true: "",
+        truevalue: 1,
+        false: "",
+        falsevalue: 0,
+        isread: "r",
+        unit: "",
+        string: "",
+        date: "String类型的UTC时间戳 (毫秒)",
+        specs: [
+          {
+            attribute: "",
+            attributevalue: ""
+          }
+        ],
+        struct: [],
+        rate: 1,
+        offset: 0,
+        byteorder: "big",
+        protocol: "normal",
+        operatetype: "holdingRegister",
+        originaltype: "int16",
+        slaveid: 256
+      };
+    },
     protocolChange(val) {
-      if (val == 'modbus') {
-        this.showNewItem = true
+      if (val == "modbus") {
+        this.showNewItem = true;
       } else {
-        this.showNewItem = false
+        this.showNewItem = false;
       }
     },
     changeValue(formName) {
-      this.$refs[formName].validateField('startnumber', errMsg => {
+      this.$refs[formName].validateField("startnumber", errMsg => {
         if (errMsg) {
-          return false
+          return false;
         } else {
         }
-      })
+      });
     },
     changeStructValue(formName) {
-      this.$refs[formName].validateField('startnumber', errMsg => {
+      this.$refs[formName].validateField("startnumber", errMsg => {
         if (errMsg) {
-          return false
+          return false;
         } else {
         }
-      })
+      });
     },
     // 判断是否为结构体，可展开
     getRowClass(row, rowIndex) {
-      if (row.row.dataType.type != 'struct') {
+      if (row.row.dataType.type != "struct") {
         // 判断当前行是否有子数据
-        return 'row-expand-cover'
+        return "row-expand-cover";
       }
     },
     getChannelEnable(row, rowIndex) {
       if (row.row.attributes.isEnable == true) {
-        return 'green_active'
+        return "green_active";
       } else {
-        return 'red_active'
+        return "red_active";
       }
     },
     handleClick(val) {
-      if (val.name == 'fiveth') {
-        this.getProductChannel()
-      } else if (val.name == 'second') {
-        this.getTopic()
-      } else if (val.name == 'seven') {
-        this.getResourceChannel()
-      } else if (val.name == 'sixeth') {
-        this.orginRule()
-      } else if (val.name == 'eighth') {
-        this.isreload++
-      } else if (val.name != 'fourth') {
-        window.clearInterval(this.subtimer)
-        this.subtimer = null
+      if (val.name == "fiveth") {
+        this.getProductChannel();
+      } else if (val.name == "second") {
+        this.getTopic();
+      } else if (val.name == "seven") {
+        this.getResourceChannel();
+      } else if (val.name == "sixeth") {
+        this.orginRule();
+      } else if (val.name == "eighth") {
+        this.isreload++;
+      } else if (val.name != "fourth") {
+        window.clearInterval(this.subtimer);
+        this.subtimer = null;
       }
     },
     getAllunit() {
-      this.allunit = []
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      var arr = [{}]
-      datas.equalTo('type', 'unit')
-      datas.limit(1000)
+      this.allunit = [];
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
+      var arr = [{}];
+      datas.equalTo("type", "unit");
+      datas.limit(1000);
       datas.find().then(
         response => {
-          this.allunit = response.concat([])
+          this.allunit = response.concat([]);
           this.allunit.unshift({
             attributes: {
               data: {
-                Name: '无',
-                Symbol: ''
+                Name: "无",
+                Symbol: ""
               }
             }
-          })
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     getTopic() {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(
         resultes => {
           if (resultes) {
-            this.topicData = resultes.attributes.topics.concat(this.topic)
+            this.topicData = resultes.attributes.topics.concat(this.topic);
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     exportProduct() {
-      var _this = this
+      var _this = this;
       /*
       postFile (_this.productName).then(response=>{
         if(response){
@@ -2092,7 +2096,7 @@ export default {
 
       // let url = Cookies.get('apiserver') + '/product?name=' + _this.productName;
 
-      const url = '/product?name=' + _this.productName
+      const url = "/product?name=" + _this.productName;
       _this.$axios
         .get(url)
         .then(function(response) {
@@ -2106,17 +2110,17 @@ export default {
           if (response) {
             window.open(
               window.location.origin +
-                '/iotapi/product?name=' +
+                "/iotapi/product?name=" +
                 _this.productName,
-              '_blank'
-            )
+              "_blank"
+            );
           }
 
           // window.location.origin = "/iotapi/product?name="+_this.productName;
         })
         .catch(function(error) {
-          _this.$message({ message: error, type: 'error' })
-        })
+          _this.$message({ message: error, type: "error" });
+        });
 
       // $.ajax({
       //   type: 'GET',
@@ -2139,299 +2143,299 @@ export default {
     },
     // 热加载弹窗
     updatesubdialog() {
-      this.protoldialog = true
-      var Channel = Parse.Object.extend('Channel')
-      var query = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = this.productId
-      query.equalTo('product', product)
-      query.equalTo('type', '1')
-      query.ascending('-updatedAt')
+      this.protoldialog = true;
+      var Channel = Parse.Object.extend("Channel");
+      var query = new Parse.Query(Channel);
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.id = this.productId;
+      query.equalTo("product", product);
+      query.equalTo("type", "1");
+      query.ascending("-updatedAt");
       query.find().then(
         res => {
-          this.protolchannel = res
-          this.$refs.multipleTable.toggleAllSelection()
+          this.protolchannel = res;
+          this.$refs.multipleTable.toggleAllSelection();
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 通道全选
     handleSelectionChange(val) {
-      this.multipleSelection = val
+      this.multipleSelection = val;
     },
     updateAllChannel() {
       if (this.multipleSelection.length == 0) {
-        this.protoldialog = false
+        this.protoldialog = false;
       } else {
-        var arr = []
+        var arr = [];
         this.multipleSelection.map(item => {
           arr.push(
             new Promise((reslove, reject) => {
-              return subupadte(item.id, 'update')
+              return subupadte(item.id, "update")
                 .then(resultes => {
                   if (resultes) {
-                    reslove(resultes)
+                    reslove(resultes);
                   }
                 })
                 .catch(error => {
-                  reject(error)
-                })
+                  reject(error);
+                });
             })
-          )
-        })
+          );
+        });
         Promise.all(arr)
           .then(data => {
             this.$message({
-              message: '热加载成功',
-              type: 'success'
-            })
+              message: "热加载成功",
+              type: "success"
+            });
             if (data.length == this.multipleSelection.length) {
-              this.protoldialog = false
+              this.protoldialog = false;
             }
           })
           .catch(error => {
             this.$message({
               message: error,
-              type: 'error'
-            })
-          })
+              type: "error"
+            });
+          });
       }
     },
     getProductChannel() {
-      var Channel = Parse.Object.extend('Channel')
-      var query = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = this.productId
-      query.equalTo('product', product)
-      query.containedIn('type', ['1', '3'])
-      query.skip(this.channelstart)
-      query.limit(this.channellength)
-      query.ascending('-updatedAt')
+      var Channel = Parse.Object.extend("Channel");
+      var query = new Parse.Query(Channel);
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.id = this.productId;
+      query.equalTo("product", product);
+      query.containedIn("type", ["1", "3"]);
+      query.skip(this.channelstart);
+      query.limit(this.channellength);
+      query.ascending("-updatedAt");
       query.count().then(
         count => {
-          this.channeltotal = count
+          this.channeltotal = count;
           query.find().then(res => {
-            this.channelData = res
+            this.channelData = res;
             if (res.length == 0) {
-              isallchannel = true
+              isallchannel = true;
             } else {
-              isallchannel = false
+              isallchannel = false;
             }
-          })
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     getResourceChannel() {
-      var Channel = Parse.Object.extend('Channel')
-      var query = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = this.productId
-      query.equalTo('product', product)
-      query.equalTo('type', '2')
-      query.skip(this.channelstart)
-      query.limit(this.channellength)
-      query.ascending('-updatedAt')
+      var Channel = Parse.Object.extend("Channel");
+      var query = new Parse.Query(Channel);
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.id = this.productId;
+      query.equalTo("product", product);
+      query.equalTo("type", "2");
+      query.skip(this.channelstart);
+      query.limit(this.channellength);
+      query.ascending("-updatedAt");
       query.count().then(
         count => {
-          this.resourcetotal = count
+          this.resourcetotal = count;
           query.find().then(res => {
-            this.resourcechannelData = res
+            this.resourcechannelData = res;
             if (res.length == 0) {
-              isallchannel = true
+              isallchannel = true;
             } else {
-              isallchannel = false
+              isallchannel = false;
             }
-          })
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 添加关联
     addProductChannel(id) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = id
-      var relation = channel.relation('product')
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.set('objectId', this.productId)
-      relation.add(product)
+      var Channel = Parse.Object.extend("Channel");
+      var channel = new Channel();
+      channel.id = id;
+      var relation = channel.relation("product");
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.set("objectId", this.productId);
+      relation.add(product);
       channel.save().then(
         res => {
           if (res) {
             this.$message({
-              type: 'success',
-              message: '添加成功'
-            })
+              type: "success",
+              message: "添加成功"
+            });
             if (this.channeltype == 1) {
-              this.showAllChannel()
-              this.getProductChannel()
+              this.showAllChannel();
+              this.getProductChannel();
             } else {
-              this.resourceShowAllChannel()
-              this.getResourceChannel()
+              this.resourceShowAllChannel();
+              this.getResourceChannel();
             }
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 解除关联
     deleteRelation(row) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = row.id
-      var relation = channel.relation('product')
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.set('objectId', this.productId)
-      relation.remove(product)
+      var Channel = Parse.Object.extend("Channel");
+      var channel = new Channel();
+      channel.id = row.id;
+      var relation = channel.relation("product");
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.set("objectId", this.productId);
+      relation.remove(product);
       channel.save().then(
         res => {
           if (res) {
             this.$message({
-              type: 'success',
-              message: '删除成功'
-            })
+              type: "success",
+              message: "删除成功"
+            });
             if (this.channeltype == 1) {
-              this.getProductChannel()
+              this.getProductChannel();
             } else {
-              this.getResourceChannel()
+              this.getResourceChannel();
             }
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 关联服务通道分页
     channelSizeChange(val) {
-      this.channellength = val
-      this.getProductChannel()
+      this.channellength = val;
+      this.getProductChannel();
     },
     channelCurrentChange(val) {
-      this.channelstart = (val - 1) * this.channellength
-      this.getProductChannel()
+      this.channelstart = (val - 1) * this.channellength;
+      this.getProductChannel();
     },
     // 资源通道关联
     resourcechannelSizeChange(val) {
-      this.resourcelength = val
-      this.getResourceChannel()
+      this.resourcelength = val;
+      this.getResourceChannel();
     },
     resourcechannelCurrentChange(val) {
-      this.resourcestart = (val - 1) * this.resourcelength
-      this.getResourceChannel()
+      this.resourcestart = (val - 1) * this.resourcelength;
+      this.getResourceChannel();
     },
     // 展示全部服务通道
     showAllChannel() {
-      this.channeltype = 1
-      this.innerVisible = true
-      var Channel = Parse.Object.extend('Channel')
-      var query = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = this.productId
-      query.skip(this.allChannelstart)
-      query.limit(this.allChannellength)
-      query.containedIn('type', ['1', '3'])
-      query.ascending('-updatedAt')
+      this.channeltype = 1;
+      this.innerVisible = true;
+      var Channel = Parse.Object.extend("Channel");
+      var query = new Parse.Query(Channel);
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.id = this.productId;
+      query.skip(this.allChannelstart);
+      query.limit(this.allChannellength);
+      query.containedIn("type", ["1", "3"]);
+      query.ascending("-updatedAt");
       if (!isallchannel) {
-        query.notEqualTo('product', product)
+        query.notEqualTo("product", product);
       }
       query.count().then(
         count => {
-          this.allChanneltotal = count
+          this.allChanneltotal = count;
           query.find().then(resultes => {
-            this.allchannelData = resultes
-          })
+            this.allchannelData = resultes;
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     allChannelSizeChange(val) {
-      this.allChannellength = val
-      this.showAllChannel()
+      this.allChannellength = val;
+      this.showAllChannel();
     },
     allChannelCurrentChange(val) {
-      this.allChannelstart = (val - 1) * this.allChannellength
-      this.showAllChannel()
+      this.allChannelstart = (val - 1) * this.allChannellength;
+      this.showAllChannel();
     },
     // 得到全部未关联资源通道
     resourceShowAllChannel() {
-      this.channeltype = 2
-      this.innerVisible = true
-      var Channel = Parse.Object.extend('Channel')
-      var query = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = this.productId
-      query.skip(this.resourcestart)
-      query.limit(this.resourcelength)
-      query.equalTo('type', '2')
-      query.ascending('-updatedAt')
+      this.channeltype = 2;
+      this.innerVisible = true;
+      var Channel = Parse.Object.extend("Channel");
+      var query = new Parse.Query(Channel);
+      var Product = Parse.Object.extend("Product");
+      var product = new Product();
+      product.id = this.productId;
+      query.skip(this.resourcestart);
+      query.limit(this.resourcelength);
+      query.equalTo("type", "2");
+      query.ascending("-updatedAt");
       if (!isallchannel) {
-        query.notEqualTo('product', product)
+        query.notEqualTo("product", product);
       }
       query.count().then(
         count => {
-          this.allChanneltotal = count
+          this.allChanneltotal = count;
           query.find().then(resultes => {
-            this.allchannelData = resultes
-          })
+            this.allchannelData = resultes;
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 自定义模型弹窗
     customize(row) {
-      this.resourcedialogFormVisible = true
-      this.resourcechannelid = row.id
+      this.resourcedialogFormVisible = true;
+      this.resourcechannelid = row.id;
       // for (var key in row.attributes.config) {
       //   channelrow[key] = row.attributes.config[key];
       // }
-      channelrow = JSON.parse(JSON.stringify(row.attributes.config))
+      channelrow = JSON.parse(JSON.stringify(row.attributes.config));
       // console.log(row,channelrow)
       setTimeout(() => {
-        editormodel = ace.edit('editormodel')
-        editormodel.session.setMode('ace/mode/json') // 设置语言
-        editormodel.setTheme('ace/theme/twilight') // 设置主题
+        editormodel = ace.edit("editormodel");
+        editormodel.session.setMode("ace/mode/json"); // 设置语言
+        editormodel.setTheme("ace/theme/twilight"); // 设置主题
         editormodel.setOptions({
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        })
-        editormodel.setReadOnly(true)
-        editormodel.setValue(JSON.stringify(this.productdetail.thing, null, 4))
+        });
+        editormodel.setReadOnly(true);
+        editormodel.setValue(JSON.stringify(this.productdetail.thing, null, 4));
         // 物建表
-        editorcreate = ace.edit('editorcreate')
-        editorcreate.session.setMode('ace/mode/mysql') // 设置语言
-        editorcreate.setTheme('ace/theme/twilight') // 设置主题
+        editorcreate = ace.edit("editorcreate");
+        editorcreate.session.setMode("ace/mode/mysql"); // 设置语言
+        editorcreate.setTheme("ace/theme/twilight"); // 设置主题
         editorcreate.setOptions({
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        })
+        });
         if (
           row.attributes.config.datamodel &&
-          row.attributes.config.datamodel != ''
+          row.attributes.config.datamodel != ""
         ) {
-          editorcreate.setValue(row.attributes.config.datamodel)
+          editorcreate.setValue(row.attributes.config.datamodel);
         } else {
           editorcreate.setValue(`{
             "vars":{
@@ -2469,7 +2473,7 @@ export default {
               "insert_table":"INSERT INTO \${database}.\${table} VALUES (\${temperature}, \${humidity})",
               "create_table":"CREATE TABLE \${databas}.\${table} USING \${database}.\${stable} TAGS (\${devaddr});"
             }
-          }`)
+          }`);
         }
         // 物存储
 
@@ -2487,18 +2491,18 @@ export default {
         //   }else{
         //     editorsubtable.setValue('')
         //   }
-      })
+      });
     },
     questionModel() {
       setTimeout(() => {
-        editorinsert = ace.edit('editorinsert')
-        editorinsert.session.setMode('ace/mode/mysql') // 设置语言
-        editorinsert.setTheme('ace/theme/gob') // 设置主题
+        editorinsert = ace.edit("editorinsert");
+        editorinsert.session.setMode("ace/mode/mysql"); // 设置语言
+        editorinsert.setTheme("ace/theme/gob"); // 设置主题
         editorinsert.setOptions({
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        })
+        });
         editorinsert.setValue(`{
           "vars":{
             "database":"database",
@@ -2593,70 +2597,70 @@ export default {
             "insert_table":"INSERT INTO {{database}}.{{table}} VALUES ({{temperature}}, {{humidity}})",
             "create_table":"CREATE TABLE {{database}}.{{table}} USING {{database}}.{{stable}} TAGS ({{devaddr}});"
           }
-        }`)
-      })
+        }`);
+      });
     },
     // 添加自定义模型
     addData() {
       // console.log(channelrow)
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = this.resourcechannelid
-      channelrow.datamodel = editorcreate.getValue()
-      channel.set('config', channelrow)
+      var Channel = Parse.Object.extend("Channel");
+      var channel = new Channel();
+      channel.id = this.resourcechannelid;
+      channelrow.datamodel = editorcreate.getValue();
+      channel.set("config", channelrow);
       channel.save().then(
         response => {
           if (response) {
-            this.$message('添加成功')
+            this.$message("添加成功");
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     closeWuDialog() {
-      this.resourcedialogFormVisible = false
-      this.resourcechannelid = ''
+      this.resourcedialogFormVisible = false;
+      this.resourcechannelid = "";
     },
     // 删除枚举型
     removeDomain(item) {
-      var index = this.sizeForm.specs.indexOf(item)
+      var index = this.sizeForm.specs.indexOf(item);
       if (index !== -1) {
-        this.sizeForm.specs.splice(index, 1)
+        this.sizeForm.specs.splice(index, 1);
       }
     },
     addDomain() {
       this.sizeForm.specs.push({
-        value: '',
-        name: ''
-      })
+        value: "",
+        name: ""
+      });
     },
     removeDomain1(item) {
-      var index = this.structform.specs.indexOf(item)
+      var index = this.structform.specs.indexOf(item);
       if (index !== -1) {
-        this.structform.specs.splice(index, 1)
+        this.structform.specs.splice(index, 1);
       }
     },
     addDomain1() {
       this.structform.specs.push({
-        value: '',
-        name: ''
-      })
+        value: "",
+        name: ""
+      });
     },
     // 物模型提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var obj = {}
-          var Product = Parse.Object.extend('Product')
-          var product = new Parse.Query(Product)
+          var obj = {};
+          var Product = Parse.Object.extend("Product");
+          var product = new Parse.Query(Product);
           product.get(this.productId).then(response => {
             // 提交之前需要先判断类型
             if (
-              this.sizeForm.type == 'FLOAT' ||
-              this.sizeForm.type == 'DOUBLE' ||
-              this.sizeForm.type == 'INT'
+              this.sizeForm.type == "FLOAT" ||
+              this.sizeForm.type == "DOUBLE" ||
+              this.sizeForm.type == "INT"
             ) {
               obj = {
                 name: this.sizeForm.name,
@@ -2666,7 +2670,7 @@ export default {
                     max: this.sizeForm.endnumber,
                     min: this.sizeForm.startnumber,
                     step: this.sizeForm.step,
-                    unit: this.sizeForm.unit == '' ? '' : this.sizeForm.unit
+                    unit: this.sizeForm.unit == "" ? "" : this.sizeForm.unit
                   }
                 },
                 dataForm: {
@@ -2683,21 +2687,21 @@ export default {
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
+              };
               // 去除多余的属性
               if (!this.showNewItem) {
-                delete obj.dataForm.operatetype
-                delete obj.dataForm.originaltype
-                delete obj.dataForm.slaveid
+                delete obj.dataForm.operatetype;
+                delete obj.dataForm.originaltype;
+                delete obj.dataForm.slaveid;
               }
-            } else if (this.sizeForm.type == 'BOOL') {
+            } else if (this.sizeForm.type == "BOOL") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   specs: {
-                    '0': this.sizeForm.false,
-                    '1': this.sizeForm.true
+                    "0": this.sizeForm.false,
+                    "1": this.sizeForm.true
                   }
                 },
                 dataForm: {
@@ -2707,13 +2711,13 @@ export default {
                 required: false,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
-            } else if (this.sizeForm.type == 'ENUM') {
-              var specs = {}
+              };
+            } else if (this.sizeForm.type == "ENUM") {
+              var specs = {};
               this.sizeForm.specs.map(items => {
-                var newkey = items['attribute']
-                specs[newkey] = items['attributevalue']
-              })
+                var newkey = items["attribute"];
+                specs[newkey] = items["attributevalue"];
+              });
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2727,8 +2731,8 @@ export default {
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
-            } else if (this.sizeForm.type == 'STRUCT') {
+              };
+            } else if (this.sizeForm.type == "STRUCT") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2742,8 +2746,8 @@ export default {
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
-            } else if (this.sizeForm.type == 'STRING') {
+              };
+            } else if (this.sizeForm.type == "STRING") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2757,8 +2761,8 @@ export default {
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
-            } else if (this.sizeForm.type == 'DATE') {
+              };
+            } else if (this.sizeForm.type == "DATE") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2771,44 +2775,149 @@ export default {
                 required: true,
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
-              }
+              };
             }
-            this.productdetail.thing.properties.unshift(obj)
-            response.set('thing', this.productdetail.thing)
+            this.productdetail.thing.properties.unshift(obj);
+            response.set("thing", this.productdetail.thing);
             response.save().then(
               resultes => {
                 if (resultes) {
                   this.$message({
-                    type: 'success',
-                    message: '添加成功'
-                  })
-                  this.getProDetail()
-                  this.$refs[formName].resetFields()
+                    type: "success",
+                    message: "添加成功"
+                  });
+                  this.getProDetail();
+                  this.$refs[formName].resetFields();
 
-                  this.wmxdialogVisible = false
+                  this.wmxdialogVisible = false;
                 }
               },
               error => {
-                returnLogin(error)
+                returnLogin(error);
               }
-            )
-          })
+            );
+          });
         } else {
-          console.log(valid)
-          console.log('error submit!!')
-          return false
+          console.log(valid);
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
+    },
+    // 物模型修改
+    wmxDataFill(rowData, index) {
+
+
+      
+      this.wmxdialogVisible = true;
+      this.wmxSituation = "编辑";
+
+      
+      var obj = {};
+
+      // rowData.dataType.type
+
+      // 提交之前需要先判断类型
+      if ( ['FLOAT','DOUBLE','INT'].indexOf(rowData.dataType.type) != -1) {
+        obj = {
+          name: rowData.name,
+          // rowData.dataType
+          type: rowData.dataType.type,
+          endnumber:rowData.dataType.max,
+          startnumber:rowData.dataType.min,
+          step:rowData.dataType.step,
+          unit:rowData.dataType.unit,
+          // : rowData.dataForm.    
+          dis : rowData.dataForm.addres,
+          dinumber : rowData.dataForm.quantity,
+          rate : rowData.dataForm.rate,
+          offset : rowData.dataForm.offset,
+          byteorder : rowData.dataForm.byteorder,
+          protocol : rowData.dataForm.protocol,
+          operatetype : rowData.dataForm.operatetype,
+          originaltype : rowData.dataForm.originaltype,
+          slaveid : rowData.dataForm.slaveid,
+      
+          required: true,
+          isread: rowData.accessMode,
+          identifier: rowData.identifier
+
+        };
+      } else if (rowData.dataType.type == "BOOL") {
+        obj = {
+          name: rowData.name,        
+          type: rowData.dataType.type,
+          true: rowData.dataType.specs['1'],
+          false: rowData.dataType.specs['0'],         
+        // rowData.dataForm.       
+          dis: rowData.dataForm.address ,
+          dinumber: rowData.dataForm.quantity,        
+          required: false,
+          isread:rowData.accessMode,
+          identifier: rowData.identifier
+        };
+      } else if (rowData.dataType.type == "ENUM") {
+   /*      var specs = {};
+        this.sizeForm.specs.map(items => {
+          var newkey = items["attribute"];
+          specs[newkey] = items["attributevalue"];
+        }); */
+        obj = {
+          name: rowData.name,
+          type: rowData.dataType.type,
+          specs:rowData.dataType.specs,
+          dis : rowData.dataForm.address,
+          dinumber : rowData.dataForm.quantity,         
+          required: true,
+          isread : rowData.accessMode,
+          identifier : rowData.identifier
+        };
+      } else if (rowData.dataType.type == "STRUCT") {
+        obj = {
+          name: rowData.name,
+          type:rowData.dataType.type,
+          struct:rowData.dataType.specs,       
+          dis: rowData.dataForm.address,
+          quantity: rowData.dataForm.dinumber,        
+          required: true,
+          isread:rowData.accessMode,
+          identifier: rowData.identifier
+        };
+      } else if (rowData.dataType.type == "STRING") {
+        obj = {
+          name: rowData.name,        
+          type: rowData.dataType.type,
+          string:rowData.dataType.size,        
+          dis: rowData.dataForm.address,
+          dinumber: rowData.dataForm,        
+          required: true,
+         isread : rowData.accessMode ,
+         identifier: rowData.identifier
+        };
+      } else if (rowData.dataType.type == "DATE") {
+        obj = {
+          name: rowData.name,        
+          type: rowData.dataType.type,       
+           dis : rowData.dataForm.address,
+           dinumber : rowData.dataForm.quantity,        
+          required: true,
+          isread : rowData.accessMode,
+          identifier : rowData.identifier
+        };
+      }
+
+      this.sizeForm = obj
+
     },
     // 物模型结构体
     submitStruct(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var obj = {}
+          var obj = {};
           if (
-            this.structform.type == 'FLOAT' ||
-            this.structform.type == 'DOUBLE' ||
-            this.structform.type == 'INT'
+            this.structform.type == "FLOAT" ||
+            this.structform.type == "DOUBLE" ||
+            this.structform.type == "INT"
           ) {
             obj = {
               name: this.structform.name,
@@ -2818,7 +2927,7 @@ export default {
                   max: this.structform.endnumber,
                   min: this.structform.startnumber,
                   step: this.structform.step,
-                  unit: this.structform.unit == '' ? '' : this.structform.unit
+                  unit: this.structform.unit == "" ? "" : this.structform.unit
                 }
               },
               dataForm: {
@@ -2828,15 +2937,15 @@ export default {
               required: true,
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
-            }
-          } else if (this.structform.type == 'BOOL') {
+            };
+          } else if (this.structform.type == "BOOL") {
             obj = {
               name: this.structform.name,
               dataType: {
                 type: this.structform.type.toLowerCase(),
                 specs: {
-                  '0': this.structform.false,
-                  '1': this.structform.true
+                  "0": this.structform.false,
+                  "1": this.structform.true
                 }
               },
               dataForm: {
@@ -2846,13 +2955,13 @@ export default {
               required: false,
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
-            }
-          } else if (this.structform.type == 'ENUM') {
-            var specs = {}
+            };
+          } else if (this.structform.type == "ENUM") {
+            var specs = {};
             this.structform.specs.map(items => {
-              var newkey = items['attribute']
-              specs[newkey] = items['attributevalue']
-            })
+              var newkey = items["attribute"];
+              specs[newkey] = items["attributevalue"];
+            });
             obj = {
               name: this.structform.name,
               dataType: {
@@ -2866,8 +2975,8 @@ export default {
               required: true,
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
-            }
-          } else if (this.structform.type == 'STRING') {
+            };
+          } else if (this.structform.type == "STRING") {
             obj = {
               name: this.structform.name,
               dataType: {
@@ -2881,8 +2990,8 @@ export default {
               required: true,
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
-            }
-          } else if (this.structform.type == 'DATE') {
+            };
+          } else if (this.structform.type == "DATE") {
             obj = {
               name: this.structform.name,
               dataType: {
@@ -2895,201 +3004,192 @@ export default {
               required: true,
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
-            }
+            };
           }
           if (this.isupdatedstruct == -1) {
-            this.sizeForm.struct.push(obj)
+            this.sizeForm.struct.push(obj);
           } else {
-            this.sizeForm.struct.splice(this.isupdatedstruct, 1, obj)
-            this.isupdatedstruct = -1
+            this.sizeForm.struct.splice(this.isupdatedstruct, 1, obj);
+            this.isupdatedstruct = -1;
           }
-          this.$refs[formName].resetFields()
-          this.structdialog = false
+          this.$refs[formName].resetFields();
+          this.structdialog = false;
         } else {
         }
-      })
+      });
     },
-    // 选择结构体
-    //  selectStruct(val){
-    //   if(val=='STRUCT'){
-    //     this.structdialog = true
-    //   }else{
-    //     this.structdialog = false
-    //   }
-
-    // },
     // 新增结构体
     addStruct(formName) {
-      this.structdialog = true
+      this.structdialog = true;
       this.structform = {
         resource: 1,
-        identifier: '',
-        type: 'INT',
-        startnumber: '',
-        endnumber: '',
-        step: '',
-        true: '',
+        identifier: "",
+        type: "INT",
+        startnumber: "",
+        endnumber: "",
+        step: "",
+        true: "",
         truevalue: 1,
-        false: '',
+        false: "",
         falsevalue: 0,
-        isread: 'r',
-        unit: '',
+        isread: "r",
+        unit: "",
         specs: [],
-        date: 'String类型的UTC时间戳 (毫秒)',
-        string: ''
-      }
+        date: "String类型的UTC时间戳 (毫秒)",
+        string: ""
+      };
     },
     editStruct(item, index) {
-      console.log(item, index)
-      this.isupdatedstruct = index
-      this.structdialog = true
-      this.structform.type = item.dataType.type.toUpperCase()
-      this.structform.name = item.name
-      this.structform.identifier = item.identifier
-      this.structform.isread = item.accessMode
+      console.log(item, index);
+      this.isupdatedstruct = index;
+      this.structdialog = true;
+      this.structform.type = item.dataType.type.toUpperCase();
+      this.structform.name = item.name;
+      this.structform.identifier = item.identifier;
+      this.structform.isread = item.accessMode;
       if (
-        item.dataType.type == 'float' ||
-        item.dataType.type == 'double' ||
-        item.dataType.type == 'int'
+        item.dataType.type == "float" ||
+        item.dataType.type == "double" ||
+        item.dataType.type == "int"
       ) {
-        this.structform.startnumber = item.dataType.specs.min
-        this.structform.endnumber = item.dataType.specs.max
-        this.structform.step = item.dataType.specs.step
-        this.structform.unit = item.dataType.specs.unit
-      } else if (item.dataType.type == 'bool') {
-        this.structform.true = item.dataType.specs['1']
-        this.structform.false = item.dataType.specs['0']
-      } else if (item.dataType.type == 'enum') {
-        this.structform.specs = []
-        var obj = {}
+        this.structform.startnumber = item.dataType.specs.min;
+        this.structform.endnumber = item.dataType.specs.max;
+        this.structform.step = item.dataType.specs.step;
+        this.structform.unit = item.dataType.specs.unit;
+      } else if (item.dataType.type == "bool") {
+        this.structform.true = item.dataType.specs["1"];
+        this.structform.false = item.dataType.specs["0"];
+      } else if (item.dataType.type == "enum") {
+        this.structform.specs = [];
+        var obj = {};
         Object.keys(item.dataType.specs).forEach((value, index) => {
-          obj.attribute = value
-          obj.attributevalue = item.dataType.specs[value]
-          this.structform.specs.push(obj)
-        })
-      } else if (item.dataType.type == 'string') {
-        this.structform.string = item.dataType.size
+          obj.attribute = value;
+          obj.attributevalue = item.dataType.specs[value];
+          this.structform.specs.push(obj);
+        });
+      } else if (item.dataType.type == "string") {
+        this.structform.string = item.dataType.size;
       }
     },
     // 删除结构体
     deleteStruct(index) {
-      this.sizeForm.struct.splice(index, 1)
+      this.sizeForm.struct.splice(index, 1);
     },
     preserve() {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(response => {
-        response.set('thing', JSON.parse(editor1.getValue()))
+        response.set("thing", JSON.parse(editor1.getValue()));
         response.save().then(
           resultes => {
             if (resultes) {
               this.$message({
-                type: 'success',
-                message: '保存成功'
-              })
-              this.schemadialogVisible = false
+                type: "success",
+                message: "保存成功"
+              });
+              this.schemadialogVisible = false;
             }
           },
           error => {
             this.$message({
-              type: 'error',
+              type: "error",
               message: error.message
-            })
+            });
           }
-        )
-      })
+        );
+      });
     },
     Industry() {
-      this.option = []
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('data.key', 'category')
-      datas.limit(1000)
+      this.option = [];
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
+      datas.equalTo("data.key", "category");
+      datas.limit(1000);
       datas.find().then(
         response => {
           if (response) {
             response.map(items => {
-              var obj = {}
-              obj.value = items.attributes.type
-              obj.label = items.attributes.data.CategoryName
-              obj.id = items.attributes.data.Id
-              obj.parentid = items.attributes.data.SuperId
-              this.option.push(obj)
-            })
-            this.getProDetail()
+              var obj = {};
+              obj.value = items.attributes.type;
+              obj.label = items.attributes.data.CategoryName;
+              obj.id = items.attributes.data.Id;
+              obj.parentid = items.attributes.data.SuperId;
+              this.option.push(obj);
+            });
+            this.getProDetail();
           }
         },
         error => {
-          this.$message(error.message)
+          this.$message(error.message);
         }
-      )
+      );
     },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒
       var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
         .toISOString()
-        .replace(/T/g, ' ')
-        .replace(/\.[\d]{3}Z/, '')
-      return date // 2017-03-31 16:02:06
+        .replace(/T/g, " ")
+        .replace(/\.[\d]{3}Z/, "");
+      return date; // 2017-03-31 16:02:06
     },
     getPropData(start) {
       if (start == 0) {
-        this.productstart = 0
+        this.productstart = 0;
       }
-      this.CategoryKey = this.$route.query.CategoryKey
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.limit(this.productlength)
-      datas.skip(this.productstart)
+      this.CategoryKey = this.$route.query.CategoryKey;
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
+      datas.limit(this.productlength);
+      datas.skip(this.productstart);
       if (this.category.length != 0) {
-        datas.equalTo('type', this.category[this.category.length - 1])
+        datas.equalTo("type", this.category[this.category.length - 1]);
       }
-      datas.equalTo('data.key', 'category'),
-      datas.count().then(count => {
-        this.producttotal = count
-        datas.find().then(
-          res => {
-            this.PropData = res
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
-      })
+      datas.equalTo("data.key", "category"),
+        datas.count().then(count => {
+          this.producttotal = count;
+          datas.find().then(
+            res => {
+              this.PropData = res;
+            },
+            error => {
+              returnLogin(error);
+            }
+          );
+        });
     },
     productSizeChange(val) {
-      this.productlength = val
-      this.getPropData()
+      this.productlength = val;
+      this.getPropData();
     },
     productCurrentChange(val) {
-      this.productstart = (val - 1) * this.productlength
-      this.getPropData()
+      this.productstart = (val - 1) * this.productlength;
+      this.getPropData();
     },
     // 查看物模型模板
     checkschema() {
-      this.schemadialogVisible = true
+      this.schemadialogVisible = true;
       setTimeout(() => {
-        editor1 = ace.edit('editor1')
-        editor1.session.setMode('ace/mode/json') // 设置语言
-        editor1.setTheme('ace/theme/eclipse') // 设置主题
+        editor1 = ace.edit("editor1");
+        editor1.session.setMode("ace/mode/json"); // 设置语言
+        editor1.setTheme("ace/theme/eclipse"); // 设置主题
         editor1.setOptions({
           enableBasicAutocompletion: true,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        })
-        editor1.setValue(JSON.stringify(this.productdetail.thing, null, 4))
-      }, 1)
+        });
+        editor1.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+      }, 1);
     },
     // 得到产品详情
     getProDetail() {
-      editor = ace.edit('editor')
-      editor.session.setMode('ace/mode/erlang') // 设置语言
-      editor.setTheme('ace/theme/monokai') // 设置主题
+      editor = ace.edit("editor");
+      editor.session.setMode("ace/mode/erlang"); // 设置语言
+      editor.setTheme("ace/theme/monokai"); // 设置主题
       editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true // 设置自动提示
-      })
+      });
 
       // editor6 = ace.edit("editor6");
       // editor6.session.setMode("ace/mode/json"); // 设置语言
@@ -3100,93 +3200,93 @@ export default {
       //   enableLiveAutocompletion: true // 设置自动提示
       // });
 
-      this.productId = this.$route.query.id
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      this.productId = this.$route.query.id;
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(
         response => {
           if (response) {
-            this.productName = response.attributes.name
+            this.productName = response.attributes.name;
             for (var key in response.attributes) {
-              this.productdetail[key] = response.attributes[key]
+              this.productdetail[key] = response.attributes[key];
             }
             this.option.map(items => {
               if (this.productdetail.category == items.value) {
-                this.productdetail.category = items.label
+                this.productdetail.category = items.label;
               }
-            })
-            this.productdetail.createdAt = this.utc2beijing(response.createdAt)
-            this.productdetail.id = response.id
-            this.dynamicReg = response.attributes.dynamicReg
-            this.productdetail.isshow = 0
-            this.form.Productname = response.attributes.name
-            this.ProductSecret = response.attributes.productSecret
-            this.form.Productkey = this.productId
+            });
+            this.productdetail.createdAt = this.utc2beijing(response.createdAt);
+            this.productdetail.id = response.id;
+            this.dynamicReg = response.attributes.dynamicReg;
+            this.productdetail.isshow = 0;
+            this.form.Productname = response.attributes.name;
+            this.ProductSecret = response.attributes.productSecret;
+            this.form.Productkey = this.productId;
             // window.location.origin
-            this.productimg = response.attributes.icon
+            this.productimg = response.attributes.icon;
             if (response.attributes.decoder) {
-              setdata = response.attributes.decoder.code
-              this.formInline.name = response.attributes.decoder.name
-              this.formInline.version = response.attributes.decoder.version
-              this.formInline.desc = response.attributes.decoder.desc
+              setdata = response.attributes.decoder.code;
+              this.formInline.name = response.attributes.decoder.name;
+              this.formInline.version = response.attributes.decoder.version;
+              this.formInline.desc = response.attributes.decoder.desc;
             } else {
               setdata =
-                'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
+                "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
             }
             if (!this.productdetail.thing) {
               this.productdetail.thing = {
                 properties: []
-              }
-              this.wmxData = this.productdetail.thing.properties.concat([])
-            } else {
-              this.wmxData = this.productdetail.thing.properties.concat([])
+              };
             }
-            editor.setValue(Base64.decode(setdata))
-            editor.gotoLine(editor.session.getLength())
-            // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-            var Device = Parse.Object.extend('Device')
-            var devices = new Parse.Query(Device)
 
-            devices.equalTo('product', this.productId)
-            devices.skip(0)
+            this.wmxData = this.productdetail.thing.properties.concat([]);
+
+            editor.setValue(Base64.decode(setdata));
+            editor.gotoLine(editor.session.getLength());
+            // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+            var Device = Parse.Object.extend("Device");
+            var devices = new Parse.Query(Device);
+
+            devices.equalTo("product", this.productId);
+            devices.skip(0);
             devices.count().then(count => {
-              this.form.ProductAll = count
-            })
+              this.form.ProductAll = count;
+            });
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     // 产品修改
     handelUpdate(event, row) {
-      var isopen
+      var isopen;
       if (event == true) {
-        isopen = false
+        isopen = false;
       } else {
-        isopen = true
+        isopen = true;
       }
-      this.dynamicReg = isopen
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      this.dynamicReg = isopen;
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(response => {
-        response.set('dynamicReg', !isopen)
+        response.set("dynamicReg", !isopen);
         response.save().then(
           resultes => {
             if (resultes) {
               this.$message({
-                type: 'success',
-                message: '修改成功'
-              })
-              this.dynamicReg = !isopen
+                type: "success",
+                message: "修改成功"
+              });
+              this.dynamicReg = !isopen;
             }
           },
           error => {
-            returnLogin(error)
+            returnLogin(error);
           }
-        )
-      })
+        );
+      });
       // var isopen =
     },
     //    updateisshow(isshow){
@@ -3195,62 +3295,62 @@ export default {
 
     //    }
     wmxhandleClose() {
-      this.sizeForm.type = 'INT'
-      this.$refs['sizeForm'].resetFields()
+      this.sizeForm.type = "INT";
+      this.$refs["sizeForm"].resetFields();
 
-      this.wmxdialogVisible = false
+      this.wmxdialogVisible = false;
     },
     // 协议编辑
     protol() {
-      var log = ''
+      var log = "";
       Compile(Base64.encode(editor.getValue()))
         .then(res => {
           if (res) {
             this.$message({
-              type: 'success',
-              message: '编译成功'
-            })
-            log = '编译成功' + res.mod + '\r\n'
-            this.warningeditror = res.warnings
+              type: "success",
+              message: "编译成功"
+            });
+            log = "编译成功" + res.mod + "\r\n";
+            this.warningeditror = res.warnings;
             this.warningeditror.map(items => {
-              log += items + '\r\n'
-            })
-            isupdatetrue += log
-            editor2.setValue(isupdatetrue)
+              log += items + "\r\n";
+            });
+            isupdatetrue += log;
+            editor2.setValue(isupdatetrue);
           }
         })
         .catch(error => {
-          this.warningeditror = error.error
+          this.warningeditror = error.error;
           this.warningeditror.map(items => {
-            log += items + '\r\n'
-          })
-          isupdatetrue += log
-          editor2.setValue(isupdatetrue)
-        })
+            log += items + "\r\n";
+          });
+          isupdatetrue += log;
+          editor2.setValue(isupdatetrue);
+        });
     },
     decoderSizeChange(val) {
-      this.decoder.length = val
-      this.chaxun()
+      this.decoder.length = val;
+      this.chaxun();
     },
     devicerCurrentChange(val) {
-      this.decoderstart = (val - 1) * this.decoderlength
-      this.chaxun()
+      this.decoderstart = (val - 1) * this.decoderlength;
+      this.chaxun();
     },
     deletedata(id) {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Dict()
-      datas.id = id
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Dict();
+      datas.id = id;
       datas.destroy().then(
         resultes => {
           if (resultes) {
-            this.$message('成功删除')
-            this.chaxun()
+            this.$message("成功删除");
+            this.chaxun();
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     subAce(formName, istrue) {
       this.$refs[formName].validate(valid => {
@@ -3260,277 +3360,277 @@ export default {
             version: this.formInline.version,
             code: Base64.encode(editor.getValue()),
             desc: this.formInline.desc
-          }
-          var Product = Parse.Object.extend('Product')
-          var product = new Product()
-          product.id = this.productId
+          };
+          var Product = Parse.Object.extend("Product");
+          var product = new Product();
+          product.id = this.productId;
           // product.get(this.productId).then(object => {
-          product.set('decoder', obj)
+          product.set("decoder", obj);
           product.save().then(
             res => {
               if (this.issub == false) {
                 this.$message({
-                  type: 'success',
-                  message: '保存成功'
-                })
+                  type: "success",
+                  message: "保存成功"
+                });
                 if (istrue == true) {
-                  isupdatetrue += '保存成功' + '\r\n'
-                  editor2.setValue(isupdatetrue)
+                  isupdatetrue += "保存成功" + "\r\n";
+                  editor2.setValue(isupdatetrue);
                 }
               } else {
               }
-              this.issub = true
+              this.issub = true;
             },
             error => {
-              returnLogin(error)
+              returnLogin(error);
             }
-          )
+          );
           // });
         } else {
           this.$message({
-            type: 'warning',
-            message: '输入格式有误'
-          })
+            type: "warning",
+            message: "输入格式有误"
+          });
         }
-      })
+      });
     },
     subAce1(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var userid = Parse.User.current().id
+          var userid = Parse.User.current().id;
           var obj = {
             name: this.formInline.name,
             version: this.formInline.version,
             code: Base64.encode(editor.getValue()),
             desc: this.formInline.desc
-          }
+          };
 
-          var Dict = Parse.Object.extend('Dict')
-          var datas1 = new Parse.Query(Dict)
-          datas1.equalTo('data.name', obj.name)
-          datas1.equalTo('data.version', obj.version)
+          var Dict = Parse.Object.extend("Dict");
+          var datas1 = new Parse.Query(Dict);
+          datas1.equalTo("data.name", obj.name);
+          datas1.equalTo("data.version", obj.version);
 
           datas1.find().then(
             response => {
               if (response) {
                 if (response.length >= 1) {
-                  this.$messages('此协议版本已存在')
-                  return
+                  this.$messages("此协议版本已存在");
+                  return;
                 } else {
-                  var datas = new Dict()
-                  var acl = new Parse.ACL()
-                  acl.setReadAccess(userid, true)
-                  acl.setWriteAccess(userid, true)
-                  acl.setPublicReadAccess(true)
-                  datas.set('type', 'decoder')
-                  datas.set('data', obj)
-                  datas.set('ACL', acl)
+                  var datas = new Dict();
+                  var acl = new Parse.ACL();
+                  acl.setReadAccess(userid, true);
+                  acl.setWriteAccess(userid, true);
+                  acl.setPublicReadAccess(true);
+                  datas.set("type", "decoder");
+                  datas.set("data", obj);
+                  datas.set("ACL", acl);
                   datas.save().then(
                     resultes => {
                       if (resultes) {
-                        this.$message('保存到公共协议库成功')
+                        this.$message("保存到公共协议库成功");
                       }
                     },
                     error => {
-                      this.$message(error.message)
+                      this.$message(error.message);
                     }
-                  )
+                  );
                 }
               }
             },
             error => {
-              returnLogin(error)
+              returnLogin(error);
             }
-          )
+          );
         } else {
           this.$message({
-            type: 'warning',
-            message: '输入格式有误'
-          })
+            type: "warning",
+            message: "输入格式有误"
+          });
         }
-      })
+      });
     },
     // 通道更新协议状态
     updatesub(row) {
-      subupadte(row.id, 'update')
+      subupadte(row.id, "update")
         .then(resultes => {
           if (resultes) {
-            this.$message('重载成功')
+            this.$message("重载成功");
           }
         })
         .catch(error => {
-          this.$message(error.error)
-        })
+          this.$message(error.error);
+        });
     },
 
     chaxun() {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.skip(this.decoderstart)
-      datas.limit(this.decoderlength)
-      datas.equalTo('type', 'decoder')
-      datas.ascending('-createdAt')
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
+      datas.skip(this.decoderstart);
+      datas.limit(this.decoderlength);
+      datas.equalTo("type", "decoder");
+      datas.ascending("-createdAt");
       datas.count().then(
         count => {
-          this.decodertotal = count
+          this.decodertotal = count;
           datas.find().then(resultes => {
             if (resultes) {
-              this.dialogTableVisible = true
-              this.gridData = resultes
+              this.dialogTableVisible = true;
+              this.gridData = resultes;
             }
-          })
+          });
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     editordata(row) {
-      this.formInline.name = row.attributes.data.name
-      this.formInline.version = row.attributes.data.version
-      this.formInline.desc = row.attributes.data.desc
-      this.formInline.resource = row.attributes.data.enable
-      editor.setValue(Base64.decode(row.attributes.data.code))
-      this.dialogTableVisible = false
+      this.formInline.name = row.attributes.data.name;
+      this.formInline.version = row.attributes.data.version;
+      this.formInline.desc = row.attributes.data.desc;
+      this.formInline.resource = row.attributes.data.enable;
+      editor.setValue(Base64.decode(row.attributes.data.code));
+      this.dialogTableVisible = false;
     },
     goToDevices() {
       this.$router.push({
-        path: '/roles/thing',
+        path: "/roles/thing",
         query: {
           productid: this.productId
         }
-      })
+      });
     },
     addcategory() {
-      this.originwmx = true
-      this.getPropData()
+      this.originwmx = true;
+      this.getPropData();
     },
     handleChange(value, direction, movedKeys) {
-      console.log(value, direction, movedKeys)
+      console.log(value, direction, movedKeys);
     },
     // 用于处理定义好的物模型模板
     TypeInstall(origin, arr) {
-      console.log(arr)
+      console.log(arr);
       arr.map((items, index) => {
-        if (items.DataType == 'enum' || items.DataType == 'bool') {
+        if (items.DataType == "enum" || items.DataType == "bool") {
           var obj = {
             dataType: {
               specs: {}
             }
-          }
-          obj.name = items.Name
-          obj.dataType.type = items.DataType
-          obj.required = items.Required
-          obj.identifier = items.Identifier
-          obj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
+          };
+          obj.name = items.Name;
+          obj.dataType.type = items.DataType;
+          obj.required = items.Required;
+          obj.identifier = items.Identifier;
+          obj.accessMode = items.RwFlag == 1 ? "r" : "rw";
           JSON.parse(items.DataSpecsList).map(child => {
             for (var key in child) {
-              var attribute = child['value']
-              var value = child['name']
-              obj.dataType.specs[attribute] = value
+              var attribute = child["value"];
+              var value = child["name"];
+              obj.dataType.specs[attribute] = value;
             }
-          })
-          origin.push(obj)
+          });
+          origin.push(obj);
         } else if (
-          items.DataType == 'double' ||
-          items.DataType == 'int' ||
-          items.DataType == 'float'
+          items.DataType == "double" ||
+          items.DataType == "int" ||
+          items.DataType == "float"
         ) {
           var obj = {
             dataType: {
               specs: {}
             }
-          }
-          obj.name = items.Name
-          obj.dataType.type = items.DataType
-          obj.required = items.Required
-          obj.identifier = items.Identifier
-          obj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
+          };
+          obj.name = items.Name;
+          obj.dataType.type = items.DataType;
+          obj.required = items.Required;
+          obj.identifier = items.Identifier;
+          obj.accessMode = items.RwFlag == 1 ? "r" : "rw";
           for (var key in JSON.parse(items.DataSpecs)) {
-            obj.dataType.specs.min = JSON.parse(items.DataSpecs)['min']
-            obj.dataType.specs.max = JSON.parse(items.DataSpecs)['max']
-            obj.dataType.specs.step = JSON.parse(items.DataSpecs)['step']
-            obj.dataType.specs.unit = JSON.parse(items.DataSpecs)['unit']
+            obj.dataType.specs.min = JSON.parse(items.DataSpecs)["min"];
+            obj.dataType.specs.max = JSON.parse(items.DataSpecs)["max"];
+            obj.dataType.specs.step = JSON.parse(items.DataSpecs)["step"];
+            obj.dataType.specs.unit = JSON.parse(items.DataSpecs)["unit"];
           }
-          origin.push(obj)
+          origin.push(obj);
           // 分开结构体单独遍历
-        } else if (items.DataType == 'struct') {
+        } else if (items.DataType == "struct") {
           var structobj = {
             dataType: {
               specs: []
             }
-          }
-          structobj.name = items.Name
-          structobj.dataType.type = items.DataType
-          structobj.required = !items.Required
-          structobj.identifier = items.Identifier
-          structobj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
+          };
+          structobj.name = items.Name;
+          structobj.dataType.type = items.DataType;
+          structobj.required = !items.Required;
+          structobj.identifier = items.Identifier;
+          structobj.accessMode = items.RwFlag == 1 ? "r" : "rw";
           JSON.parse(items.DataSpecsList).map(children => {
             if (
-              children.childDataType == 'ENUM' ||
-              children.childDataType == 'BOOL'
+              children.childDataType == "ENUM" ||
+              children.childDataType == "BOOL"
             ) {
               var obj = {
                 dataType: {
                   specs: {}
                 }
-              }
-              obj.name = children.childName
-              obj.dataType.type = children.childDataType.toLowerCase()
-              obj.required = children.Required
-              obj.identifier = children.identifier
-              obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
+              };
+              obj.name = children.childName;
+              obj.dataType.type = children.childDataType.toLowerCase();
+              obj.required = children.Required;
+              obj.identifier = children.identifier;
+              obj.accessMode = children.RwFlag == 1 ? "r" : "rw";
               children.childEnumSpecsDTO.map(child => {
                 for (var key in child) {
-                  var attribute = child['value']
-                  var value = child['name']
-                  obj.dataType.specs[attribute] = value
+                  var attribute = child["value"];
+                  var value = child["name"];
+                  obj.dataType.specs[attribute] = value;
                 }
-              })
-              structobj.dataType.specs.push(obj)
+              });
+              structobj.dataType.specs.push(obj);
             } else if (
-              children.childDataType == 'DOUBLE' ||
-              children.childDataType == 'INT' ||
-              children.childDataType == 'FLOAT'
+              children.childDataType == "DOUBLE" ||
+              children.childDataType == "INT" ||
+              children.childDataType == "FLOAT"
             ) {
               var obj = {
                 dataType: {
                   specs: {}
                 }
-              }
-              obj.name = children.childName
-              obj.dataType.type = children.childDataType.toLowerCase()
-              obj.required = children.Required
-              obj.identifier = children.identifier
-              obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
+              };
+              obj.name = children.childName;
+              obj.dataType.type = children.childDataType.toLowerCase();
+              obj.required = children.Required;
+              obj.identifier = children.identifier;
+              obj.accessMode = children.RwFlag == 1 ? "r" : "rw";
               for (var key in children.childSpecsDTO) {
-                obj.dataType.specs.min = children.childSpecsDTO['min']
-                obj.dataType.specs.max = children.childSpecsDTO['max']
-                obj.dataType.specs.step = children.childSpecsDTO['precise']
-                obj.dataType.specs.unit = children.childSpecsDTO['unit']
+                obj.dataType.specs.min = children.childSpecsDTO["min"];
+                obj.dataType.specs.max = children.childSpecsDTO["max"];
+                obj.dataType.specs.step = children.childSpecsDTO["precise"];
+                obj.dataType.specs.unit = children.childSpecsDTO["unit"];
               }
-              structobj.dataType.specs.push(obj)
+              structobj.dataType.specs.push(obj);
             }
-          })
-          origin.push(structobj)
+          });
+          origin.push(structobj);
         }
-      })
-      var update = {}
+      });
+      var update = {};
       origin = origin.reduce((cur, next) => {
         update[next.identifier]
-          ? ''
-          : (update[next.identifier] = true && cur.push(next))
-        return cur
-      }, [])
+          ? ""
+          : (update[next.identifier] = true && cur.push(next));
+        return cur;
+      }, []);
     },
     // 添加物模型模板
     addProCategory(row) {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('type', row.attributes.type)
-      datas.equalTo('data.key', 'detail')
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
+      datas.equalTo("type", row.attributes.type);
+      datas.equalTo("data.key", "detail");
       datas.find().then(
         res => {
           if (res.length) {
@@ -3538,267 +3638,311 @@ export default {
               this.TypeInstall(
                 this.productdetail.thing.properties,
                 res[0].attributes.data.Ability
-              )
+              );
               product.get(this.productId).then(resultes => {
-                resultes.set('thing', this.productdetail.thing)
+                resultes.set("thing", this.productdetail.thing);
                 resultes.save().then(
                   resultes => {
                     this.$message({
-                      type: 'success',
-                      message: '添加成功'
-                    })
-                    this.getProDetail()
+                      type: "success",
+                      message: "添加成功"
+                    });
+                    this.getProDetail();
                   },
                   error => {
-                    returnLogin(error)
+                    returnLogin(error);
                   }
-                )
-              })
+                );
+              });
             } else {
-              console.log('此选项没有属性功能')
+              console.log("此选项没有属性功能");
             }
           }
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     /* 删除物模型*/
     deletewmx(index) {
       this.productdetail.thing.properties.splice(
         (this.wmxstart - 1) * this.wmxlength + index,
         1
-      )
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      );
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(resultes => {
-        resultes.set('thing', this.productdetail.thing)
+        resultes.set("thing", this.productdetail.thing);
         resultes.save().then(
           resultes => {
             if (resultes) {
               this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              this.wmxData = this.productdetail.thing.properties.concat([])
+                type: "success",
+                message: "删除成功"
+              });
+              this.wmxData = this.productdetail.thing.properties.concat([]);
             }
           },
           error => {
-            returnLogin(error)
+            returnLogin(error);
           }
-        )
-      })
+        );
+      });
+    },
+    /* 编辑物模型*/
+    editwmx(rowData, index) {
+      console.log("rowData ", rowData);
+
+      console.log("index ", index);
+
+
+      // let sizeFormTemp = this.getFormOrginalData()
+
+      this.sizeForm = {
+        resource: 1,
+        identifier: "",
+        dis: "",
+        dinumber: "",
+        type: "INT",
+        startnumber: "",
+        endnumber: "",
+        step: "",
+        true: "",
+        truevalue: 1,
+        false: "",
+        falsevalue: 0,
+        isread: "r",
+        unit: "",
+        string: "",
+        date: "String类型的UTC时间戳 (毫秒)",
+        specs: [
+          {
+            attribute: "",
+            attributevalue: ""
+          }
+        ],
+        struct: [],
+        rate: 1,
+        offset: 0,
+        byteorder: "big",
+        protocol: "normal",
+        operatetype: "holdingRegister",
+        originaltype: "int16",
+        slaveid: 256
+      };
+
+      // this.sizeForm =  JSON.parse(JSON.stringify(rowData))
     },
     wmxSizeChange(val) {
-      this.wmxstart = 1
-      this.wmxlength = val
+      this.wmxstart = 1;
+      this.wmxlength = val;
       console.log(
         this.wmxData.slice(
           (this.wmxstart - 1) * this.wmxlength,
           this.wmxstart * this.wmxlength
         )
-      )
+      );
     },
     wmxCurrentChange(val) {
-      this.wmxstart = val
+      this.wmxstart = val;
     },
     // 订阅日志按钮
     nowtime() {
-      var timestamp3 = Date.parse(new Date())
-      var date = new Date(timestamp3)
-      var Y = date.getFullYear() + '年'
+      var timestamp3 = Date.parse(new Date());
+      var date = new Date(timestamp3);
+      var Y = date.getFullYear() + "年";
       var M =
         (date.getMonth() + 1 <= 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '月'
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "月";
       var D =
-        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
-        '日  '
+        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
+        "日  ";
       var h =
-        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
-        ':'
+        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
+        ":";
       var m =
         (date.getMinutes() + 1 <= 10
-          ? '0' + date.getMinutes()
-          : date.getMinutes()) + ':'
+          ? "0" + date.getMinutes()
+          : date.getMinutes()) + ":";
       var s =
         date.getSeconds() + 1 <= 10
-          ? '0' + date.getSeconds()
-          : date.getSeconds()
-      return h + m + s + ' '
+          ? "0" + date.getSeconds()
+          : date.getSeconds();
+      return h + m + s + " ";
     },
     // 订阅日志
     subProTopic(row) {
-      this.subdialog = true
-      this.subdialogid = row.id
-      this.channelname = row.id
+      this.subdialog = true;
+      this.subdialogid = row.id;
+      this.channelname = row.id;
       setTimeout(() => {
-        subdialog = ace.edit('subdialog')
-        subdialog.session.setMode('ace/mode/text') // 设置语言
-        subdialog.setTheme('ace/theme/gob') // 设置主题
-        subdialog.setReadOnly(true)
+        subdialog = ace.edit("subdialog");
+        subdialog.session.setMode("ace/mode/text"); // 设置语言
+        subdialog.setTheme("ace/theme/gob"); // 设置主题
+        subdialog.setReadOnly(true);
         subdialog.setOptions({
           enableBasicAutocompletion: false,
           enableSnippets: true,
           enableLiveAutocompletion: true // 设置自动提示
-        })
-      })
+        });
+      });
       var info = {
-        topic: 'log/channel/' + row.id + '/' + this.productId,
+        topic: "log/channel/" + row.id + "/" + this.productId,
         qos: 2
-      }
+      };
       var channeltopic = new RegExp(
-        'log/channel/' + row.id + '/' + this.productId
-      )
-      var submessage = ''
-      var _this = this
+        "log/channel/" + row.id + "/" + this.productId
+      );
+      var submessage = "";
+      var _this = this;
       Websocket.add_hook(channeltopic, function(Msg) {
         // 判断长度
         if (subdialog.session.getLength() >= 1000) {
-          submessage = ''
+          submessage = "";
         } else {
-          submessage += _this.nowtime() + Msg + `\n`
+          submessage += _this.nowtime() + Msg + `\n`;
         }
-        subdialog.setValue(submessage)
-        subdialog.gotoLine(subdialog.session.getLength())
-      })
+        subdialog.setValue(submessage);
+        subdialog.gotoLine(subdialog.session.getLength());
+      });
       // 订阅
-      var text0 = JSON.stringify({ action: 'start_logger' })
+      var text0 = JSON.stringify({ action: "start_logger" });
       Websocket.subscribe(info, function(res) {
         if (res.result) {
-          console.log(info)
-          console.log('订阅成功')
+          console.log(info);
+          console.log("订阅成功");
           var sendInfo = {
-            topic: 'channel/' + row.id + '/' + _this.productId,
+            topic: "channel/" + row.id + "/" + _this.productId,
             text: text0,
             retained: true,
             qos: 2
-          }
-          Websocket.sendMessage(sendInfo)
+          };
+          Websocket.sendMessage(sendInfo);
           _this.subdialogtimer = window.setInterval(() => {
-            Websocket.sendMessage(sendInfo)
-          }, 600000)
+            Websocket.sendMessage(sendInfo);
+          }, 600000);
         }
-      })
+      });
     },
     // 关闭弹窗操作
     handleCloseSubdialog() {
-      var text0 = JSON.stringify({ action: 'stop_logger' })
+      var text0 = JSON.stringify({ action: "stop_logger" });
       var sendInfo = {
-        topic: 'channel/' + this.subdialogid + '/' + this.productId,
+        topic: "channel/" + this.subdialogid + "/" + this.productId,
         text: text0,
         retained: true,
         qos: 2
-      }
-      Websocket.sendMessage(sendInfo)
-      this.subdialog = false
-      window.clearInterval(this.subdialogtimer)
-      this.subdialogtimer = null
+      };
+      Websocket.sendMessage(sendInfo);
+      this.subdialog = false;
+      window.clearInterval(this.subdialogtimer);
+      this.subdialogtimer = null;
     },
     // 停止topic刷新
     stopsub(value) {
-      var text0
+      var text0;
       if (value == false) {
         // this.subaction = 'start'
-        text0 = JSON.stringify({ action: 'stop_logger' })
+        text0 = JSON.stringify({ action: "stop_logger" });
       } else {
         // this.subaction = 'stop'
-        text0 = JSON.stringify({ action: 'start_logger' })
+        text0 = JSON.stringify({ action: "start_logger" });
       }
       var sendInfo = {
-        topic: 'channel/' + this.subdialogid + '/' + this.productId,
+        topic: "channel/" + this.subdialogid + "/" + this.productId,
         text: text0,
         retained: true,
         qos: 2
-      }
-      Websocket.sendMessage(sendInfo)
+      };
+      Websocket.sendMessage(sendInfo);
     }, // topic增加
     subTopic(formName, isupdated) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           var Topic =
-            'thing/' + this.productId + '/${DevAddr}/' + this.topicform.topic
-          var Product = Parse.Object.extend('Product')
-          var product = new Parse.Query(Product)
+            "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
+          var Product = Parse.Object.extend("Product");
+          var product = new Parse.Query(Product);
           product.get(this.productId).then(resultes => {
             var addTopic = {
               topic: Topic,
               type: this.topicform.type,
               desc: this.topicform.desc
-            }
-            var arr = []
-            arr.push(addTopic)
+            };
+            var arr = [];
+            arr.push(addTopic);
             if (isupdated == -1) {
-              arr = arr.concat(resultes.attributes.topics)
-              resultes.set('topics', arr)
+              arr = arr.concat(resultes.attributes.topics);
+              resultes.set("topics", arr);
             } else {
-              var topicupdated = resultes.attributes.topics.concat([])
-              topicupdated[isupdated] = addTopic
-              resultes.set('topics', topicupdated)
+              var topicupdated = resultes.attributes.topics.concat([]);
+              topicupdated[isupdated] = addTopic;
+              resultes.set("topics", topicupdated);
             }
             resultes.save().then(
               response => {
                 if (response) {
                   this.$message({
-                    type: 'success',
-                    message: '成功'
-                  })
-                  this.topicdialogVisible = false
+                    type: "success",
+                    message: "成功"
+                  });
+                  this.topicdialogVisible = false;
                   this.$refs[formName].resetFields();
-                  (this.topicform.isupdated = -1), (this.topicform.topic = '')
-                  this.topicform.desc = ''
-                  this.handleClick({ name: 'second' })
+                  (this.topicform.isupdated = -1), (this.topicform.topic = "");
+                  this.topicform.desc = "";
+                  this.handleClick({ name: "second" });
                 }
               },
               error => {
-                returnLogin(error)
+                returnLogin(error);
               }
-            )
-          })
+            );
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     topicSizeChange(val) {
-      this.topicstart = 1
-      this.topiclength = val
+      this.topicstart = 1;
+      this.topiclength = val;
     },
     topicCurrentChange(val) {
-      this.topicstart = val
+      this.topicstart = val;
     },
     updatetopic(row, index) {
-      this.topicform.topic = row.topic.substr(row.topic.lastIndexOf('/') + 1)
-      this.topicform.type = row.type
-      this.topicform.desc = row.desc
-      this.topicdialogVisible = true
-      this.topicform.isupdated = index
+      this.topicform.topic = row.topic.substr(row.topic.lastIndexOf("/") + 1);
+      this.topicform.type = row.type;
+      this.topicform.desc = row.desc;
+      this.topicdialogVisible = true;
+      this.topicform.isupdated = index;
     },
     deletetopic(scope, index) {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(this.productId).then(resultes => {
-        var topic = resultes.attributes.topics.concat([])
-        topic.splice(index, 1)
-        resultes.set('topics', topic)
+        var topic = resultes.attributes.topics.concat([]);
+        topic.splice(index, 1);
+        resultes.set("topics", topic);
         resultes.save().then(
           response => {
             if (response) {
               this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.handleClick({ name: 'second' })
+                type: "success",
+                message: "删除成功"
+              });
+              scope._self.$refs[`popover-${scope.$index}`].doClose();
+              this.handleClick({ name: "second" });
             }
           },
           error => {
-            returnLogin(error)
+            returnLogin(error);
           }
-        )
-      })
+        );
+      });
     },
     testgraphql() {
       this.$apollo
@@ -3808,70 +3952,70 @@ export default {
           `
         })
         .then(resultes => {
-          editor5.setValue(JSON.stringify(resultes, null, 4))
+          editor5.setValue(JSON.stringify(resultes, null, 4));
         })
         .catch(error => {
-          console.log(error)
-          this.$message(error)
-        })
+          console.log(error);
+          this.$message(error);
+        });
     },
     // 规则tab显示
     orginRule() {
       getRule()
         .then(response => {
           if (response) {
-            this.engineData = response
+            this.engineData = response;
           }
         })
         .catch(error => {
-          this.$message(error.error)
-        })
+          this.$message(error.error);
+        });
     },
     // 分页
     handleSizeChange(val) {},
     handleCurrentChange(val) {},
     addEngine() {
       this.$router.push({
-        path: '/rules_engine/addengine',
+        path: "/rules_engine/addengine",
         query: {
-          title: '新增',
+          title: "新增",
           productid: this.productId
         }
-      })
+      });
     },
     actions(row) {
-      var string = []
+      var string = [];
       row.map(items => {
-        string.push(items.name)
-      })
-      return string.join(',')
+        string.push(items.name);
+      });
+      return string.join(",");
     },
     // 表格单个单元格class添加
     getRowindex(row, rowIndex, columnIndex) {
       if (row.columnIndex == 0) {
-        return 'firstcolumn'
+        return "firstcolumn";
       }
     },
     detailRules(id) {
       this.$router.push({
-        path: '/rules_engine/checkengine',
+        path: "/rules_engine/checkengine",
         query: { id: id }
-      })
+      });
     },
     deleteRule(id) {
       ruleDelete(id)
         .then(resultes => {
           if (resultes) {
-            this.$message('删除成功')
-            this.orginRule()
+            this.$message("删除成功");
+            this.orginRule();
           }
         })
         .catch(error => {
-          this.$message(error.error)
-        })
+          this.$message(error.error);
+        });
     }
   }
-}
+};
 </script>
 <style scoped>
 .editproduct {
