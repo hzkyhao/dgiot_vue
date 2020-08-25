@@ -169,11 +169,10 @@
       </el-col>
     </el-row>
 
-    <el-dialog :visible="centerDialogRole" title="添加角色" width="30%" center @close="closeDialogRole">
-      <div style="height:420px">
-        <addroles ref="addRoleRef" />
-      </div>
+    <el-dialog :visible="centerDialogRole" title="添加角色" width="35%" center @close="closeDialogRole">    
+        <addroles ref="addRoleRef" />     
     </el-dialog>
+    
     <el-dialog :title="$t('developer.add')" :visible.sync="dialogVisible" width="50%">
       <el-table
         ref="multipleTable"
@@ -253,6 +252,7 @@ import { returnLogin } from '@/utils/return'
 import addroles from '@/views/roles/rolelist/addroles'
 import { eventBus } from '@/api/eventBus'
 export default {
+  name: 'Role',
   data() {
     return {
       deptTreeData: [],
