@@ -626,6 +626,15 @@
                       </el-form-item>
                     </el-col>
 
+                   <el-col :span="10">
+                      <el-form-item
+                        label="从机地址"
+                      >
+                        <el-input v-model="sizeForm.slaveid" auto-complete="off"/>
+                      </el-form-item>
+                    </el-col>
+
+
                   </el-row>
                 </div>
 
@@ -1756,7 +1765,8 @@ export default {
         byteorder: 'big',
         protocol: 'normal',
         operatetype: 'holdingRegister',
-        originaltype: 'int16'
+        originaltype: 'int16',
+        slaveid:256
 
       },
       sizerule: {
@@ -2667,7 +2677,8 @@ export default {
                   byteorder: this.sizeForm.byteorder,
                   protocol: this.sizeForm.protocol,
                   operatetype: this.sizeForm.operatetype,
-                  originaltype: this.sizeForm.originaltype
+                  originaltype: this.sizeForm.originaltype,
+                  slaveid: this.sizeForm.slaveid
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
@@ -2677,6 +2688,7 @@ export default {
               if (!this.showNewItem) {
                 delete obj.dataForm.operatetype
                 delete obj.dataForm.originaltype
+                delete obj.dataForm.slaveid
               }
             } else if (this.sizeForm.type == 'BOOL') {
               obj = {
