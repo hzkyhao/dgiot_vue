@@ -15,8 +15,6 @@
             </template>
           </el-table-column>
 
-
-
           <el-table-column :label="$t('developer.operation')" align="center">
             <template slot-scope="scope">
               <el-dropdown
@@ -113,9 +111,6 @@ export default {
   name: "Department",
   data() {
     return {
-      total: 0,
-      pagesize: 10,
-      start: 0,
       roletempList: [],
       roleData: [],
       checkMenus: [], // 选中菜单
@@ -212,8 +207,8 @@ export default {
       role.get(this.objectId).then(object => {
         let acl = new Parse.ACL();
         this.multipleSelection.map(item => {
-          acl.setRoleReadAccess(item.attributes.name, true);
-          acl.setRoleWriteAccess(item.attributes.name, true);
+          acl.setRoleReadAccess(item.name, true);
+          acl.setRoleWriteAccess(item.name, true);
           object.set("ACL", acl);
         });
         object.save().then(
@@ -271,7 +266,7 @@ export default {
     //增加菜单
     addmenu(row) {
       // console.log(row)
-      this.rolename = row.attributes.name;
+      this.rolename = row.name;
 
       // this.dialogVisible = true;
       this.getMenu();
@@ -304,7 +299,7 @@ export default {
       });
       this.currentSelectIndex = row.index;
       this.$axiosWen
-        .get("/role?name=" + row.attributes.name)
+        .get("/role?name=" + row.name)
         .then(res => {
           this.roleItem = res;
           if (res && res.menus && res.rules) {
@@ -430,9 +425,9 @@ export default {
         this.$axios
           .put("/role", {
             objectId: this.roleItem.objectId,
-            name: row.attributes.name,
-            alias: row.attributes.alias,
-            desc: row.attributes.desc,
+            name: row.name,
+            alias: row.alias,
+            desc: row.desc,
             rules: checkrole,
             menus: checkmenu,
             roles: rolesList,
@@ -456,11 +451,11 @@ export default {
       this.$axiosWen
         .post(
           "/roletemp?name=" +
-            row.attributes.name +
+            row.name +
             "&tempname=" +
-            row.attributes.name +
+            row.name +
             "_" +
-            row.attributes.desc
+            row.desc
         )
         .then(response => {
           console.log("response", response);
@@ -473,9 +468,9 @@ export default {
       var query = new Parse.Query(roles);
       query.get(row.id).then(resultes => {
         this.roleEdit = true;
-        this.form.name = resultes.attributes.name;
-        this.form.desc = resultes.attributes.desc;
-        this.form.alias = resultes.attributes.alias;
+        this.form.name = resultes.name;
+        this.form.desc = resultes.desc;
+        this.form.alias = resultes.alias;
       });
     },
     updaterole() {
