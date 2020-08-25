@@ -284,14 +284,7 @@ export const constantRouterMap = [
         name: '访问钥匙',
         component: () => import('@/views/equipment_management/appOperate/application'),
         meta: { title: '访问钥匙', icon: 'application' }
-      },
-      {
-        path: '/roles/adduser',
-        name: '新增用户',
-        meta: { title: '新增用户' },
-        hidden: true,
-        component: () => import('@/views/roles/adduser/adduser')
-      },
+      }, 
       {
         path: '/roles/edituser',
         name: '编辑用户',

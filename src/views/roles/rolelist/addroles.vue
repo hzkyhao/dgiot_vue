@@ -10,10 +10,6 @@
         class="demo-ruleForm"
       >
         <el-form-item label="parent" prop="parent">
-          <!--           <el-input
-            v-model="ruleForm.ParentId"
-            style="width:200px;"
-          ></el-input> -->
 
           <el-select v-model="ruleForm.ParentId" placeholder="请选择Parent">
             <el-option
@@ -28,17 +24,7 @@
         <el-form-item label="角色名" prop="name">
           <el-input v-model="ruleForm.name" style="width:200px;"/>
         </el-form-item>
-        <el-form-item label="部门" prop="departmentid">
-          <!-- <el-cascader
-            v-model="treeModu"
-            placeholder="请选择部门"
-            :props="treeprops"
-            clearable
-            :options="treeData"
-            :show-all-levels="false"
-            ref="cascaderAddr"
-            @change="changeOption('tree')"
-          ></el-cascader> -->
+        <el-form-item label="部门" prop="departmentid">      
           <el-input
             v-model="ruleForm.depname"
             placeholder="请输入部门名称"
@@ -72,11 +58,7 @@
         <el-form-item class="el_btn">
           <el-form-item label="操作" prop="desc"/>
           <el-button type="warning" @click="resetFrom()">重置</el-button>
-          <!-- <el-button
-            v-if="insert==0||insert==1"
-            type="primary"
-            style="margin:0 7%"
-          >取消</el-button> -->
+ 
           <el-button
             v-if="insert == 0 || insert == 1"
             type="success"
@@ -90,11 +72,11 @@
 </template>
 <script>
 import { Parse } from 'parse'
+import { eventBus } from '@/api/eventBus'
 export default {
   data() {
     return {
       treeModu: [],
-      data: [],
       treeprops: {
         value: 'name',
         label: 'name'
@@ -124,17 +106,11 @@ export default {
         phoneNum: '',
         mail: '',
         department: '',
-        duty: '',
         gender: '男',
         role: '',
         description: '',
-        region: '',
-        delivery: false,
         type: [],
-        resource: '',
-        data2: [],
         list: [],
-        parentrole: '',
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -162,41 +138,35 @@ export default {
           { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
-      orderresultes: [],
-      parentid: '',
-      roles: [],
-      roleList: []
+      roleList: [],
+      deptInfo:{}
     }
   },
   computed: {
-    treeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.data))
-      return cloneData.filter(father => {
-        const branchArr = cloneData.filter(
-          child => father.objectId == child.ParentId
-        )
-        branchArr.length > 0 ? (father.children = branchArr) : ''
-        return father.ParentId == 0
-      })
-    },
-    deptInfo() {
-      return this.$store.getters.deptInfo
-    }
+
   },
   mounted() {
-    this.ruleForm.ParentId = this.$store.state.user.departmentObj.objectId
-    // this.getMenu();
+
     // this.nodetree()
-    console.log(this.deptInfo, 'this.deptInfo')
     this.searchAllOption()
   },
   methods: {
+    getData(departData){
+        this.deptInfo = departData
+
+        this.ruleForm.ParentId =  this.deptInfo.objectId //this.$store.state.user.departmentObj.objectId
+
+        console.log('this.deptInfo', this.deptInfo.objectId)
+
+        //这里有点多余,但不加的话,parent select在视图上无法选中
+        this.searchAllOption()
+    },
     changeOption(key, val) {
       switch (key) {
         case 'tree':
           this.Option.deptvalue = this.$refs['cascaderAddr'].currentLabels[1]
           const fatheOptions = this.$refs['cascaderAddr'].options
-          console.log(this.Option.deptvalue, fatheOptions)
+
           fatheOptions.forEach(val => {
             if (this.$refs['cascaderAddr'].currentLabels[0] === val.name) { this.Option.objectId = val.children[0].objectId }
             this.Option.ParentId = val.objectId
@@ -206,10 +176,10 @@ export default {
           this.Option.dictvalue = val
           break
       }
-      console.log(this.Option.dictvalue)
     },
     // 查询部门  角色
     searchAllOption() {
+
       this.$axiosWen
         .get('/classes/Dict', {
           params: {
@@ -219,23 +189,25 @@ export default {
           }
         })
         .then(res => {
-          console.log(res)
           this.Option.dictOption = res.results
         })
       this.$axiosWen.get('/classes/_Role').then(res => {
-        const results = res.results
-        console.log(results)
-        results.forEach((key, val) => {
-          var obj = {}
-          obj.ParentId = key.ParentId
-          obj.name = key.name
-          obj.objectId = key.objectId
-          obj.org_type = key.org_type
-          obj.createdAt = key.createdAt
-          this.data.push(obj)
-        })
+        const tempResults = []
+  
         if (res.results) {
-          this.roleList = res.results
+
+           res.results.forEach((item, key) => {
+              let obj = {}
+              obj.ParentId = item.ParentId
+              obj.name = item.name
+              obj.objectId = item.objectId
+              obj.org_type = item.org_type
+              obj.desc = item.desc
+              obj.createdAt = item.createdAt
+              tempResults.push(obj)
+            })
+
+          this.roleList = tempResults
           this.Option.deptOption = res.results
         } else {
           this.roleList = []
@@ -249,8 +221,6 @@ export default {
       (this.ruleForm = {
         name: '',
         phoneNum: '',
-        mail: '',
-        department: '',
         duty: '',
         gender: '男',
         role: '',
@@ -261,7 +231,7 @@ export default {
       this.Option.dictvalue = ''
       this.Option.objectId = 0
       this.Option.ParentId = 0
-      this.data = []
+ 
       this.treeModu = []
       setTimeout(() => {
         this.searchAllOption()
@@ -298,7 +268,7 @@ export default {
           // this.$router.push({
           //   path: "/roles/roles"
           // });
-          this.$store.dispatch('setDialogFlag', false)
+          eventBus.$emit('dialogHide')
         })
         .catch(error => {
           console.log(error)
@@ -325,9 +295,9 @@ export default {
     },
     getdetail() {
       this.insert = this.$route.query.insert
-      console.log(this.insert)
+
       this.roleId = this.$route.query.roleId
-      console.log(this.insert, 'insert')
+  
     }
   }
 }
@@ -339,12 +309,7 @@ export default {
 .from /deep/ .el-form-item:last-child .el-form-item__content {
   margin-left: 0 !important;
 }
-// .from /deep/ .el-form-item:nth-child(7) .el-form-item__label {
-//   width: 58px !important;
-// }
-// .from /deep/ .el-form-item:nth-child(7) .el-form-item__content {
-//   margin-left: 60px !important;
-// }
+
 .app-container {
   width: 100%;
   min-height: 320px;
