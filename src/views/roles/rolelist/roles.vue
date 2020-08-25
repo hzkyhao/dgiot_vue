@@ -171,7 +171,7 @@
 
     <el-dialog :visible="centerDialogRole" title="添加角色" width="30%" center @close="closeDialogRole">
       <div style="height:420px">
-        <addroles />
+        <addroles ref="addRoleRef" />
       </div>
     </el-dialog>
     <el-dialog :title="$t('developer.add')" :visible.sync="dialogVisible" width="50%">
@@ -251,6 +251,7 @@ import { page, UpdatedMenu, UpdatedRole } from '@/api/login'
 import { Parse } from 'parse'
 import { returnLogin } from '@/utils/return'
 import addroles from '@/views/roles/rolelist/addroles'
+import { eventBus } from '@/api/eventBus'
 export default {
   data() {
     return {
@@ -340,6 +341,11 @@ export default {
     this.gettable();
     this.getMenu();
     this.getRoleschema();
+
+     eventBus.$on('dialogHide',()=>{
+
+       this.centerDialogRole = false
+     })
   },
 
   methods: {
@@ -401,39 +407,6 @@ export default {
         }
       });
     },
-    //给角色设置访问权限
-    // handleEdit(row) {
-    //   this.objectId = row.id;
-    //   this.centerDialogVisible = true;
-    //   this.tableDataroles = [];
-    //   this.originrole = [];
-    //   var Role = Parse.Object.extend("_Role");
-    //   var role = new Parse.Query(Role);
-    //   role.find().then(resultes => {
-    //     this.tableDataroles = resultes;
-    //     role.get(this.objectId).then(res => {
-    //       var _this = this;
-    //       var rootrole = res.attributes.ACL.permissionsById;
-    //       Object.keys(rootrole).forEach(function(key) {
-    //         if (key == "*") {
-    //           _this.originrole.push(key);
-    //         } else {
-    //           _this.originrole.push(key.substring(5));
-    //         }
-    //       });
-    //       for (let i = 0; i < this.tableDataroles.length; i++) {
-    //         if (
-    //           this.originrole.includes(this.tableDataroles[i].attributes.name)
-    //         ) {
-    //           this.$refs.multipleTable.toggleRowSelection(
-    //             this.tableDataroles[i],
-    //             true
-    //           );
-    //         }
-    //       }
-    //     });
-    //   });
-    // },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -588,9 +561,6 @@ export default {
       this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
     },
 
-    // rowClick (row) {
-    //     this.currentSelectIndex=row.index
-    // },
     //初始化权限列表
     gettable(start) {
       if (start == 0) {
@@ -761,15 +731,6 @@ export default {
         )
         .then(response => {
           console.log("response", response);
-
-          /*     if(response){
-                      window.open(
-                        window.location.origin +
-                          "/iotapi/product?name=" +
-                          _this.productName,
-                          "_blank"
-                      );
-                    } */
         });
     },
     //编辑权限
@@ -782,7 +743,7 @@ export default {
         this.form.name = resultes.attributes.name;
         this.form.desc = resultes.attributes.desc;
         this.form.alias = resultes.attributes.alias;
-        console.log(resultes);
+
       });
     },
     updaterole() {
@@ -836,13 +797,20 @@ export default {
     },
     // 显示弹窗
     setDialogRole(data) {
-      this.$store.commit("set_DeptObj", data);
+      // this.$store.commit("set_DeptObj", data);
+      // eventBus.$emit("set_DeptObj", data)
       this.centerDialogRole = true
+
+      this.$nextTick(()=>{
+        this.$refs['addRoleRef'].getData(data)
+
+
+      })
     },
     closeDialogRole() {
       this.centerDialogRole = false
-      this.gettable();
-      this.getMenu();
+  /*     this.gettable();
+      this.getMenu(); */
     }
   }
 };
