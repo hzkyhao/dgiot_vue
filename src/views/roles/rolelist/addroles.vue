@@ -1,17 +1,15 @@
 <template>
   <div class="app-container">
     <!-- <h2>添加角色</h2> -->
-    <div class="from">
+    <div class="role-box">
       <el-form
-        ref="ruleForm"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="100px"
-        class="demo-ruleForm"
+        :model="roleFormObj"
+        :rules="roleFormRules" 
+        label-width="80px"
       >
         <el-form-item label="parent" prop="parent">
 
-          <el-select v-model="ruleForm.ParentId" placeholder="请选择Parent">
+          <el-select v-model="roleFormObj.ParentId" placeholder="请选择Parent">
             <el-option
               v-for="(item, index) in roleList"
               :key="index"
@@ -22,22 +20,29 @@
         </el-form-item>
 
         <el-form-item label="角色名" prop="name">
-          <el-input v-model="ruleForm.name" style="width:200px;"/>
+          <el-input v-model="roleFormObj.name"  />
         </el-form-item>
         <el-form-item label="部门" prop="departmentid">      
           <el-input
-            v-model="ruleForm.depname"
+            v-model="roleFormObj.depname"
             placeholder="请输入部门名称"
-            style="width:200px"
+            
           />
         </el-form-item>
 
-        <el-form-item label="角色模版" prop="role">
+   <!--      <el-form-item label="岗位" prop="departmentid">      
+          <el-input
+            v-model="roleFormObj.org_type"
+           
+          />
+        </el-form-item> -->
+
+        <el-form-item label="岗位" prop="role">
           <el-select
-            v-model="ruleForm.dictvalue"
+            v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
             placeholder="请选择角色模版"
-            style="width:200px;"
+          
           >
             <el-option
               v-for="(item, index) in Option.dictOption"
@@ -49,14 +54,14 @@
         </el-form-item>
         <el-form-item label="备注" prop="description">
           <el-input
-            v-model="ruleForm.description"
+            v-model="roleFormObj.description"
             placeholder="备注项为必填项"
             type="textarea"
-            style="width:200px;"
+          
           />
         </el-form-item>
         <el-form-item class="el_btn">
-          <el-form-item label="操作" prop="desc"/>
+         
           <el-button type="warning" @click="resetFrom()">重置</el-button>
  
           <el-button
@@ -100,7 +105,7 @@ export default {
         ParentId: 0
       },
       clearFlag: true,
-      ruleForm: {
+      roleFormObj: {
         parentId: '',
         name: '',
         phoneNum: '',
@@ -117,7 +122,7 @@ export default {
         },
         dictvalue: ''
       },
-      rules: {
+      roleFormRules: {
         name: [
           { required: true, message: '请输入角色名', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
@@ -125,17 +130,6 @@ export default {
         description: [
           { required: true, message: '请输入权限描述', trigger: 'blur' },
           { min: 3, message: '最少三个字符', trigger: 'blur' }
-        ],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: '请至少选择一个权限',
-            trigger: 'change'
-          }
-        ],
-        roledetail: [
-          { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
       roleList: [],
@@ -154,7 +148,7 @@ export default {
     getData(departData){
         this.deptInfo = departData
 
-        this.ruleForm.ParentId =  this.deptInfo.objectId //this.$store.state.user.departmentObj.objectId
+        this.roleFormObj.ParentId =  this.deptInfo.objectId //this.$store.state.user.departmentObj.objectId
 
         console.log('this.deptInfo', this.deptInfo.objectId)
 
@@ -218,7 +212,7 @@ export default {
     },
     // 重置
     resetFrom() {
-      (this.ruleForm = {
+      (this.roleFormObj = {
         name: '',
         phoneNum: '',
         duty: '',
@@ -251,11 +245,11 @@ export default {
     },
     addroles() {
       const params = {
-        depname: this.ruleForm.depname,
-        desc: this.ruleForm.description,
-        name: this.ruleForm.name,
-        parent: this.ruleForm.ParentId,
-        tempname: this.ruleForm.dictvalue
+        depname: this.roleFormObj.depname,
+        desc: this.roleFormObj.description,
+        name: this.roleFormObj.name,
+        parent: this.roleFormObj.ParentId,
+        tempname: this.roleFormObj.dictvalue
       }
       this.$axiosWen
         .post('/role', params)
@@ -303,12 +297,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.from /deep/ .el-form-item {
-  float: left;
-}
-.from /deep/ .el-form-item:last-child .el-form-item__content {
-  margin-left: 0 !important;
-}
 
 .app-container {
   width: 100%;
@@ -324,13 +312,6 @@ export default {
     line-height: 40px;
     cursor: pointer;
   }
-  .from {
-    width: 80%;
-    margin: 0 auto;
-    .el_btn {
-      width: 500px;
-      margin-left: 0;
-    }
-  }
+
 }
 </style>
