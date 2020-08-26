@@ -1421,7 +1421,7 @@
         <pre id="editor1" class="ace_editor" style="min-height:400px"><textarea class="ace_text-input" style="overflow:scroll" /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height:30px;">
-        <el-button type="primary" @click="preserve">{{ $t('developer.determine') }}</el-button>
+        <el-button type="primary" @click="preserve">更新</el-button>
       </span>
     </el-dialog>
     <!--通道弹窗-->
