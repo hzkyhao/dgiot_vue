@@ -256,7 +256,7 @@
             <el-button
               type="primary"
               size="small"
-              @click="wmxdialogVisible = true;wmxSituation = '新增'"
+              @click="createProperty"
             >{{ $t('product.newcustomattribute') }}</el-button>
             <el-button
               type="primary"
@@ -266,7 +266,7 @@
           </div>
           <div>
             <el-table
-              :data="wmxData.slice((wmxstart-1)*wmxlength,wmxstart*wmxlength)"
+              :data="wmxData.slice((wmxstart-1)*wmxPageSize,wmxstart*wmxPageSize)"
               :default-expand-all="false"
               :row-class-name="getRowClass"
               border
@@ -347,7 +347,7 @@
             <!--功能定义分页-->
             <el-pagination
               :page-sizes="[10, 20, 30, 50]"
-              :page-size="wmxlength"
+              :page-size="wmxPageSize"
               :total="wmxData.length"
               style="margin-top:10px;"
               layout="total, sizes, prev, pager, next, jumper"
@@ -452,7 +452,7 @@
                 </el-row>
 
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
-                <div v-if="sizeForm.type=='INT'||sizeForm.type=='FLOAT'||sizeForm.type=='DOUBLE'">
+                <div v-if="sizeForm.type=='int'||sizeForm.type=='float'||sizeForm.type=='double'">
                   <el-form-item required label="取值范围(数值)">
                     <el-col :span="9">
                       <el-form-item prop="startnumber">
@@ -587,7 +587,6 @@
                         <el-select
                           v-model="sizeForm.protocol"
                           placeholder="请选择"
-                          @change="protocolChange"
                         >
                           <el-option
                             v-for="(item,index) in ['normal','modbus']"
@@ -636,7 +635,7 @@
                 </div>
 
                 <!--BOOL数据类型添加格式-->
-                <div v-if="sizeForm.type=='BOOL'">
+                <div v-if="sizeForm.type=='bool'">
                   <el-form-item :label="$t('product.attribute')" required>
                     <div style="height:40px;">
                       <el-col :span="11">
@@ -687,7 +686,7 @@
                   </el-form-item>
                 </div>
                 <!--枚举型添加格式-->
-                <div v-if="sizeForm.type=='ENUM'">
+                <div v-if="sizeForm.type=='enum'">
                   <el-form-item v-for="(item, index) in sizeForm.specs" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
@@ -730,7 +729,7 @@
                   >{{ $t('product.add') }}</el-link>
                 </div>
                 <!--结构体类型添加格式-->
-                <div v-if="sizeForm.type=='STRUCT'">
+                <div v-if="sizeForm.type=='struct'">
                   <el-form-item label="JSON对象" required>
                     <ul style="margin:0;padding-left:20px;">
                       <li
@@ -767,7 +766,7 @@
                   </el-form-item>
                 </div>
                 <!--字符串添加格式-->
-                <div v-if="sizeForm.type=='STRING'">
+                <div v-if="sizeForm.type=='string'">
                   <el-form-item :label="$t('product.datalength')" prop="string">
                     <el-input v-model.number="sizeForm.string" type="number">
                       <template slot="append">{{ $t('product.byte') }}</template>
@@ -775,7 +774,7 @@
                   </el-form-item>
                 </div>
                 <!--date类型添加格式-->
-                <div v-if="sizeForm.type=='DATE'">
+                <div v-if="sizeForm.type=='date'">
                   <el-form-item :label="$t('product.timeformat')">
                     <el-input v-model="sizeForm.date" readonly />
                   </el-form-item>
@@ -1873,7 +1872,7 @@ export default {
       productlength: 10,
       producttotal: 0,
       wmxstart: 1,
-      wmxlength: 10,
+      wmxPageSize: 10,
       wmxtotal: 20,
       wmxData: [],
       warningeditror: [],
@@ -1906,7 +1905,7 @@ export default {
       resourceform: {},
       resourcechannelid: "",
       isreload: 1,
-      showNewItem: false
+      modifyIndex:-1
     };
   },
   computed: {
@@ -1919,6 +1918,14 @@ export default {
         branchArr.length > 0 ? (father.children = branchArr) : ""; // 如果存在子级，则给父级添加一个children属性，并赋值
         return father.parentid == 0; // 返回第一层
       });
+    },
+    showNewItem(){
+      if ( this.sizeForm && this.sizeForm.protocol == "modbus") {
+         return true;
+      } else {
+        return false;
+      }  
+
     }
   },
   watch: {
@@ -1961,7 +1968,7 @@ export default {
         identifier: "",
         dis: "",
         dinumber: "",
-        type: "INT",
+        type: "int",
         startnumber: "",
         endnumber: "",
         step: "",
@@ -1988,13 +1995,6 @@ export default {
         originaltype: "int16",
         slaveid: 256
       };
-    },
-    protocolChange(val) {
-      if (val == "modbus") {
-        this.showNewItem = true;
-      } else {
-        this.showNewItem = false;
-      }
     },
     changeValue(formName) {
       this.$refs[formName].validateField("startnumber", errMsg => {
@@ -2658,9 +2658,9 @@ export default {
           product.get(this.productId).then(response => {
             // 提交之前需要先判断类型
             if (
-              this.sizeForm.type == "FLOAT" ||
-              this.sizeForm.type == "DOUBLE" ||
-              this.sizeForm.type == "INT"
+              this.sizeForm.type == "float" ||
+              this.sizeForm.type == "double" ||
+              this.sizeForm.type == "int"
             ) {
               obj = {
                 name: this.sizeForm.name,
@@ -2694,7 +2694,7 @@ export default {
                 delete obj.dataForm.originaltype;
                 delete obj.dataForm.slaveid;
               }
-            } else if (this.sizeForm.type == "BOOL") {
+            } else if (this.sizeForm.type == "bool") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2712,7 +2712,7 @@ export default {
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
               };
-            } else if (this.sizeForm.type == "ENUM") {
+            } else if (this.sizeForm.type == "enum") {
               var specs = {};
               this.sizeForm.specs.map(items => {
                 var newkey = items["attribute"];
@@ -2732,7 +2732,7 @@ export default {
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
               };
-            } else if (this.sizeForm.type == "STRUCT") {
+            } else if (this.sizeForm.type == "struct") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2747,7 +2747,7 @@ export default {
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
               };
-            } else if (this.sizeForm.type == "STRING") {
+            } else if (this.sizeForm.type == "string") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2762,7 +2762,7 @@ export default {
                 accessMode: this.sizeForm.isread,
                 identifier: this.sizeForm.identifier
               };
-            } else if (this.sizeForm.type == "DATE") {
+            } else if (this.sizeForm.type == "date") {
               obj = {
                 name: this.sizeForm.name,
                 dataType: {
@@ -2777,7 +2777,17 @@ export default {
                 identifier: this.sizeForm.identifier
               };
             }
-            this.productdetail.thing.properties.unshift(obj);
+
+            if(this.wmxSituation =='新增'){
+
+                console.log('新增');                            
+                this.productdetail.thing.properties.unshift(obj);
+
+            } else if(this.wmxSituation =='编辑') {
+               console.log('编辑');
+                this.productdetail.thing.properties[this.modifyIndex] = obj
+            }
+
             response.set("thing", this.productdetail.thing);
             response.save().then(
               resultes => {
@@ -2804,102 +2814,126 @@ export default {
         }
       });
     },
+    createProperty(){
+
+      
+      this.sizeForm = this.getFormOrginalData()
+
+      this.wmxdialogVisible = true;
+      this.wmxSituation = '新增'
+
+
+    },
     // 物模型修改
     wmxDataFill(rowData, index) {
 
+      this.modifyIndex = (this.wmxstart - 1) * this.wmxPageSize + index
+      console.log('this.modifyIndex ',this.modifyIndex);  
+      console.log('rowData ',rowData);
 
-      
       this.wmxdialogVisible = true;
       this.wmxSituation = "编辑";
 
-      
+
       var obj = {};
 
       // rowData.dataType.type
 
       // 提交之前需要先判断类型
-      if ( ['FLOAT','DOUBLE','INT'].indexOf(rowData.dataType.type) != -1) {
+      if ( ['float','double','int'].indexOf(rowData.dataType.type) != -1) {
         obj = {
           name: rowData.name,
           // rowData.dataType
           type: rowData.dataType.type,
-          endnumber:rowData.dataType.max,
-          startnumber:rowData.dataType.min,
-          step:rowData.dataType.step,
-          unit:rowData.dataType.unit,
+
+          endnumber:this.$objGet(rowData,'dataType.specs.max'),
+          startnumber:this.$objGet(rowData,'dataType.specs.min'),
+          step:this.$objGet(rowData,'dataType.specs.step'),
+          unit:this.$objGet(rowData,'dataType.specs.unit'),
           // : rowData.dataForm.    
-          dis : rowData.dataForm.addres,
-          dinumber : rowData.dataForm.quantity,
-          rate : rowData.dataForm.rate,
-          offset : rowData.dataForm.offset,
-          byteorder : rowData.dataForm.byteorder,
-          protocol : rowData.dataForm.protocol,
-          operatetype : rowData.dataForm.operatetype,
-          originaltype : rowData.dataForm.originaltype,
-          slaveid : rowData.dataForm.slaveid,
+          dis : this.$objGet(rowData,'dataForm.address'),
+          dinumber : this.$objGet(rowData,'dataForm.quantity'),
+          rate : this.$objGet(rowData,'dataForm.rate'),
+          offset : this.$objGet(rowData,'dataForm.offset'),
+          byteorder : this.$objGet(rowData,'dataForm.byteorder'),
+          protocol : this.$objGet(rowData,'dataForm.protocol'),
+          operatetype : this.$objGet(rowData,'dataForm.operatetype'),
+          originaltype : this.$objGet(rowData,'dataForm.originaltype'),
+          slaveid : this.$objGet(rowData,'dataForm.slaveid'),
       
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier
 
         };
-      } else if (rowData.dataType.type == "BOOL") {
+      } else if (rowData.dataType.type == "bool") {
         obj = {
           name: rowData.name,        
           type: rowData.dataType.type,
-          true: rowData.dataType.specs['1'],
-          false: rowData.dataType.specs['0'],         
+          true: rowData.dataType.specs[1],
+          false: rowData.dataType.specs[0],         
         // rowData.dataForm.       
-          dis: rowData.dataForm.address ,
-          dinumber: rowData.dataForm.quantity,        
+          dis: this.$objGet(rowData,'dataForm.address') ,
+          dinumber: this.$objGet(rowData,'dataForm.quantity'),       
           required: false,
           isread:rowData.accessMode,
           identifier: rowData.identifier
         };
-      } else if (rowData.dataType.type == "ENUM") {
+      } else if (rowData.dataType.type == "enum") {
    /*      var specs = {};
         this.sizeForm.specs.map(items => {
           var newkey = items["attribute"];
           specs[newkey] = items["attributevalue"];
         }); */
+
+        // rowData.dataType.specs.map                
+        var specsArray = []
+
+        for(let key  in rowData.dataType.specs){   
+             specsArray.push({
+              'attribute':key,
+              'attributevalue':rowData.dataType.specs[key]
+            })
+        } 
+
         obj = {
           name: rowData.name,
           type: rowData.dataType.type,
-          specs:rowData.dataType.specs,
-          dis : rowData.dataForm.address,
-          dinumber : rowData.dataForm.quantity,         
+          specs:specsArray,
+          dis : this.$objGet(rowData,'dataForm.address'),
+          dinumber : this.$objGet(rowData,'dataForm.quantity'),         
           required: true,
           isread : rowData.accessMode,
           identifier : rowData.identifier
         };
-      } else if (rowData.dataType.type == "STRUCT") {
+      } else if (rowData.dataType.type == "struct") {
         obj = {
           name: rowData.name,
           type:rowData.dataType.type,
           struct:rowData.dataType.specs,       
-          dis: rowData.dataForm.address,
-          quantity: rowData.dataForm.dinumber,        
+          dis: this.$objGet(rowData,'dataForm.address'),
+          dinumber: this.$objGet(rowData,'dataForm.quantity'),        
           required: true,
           isread:rowData.accessMode,
           identifier: rowData.identifier
         };
-      } else if (rowData.dataType.type == "STRING") {
+      } else if (rowData.dataType.type == "string") {
         obj = {
           name: rowData.name,        
           type: rowData.dataType.type,
           string:rowData.dataType.size,        
-          dis: rowData.dataForm.address,
-          dinumber: rowData.dataForm,        
+          dis: this.$objGet(rowData,'dataForm.address'),
+          dinumber: this.$objGet(rowData,'dataForm.quantity'),        
           required: true,
          isread : rowData.accessMode ,
          identifier: rowData.identifier
         };
-      } else if (rowData.dataType.type == "DATE") {
+      } else if (rowData.dataType.type == "date") {
         obj = {
           name: rowData.name,        
           type: rowData.dataType.type,       
-           dis : rowData.dataForm.address,
-           dinumber : rowData.dataForm.quantity,        
+           dis : this.$objGet(rowData,'dataForm.address'),
+           dinumber : this.$objGet(rowData,'dataForm.quantity'),        
           required: true,
           isread : rowData.accessMode,
           identifier : rowData.identifier
@@ -2907,6 +2941,9 @@ export default {
       }
 
       this.sizeForm = obj
+
+      console.log('this.sizeForm ',this.sizeForm);
+      
 
     },
     // 物模型结构体
@@ -3239,7 +3276,9 @@ export default {
               };
             }
 
-            this.wmxData = this.productdetail.thing.properties.concat([]);
+            this.wmxData = this.productdetail.thing.properties.filter((item)=>{
+              return  (item.name && item.dataType)
+            })
 
             editor.setValue(Base64.decode(setdata));
             editor.gotoLine(editor.session.getLength());
@@ -3295,10 +3334,16 @@ export default {
 
     //    }
     wmxhandleClose() {
-      this.sizeForm.type = "INT";
-      this.$refs["sizeForm"].resetFields();
-
+      
       this.wmxdialogVisible = false;
+
+      
+      this.sizeForm = this.getFormOrginalData()
+
+      
+  /*     this.sizeForm.type = "int";
+      this.$refs["sizeForm"].resetFields(); */
+
     },
     // 协议编辑
     protol() {
@@ -3667,7 +3712,7 @@ export default {
     /* 删除物模型*/
     deletewmx(index) {
       this.productdetail.thing.properties.splice(
-        (this.wmxstart - 1) * this.wmxlength + index,
+        (this.wmxstart - 1) * this.wmxPageSize + index,
         1
       );
       var Product = Parse.Object.extend("Product");
@@ -3690,57 +3735,13 @@ export default {
         );
       });
     },
-    /* 编辑物模型*/
-    editwmx(rowData, index) {
-      console.log("rowData ", rowData);
-
-      console.log("index ", index);
-
-
-      // let sizeFormTemp = this.getFormOrginalData()
-
-      this.sizeForm = {
-        resource: 1,
-        identifier: "",
-        dis: "",
-        dinumber: "",
-        type: "INT",
-        startnumber: "",
-        endnumber: "",
-        step: "",
-        true: "",
-        truevalue: 1,
-        false: "",
-        falsevalue: 0,
-        isread: "r",
-        unit: "",
-        string: "",
-        date: "String类型的UTC时间戳 (毫秒)",
-        specs: [
-          {
-            attribute: "",
-            attributevalue: ""
-          }
-        ],
-        struct: [],
-        rate: 1,
-        offset: 0,
-        byteorder: "big",
-        protocol: "normal",
-        operatetype: "holdingRegister",
-        originaltype: "int16",
-        slaveid: 256
-      };
-
-      // this.sizeForm =  JSON.parse(JSON.stringify(rowData))
-    },
     wmxSizeChange(val) {
       this.wmxstart = 1;
-      this.wmxlength = val;
+      this.wmxPageSize = val;
       console.log(
         this.wmxData.slice(
-          (this.wmxstart - 1) * this.wmxlength,
-          this.wmxstart * this.wmxlength
+          (this.wmxstart - 1) * this.wmxPageSize,
+          this.wmxstart * this.wmxPageSize
         )
       );
     },
