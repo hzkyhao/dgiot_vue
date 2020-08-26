@@ -5,20 +5,22 @@
         <el-table
           :data="roletempList"
           :row-class-name="tableRowClassName"
-          :row-style="selectedHighlight" 
+          :row-style="selectedHighlight"
           size="small"
+          border
+          highlight-current-row
           @row-click="getDetailmenu"
         >
           <el-table-column label="名称" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.key }}</span>
+              <span>{{ scope.row.data.name }}</span>
+              <span>( {{ scope.row.key }} )</span>
             </template>
           </el-table-column>
 
-          <el-table-column :label="$t('developer.operation')" align="center">
+          <el-table-column width="180" :label="$t('developer.operation')" align="center">
             <template slot-scope="scope">
-              <el-dropdown
-                split-button
+              <!--          <el-dropdown
                 type="primary"
                 size="medium"
                 @click="exportRolerole(scope.row)"
@@ -31,17 +33,18 @@
                   >保存模板</el-dropdown-item>
                   <el-dropdown-item icon="el-icon-delete" @click.native="handleDelete(scope.row)">删除</el-dropdown-item>
                 </el-dropdown-menu>
-              </el-dropdown>
+              </el-dropdown>-->
+
+              <el-button size="small" @click.native="exportRoletemp(scope.row)" type="primary">更新模版</el-button>
+              <el-button size="small" @click.native="handleDelete(scope.row)" type="danger">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
- 
       </el-col>
 
       <el-col :span="10">
-
         <el-col :span="12">
-           <!--权限 -->
+          <!--权限 -->
           <div class="footerleft">
             <p class="top">
               <span class="svg-container">
@@ -66,12 +69,10 @@
               </el-tree>
             </div>
           </div>
-
         </el-col>
 
         <el-col :span="12">
-
-         <!--菜单-->
+          <!--菜单-->
           <div class="footerright">
             <p class="top">
               <span class="svg-container">
@@ -96,9 +97,7 @@
               </el-tree>
             </div>
           </div>
-
         </el-col>
-    
       </el-col>
     </el-row>
   </div>
@@ -236,32 +235,25 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-          var roles = Parse.Object.extend("_Role");
-          var query = new Parse.Query(roles);
-          query.get(row).then(object => {
-            object.destroy().then(
-              response => {
-                this.$message({
-                  type: "success",
-                  message: "删除成功!"
-                });
-                this.gettable();
-                this.getMenu();
-              },
-              error => {
-                console.log("error", error);
-              }
-            );
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
+      }).then(() => {
+        var roles = Parse.Object.extend("_Role");
+        var query = new Parse.Query(roles);
+        query.get(row).then(object => {
+          object.destroy().then(
+            response => {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.gettable();
+              this.getMenu();
+            },
+            error => {
+              console.log("error", error);
+            }
+          );
         });
+      });
     },
     //增加菜单
     addmenu(row) {
@@ -279,10 +271,8 @@ export default {
     selectedHighlight({ row, rowIndex }) {
       if (this.currentSelectIndex === rowIndex) {
         return {
-          // "background-color": "#409EFF",
           color: "#409EFF",
           "font-weight": "bold"
-          // border: "5px solid black"
         };
       }
     },
@@ -290,35 +280,11 @@ export default {
       if (column && column.label == "操作") {
         return;
       }
-
-      this.loadingService = this.$loading({
-        lock: true,
-        text: "数据加载中...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.6)"
-      });
       this.currentSelectIndex = row.index;
-      this.$axiosWen
-        .get("/role?name=" + row.name)
-        .then(res => {
-          this.roleItem = res;
-          if (res && res.menus && res.rules) {
-            this.checkMenus = res.menus;
-            this.checkRoles = res.rules;
-            this.doSetChecked();
-          } else {
-            this.$message({
-              type: "warning",
-              message: "获取角色菜单失败"
-            });
-          }
 
-          this.loadingService.close();
-        })
-        .catch(error => {
-          this.loadingService.close();
-          console.log(error);
-        });
+      this.checkMenus = row.data.menus;
+      this.checkRoles = row.data.rules;
+      this.doSetChecked();
     },
     doSetChecked() {
       this.roleMenuList = [];
@@ -345,26 +311,21 @@ export default {
       this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
     },
     gettable(start) {
-
-     this.$axiosWen
-        .get('/classes/Dict', {
+      this.$axiosWen
+        .get("/classes/Dict", {
           params: {
             where: {
-              type: 'roletemp'
+              type: "roletemp"
             }
           }
         })
         .then(res => {
-          if(res && res.results){            
-          this.roletempList  = res.results
-
+          if (res && res.results) {
+            this.roletempList = res.results;
           } else {
             this.roletempList = [];
-
           }
-        })
-
-
+        });
     },
     // 获取权限
     getRoleschema() {
@@ -390,75 +351,48 @@ export default {
           console.log(error);
         });
     },
-    // 修改角色权限
-    exportRolerole(row) {
-      let usersList = [];
-      let rolesList = [];
+    // 保存模板
+    exportRoletemp(row) {
+      console.log("row ##", row);
+
       let checkrole = [];
       let checkmenu = [];
       let selectMenu = this.$refs.menusTree.getCheckedNodes();
       let selectRermission = this.$refs.permissionTree.getCheckedNodes();
-      let rolesData = this.roleItem.roles;
-      let usersData = this.roleItem.users;
-      if (!usersData || !rolesData) {
-        this.$message({
-          message: "未选择正确的角色"
-        });
 
-        return false;
-      }
-      usersData.forEach(item => {
-        usersList.push(item.username);
-      });
-      rolesData.forEach(item => {
-        rolesList.push(item.name);
-      });
-      if (selectMenu && selectRermission) {
+      if (
+        selectMenu &&
+        selectRermission &&
+        selectMenu.length > 0 &&
+        selectRermission.length > 0
+      ) {
         selectMenu.forEach(item => {
-          console.log(item);
           checkmenu.push(item.label);
         });
         selectRermission.forEach(item => {
-          console.log(item);
           checkrole.push(item.alias);
         });
-        this.$axios
-          .put("/role", {
-            objectId: this.roleItem.objectId,
-            name: row.name,
-            alias: row.alias,
-            desc: row.desc,
-            rules: checkrole,
-            menus: checkmenu,
-            roles: rolesList,
-            users: usersList
-          })
-          .then(res => {
-            this.$message("角色信息更新成功");
-          })
-          .catch(error => {
-            console.log(error);
-            this.$message({
-              message: "更新失败!"
-            });
-          });
       } else {
-        this.$message("请选择菜单列表和权限列表");
+        this.$message({ mesaage: "数据为空" });
+        return;
       }
-    },
-    // 保存模板
-    exportRoletemp(row) {
+
+      var newData = row.data;
+
+      newData.menus = checkmenu;
+      newData.rules = checkrole;
+
       this.$axiosWen
-        .post(
-          "/roletemp?name=" +
-            row.name +
-            "&tempname=" +
-            row.name +
-            "_" +
-            row.desc
-        )
-        .then(response => {
-          console.log("response", response);
+        .put("/classes/Dict/" + row.objectId, {
+          data: newData
+        })
+        .then(res => {
+          if (res) {
+            this.$message({ mesaage: "更新成功" });
+          }
+        })
+        .catch(err => {
+          this.$message({ mesaage: "更新失败" });
         });
     },
     //编辑权限
@@ -488,36 +422,6 @@ export default {
         this.roleEdit = false;
         this.gettable();
       });
-    },
-    handleNodeClick(data) {
-      this.gettable(data);
-
-      this.curDepartmentId = data.objectId;
-
-      // 清除选中的角色
-
-      this.currentSelectIndex = null;
-
-      //清除菜单树
-
-      // this.dataMenus = []
-    },
-    // 添加子节点
-    appendChildTree(data) {
-      console.log(data, "添加子节点");
-    },
-    // 显示弹窗
-    setDialogRole(data) {
-      // this.$store.commit("set_DeptObj", data);
-      // eventBus.$emit("set_DeptObj", data)
-      this.centerDialogRole = true;
-
-      this.$nextTick(() => {
-        this.$refs["addRoleRef"].getData(data);
-      });
-    },
-    closeDialogRole() {
-      this.centerDialogRole = false;
     }
   }
 };

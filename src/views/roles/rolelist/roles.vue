@@ -508,10 +508,6 @@ export default {
         background: "rgba(0, 0, 0, 0.6)"
       });
 
-      console.log("column", column);
-      console.log("event", event);
-      console.log("cell", cell);
-
       this.currentSelectIndex = row.index;
 
       this.$axiosWen
@@ -672,6 +668,7 @@ export default {
       let selectRermission = this.$refs.permissionTree.getCheckedNodes();
       let rolesData = this.roleItem.roles;
       let usersData = this.roleItem.users;
+      
       if (!usersData || !rolesData) {
         this.$message({
           message: "未选择正确的角色"
