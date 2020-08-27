@@ -684,15 +684,14 @@ export default {
       });
       if (selectMenu && selectRermission) {
         selectMenu.forEach(item => {
-          console.log(item);
+          console.log('selectMenu' ,item);
           checkmenu.push(item.label);
         });
         selectRermission.forEach(item => {
-          console.log(item);
+          console.log('selectRermission',item);
           checkrole.push(item.alias);
         });
-        this.$axios
-          .put("/role", {
+        this.$axios.put("/role", {
             objectId: this.roleItem.objectId,
             name: row.attributes.name,
             alias: row.attributes.alias,
