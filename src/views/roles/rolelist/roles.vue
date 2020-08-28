@@ -9,13 +9,15 @@
             :expand-on-click-node="false"
             node-key="index"
             default-expand-all
-
           >
             <!-- @node-click="handleNodeClick" -->
             <div slot-scope="{ node, data }" class="custom-tree-node">
-              <span :class="{ selected: data.objectId == curDepartmentId}" @click="handleNodeClick(data)" >{{ node.label }}</span>
+              <span
+                :class="{ selected: data.objectId == curDepartmentId}"
+                @click="handleNodeClick(data)"
+              >{{ node.label }}</span>
               <span>
-                <i class="el-icon-circle-plus-outline" title="添加角色" @click="setDialogRole(data)"/>
+                <i class="el-icon-circle-plus-outline" title="添加角色" @click="setDialogRole(data)" />
               </span>
             </div>
           </el-tree>
@@ -24,26 +26,26 @@
       <el-col :span="9">
         <div class="rightTable">
           <div class="search">
-            <el-input :placeholder="$t('user.name')" v-model="search" size="mini" clearable/>
+            <el-input :placeholder="$t('user.name')" v-model="search" size="mini" clearable />
             <el-button
               type="primary"
               size="mini"
               icon="el-icon-search"
               style="margin-left:20px;"
-              @click="gettable(0)"
+              @click="getRolesList(0)"
             >{{ $t("developer.search") }}</el-button>
             <!-- icon="el-icon-plus" -->
             <!--           <el-button type="primary" size="mini" @click="add">
               {{
               $t("developer.add")
               }}
-            </el-button> -->
+            </el-button>-->
             <!-- icon="el-icon-search" -->
-            <el-button type="primary" size="mini" @click="gettable()">所有角色</el-button>
+            <el-button type="primary" size="mini" @click="getRolesList()">所有角色</el-button>
           </div>
           <div class="tableroles" style="margin-top:20px">
             <el-table
-              :data="tableData"
+              :data="roleList"
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
               style="width: 100%;text-align:center"
@@ -52,22 +54,22 @@
             >
               <el-table-column :label="$t('user.name')" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <!--         <el-table-column :label="$t('developer.describe')" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.desc }}</span>
+                  <span>{{ scope.row.desc }}</span>
                 </template>
               </el-table-column>-->
               <el-table-column :label="$t('user.Remarks')" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.alias }}</span>
+                  <span>{{ scope.row.alias }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="ID" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.id }}</span>
+                  <span>{{ scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" align="center">
@@ -102,14 +104,11 @@
             <!--分页-->
             <div class="rightPagination">
               <el-pagination
-                v-show="total > 2"
-                :page-sizes="[1, 5, 10]"
-                :page-size="pagesize"
                 :total="total"
-                layout="total, sizes, prev, pager, next, jumper"
+                layout="prev, pager, next"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-              />
+              ></el-pagination>
             </div>
           </div>
         </div>
@@ -169,10 +168,10 @@
       </el-col>
     </el-row>
 
-    <el-dialog :visible="centerDialogRole" title="添加角色" width="35%" center @close="closeDialogRole">    
-        <addroles ref="addRoleRef" />     
+    <el-dialog :visible="centerDialogRole" title="添加角色" width="35%" center @close="closeDialogRole">
+      <addroles ref="addRoleRef" />
     </el-dialog>
-    
+
     <el-dialog :title="$t('developer.add')" :visible.sync="dialogVisible" width="50%">
       <el-table
         ref="multipleTable"
@@ -180,7 +179,7 @@
         style="width: 100%;text-align:center"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"/>
+        <el-table-column type="selection" width="55" />
         <el-table-column :label="$t('user.name')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.attributes.name }}</span>
@@ -200,12 +199,12 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">
           {{
-            $t("developer.cancel")
+          $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="addacl">
           {{
-            $t("developer.determine")
+          $t("developer.determine")
           }}
         </el-button>
       </span>
@@ -215,10 +214,10 @@
     <el-dialog :title="$t('developer.edit')" :visible.sync="roleEdit">
       <el-form :model="form">
         <el-form-item :label="$t('user.name')" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled/>
+          <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled />
         </el-form-item>
         <el-form-item :label="$t('user.Remarks')" :label-width="formLabelWidth">
-          <el-input v-model="form.alias" autocomplete="off" style="width:300px;"/>
+          <el-input v-model="form.alias" autocomplete="off" style="width:300px;" />
         </el-form-item>
         <el-form-item :label="$t('developer.describe')" :label-width="formLabelWidth">
           <el-input
@@ -233,12 +232,12 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleEdit = false">
           {{
-            $t("developer.cancel")
+          $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="updaterole">
           {{
-            $t("developer.determine")
+          $t("developer.determine")
           }}
         </el-button>
       </div>
@@ -246,57 +245,40 @@
   </div>
 </template>
 <script>
-import { page, UpdatedMenu, UpdatedRole } from '@/api/login'
-import { Parse } from 'parse'
-import { returnLogin } from '@/utils/return'
-import addroles from '@/views/roles/rolelist/addroles'
-import { eventBus } from '@/api/eventBus'
+import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
+import { Parse } from "parse";
+import { returnLogin } from "@/utils/return";
+import addroles from "@/views/roles/rolelist/addroles";
+import { eventBus } from "@/api/eventBus";
 export default {
-  name: 'Role',
+  name: "Role",
   data() {
     return {
       deptTreeData: [],
-      curDepartmentId: '',
-      formLabelWidth: '120px',
+      curDepartmentId: "",
+      formLabelWidth: "120px",
       roleEdit: false,
       form: {
-        name: '',
-        alias: '',
-        desc: ''
+        name: "",
+        alias: "",
+        desc: ""
       },
       data: [],
       dialogVisible: false,
       multipleSelection: [],
-      search: '',
+      search: "",
       total: 0,
       pagesize: 10,
       start: 0,
-      tableData: [],
-      update: 0,
-      id: '',
-      row: '',
-      insert: [],
-      roles1: [],
+      roleList: [],
       tableDataroles: [],
       centerDialogVisible: false,
-      originrole: [],
-      orderresultes: [],
-      depandmenu: [],
-      rolemenu: [],
-      rolemenuname: '',
-      roleobjectid: '',
-      rolecontrol: true,
-      roledata: [],
-      rolecontroldata: [],
-      data1: [],
-      editroleid: '',
+      editroleid: "",
       currentSelectIndex: null,
       roleProps: {
-        children: 'children',
-        label: 'name'
+        children: "children",
+        label: "name"
       },
-      roleData: [],
-      DialogRoleFlag: true,
       checkMenus: [], // 选中菜单
       checkRoles: [], // 选中权限
       dataMenus: [],
@@ -306,11 +288,11 @@ export default {
       loadingService: {},
       roleItem: [],
       centerDialogRole: false
-    }
+    };
   },
   computed: {
     permissionTreeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
+      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions));
       return cloneData.filter(father => {
         /* eslint-disable */
         const branchArr = cloneData.filter(
@@ -338,14 +320,13 @@ export default {
     addroles
   },
   mounted() {
-    this.gettable();
+    this.getRolesList();
     this.getMenu();
     this.getRoleschema();
 
-     eventBus.$on('dialogHide',()=>{
-
-       this.centerDialogRole = false
-     })
+    eventBus.$on("dialogHide", () => {
+      this.centerDialogRole = false;
+    });
   },
 
   methods: {
@@ -355,8 +336,7 @@ export default {
       this.$axiosWen
         .get("/classes/Menu")
         .then(res => {
-          if(res && res.results){
-
+          if (res && res.results) {
             this.menuListRes = res.results;
             res.results.map(items => {
               var obj = {};
@@ -367,7 +347,6 @@ export default {
               this.data.push(obj);
               this.dataMenus.push(obj);
             });
-
           }
         })
         .catch(error => {
@@ -428,7 +407,7 @@ export default {
               message: "添加成功!"
             });
             this.centerDialogVisible = false;
-            this.gettable();
+            this.getRolesList();
           },
           error => {
             console.log(error);
@@ -442,36 +421,24 @@ export default {
     },
     //删除角色
     handleDelete(row) {
-      this.$confirm("此操作将永久删除此权限, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除此角色, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          var roles = Parse.Object.extend("_Role");
-          var query = new Parse.Query(roles);
-          query.get(row).then(object => {
-            object.destroy().then(
-              response => {
-                this.$message({
-                  type: "success",
-                  message: "删除成功!"
-                });
-                this.gettable();
-                this.getMenu();
-              },
-              error => {
-                returnLogin(error);
-              }
-            );
+          this.$axiosWen.delete("/classes/_Role/" + row.objectId).then(res => {
+            if (res) {
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+              this.getRolesList();
+              this.getMenu();
+            }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
     },
     //增加菜单
     addmenu(row) {
@@ -511,7 +478,7 @@ export default {
       this.currentSelectIndex = row.index;
 
       this.$axiosWen
-        .get("/role?name=" + row.attributes.name)
+        .get("/role?name=" + row.name)
         .then(res => {
           this.roleItem = res;
           if (res && res.menus && res.rules) {
@@ -558,69 +525,55 @@ export default {
     },
 
     //初始化权限列表
-    gettable(start) {
+    getRolesList(start, dataR) {
       if (start == 0) {
         this.start = 0;
       }
-/*       this.loadingService = this.$loading({
-        lock: true,
-        text: "请等待...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      }); */
-      this.tableData = [];
-      var roles = Parse.Object.extend("_Role");
-      var query = new Parse.Query(roles);
-      query.limit(this.pagesize);
-      query.skip(this.start);
-      if (this.searchvalue != "") {
-        query.equalTo("name", this.searchvalue);
+
+      let where = {};
+
+      if (dataR && dataR.name != "admin") {
+        where.objectId = dataR.objectId;
       }
-      query.count().then(count => {
-        if (count) {
-          this.total = count;
-        }
-        query.find().then(
-          res => {
-            const filtterArr = res.filter(item=>{
-              if(start && start.name !='admin'){
-                return item.id === start.objectId
-              }else{
-                return item
-              }
-            })
-            this.tableData = filtterArr;
-            // this.loadingService.close();
-          },
-          error => {
-            // this.loadingService.close();
-            console.log(error);
-            if (error.code == "209") {
-              this.$message({
-                type: "warning",
-                message: "登陆权限过期，请重新登录"
-              });
-              this.$router.push({
-                path: "/login"
-              });
-            }
-          }
-        );
+      const loading = this.$loading({
+        background: "rgba(0, 0, 0, 0.5)"
       });
+      this.$axiosWen
+        .get("/classes/_Role", {
+          params: {
+            skip: this.start,
+            limit: this.pagesize,
+            order: "-createdAt",
+            where: where,
+            keys: "count(*)"
+          }
+        })
+        .then(res => {
+          loading.close();
+          if (res && res.results) {
+            this.roleList = res.results;
+            this.total = res.count;
+          } else {
+            this.roleList = [];
+          }
+        })
+        .catch(() => {
+          loading.close();
+        });
     },
     handleSizeChange(val) {
       this.pagesize = val;
-      this.gettable();
+      this.getRolesList();
     },
     handleCurrentChange(val) {
       this.start = Number(val - 1) * Number(this.pagesize);
-      this.gettable();
+      this.getRolesList();
     },
     handleCheckChange(data, checked) {
       console.log(data, checked);
     },
     searchvalue() {
-      this.tableData = [];
+      this.roleList = [];
       var roles = Parse.Object.extend("_Role");
       var query = new Parse.Query(roles);
       query.equalTo("name", this.search);
@@ -629,7 +582,7 @@ export default {
         if (count) {
           this.total = count;
           query.find().then(results => {
-            this.tableData = results;
+            this.roleList = results;
           });
         }
       });
@@ -668,7 +621,7 @@ export default {
       let selectRermission = this.$refs.permissionTree.getCheckedNodes();
       let rolesData = this.roleItem.roles;
       let usersData = this.roleItem.users;
-      
+
       if (!usersData || !rolesData) {
         this.$message({
           message: "未选择正确的角色"
@@ -684,14 +637,15 @@ export default {
       });
       if (selectMenu && selectRermission) {
         selectMenu.forEach(item => {
-          console.log('selectMenu' ,item);
+          console.log("selectMenu", item);
           checkmenu.push(item.label);
         });
         selectRermission.forEach(item => {
-          console.log('selectRermission',item);
+          console.log("selectRermission", item);
           checkrole.push(item.alias);
         });
-        this.$axios.put("/role", {
+        this.$axios
+          .put("/role", {
             objectId: this.roleItem.objectId,
             name: row.attributes.name,
             alias: row.attributes.alias,
@@ -719,11 +673,11 @@ export default {
       this.$axiosWen
         .post(
           "/roletemp?name=" +
-            row.attributes.name +
+            row.name +
             "&tempname=" +
-            row.attributes.name +
+            row.name +
             "_" +
-            row.attributes.desc
+            row.desc
         )
         .then(response => {
           console.log("response", response);
@@ -739,7 +693,6 @@ export default {
         this.form.name = resultes.attributes.name;
         this.form.desc = resultes.attributes.desc;
         this.form.alias = resultes.attributes.alias;
-
       });
     },
     updaterole() {
@@ -755,17 +708,17 @@ export default {
           });
         });
         this.roleEdit = false;
-        this.gettable();
+        this.getRolesList();
       });
     },
     handleNodeClick(data) {
-      this.gettable(data)
+      this.getRolesList(0, data);
 
-      this.curDepartmentId = data.objectId
+      this.curDepartmentId = data.objectId;
 
       // 清除选中的角色
 
-      this.currentSelectIndex = null
+      this.currentSelectIndex = null;
 
       //清除菜单树
 
@@ -795,18 +748,14 @@ export default {
     setDialogRole(data) {
       // this.$store.commit("set_DeptObj", data);
       // eventBus.$emit("set_DeptObj", data)
-      this.centerDialogRole = true
+      this.centerDialogRole = true;
 
-      this.$nextTick(()=>{
-        this.$refs['addRoleRef'].getData(data)
-
-
-      })
+      this.$nextTick(() => {
+        this.$refs["addRoleRef"].getData(data);
+      });
     },
     closeDialogRole() {
-      this.centerDialogRole = false
-  /*     this.gettable();
-      this.getMenu(); */
+      this.centerDialogRole = false;
     }
   }
 };
@@ -835,7 +784,6 @@ export default {
   width: 100%;
   display: flex;
   margin-top: 10px;
-
 }
 .footerleft,
 .footerright {
@@ -859,7 +807,6 @@ export default {
 .rolefooter .top button {
   float: right;
 }
-
 </style>
 <style lang="scss">
 .roles .search .el-input {
@@ -868,20 +815,15 @@ export default {
 
 .leftTree {
   span.selected {
-
-  font-weight: bold;
-  color:#409EFF;
-    }
+    font-weight: bold;
+    color: #409eff;
+  }
   .el-tree-node {
-
-    margin-top:5px;
+    margin-top: 5px;
   }
 
-.custom-tree-node .el-icon-circle-plus-outline:hover {
-
-color:#409EFF;
-
+  .custom-tree-node .el-icon-circle-plus-outline:hover {
+    color: #409eff;
+  }
 }
-}
-
 </style>

@@ -45,7 +45,8 @@
                 :expand-on-click-node="false"
                 show-checkbox
                 node-key="name"
-                accordion >
+                accordion
+              >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
                 </span>
@@ -71,7 +72,8 @@
                 :expand-on-click-node="false"
                 show-checkbox
                 node-key="label"
-                accordion >
+                accordion
+              >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
                 </span>
@@ -100,42 +102,37 @@ export default {
   },
   computed: {
     permissionTreeData() {
-
       return this.dataPermissions.filter(father => {
-        let branchArr = []
+        let branchArr = [];
 
-        this.dataPermissions.forEach((child)=>{
-          if(father.objectId == child.parentId){       
-              branchArr.push(child)
+        this.dataPermissions.forEach(child => {
+          if (father.objectId == child.parentId) {
+            branchArr.push(child);
           }
-        })
+        });
 
-    /*     let branchArr = this.dataPermissions.filter( (child) => {
+        /*     let branchArr = this.dataPermissions.filter( (child) => {
             return father.objectId == child.parentId
             }
         ); */
-            
-      // 如果存在子级，则给父级添加一个children，并赋值
-        if(branchArr.length > 0) {
-          father.children = branchArr
-          }        
-        return father.parentId == 0; 
-  
+
+        // 如果存在子级，则给父级添加一个children，并赋值
+        if (branchArr.length > 0) {
+          father.children = branchArr;
+        }
+        return father.parentId == 0;
       });
     },
     menuTreeData() {
-
-      return this.dataMenus.filter(father => {  
-
+      return this.dataMenus.filter(father => {
         let branchArr = this.dataMenus.filter(
           child => father.objectId == child.parentId
         );
 
-        if(branchArr.length > 0 ){
-          father.children = branchArr
+        if (branchArr.length > 0) {
+          father.children = branchArr;
         }
         return father.parentId == 0;
-     
       });
     }
   },
@@ -174,7 +171,7 @@ export default {
           console.log(error);
         });
     },
-        gettable(start) {
+    gettable(start) {
       this.$axiosWen
         .get("/classes/Dict", {
           params: {
@@ -208,7 +205,6 @@ export default {
             obj.createtime = new Date(items.createdAt).toLocaleDateString();
             this.dataPermissions.push(obj);
           });
-
         })
         .catch(error => {
           console.log(error);
@@ -233,14 +229,14 @@ export default {
       }
       this.currentSelectIndex = row.index;
 
-      this.doSetChecked(row.data.menus,row.data.rules);
+      this.doSetChecked(row.data.menus, row.data.rules);
     },
-    doSetChecked(allMenus,allPermissions) {
+    doSetChecked(allMenus, allPermissions) {
       this.roleMenuList = [];
       this.rolePermissonList = [];
 
-      const tempMenuList = []
-      const tempPermissonList = []
+      const tempMenuList = [];
+      const tempPermissonList = [];
 
       this.menuListRes.map(items => {
         allMenus.map(mentItem => {
@@ -262,72 +258,64 @@ export default {
         });
       });
 
-
-     this.rolePermissonList = [...new Set(tempPermissonList)];     
+      this.rolePermissonList = [...new Set(tempPermissonList)];
 
       // set ###
       this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
     },
     // 保存模板
     exportRoletemp(row) {
+      this.$confirm("确定要更新吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let checkrole = [];
+        let checkmenu = [];
+        let selectMenu = this.$refs.menusTree.getCheckedNodes();
+        let selectRermission = this.$refs.permissionTree.getCheckedNodes();
 
-      this.$confirm('确定要更新吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          
-          let checkrole = [];
-          let checkmenu = [];
-          let selectMenu = this.$refs.menusTree.getCheckedNodes();
-          let selectRermission = this.$refs.permissionTree.getCheckedNodes();
-
-          if (
-            selectMenu &&
-            selectRermission &&
-            selectMenu.length > 0 &&
-            selectRermission.length > 0
-          ) {
-            selectMenu.forEach(item => {
-              checkmenu.push(item.label);
-            });
-            selectRermission.forEach(item => {
-              checkrole.push(item.name);
-            });
-          } else {
-            this.$message({ mesaage: "数据为空" });
-            return;
-          }
-
-          var newData = row.data;
-
-          newData.menus = checkmenu;
-          newData.rules = checkrole;
-
-          const loading = this.$loading({
-            background: "rgba(0, 0, 0, 0.5)"
+        if (
+          selectMenu &&
+          selectRermission &&
+          selectMenu.length > 0 &&
+          selectRermission.length > 0
+        ) {
+          selectMenu.forEach(item => {
+            checkmenu.push(item.label);
           });
+          selectRermission.forEach(item => {
+            checkrole.push(item.name);
+          });
+        } else {
+          this.$message({ mesaage: "数据为空" });
+          return;
+        }
 
-          this.$axiosWen
-            .put("/classes/Dict/" + row.objectId, {
-              data: newData
-            })
-            .then(res => {
-              loading.close()
-              if (res) {
-                this.$message({ message: "更新成功" });
-                
-              }
-            })
-            .catch(err => {
-               loading.close()
-              this.$message({ message: "更新失败" });
-            });
+        var newData = row.data;
 
-      
-        })
+        newData.menus = checkmenu;
+        newData.rules = checkrole;
 
+        const loading = this.$loading({
+          background: "rgba(0, 0, 0, 0.5)"
+        });
 
+        this.$axiosWen
+          .put("/classes/Dict/" + row.objectId, {
+            data: newData
+          })
+          .then(res => {
+            loading.close();
+            if (res) {
+              this.$message({ message: "更新成功" });
+            }
+          })
+          .catch(err => {
+            loading.close();
+            this.$message({ message: "更新失败" });
+          });
+      });
     }
   }
 };
