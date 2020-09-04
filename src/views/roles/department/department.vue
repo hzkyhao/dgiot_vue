@@ -18,10 +18,22 @@
             </template>
           </el-table-column>
 
-          <el-table-column width="180" :label="$t('developer.operation')" align="center">
+          <el-table-column
+            width="180"
+            :label="$t('developer.operation')"
+            align="center"
+          >
             <template slot-scope="scope">
-              <el-button size="small" @click.native="exportRoletemp(scope.row)" type="primary">更新模版</el-button>
-              <!-- <el-button size="small" @click.native="handleDelete(scope.row)" type="danger">删除</el-button> -->
+              <el-button
+                size="small"
+                @click.native="exportRoletemp(scope.row)"
+                type="primary"
+              >更新模版</el-button>
+              <el-button
+                size="small"
+                @click.native="handleDelete(scope.$index,scope.row,roletempList)"
+                type="danger"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -86,11 +98,11 @@
   </div>
 </template>
 <script>
-import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
-import { Parse } from "parse";
-import { eventBus } from "@/api/eventBus";
+import { page, UpdatedMenu, UpdatedRole } from '@/api/login'
+import { Parse } from 'parse'
+import { eventBus } from '@/api/eventBus'
 export default {
-  name: "Department",
+  name: 'Department',
   data() {
     return {
       roletempList: [],
@@ -98,18 +110,18 @@ export default {
       roleMenuList: [],
       dataPermissions: [],
       rolePermissonList: []
-    };
+    }
   },
   computed: {
     permissionTreeData() {
       return this.dataPermissions.filter(father => {
-        let branchArr = [];
+        let branchArr = []
 
         this.dataPermissions.forEach(child => {
           if (father.objectId == child.parentId) {
-            branchArr.push(child);
+            branchArr.push(child)
           }
-        });
+        })
 
         /*     let branchArr = this.dataPermissions.filter( (child) => {
             return father.objectId == child.parentId
@@ -118,29 +130,29 @@ export default {
 
         // 如果存在子级，则给父级添加一个children，并赋值
         if (branchArr.length > 0) {
-          father.children = branchArr;
+          father.children = branchArr
         }
-        return father.parentId == 0;
-      });
+        return father.parentId == 0
+      })
     },
     menuTreeData() {
       return this.dataMenus.filter(father => {
         let branchArr = this.dataMenus.filter(
           child => father.objectId == child.parentId
-        );
+        )
 
         if (branchArr.length > 0) {
-          father.children = branchArr;
+          father.children = branchArr
         }
-        return father.parentId == 0;
-      });
+        return father.parentId == 0
+      })
     }
   },
   components: {},
   mounted() {
-    this.gettable();
-    this.getMenu();
-    this.getRoleschema();
+    this.gettable()
+    this.getMenu()
+    this.getRoleschema()
 
     /* eventBus.$on("dialogHide", () => {
       this.centerDialogRole = false;
@@ -149,131 +161,149 @@ export default {
 
   methods: {
     getMenu() {
-      this.data = [];
-      this.dataMenus = [];
+      this.data = []
+      this.dataMenus = []
       this.$axiosWen
-        .get("/classes/Menu")
+        .get('/classes/Menu')
         .then(res => {
           if (res && res.results) {
-            this.menuListRes = res.results;
+            this.menuListRes = res.results
             res.results.map(items => {
-              var obj = {};
-              obj.label = items.name;
-              obj.objectId = items.objectId;
-              obj.parentId = items.parent.objectId;
-              obj.createtime = new Date(items.createdAt).toLocaleDateString();
-              this.data.push(obj);
-              this.dataMenus.push(obj);
-            });
+              var obj = {}
+              obj.label = items.name
+              obj.objectId = items.objectId
+              obj.parentId = items.parent.objectId
+              obj.createtime = new Date(items.createdAt).toLocaleDateString()
+              this.data.push(obj)
+              this.dataMenus.push(obj)
+            })
           }
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     gettable(start) {
       this.$axiosWen
-        .get("/classes/Dict", {
+        .get('/classes/Dict', {
           params: {
             where: {
-              type: "roletemp"
+              type: 'roletemp'
             }
           }
         })
         .then(res => {
           if (res && res.results) {
-            this.roletempList = res.results;
+            this.roletempList = res.results
           } else {
-            this.roletempList = [];
+            this.roletempList = []
           }
-        });
+        })
     },
     // 获取权限
     getRoleschema() {
-      this.dataPermissions = [];
+      this.dataPermissions = []
       this.$axiosWen
-        .get("/classes/Permission")
+        .get('/classes/Permission')
         .then(res => {
-          const results = res.results;
-          this.permissionListRes = results;
+          const results = res.results
+          this.permissionListRes = results
           results.map(items => {
-            var obj = {};
-            obj.label = items.alias;
-            obj.name = items.name;
-            obj.objectId = items.objectId;
-            obj.parentId = items.parent.objectId;
-            obj.createtime = new Date(items.createdAt).toLocaleDateString();
-            this.dataPermissions.push(obj);
-          });
+            var obj = {}
+            obj.label = items.alias
+            obj.name = items.name
+            obj.objectId = items.objectId
+            obj.parentId = items.parent.objectId
+            obj.createtime = new Date(items.createdAt).toLocaleDateString()
+            this.dataPermissions.push(obj)
+          })
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     tableRowClassName({ row, rowIndex }) {
       //把每一行的索引放进row
 
-      row.index = rowIndex;
+      row.index = rowIndex
     },
     selectedHighlight({ row, rowIndex }) {
       if (this.currentSelectIndex === rowIndex) {
         return {
-          color: "#409EFF",
-          "font-weight": "bold"
-        };
+          color: '#409EFF',
+          'font-weight': 'bold'
+        }
       }
     },
     getDetailmenu(row, column, event, cell) {
-      if (column && column.label == "操作") {
-        return;
+      if (column && column.label == '操作') {
+        return
       }
-      this.currentSelectIndex = row.index;
+      this.currentSelectIndex = row.index
 
-      this.doSetChecked(row.data.menus, row.data.rules);
+      this.doSetChecked(row.data.menus, row.data.rules)
     },
     doSetChecked(allMenus, allPermissions) {
-      this.roleMenuList = [];
-      this.rolePermissonList = [];
+      this.roleMenuList = []
+      this.rolePermissonList = []
 
-      const tempMenuList = [];
-      const tempPermissonList = [];
+      const tempMenuList = []
+      const tempPermissonList = []
 
       this.menuListRes.map(items => {
         allMenus.map(mentItem => {
           if (items.name == mentItem) {
-            tempMenuList.push(items.name);
+            tempMenuList.push(items.name)
           }
-        });
-      });
+        })
+      })
 
-      this.roleMenuList = [...new Set(tempMenuList)];
+      this.roleMenuList = [...new Set(tempMenuList)]
       // set ###
-      this.$refs.menusTree.setCheckedKeys(this.roleMenuList);
+      this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
 
       this.permissionListRes.map(items => {
         allPermissions.map(mentItem => {
           if (items.name == mentItem) {
-            tempPermissonList.push(items.name);
+            tempPermissonList.push(items.name)
           }
-        });
-      });
+        })
+      })
 
-      this.rolePermissonList = [...new Set(tempPermissonList)];
+      this.rolePermissonList = [...new Set(tempPermissonList)]
 
       // set ###
-      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
+      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+    },
+    // 删除模板
+    handleDelete(index, row, data) {
+      this.$axiosWen
+        .delete('/classes/Dict/' + row.objectId)
+        .then(res => {
+          this.$message({
+            type: 'sussess',
+            message: '删除成功'
+          }),
+            data.splice(index, 1)
+        })
+        .catch(e => {
+          this.$message({
+            type: 'error',
+            message: '删除失败' + e.error
+          })
+        })
     },
     // 保存模板
     exportRoletemp(row) {
-      this.$confirm("确定要更新吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确定要更新吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        let checkrole = [];
-        let checkmenu = [];
-        let selectMenu = this.$refs.menusTree.getCheckedNodes();
-        let selectRermission = this.$refs.permissionTree.getCheckedNodes();
+        let checkrole = []
+        let checkmenu = []
+        let selectMenu = this.$refs.menusTree.getCheckedNodes()
+        let selectRermission = this.$refs.permissionTree.getCheckedNodes()
 
         if (
           selectMenu &&
@@ -282,43 +312,43 @@ export default {
           selectRermission.length > 0
         ) {
           selectMenu.forEach(item => {
-            checkmenu.push(item.label);
-          });
+            checkmenu.push(item.label)
+          })
           selectRermission.forEach(item => {
-            checkrole.push(item.name);
-          });
+            checkrole.push(item.name)
+          })
         } else {
-          this.$message({ mesaage: "数据为空" });
-          return;
+          this.$message({ mesaage: '数据为空' })
+          return
         }
 
-        var newData = row.data;
+        var newData = row.data
 
-        newData.menus = checkmenu;
-        newData.rules = checkrole;
+        newData.menus = checkmenu
+        newData.rules = checkrole
 
         const loading = this.$loading({
-          background: "rgba(0, 0, 0, 0.5)"
-        });
+          background: 'rgba(0, 0, 0, 0.5)'
+        })
 
         this.$axiosWen
-          .put("/classes/Dict/" + row.objectId, {
+          .put('/classes/Dict/' + row.objectId, {
             data: newData
           })
           .then(res => {
-            loading.close();
+            loading.close()
             if (res) {
-              this.$message({ message: "更新成功" });
+              this.$message({ message: '更新成功' })
             }
           })
           .catch(err => {
-            loading.close();
-            this.$message({ message: "更新失败" });
-          });
-      });
+            loading.close()
+            this.$message({ message: '更新失败' })
+          })
+      })
     }
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .department {
