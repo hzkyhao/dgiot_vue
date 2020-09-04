@@ -710,9 +710,7 @@ export default {
           '/roletemp?name=' +
             row.name +
             '&tempname=' +
-            row.name +
-            '_' +
-            row.desc
+            row.name
         )
         .then(response => {
           console.log('response', response)
