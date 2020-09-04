@@ -18,3 +18,4 @@ WebTopo-master/src/statics/shapes
 *.sln
 spa/
 **/*.ts
+*.zip
