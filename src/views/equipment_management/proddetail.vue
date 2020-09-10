@@ -1014,7 +1014,7 @@
           </el-dialog>
         </el-tab-pane>
         <!--协议解析-->
-        <div style="diaplay:none;">
+        <!-- <div style="diaplay:none;"> -->
           <!-- <div> -->
           <el-tab-pane label="物解析" name="fourth">
             <div class="protolheader">
@@ -1175,7 +1175,7 @@
               ><textarea class="ace_text-input" /></pre>
             </div>
           </el-tab-pane>
-        </div>
+        <!-- </div> -->
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane :label="$t('product.physicalaccess')" name="fiveth">
           <div class="productchannel" style="text-align:right;padding:10px;">
