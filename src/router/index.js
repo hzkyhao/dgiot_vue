@@ -366,6 +366,13 @@ export const constantRouterMap = [
         component: () => import('@/views/equipment_management/proddetail'),
         meta: { title: '产品详情' },
         hidden: true
+      },    
+      {
+        path: '/roles/thingsParse',
+        name: '物解析',
+        component: () => import('@/views/equipment_management/thingsParse'),
+        meta: { title: '物解析' },
+        hidden: true
       },
       {
         path: '/roles/editdevices',
