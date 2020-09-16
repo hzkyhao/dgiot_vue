@@ -22,6 +22,7 @@
                 type="primary"
                 @click="addproduct"
               >{{ $t('product.createproduct') }}</el-button>
+              <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
               <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
               <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
 
@@ -1002,6 +1003,18 @@ export default {
       }
       // 为了兼容性,暂时传两个相同的值
       var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
+      window.open(url, '__blank')
+    },
+    // 跳转到组态大屏
+    goTopoview() {
+      // 判断是线上环境还是线下环境
+      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
+        var topoUrl = window.location.origin + '/spa'
+      } else {
+        // eslint-disable-next-line no-redeclare
+        var topoUrl = this.$globalConfig.localTopoUrl
+      }
+      var url = `${topoUrl}/#/view`
       window.open(url, '__blank')
     },
     // 导出

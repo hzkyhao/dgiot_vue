@@ -9,8 +9,11 @@
               <svg-icon icon-class="devicelist" />
             </span>
             {{ $t('equipment.totalequipment') }}
-            <el-tooltip :content="$t('equipment.totalequipment')" placement="top">
-              <i class="el-icon-question"/>
+            <el-tooltip
+              :content="$t('equipment.totalequipment')"
+              placement="top"
+            >
+              <i class="el-icon-question" />
             </el-tooltip>
           </p>
           <span>{{ devicetotal }}</span>
@@ -22,7 +25,7 @@
             </span>
             {{ $t('equipment.activationdevice') }}
             <el-tooltip :content="$t('equipment.totalactive')" placement="top">
-              <i class="el-icon-question"/>
+              <i class="el-icon-question" />
             </el-tooltip>
           </p>
           <span>{{ activeall }}</span>
@@ -34,7 +37,7 @@
             </span>
             {{ $t('equipment.onlinedevices') }}
             <el-tooltip :content="$t('equipment.totalonline')" placement="top">
-              <i class="el-icon-question"/>
+              <i class="el-icon-question" />
             </el-tooltip>
           </p>
           <span>{{ onlineall }}</span>
@@ -48,7 +51,7 @@
                line-height: 200px;"
             >
               <div slot="error" class="image-slot">
-                <i class="el-icon-picture-outline"/>
+                <i class="el-icon-picture-outline" />
               </div>
             </el-image>
           </div>
@@ -85,8 +88,8 @@
               />
             </el-select>
             <el-select v-model="selectdevice" class="selectdetail" size="small">
-              <el-option :value="$t('equipment.devicename')"/>
-              <el-option :value="$t('equipment.devicenumber')"/>
+              <el-option :value="$t('equipment.devicename')" />
+              <el-option :value="$t('equipment.devicenumber')" />
             </el-select>
             <el-input
               v-if="selectdevice==$t('equipment.devicename')"
@@ -140,7 +143,7 @@
               style="width: 100%;text-align:center;margin-top:20px;"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" align="center" width="55"/>
+              <el-table-column type="selection" align="center" width="55" />
               <el-table-column
                 :label="$t('equipment.devicenumber')+'/'+$t('equipment.name')"
                 align="center"
@@ -163,20 +166,42 @@
                    <span  :class="scope.row.status" v-if="scope.row.status=='UNACTIVE'">{{$t('product.unactive')}}</span><el-tooltip content="设备未注册" placement="top" v-if="scope.row.status=='UNACTIVE'">
                   <i class="el-icon-question"></i>
                 </el-tooltip>
-                -->
-                  <span v-if="scope.row.status=='ONLINE'" :class="scope.row.status">{{ $t('product.online') }}</span><el-tooltip v-if="scope.row.status=='ONLINE'" content="设备已经上线" placement="top">
-                    <i class="el-icon-question"/>
+                  -->
+                  <span
+                    v-if="scope.row.status=='ONLINE'"
+                    :class="scope.row.status"
+                  >{{ $t('product.online') }}</span>
+                  <el-tooltip
+                    v-if="scope.row.status=='ONLINE'"
+                    content="设备已经上线"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
                   </el-tooltip>
 
-                  <span v-if="scope.row.status=='OFFLINE'" :class="scope.row.status">{{ $t('product.offline') }}</span>
-                  <el-tooltip v-if="scope.row.status=='OFFLINE'" content="设备已经离线" placement="top">
-                    <i class="el-icon-question"/>
+                  <span
+                    v-if="scope.row.status=='OFFLINE'"
+                    :class="scope.row.status"
+                  >{{ $t('product.offline') }}</span>
+                  <el-tooltip
+                    v-if="scope.row.status=='OFFLINE'"
+                    content="设备已经离线"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
                   </el-tooltip>
-                  <span v-if="scope.row.status!='OFFLINE' && scope.row.status!='ONLINE' " :class="scope.row.status">未注册</span>
+                  <span
+                    v-if="scope.row.status!='OFFLINE' && scope.row.status!='ONLINE' "
+                    :class="scope.row.status"
+                  >未注册</span>
                 </template>
               </el-table-column>
 
-              <el-table-column :label="$t('equipment.product')" prop="productName" align="center"/>
+              <el-table-column
+                :label="$t('equipment.product')"
+                prop="productName"
+                align="center"
+              />
 
               <el-table-column :label="$t('equipment.nodetype')" align="center">
                 <template slot-scope="scope">
@@ -185,7 +210,11 @@
                     icon-class="iot"
                     style="width:2rem;height:2rem"
                   />
-                  <svg-icon v-else icon-class="wgicon" style="width:2rem;height:2rem"/>
+                  <svg-icon
+                    v-else
+                    icon-class="wgicon"
+                    style="width:2rem;height:2rem"
+                  />
                   <!-- <el-tag type="success" >设备</el-tag>
                   <el-tag type="success" v-else>网关</el-tag>-->
                 </template>
@@ -227,7 +256,10 @@
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('developer.operation')" align="center">
+              <el-table-column
+                :label="$t('developer.operation')"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <el-link
                     :underline="false"
@@ -235,7 +267,11 @@
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
                   >{{ $t('equipment.see') }}</el-link>
-                  <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
+                  <el-popover
+                    :ref="`popover-${scope.$index}`"
+                    placement="top"
+                    width="300"
+                  >
                     <p>确定删除这个{{ scope.row.name }}设备吗？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button
@@ -331,22 +367,31 @@
         <div slot="title" class="header-title">
           <span class="title-name">
             {{ '设备'+equipmentEditor }}
-            <el-tooltip :content="$t('equipment.text')" placement="top" style="margin-left:5px">
-              <i class="el-icon-question"/>
+            <el-tooltip
+              :content="$t('equipment.text')"
+              placement="top"
+              style="margin-left:5px"
+            >
+              <i class="el-icon-question" />
             </el-tooltip>
           </span>
         </div>
         <div class="devicecontent">
-          <el-form ref="deviceform" :model="deviceform" :rules="rules" label-width="150px">
+          <el-form
+            ref="deviceform"
+            :model="deviceform"
+            :rules="rules"
+            label-width="150px"
+          >
             <el-form-item :label="$t('equipment.devicename')" prop="name">
-              <el-input v-model="deviceform.name"/>
+              <el-input v-model="deviceform.name" />
             </el-form-item>
             <el-form-item :label="$t('equipment.devicenumber')" prop="devaddr">
-              <el-input v-model="deviceform.devaddr"/>
+              <el-input v-model="deviceform.devaddr" />
             </el-form-item>
             <el-form-item :label="$t('equipment.batchname')" prop="batchId">
               <el-input v-model="deviceform.batchId" disabled>
-                <i slot="suffix" class="el-icon-plus" @click="addDeviceBatch"/>
+                <i slot="suffix" class="el-icon-plus" @click="addDeviceBatch" />
               </el-input>
             </el-form-item>
             <!-- <el-form-item label="节点类型" prop="nodeType">
@@ -374,16 +419,16 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('equipment.assetnumber')">
-              <el-input v-model="deviceform.assetNum"/>
+              <el-input v-model="deviceform.assetNum" />
             </el-form-item>
             <el-form-item :label="$t('equipment.equipmenttype')">
-              <el-input v-model="deviceform.devModel"/>
+              <el-input v-model="deviceform.devModel" />
             </el-form-item>
             <el-form-item :label="$t('equipment.equipmentbrand')">
-              <el-input v-model="deviceform.brand"/>
+              <el-input v-model="deviceform.brand" />
             </el-form-item>
             <el-form-item :label="$t('equipment.installationlocation')">
-              <el-input v-model="deviceform.address" @focus="updateLocation"/>
+              <el-input v-model="deviceform.address" @focus="updateLocation" />
             </el-form-item>
             <el-form-item :label="$t('developer.describe')">
               <el-input
@@ -395,7 +440,10 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('deviceform')">{{ $t('developer.determine') }}</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm('deviceform')"
+          >{{ $t('developer.determine') }}</el-button>
           <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
         </span>
       </el-dialog>
@@ -416,10 +464,16 @@
             class="demo-form-inline"
           >
             <el-form-item :label="$t('equipment.batchname')" prop="pcname">
-              <el-input v-model="pcformInline.pcname" :placeholder="$t('equipment.batchname')"/>
+              <el-input
+                v-model="pcformInline.pcname"
+                :placeholder="$t('equipment.batchname')"
+              />
             </el-form-item>
             <el-form-item :label="$t('equipment.createdAt')" prop="createdtime">
-              <el-date-picker v-model="pcformInline.createdtime" type="datetime"/>
+              <el-date-picker
+                v-model="pcformInline.createdtime"
+                type="datetime"
+              />
             </el-form-item>
             <el-form-item>
               <el-button
@@ -428,7 +482,11 @@
               >{{ $t('equipment.addbatch') }}</el-button>
             </el-form-item>
           </el-form>
-          <el-table :data="pctableData" height="450" style="width: 100%;text-align:center">
+          <el-table
+            :data="pctableData"
+            height="450"
+            style="width: 100%;text-align:center"
+          >
             <el-table-column
               :label="$t('equipment.serialnumber')"
               type="index"
@@ -445,7 +503,11 @@
                 <span>{{ utc2beijing(scope.row.createdAt) }}</span>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('developer.operation')" align="center" width="300">
+            <el-table-column
+              :label="$t('developer.operation')"
+              align="center"
+              width="300"
+            >
               <template slot-scope="scope">
                 <el-button
                   type="primary"
@@ -481,13 +543,13 @@
               <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
             </el-form-item>-->
             <el-form-item label="地址名称">
-              <el-input v-model="bmapform.keyword"/>
+              <el-input v-model="bmapform.keyword" />
             </el-form-item>
             <!-- <el-form-item>
               <el-button type="primary" @click="addressSure">搜 索</el-button>
             </el-form-item>-->
             <el-form-item label="选中地址">
-              <el-input v-model="bmapform.address" readonly/>
+              <el-input v-model="bmapform.address" readonly />
             </el-form-item>
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
@@ -511,13 +573,13 @@
               zoom="12.8"
               style="display:none"
             />
-            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT"/>
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
               :show-address-bar="true"
               :auto-location="true"
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
-            <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT"/>
+            <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
             <!-- <bm-marker :position="center" style="display:none">
               <bm-info-window  @close="infoWindowClose" @open="infoWindowOpen" style="font-size: 14px">
               <p>11111</p>
@@ -688,23 +750,39 @@ export default {
       this.productroleslist = []
       var Product = Parse.Object.extend('Product')
       var product = new Parse.Query(Product)
-      product.get(val).then(response => {
-        if (response) {
-          for (var key in response.attributes.ACL.permissionsById) {
-            this.productroleslist.push(key.substr(5))
+      product.get(val).then(
+        response => {
+          if (response) {
+            for (var key in response.attributes.ACL.permissionsById) {
+              this.productroleslist.push(key.substr(5))
+            }
           }
+          console.log(this.productroleslist)
+        },
+        error => {
+          returnLogin(error)
         }
-        console.log(this.productroleslist)
-      }, error => {
-        returnLogin(error)
-      })
+      )
     },
     goEdit(row) {
+      console.log(row)
       // #topoUrl
-      window.open(
-        `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
-        '_blank'
-      )
+      // window.open(
+      //   `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
+      //   '_blank'
+      // )
+      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
+        var topoUrl = window.location.origin + '/spa'
+      } else {
+        var topoUrl = this.$globalConfig.localTopoUrl
+      }
+      var url = `${topoUrl}/#?devaddr=${row.devaddr}&proudctid=${row.productid}`
+      window.open(url, '__blank')
+      localStorage.setItem('topoData', JSON.stringify(row.config))
+      // window.open(
+      //   `http://192.168.2.58:8339/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
+      //   '_blank'
+      // )
     },
     // 从产品处进来
     selectProductid(val) {
@@ -910,17 +988,44 @@ export default {
 
                 obj.status = _this.$objGet(items, 'attributes.status')
                 obj.originstatus = _this.$objGet(items, 'attributes.status')
-                obj.nodeType = _this.$objGet(items, 'attributes.product.attributes.nodeType')
-                obj.desc = _this.$objGet(items, 'attributes.tag.attributes.desc')
-                obj.productName = _this.$objGet(items, 'attributes.product.attributes.name')
+                obj.nodeType = _this.$objGet(
+                  items,
+                  'attributes.product.attributes.nodeType'
+                )
+                obj.desc = _this.$objGet(
+                  items,
+                  'attributes.tag.attributes.desc'
+                )
+                obj.productName = _this.$objGet(
+                  items,
+                  'attributes.product.attributes.name'
+                )
 
-                obj.devaddr = items.attributes.devaddr ? items.attributes.devaddr : ''
-                obj.isEnable = items.attributes.isEnable ? items.attributes.isEnable : false
-                obj.productid = items.attributes.product ? items.attributes.product.id : ''
-                obj.devModel = _this.$objGet(items, 'attributes.tag.attributes.devModel')
-                obj.brand = _this.$objGet(items, 'attributes.tag.attributes.brand')
-                obj.address = _this.$objGet(items, 'attributes.tag.attributes.address')
-                obj.assetNum = _this.$objGet(items, 'attributes.tag.attributes.assetNum')
+                obj.devaddr = items.attributes.devaddr
+                  ? items.attributes.devaddr
+                  : ''
+                obj.isEnable = items.attributes.isEnable
+                  ? items.attributes.isEnable
+                  : false
+                obj.productid = items.attributes.product
+                  ? items.attributes.product.id
+                  : ''
+                obj.devModel = _this.$objGet(
+                  items,
+                  'attributes.tag.attributes.devModel'
+                )
+                obj.brand = _this.$objGet(
+                  items,
+                  'attributes.tag.attributes.brand'
+                )
+                obj.address = _this.$objGet(
+                  items,
+                  'attributes.tag.attributes.address'
+                )
+                obj.assetNum = _this.$objGet(
+                  items,
+                  'attributes.tag.attributes.assetNum'
+                )
                 obj.createdAt = items.createdAt ? items.createdAt : ''
                 obj.productid = _this.$objGet(items, 'attributes.product.id')
 
@@ -928,9 +1033,9 @@ export default {
                   obj.tagid = _this.$objGet(items, 'attributes.tag.id')
                   if (items.attributes.tag.attributes.location) {
                     obj.latitude =
-                        items.attributes.tag.attributes.location._latitude
+                      items.attributes.tag.attributes.location._latitude
                     obj.longitude =
-                        items.attributes.tag.attributes.location._longitude
+                      items.attributes.tag.attributes.location._longitude
                   } else {
                     obj.latitude = ''
                     obj.longitude = ''
@@ -1013,8 +1118,7 @@ export default {
           ? '0' + (date.getMonth() + 1)
           : date.getMonth() + 1) + '-'
       var D =
-        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
-        ' '
+        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) + ' '
       var h =
         (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
         ':'
@@ -1270,7 +1374,7 @@ export default {
         .then(results => {
           console.log(results)
           this.pctableData.map(item => {
-            if ((item.id == row.batchid)) {
+            if (item.id == row.batchid) {
               console.log(item)
               this.deviceform.batchId = item.attributes.data.batch_name
             }
@@ -1326,60 +1430,62 @@ export default {
                   reject(error)
                 }
               )
-            }).then(data => {
-              console.log('Tags updated')
-
-              var Tags1 = Parse.Object.extend('Tag')
-              var tags1 = new Tags1()
-              tags1.id = data.id
-              var devices = new Device()
-              devices.id = this.deviceid
-              devices.set('status', this.deviceform.status)
-              devices.set('isEnable', this.deviceform.isEnable)
-              product.id = this.deviceform.productName
-              devices.set('product', product)
-              devices.set('tag', tags1)
-              this.productroleslist.map(item => {
-                acl.setRoleReadAccess(item, true)
-                acl.setRoleWriteAccess(item, true)
-              })
-
-              devices.set('ACL', acl)
-              devices.set('devaddr', this.deviceform.devaddr)
-              devices.set('name', this.deviceform.name)
-              devices.save().then(
-                resultes => {
-                  if (resultes) {
-                    this.$message({
-                      type: 'success',
-                      message: `${
-                        this.deviceid != '' ? '编辑成功' : '添加成功'
-                      }`
-                    })
-                    this.devicedialogVisible = false
-                    this.equipmentEditor = '添加'
-                    this.batchid = ''
-                    this.getDevices()
-                    this.deviceid = ''
-                    this.$refs['deviceform'].resetFields()
-                    this.deviceform.assetNum = ''
-                    this.deviceform.devModel = ''
-                    this.deviceform.address = ''
-                    this.deviceform.desc = ''
-                    this.deviceform.brand = ''
-                  }
-                },
-                error => {
-                  console.log('Device error', error)
-
-                  returnLogin(error)
-                }
-              )
-            }).catch(error => {
-              console.log('p error ###'.error)
-
-              reject(error)
             })
+              .then(data => {
+                console.log('Tags updated')
+
+                var Tags1 = Parse.Object.extend('Tag')
+                var tags1 = new Tags1()
+                tags1.id = data.id
+                var devices = new Device()
+                devices.id = this.deviceid
+                devices.set('status', this.deviceform.status)
+                devices.set('isEnable', this.deviceform.isEnable)
+                product.id = this.deviceform.productName
+                devices.set('product', product)
+                devices.set('tag', tags1)
+                this.productroleslist.map(item => {
+                  acl.setRoleReadAccess(item, true)
+                  acl.setRoleWriteAccess(item, true)
+                })
+
+                devices.set('ACL', acl)
+                devices.set('devaddr', this.deviceform.devaddr)
+                devices.set('name', this.deviceform.name)
+                devices.save().then(
+                  resultes => {
+                    if (resultes) {
+                      this.$message({
+                        type: 'success',
+                        message: `${
+                          this.deviceid != '' ? '编辑成功' : '添加成功'
+                        }`
+                      })
+                      this.devicedialogVisible = false
+                      this.equipmentEditor = '添加'
+                      this.batchid = ''
+                      this.getDevices()
+                      this.deviceid = ''
+                      this.$refs['deviceform'].resetFields()
+                      this.deviceform.assetNum = ''
+                      this.deviceform.devModel = ''
+                      this.deviceform.address = ''
+                      this.deviceform.desc = ''
+                      this.deviceform.brand = ''
+                    }
+                  },
+                  error => {
+                    console.log('Device error', error)
+
+                    returnLogin(error)
+                  }
+                )
+              })
+              .catch(error => {
+                console.log('p error ###'.error)
+
+                reject(error)
+              })
           } else {
             console.log('### devaddrid kong')
 
