@@ -18,7 +18,7 @@ var serverURL = "http://192.168.2.66:5080/iotapi";
 // var serverURL = "http://120.25.171.26:5080/iotapi"
 // var serverURL =  'http://shapes.iotn2n.com:5080/iotapi'
 
-var localTopoUrl = "http://192.168.2.18:8339";
+var localTopoUrl = "http://192.168.2.58:8339";
 
 try {
   // 判断是否为生产环境

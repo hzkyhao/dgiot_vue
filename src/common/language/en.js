@@ -221,6 +221,7 @@ module.exports = {
     'newstorage': 'Newstorage',
     'modeldataoutput': 'Model data output',
     'exportpro': 'Export',
+    'topoview': 'topoview',
     'importpro': 'Import'
   },
   application: {
