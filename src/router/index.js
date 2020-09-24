@@ -36,7 +36,8 @@ export const constantRouterMap = [
     component: () => import('@/views/pdf/download'),
     hidden: true
   },
-  { path: '/userinfo',
+  {
+    path: '/userinfo',
     component: Layout,
     hidden: true,
     children: [{
@@ -284,7 +285,7 @@ export const constantRouterMap = [
         name: '访问钥匙',
         component: () => import('@/views/equipment_management/appOperate/application'),
         meta: { title: '访问钥匙', icon: 'application' }
-      }, 
+      },
       {
         path: '/roles/edituser',
         name: '编辑用户',
@@ -343,6 +344,12 @@ export const constantRouterMap = [
         meta: { title: '设备管理', icon: 'device' }
       },
       {
+        path: '/roles/group',
+        name: '设备管理',
+        component: () => import('@/views/equipment_management/group'),
+        meta: { title: '设备分组', icon: 'group' }
+      },
+      {
         path: '/performance_monitoring',
         component: () => import('@/views/dashboard/index'),
         name: '性能监控',
@@ -366,7 +373,7 @@ export const constantRouterMap = [
         component: () => import('@/views/equipment_management/proddetail'),
         meta: { title: '产品详情' },
         hidden: true
-      },    
+      },
       {
         path: '/roles/thingsParse',
         name: '物解析',
