@@ -670,7 +670,7 @@
                     <el-col :span="10">
                       <el-form-item label="修正系数">
                         <el-input
-                          v-model.number="sizeForm.rate"
+                          v-model="sizeForm.rate"
                           auto-complete="off"
                         />
                       </el-form-item>
@@ -679,7 +679,7 @@
                     <el-col :span="10">
                       <el-form-item label="修正偏移">
                         <el-input
-                          v-model.number="sizeForm.offset"
+                          v-model="sizeForm.offset"
                           auto-complete="off"
                         />
                       </el-form-item>
