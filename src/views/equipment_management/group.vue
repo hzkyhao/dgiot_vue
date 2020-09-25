@@ -22,23 +22,23 @@
                 <el-input v-model="editLabel" />
               </span>
               <span v-else style="color: #409EFF;">{{ node.label }}</span>
-              <span v-if="data.seen==false">
+              <span v-if="data.seen==false" style="margin-left: 5px;">
                 <i
                   class="el-icon-plus"
                   title="新增"
                   style="color: #67C23A
                 ;"
-                  @click="append(node, data)"/>
-                <i class="el-icon-delete" title="删除" style="color: red;" @click="deletes(node, data)" />
+                  @click.stop="append(node, data)"/>
+                <i class="el-icon-delete" title="删除" style="color: red;" @click.stop="deletes(node, data)" />
                 <i
                   class="el-icon-edit"
                   title="编辑"
                   style="color: #909399
                 ;"
-                  @click="rename(node, data)"/>
+                  @click.stop="rename(node, data)"/>
               </span>
               <span v-else>
-                <i slot="suffix" class="el-icon-check" title="保存" @click="savename(node, data)" />
+                <i slot="suffix" class="el-icon-check" title="保存" @click.stop="savename(node, data)" />
               </span>
             </span>
           </el-tree>
@@ -527,7 +527,15 @@ export default {
 <style lang="scss" scoped>
   .group {
     margin: 20px;
-
+    .custom-tree-node{
+      width: 100%;
+      .el-input{
+        width: 60%;
+      }
+      i{
+        margin-left: 5px;
+      }
+    }
     /deep/ {
       .el-tree-node__content {
         height: 40px;
