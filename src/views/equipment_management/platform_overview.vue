@@ -1,141 +1,143 @@
 <template>
   <div class="platform">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="统计总览" name="devchart">
-        <el-row>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="platformlist" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>项目合计</p>
-                <p>{{ project_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="productlist" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>产品合计</p>
-                <p>{{ product_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="successed" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>应用合计</p>
-                <p>{{ app_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="devicelist" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>设备数量</p>
-                <p>{{ dev_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="shuliang" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>注册数量</p>
-                <p>{{ dev_active_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
-            <el-card class="box-card">
-              <el-col :span="12">
-                <svg-icon class="card-left" icon-class="onlinelist" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>在线数量</p>
-                <p>{{ dev_online_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col
-            v-for="item in projectList"
-            :xs="12"
-            :sm="8"
-            :md="8"
-            :lg="6"
-            :xl="4"
-            :key="item.id"
-          >
-            <el-card class="box-card" shadow="always">
-              <div slot="header" class="clearfix">
-                <span style="font-weight: bolder;">{{
-                  item.attributes.title
-                }}</span>
-              </div>
-              <div class="text item">
-                <span>工程单位：</span>
-                <span>{{ item.attributes.userUnit }}</span>
-              </div>
-              <div class="text item">
-                <span>服务规模：</span>
-                <span>{{ item.attributes.scale }}</span>
-              </div>
-              <div class="text item">
-                <span>所属行业：</span>
-                <span>{{ item.attributes.category }}</span>
-              </div>
-              <div class="text item">
-                <span>更新时间：</span>
-                <span>{{
-                  new Date(item.attributes.updatedAt).toLocaleDateString() +
-                    " " +
-                    new Date(item.attributes.updatedAt).toLocaleTimeString()
-                }}</span>
-              </div>
-              <div class="text item" style="float:right;">
-                <el-button-group>
-                  <el-button
-                    style="margin-right:3px;"
-                    size="mini"
-                    type="success"
-                    @click="Gotoproduct(item)"
-                  >查看产品
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    target="_blank"
-                    @click="handleClickVisit(item)"
-                  >进入登录</el-button
-                  >
-                </el-button-group>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-tab-pane>
+      <el-row>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="platformlist" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>项目合计</p>
+              <p>{{ project_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="productlist" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>产品合计</p>
+              <p>{{ product_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="successed" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>应用合计</p>
+              <p>{{ app_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="devicelist" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>设备数量</p>
+              <p>{{ dev_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="shuliang" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>注册数量</p>
+              <p>{{ dev_active_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+          <el-card class="box-card">
+            <el-col :span="12">
+              <svg-icon class="card-left" icon-class="onlinelist" />
+            </el-col>
+            <el-col :span="12" class="card-right">
+              <p>在线数量</p>
+              <p>{{ dev_online_count }}</p>
+            </el-col>
+          </el-card>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col
+          v-for="item in projectList"
+          :xs="12"
+          :sm="8"
+          :md="8"
+          :lg="6"
+          :xl="4"
+          :key="item.id"
+        >
+          <el-card class="box-card" shadow="always">
+            <div slot="header" class="clearfix">
+              <span style="font-weight: bolder;">{{
+                item.attributes.title
+              }}</span>
+            </div>
+            <div class="text item">
+              <span>工程单位：</span>
+              <span>{{ item.attributes.userUnit }}</span>
+            </div>
+            <div class="text item">
+              <span>服务规模：</span>
+              <span>{{ item.attributes.scale }}</span>
+            </div>
+            <div class="text item">
+              <span>所属行业：</span>
+              <span>{{ item.attributes.category }}</span>
+            </div>
+            <div class="text item">
+              <span>更新时间：</span>
+              <span>{{
+                new Date(item.attributes.updatedAt).toLocaleDateString() +
+                  " " +
+                  new Date(item.attributes.updatedAt).toLocaleTimeString()
+              }}</span>
+            </div>
+            <div class="text item" style="float:right;">
+              <el-button-group>
+                <el-button
+                  style="margin-right:3px;"
+                  size="mini"
+                  type="success"
+                  @click="Gotoproduct(item)"
+                >查看产品
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="primary"
+                  target="_blank"
+                  @click="handleClickVisit(item)"
+                >进入登录</el-button
+                >
+              </el-button-group>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+      <!-- <el-tab-pane label="统计总览" name="devchart">
+
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
 <script>
 import Parse from "parse";
 import { batch } from "@/api/data";
-
 export default {
+  components: {
+  },
   data() {
     return {
       activeName: "devchart",

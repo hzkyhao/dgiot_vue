@@ -57,7 +57,7 @@ export const constantRouterMap = [
       {
         path: '/dashboard',
         name: '首页',
-        component: () => import('@/views/equipment_management/platform_overview'),
+        component: () => import('@/views/equipment_management/group'),
         meta: { title: '首页', icon: 'platform' }
       }
     ]
