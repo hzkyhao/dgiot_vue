@@ -742,7 +742,7 @@ export default {
         product.ascending('-updatedAt')
         product.skip(this.start)
         product.limit(this.length)
-        product.equalTo('nodeType', 2)
+        product.notEqualTo('nodeType', 2)
         product.count().then(
           count => {
             this.total = count

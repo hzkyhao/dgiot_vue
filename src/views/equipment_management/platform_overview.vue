@@ -170,7 +170,7 @@ export default {
     },
     Gotoproduct(project) {
       this.$router.push({
-        path: "/roles/product",
+        path: "/product",
         query: {
           project: project.id
         }
