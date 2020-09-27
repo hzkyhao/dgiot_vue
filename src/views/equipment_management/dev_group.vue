@@ -1,129 +1,134 @@
 <template>
   <div class="devproduct">
-    <h3>{{ $t('route.产品管理') }}
-      <span v-if="projectName">{{ '(所属应用:' + projectName + ')' }}</span>
-    </h3>
-    <el-tabs v-model="activeName">
-      <el-tab-pane :label="$t('product.myproduct')+'('+total+')'" name="first">
-        <div class="prosecond">
-          <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
-            <el-form-item>
-              <el-input
-                v-model="formInline.productname"
-                :placeholder="$t('product.searchproductname')"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="searchProduct(0)">{{ $t('developer.search') }}</el-button>
-            </el-form-item>
-            <el-form-item style="float:right;text-align:right">
-              <el-button
-                v-show="projectid!=''"
-                type="primary"
-                @click="addproduct"
-              >{{ $t('product.createproduct') }}</el-button>
-              <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
-              <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
-              <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
+    <div class="prosecond">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline" size="small">
+        <el-form-item>
+          <el-input
+            v-model="formInline.productname"
+            :placeholder="$t('product.searchproductname')"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchProduct(0)">{{ $t('developer.search') }}</el-button>
+        </el-form-item>
+        <el-form-item style="float:right;text-align:right">
+          <el-button
+            v-show="projectid!=''"
+            type="primary"
+            @click="addproduct"
+          >{{ $t('product.createproduct') }}</el-button>
 
-              <!-- <el-button
+          <el-button
+            type="primary"
+            @click="addgroup"
+          >新增</el-button>
+          <!-- <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
+          <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
+          <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button> -->
+
+          <!-- <el-button
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-            </el-button></el-form-item>
-          </el-form>
-          <div class="protable">
-            <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="id" label="ProductID"/>
-              <el-table-column :label="$t('product.productname')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('product.productgrouping')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.devType }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('product.nodetype')">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
-                  <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('product.classification')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.CategoryKey }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('product.addingtime')">
-                <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('developer.operation')" width="320">
-                <template slot-scope="scope">
-                  <el-link
-                    :underline="false"
+        </el-button></el-form-item>
+      </el-form>
+      <div class="protable">
+        <el-table :data="proTableData" style="width: 100%">
+          <el-table-column prop="id" label="ProductID"/>
+          <el-table-column :label="$t('product.productname')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.attributes.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('product.productgrouping')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.attributes.devType }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('product.nodetype')">
+            <template slot-scope="scope" style="text-align: center;">
+              <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
+              <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
+              <span v-if="scope.row.attributes.nodeType==2">分组</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('product.classification')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.CategoryKey }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('product.addingtime')">
+            <template slot-scope="scope">
+              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('developer.operation')" width="420">
+            <template slot-scope="scope">
+              <el-link
+                :underline="false"
+                icon="el-icon-office-building"
+                type="primary"
+                @click="proudctView(scope.row)"
+              >运行组态</el-link>
+              <el-link
+                :underline="false"
+                icon="el-icon-link"
+                type="primary"
+                @click="proudctEdit(scope.row)"
+              >编辑组态</el-link>
+              <el-link
+                :underline="false"
+                icon="el-icon-attract"
+                type="primary"
+                @click="GoTodevices(scope.row)"
+              >{{ $t('product.equipment') }}</el-link>
+              <el-link
+                :underline="false"
+                type="primary"
+                icon="el-icon-view"
+                @click="deviceToDetail(scope.row)"
+              >配置</el-link>
+              <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
+                <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button
+                    size="mini"
+                    @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                  >{{ $t('developer.cancel') }}</el-button>
+                  <el-button
                     type="primary"
-                    icon="el-icon-view"
-                    @click="deviceToDetail(scope.row)"
-                  >配置</el-link>
-                  <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
-                    <div style="text-align: right; margin: 0">
-                      <el-button
-                        size="mini"
-                        @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                      >{{ $t('developer.cancel') }}</el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >{{ $t('developer.determine') }}</el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
-                    >{{ $t('developer.delete') }}</el-link>
-                  </el-popover>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-attract"
-                    type="primary"
-                    @click="GoTodevices(scope.row)"
-                  >{{ $t('product.equipment') }}</el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-edit"
-                    type="success"
-                    @click="editorProduct(scope.row)"
-                  >编 辑</el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-link"
-                    type="primary"
-                    @click="proudctView(scope.row)"
-                  >运行组态</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="elpagination" style="margin-top:20px;">
-            <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="productSizeChange"
-              @current-change="productCurrentChange"
-            />
-          </div>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+                    size="mini"
+                    @click="makeSure(scope)"
+                  >{{ $t('developer.determine') }}</el-button>
+                </div>
+                <el-link
+                  slot="reference"
+                  :underline="false"
+                  icon="el-icon-delete"
+                  type="danger"
+                >{{ $t('developer.delete') }}</el-link>
+              </el-popover>
+              <!-- <el-link
+                :underline="false"
+                icon="el-icon-edit"
+                type="success"
+                @click="editorProduct(scope.row)"
+              >编 辑</el-link> -->
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="elpagination" style="margin-top:20px;">
+        <el-pagination
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="length"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="productSizeChange"
+          @current-change="productCurrentChange"
+        />
+      </div>
+    </div>
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
@@ -189,7 +194,7 @@
               <el-form-item :label="$t('product.nodetype')" prop="nodeType">
                 <el-radio-group v-model="form.nodeType" @change="changeNode">
                   <el-radio :label="0">{{ $t('product.equipment') }}</el-radio>
-                  <el-radio :label="1">{{ $t('product.gateway') }}</el-radio>
+                  <el-radio :label="1">{{ $t('product.gateway') }}</el-radio>  <el-radio :label="2"> 分组</el-radio>
                 </el-radio-group>
               </el-form-item>
               <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
@@ -260,6 +265,31 @@
       </el-dialog>
     </div>
 
+    <div class="add-group">
+      <el-dialog :visible.sync="groupform" title="新增虚拟分组" width="25%">
+        <el-form ref="addGroup" :model="addGroup" label-width="80px" class="demo-ruleForm">
+          <el-row>
+            <el-col :span="6">
+              <el-form-item
+                :rules="[
+                  { required: true, message: '分组名不能为空'}
+                ]"
+                label="分组名"
+                prop="name"
+            /></el-col>
+            <el-col :span="18">
+              <el-input v-model.number="addGroup.name" type="text" autocomplete="off"/></el-form-item>
+            </el-col>
+          </el-row>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addDeviceGroup()">新增</el-button>
+          <el-button @click="resetForm()">重置</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
     <div class="import-dialog">
       <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
         <el-form ref="uploadProForm" :model="formPro">
@@ -311,9 +341,14 @@ import Cookies from 'js-cookie'
 import $ from 'jquery'
 import { getServer } from '@/api/appcontrol'
 import { resolve } from 'url'
+import { addGroup } from '@/api/home'
 export default {
   data() {
     return {
+      addGroup: {
+        name: ''
+      },
+      groupform: false,
       length: 10,
       total: 0,
       start: 0,
@@ -407,6 +442,32 @@ export default {
     this.projectName = ''
   },
   methods: {
+    // 新增虚拟设备
+    addDeviceGroup() {
+      this.$refs['addGroup'].validate((valid) => {
+        if (valid) {
+          addGroup(this.addGroup.name).then(res => {
+            this.$message({
+              message: '新建设备分组成功',
+              type: 'success'
+            })
+            this.searchProduct()
+            this.groupform = false
+          }).catch(e => {
+            this.$message({
+              message: '新建设备分组失败' + e.computed,
+              type: 'error'
+            })
+            this.groupform = false
+          })
+        } else {
+          return false;
+        }
+      });
+    },
+    resetForm() {
+      this.$refs['addGroup'].resetFields();
+    },
     changeNode(val, first) {
       if (first != 0) {
         this.form.netType = ''
@@ -681,7 +742,7 @@ export default {
         product.ascending('-updatedAt')
         product.skip(this.start)
         product.limit(this.length)
-        product.notEqualTo('devType', 'report')
+        product.equalTo('nodeType', 2)
         product.count().then(
           count => {
             this.total = count
@@ -711,6 +772,10 @@ export default {
     // 添加产品弹窗
     addproduct() {
       this.dialogFormVisible = true
+    },
+    // 新增弹窗
+    addgroup() {
+      this.groupform = true
     },
     getParent(id, origin, returnarr) {
       origin.map(item => {
@@ -993,6 +1058,7 @@ export default {
       this.start = (val - 1) * this.length
       this.searchProduct()
     },
+    // 运行组态
     proudctView(row) {
       // #topoUrl
 
@@ -1002,7 +1068,22 @@ export default {
         var topoUrl = this.$globalConfig.localTopoUrl
       }
       // 为了兼容性,暂时传两个相同的值
+      var url = `${topoUrl}/#/view`
+      localStorage.setItem('rowId', row.id)
+      window.open(url, '__blank')
+    },
+    // 编辑组态
+    proudctEdit(row) {
+      // #topoUrl
+
+      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
+        var topoUrl = window.location.origin + '/spa'
+      } else {
+        var topoUrl = this.$globalConfig.localTopoUrl
+      }
+      // 为了兼容性,暂时传两个相同的值
       var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
+      localStorage.setItem('rowId', row.id)
       window.open(url, '__blank')
     },
     // 跳转到组态大屏

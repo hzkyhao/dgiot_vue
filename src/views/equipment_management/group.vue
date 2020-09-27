@@ -18,11 +18,11 @@
             draggable
             @node-drop="handleDrop">
             <span slot-scope="{ node, data }" class="custom-tree-node">
-              <span v-if="data.seen==true">
+              <span v-if="data.tag.seen == true">
                 <el-input v-model="editLabel" />
               </span>
               <span v-else style="color: #409EFF;">{{ node.label }}</span>
-              <span v-if="data.seen==false" style="margin-left: 5px;">
+              <span v-if="data.tag.seen==false" style="margin-left: 5px;">
                 <i
                   class="el-icon-plus"
                   title="新增"
@@ -49,7 +49,9 @@
           <el-tab-pane label="统计预览" name="统计预览">
             <platform />
           </el-tab-pane>
-          <el-tab-pane label="设备分组" name="设备分组">设备分组</el-tab-pane>
+          <el-tab-pane label="虚拟分组" name="虚拟分组">
+            <devproduct />
+          </el-tab-pane>
           <el-tab-pane label="设备列表" name="设备列表">
             <div class="devlist">
               <el-input v-model="filterTable" placeholder="请输入内容" style="width: 200px;" />
@@ -142,13 +144,19 @@
 </template>
 
 <script>
+import { roletree, addGroup } from '@/api/home'
 import platform from "@/views/equipment_management/platform_overview";
+import devproduct from '@/views/equipment_management/dev_group'
 export default {
   components: {
-    platform
+    platform,
+    devproduct
   },
   data() {
     return {
+      numberValidateForm: {
+        name: ''
+      },
       editLabel: "",
       editIndex: 0,
       filterText: "",
@@ -166,59 +174,7 @@ export default {
         address: ""
       },
       activeName: "统计预览",
-      treeData: [{
-        seen: false,
-        id: 1,
-        label: "一级 1",
-        children: [{
-          seen: false,
-          id: 4,
-          label: "二级 1-1",
-          children: [{
-            seen: false,
-            id: 9,
-            label: "三级 1-1-1"
-          },
-          {
-            seen: false,
-            id: 10,
-            label: "三级 1-1-2"
-          }
-          ]
-        }]
-      },
-      {
-        seen: false,
-        id: 2,
-        label: "一级 2",
-        children: [{
-          seen: false,
-          id: 5,
-          label: "二级 2-1"
-        },
-        {
-          seen: false,
-          id: 6,
-          label: "二级 2-2"
-        }
-        ]
-      },
-      {
-        seen: false,
-        id: 3,
-        label: "一级 3",
-        children: [{
-          seen: false,
-          id: 7,
-          label: "二级 3-1"
-        },
-        {
-          seen: false,
-          id: 8,
-          label: "二级 3-2"
-        }
-        ]
-      }
+      treeData: [
       ],
       defaultProps: {
         children: "children",
@@ -364,7 +320,43 @@ export default {
       this.$refs.tree.filter(val);
     }
   },
+  mounted() {
+    this.getTree()
+  },
   methods: {
+    // 获取角色树
+    getTree() {
+      roletree().then(res => {
+        this.treeData = res.results
+        console.log(this.treeData)
+      }).catch(e => {
+        console.log(e)
+        this.treeData = []
+      })
+    },
+    // 新建虚拟分组
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          addGroup(this.numberValidateForm.name).then(res => {
+            this.$message({
+              message: '新建设备分组成功',
+              type: 'success'
+            })
+          }).catch(e => {
+            this.$message({
+              message: '新建设备分组失败' + e.computed,
+              type: 'error'
+            })
+          })
+        } else {
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     append(node, data) {
       this.$prompt("节点名字", "增加节点", {
         confirmButtonText: "确定",
@@ -382,13 +374,19 @@ export default {
           if (data.children) {
             data["children"].push({
               id: new Date().getTime(),
-              label: value
+              label: value,
+              tag: {
+                seen: false
+              }
             });
           } else {
-            data.children = []
+            data['children'] = []
             data["children"].push({
               id: new Date().getTime(),
-              label: value
+              label: value,
+              tag: {
+                seen: false
+              }
             });
           }
         })
@@ -417,12 +415,12 @@ export default {
     rename(node, data) {
       console.log(node, data)
       this.editLabel = data.label
-      data.seen = true
+      data.tag = true
     },
     savename(node, data) {
       console.log(node, this.editLabel)
       data.label = this.editLabel
-      data.seen = false
+      data.tag.seen = false
     },
     allowDrop(draggingNode, dropNode, type) {
       if (draggingNode.level === dropNode.level) {
