@@ -1,96 +1,93 @@
 <template>
   <div class="resourcechannel">
-    <h3>通道管理</h3>
-    <el-tabs v-model="activeName">
-      <el-tab-pane :label="'通道管理'+'('+total+')'" name="first">
-        <div class="firsttable">
-          <el-form :inline="true" :model="channelformsearch" class="demo-form-inline" size="small">
-            <el-form-item>
-              <el-input v-model="channelformsearch.name" :placeholder="$t('resource.name')"/>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="Get_Re_Channel(0)">{{ $t('developer.search') }}</el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="addchanneltype">{{ $t('developer.selectchannel') }}</el-button>
-            </el-form-item>
-          </el-form>
-          <!----------------------------------------------------资源通道表格------------------>
-          <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;">
-            <el-table-column :label="$t('developer.channelnumber')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.id }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('developer.channelname')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.attributes.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('developer.channeltype')">
-              <template slot-scope="scope">
-                <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
-                <span v-else-if="scope.row.attributes.type==2">{{ $t('developer.resourcechannel') }}</span>
-                <span v-else>任务通道</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('developer.servicetype')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.attributes.cType }}</span>
-              </template>
-            </el-table-column>
+    <div class="firsttable">
+      <el-form :inline="true" :model="channelformsearch" class="demo-form-inline" size="small">
+        <el-form-item>
+          <el-input v-model="channelformsearch.name" :placeholder="$t('resource.name')"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="Get_Re_Channel(0)">{{ $t('developer.search') }}</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addchanneltype">{{ $t('developer.selectchannel') }}</el-button>
+        </el-form-item>
+      </el-form>
+      <!----------------------------------------------------资源通道表格------------------>
+      <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;">
+        <el-table-column :label="$t('developer.channelnumber')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('developer.channelname')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.attributes.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('developer.channeltype')">
+          <template slot-scope="scope">
+            <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
+            <span v-else-if="scope.row.attributes.type==2">{{ $t('developer.resourcechannel') }}</span>
+            <span v-else>任务通道</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('developer.servicetype')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.attributes.cType }}</span>
+          </template>
+        </el-table-column>
 
-            <el-table-column :label="$t('developer.channelstatus')">
-              <template slot-scope="scope">
-                <span v-if="scope.row.attributes.status=='ONLINE'" style="color:green">在线</span>
-                <span v-else style="color:red">离线</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('developer.channeladdr')" width="200">
-              <template slot-scope="scope">
-                <span>{{ 'channel/'+scope.row.id }}</span>
-              </template>
-            </el-table-column>
+        <el-table-column :label="$t('developer.channelstatus')">
+          <template slot-scope="scope">
+            <span v-if="scope.row.attributes.status=='ONLINE'" style="color:green">在线</span>
+            <span v-else style="color:red">离线</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('developer.channeladdr')" width="200">
+          <template slot-scope="scope">
+            <span>{{ 'channel/'+scope.row.id }}</span>
+          </template>
+        </el-table-column>
 
-            <el-table-column :label="$t('developer.describe')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.attributes.desc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('developer.operation')" width="350">
-              <template slot-scope="scope">
-                <el-button slot="reference" type="primary" size="mini" @click="editorChannel(scope.row)">编辑</el-button>
+        <el-table-column :label="$t('developer.describe')">
+          <template slot-scope="scope">
+            <span>{{ scope.row.attributes.desc }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('developer.operation')" width="350">
+          <template slot-scope="scope">
+            <el-button slot="reference" type="primary" size="mini" @click="editorChannel(scope.row)">编辑</el-button>
+            <el-button
+              v-if="scope.row.attributes.isEnable==false"
+              type="success"
+              size="mini"
+              @click="qyChannel(scope.row,'enable')"
+            >{{ $t('developer.enable') }}</el-button>
+
+            <el-button
+              v-else
+              type="danger"
+              size="mini"
+              @click="qyChannel(scope.row,'disable')"
+            >{{ $t('developer.prohibit') }}</el-button>
+            <el-button type="primary" size="mini" @click="updateChannel(scope.row)">详情</el-button>
+            <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
+              <p>确定删除这个{{ scope.row.attributes.name }}通道吗？</p>
+              <div style="text-align: right; margin: 0">
                 <el-button
-                  v-if="scope.row.attributes.isEnable==false"
-                  type="success"
                   size="mini"
-                  @click="qyChannel(scope.row,'enable')"
-                >{{ $t('developer.enable') }}</el-button>
-
+                  @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                >{{ $t('developer.cancel') }}</el-button>
                 <el-button
-                  v-else
-                  type="danger"
+                  type="primary"
                   size="mini"
-                  @click="qyChannel(scope.row,'disable')"
-                >{{ $t('developer.prohibit') }}</el-button>
-                <el-button type="primary" size="mini" @click="updateChannel(scope.row)">详情</el-button>
-                <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                  <p>确定删除这个{{ scope.row.attributes.name }}通道吗？</p>
-                  <div style="text-align: right; margin: 0">
-                    <el-button
-                      size="mini"
-                      @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                    >{{ $t('developer.cancel') }}</el-button>
-                    <el-button
-                      type="primary"
-                      size="mini"
-                      @click="deleteChannel(scope)"
-                    >{{ $t('developer.determine') }}</el-button>
-                  </div>
-                  <el-button slot="reference" type="danger" size="mini">{{ $t('developer.delete') }}</el-button>
+                  @click="deleteChannel(scope)"
+                >{{ $t('developer.determine') }}</el-button>
+              </div>
+              <el-button slot="reference" type="danger" size="mini">{{ $t('developer.delete') }}</el-button>
 
-                </el-popover>
-                <!-- <el-popover
+            </el-popover>
+            <!-- <el-popover
                 placement="top-start"
                 title="标题"
                 width="200"
@@ -98,164 +95,162 @@
                 content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
-                <el-tooltip :disabled="scope.row.attributes.status!='OFFLINE'" class="item" effect="dark" content="请先启用通道" placement="top">
-                  <el-button type="primary" size="mini" style="width:100px;height:10px;opacity:0;position:absolute" @click="subProTopic(scope.row)"/>
-                </el-tooltip>
-                <el-button :disabled="scope.row.attributes.status=='OFFLINE'" type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <div class="elpagination" style="margin-top:20px;">
-            <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="channelSizeChange"
-              @current-change="channelCurrentChange"
-            />
-          </div>
-        </div>
-      </el-tab-pane>
-      <!--弹窗--->
-      <el-dialog
-        :title="channelupdated+'通道'"
-        :visible.sync="channelForm"
-        :close-on-click-modal="false"
-        :before-close="handleClose"
-        width="40%"
-        top="0"
-      >
-        <el-form ref="addchannel" :model="addchannel" :rules="addrules" label-width="120px">
-          <el-form-item label="通道类型" prop="region">
-            <el-select
-              v-model="addchannel.region"
-              :disabled="resourceid!=''"
-              placeholder="通道类型"
-              @change="removeauto"
-            >
-              <el-option
-                v-for="(item,index) in channelregion"
-                :label="item.title.zh"
-                :key="index"
-                :value="item.cType"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$t('developer.channelname')" prop="name">
-            <el-input
-              v-model="addchannel.name"
-              :placeholder="$t('developer.channelname')"
-              autocomplete="off"
-            />
-          </el-form-item>
-
-          <!-- 所属应用(角色) app -->
-          <el-form-item
-            :label="$t('application.applicationtype')"
-            :rules="[
-              { required: true, message: '请选择所属应用',trigger: 'blur'},
-            ]"
+            <el-tooltip :disabled="scope.row.attributes.status!='OFFLINE'" class="item" effect="dark" content="请先启用通道" placement="top">
+              <el-button type="primary" size="mini" style="width:100px;height:10px;opacity:0;position:absolute" @click="subProTopic(scope.row)"/>
+            </el-tooltip>
+            <el-button :disabled="scope.row.attributes.status=='OFFLINE'" type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="elpagination" style="margin-top:20px;">
+        <el-pagination
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="length"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="channelSizeChange"
+          @current-change="channelCurrentChange"
+        />
+      </div>
+    </div>
+    <!--弹窗--->
+    <el-dialog
+      :title="channelupdated+'通道'"
+      :visible.sync="channelForm"
+      :close-on-click-modal="false"
+      :before-close="handleClose"
+      width="40%"
+      top="0"
+    >
+      <el-form ref="addchannel" :model="addchannel" :rules="addrules" label-width="120px">
+        <el-form-item label="通道类型" prop="region">
+          <el-select
+            v-model="addchannel.region"
+            :disabled="resourceid!=''"
+            placeholder="通道类型"
+            @change="removeauto"
           >
-            <el-select v-model="addchannel.applicationtText" :placeholder="$t('application.applicationtype')">
-              <el-option
-                v-for="item in applicationList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.name"/>
+            <el-option
+              v-for="(item,index) in channelregion"
+              :label="item.title.zh"
+              :key="index"
+              :value="item.cType"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('developer.channelname')" prop="name">
+          <el-input
+            v-model="addchannel.name"
+            :placeholder="$t('developer.channelname')"
+            autocomplete="off"
+          />
+        </el-form-item>
+
+        <!-- 所属应用(角色) app -->
+        <el-form-item
+          :label="$t('application.applicationtype')"
+          :rules="[
+            { required: true, message: '请选择所属应用',trigger: 'blur'},
+          ]"
+        >
+          <el-select v-model="addchannel.applicationtText" :placeholder="$t('application.applicationtype')">
+            <el-option
+              v-for="item in applicationList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"/>
+          </el-select>
+        </el-form-item>
+
+        <el-col v-for="(item,index) in arrlist" :span="12" :key="index">
+          <el-form-item
+            :label="item.title.zh"
+            :required="item.required"
+            :prop="item.showname"
+          >
+            <el-input
+              v-if="item.type=='string'"
+              v-model="addchannel[item.showname]"
+            />
+            <el-input
+              v-else-if="item.type=='integer'"
+              v-model.number="addchannel[item.showname]"
+            />
+            <el-select
+              v-else-if="item.type=='boolean'"
+              v-model="addchannel[item.showname]"
+              class="notauto"
+              readonly
+            >
+              <el-option :value="true" label="是"/>
+              <el-option :value="false" label="否"/>
             </el-select>
           </el-form-item>
-
-          <el-col v-for="(item,index) in arrlist" :span="12" :key="index">
-            <el-form-item
-              :label="item.title.zh"
-              :required="item.required"
-              :prop="item.showname"
-            >
-              <el-input
-                v-if="item.type=='string'"
-                v-model="addchannel[item.showname]"
-              />
-              <el-input
-                v-else-if="item.type=='integer'"
-                v-model.number="addchannel[item.showname]"
-              />
-              <el-select
-                v-else-if="item.type=='boolean'"
-                v-model="addchannel[item.showname]"
-                class="notauto"
-                readonly
-              >
-                <el-option :value="true" label="是"/>
-                <el-option :value="false" label="否"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <!---------------------统一的配置描述---------------------------->
-          <el-form-item :label="$t('developer.describe')">
-            <el-input
-              v-model="addchannel.desc"
-              :rows="3"
-              :placeholder="$t('developer.describe')"
-              autocomplete="off"
-              type="textarea"
-              @change="inputChange"
-            />
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
-          <el-button
-            type="primary"
-            @click="addchannelForm('addchannel')"
-          >{{ $t('developer.determine') }}</el-button>
-        </div>
-      </el-dialog>
-      <!--详情展示-->
-      <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%" >
-        <div>
-          <el-row>
-            <el-col :span="12">ID:</el-col>
-            <el-col :span="12">{{ resourceid }}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">Resource Type:</el-col>
-            <el-col :span="12">{{ resoucetype }}</el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">Description:</el-col>
-            <el-col :span="12">{{ description }}</el-col>
-          </el-row>
-
-          <el-row v-for="(key,value) in detailchannel" :key="key">
-            <el-col :span="12">{{ value }}</el-col>
-            <el-col :span="12">{{ key }}</el-col>
-          </el-row>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-        </span>
-      </el-dialog>
-      <!--订阅日志-->
-      <el-dialog :title="channelname+'日志'" :visible.sync="subdialog" :before-close="handleCloseSubdialog" width="85%">
-        <div style="margin-top:20px;">
-
-          <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
-                      <textarea class="ace_text-input" style="overflow:scroll"/>
-          </pre>
-        </div>
-        <span slot="footer" class="dialog-footer" style="height:30px;">
-          <el-switch
-            v-model="value4"
-            style="display: inline-block;margin-right:10px;"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            inactive-text="自动刷新"
-            @change="stopsub"
+        </el-col>
+        <!---------------------统一的配置描述---------------------------->
+        <el-form-item :label="$t('developer.describe')">
+          <el-input
+            v-model="addchannel.desc"
+            :rows="3"
+            :placeholder="$t('developer.describe')"
+            autocomplete="off"
+            type="textarea"
+            @change="inputChange"
           />
-        </span>
-      </el-dialog>
-    </el-tabs>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
+        <el-button
+          type="primary"
+          @click="addchannelForm('addchannel')"
+        >{{ $t('developer.determine') }}</el-button>
+      </div>
+    </el-dialog>
+    <!--详情展示-->
+    <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%" >
+      <div>
+        <el-row>
+          <el-col :span="12">ID:</el-col>
+          <el-col :span="12">{{ resourceid }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">Resource Type:</el-col>
+          <el-col :span="12">{{ resoucetype }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">Description:</el-col>
+          <el-col :span="12">{{ description }}</el-col>
+        </el-row>
+
+        <el-row v-for="(key,value) in detailchannel" :key="key">
+          <el-col :span="12">{{ value }}</el-col>
+          <el-col :span="12">{{ key }}</el-col>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!--订阅日志-->
+    <el-dialog :title="channelname+'日志'" :visible.sync="subdialog" :before-close="handleCloseSubdialog" width="85%">
+      <div style="margin-top:20px;">
+
+        <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
+                      <textarea class="ace_text-input" style="overflow:scroll"/>
+        </pre>
+      </div>
+      <span slot="footer" class="dialog-footer" style="height:30px;">
+        <el-switch
+          v-model="value4"
+          style="display: inline-block;margin-right:10px;"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+          inactive-text="自动刷新"
+          @change="stopsub"
+        />
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>

@@ -60,102 +60,96 @@
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane :label="$t('route.设备管理')" name="first">
-          <div>
-            <div>
-              <el-button size="small">{{ $t('equipment.batchaddition') }}</el-button>
-              <el-button
-                type="primary"
-                size="small"
-                @click="addDeviceForm"
-              >{{ $t('equipment.adddevice') }}</el-button>
-            </div>
-          </div>
-          <div style="margin-top:20px;" class="equdevices">
-            <el-select
-              v-model="equvalue"
-              :disabled="!productenable"
-              class="selectdetail"
-              size="small"
-              @change="selectProductid"
-            >
-              <el-option
-                v-for="(item,index) in proTableData"
-                :label="item.name"
-                :key="index"
-                :value="item.id"
-              />
-            </el-select>
-            <el-select v-model="selectdevice" class="selectdetail" size="small">
-              <el-option :value="$t('equipment.devicename')" />
-              <el-option :value="$t('equipment.devicenumber')" />
-            </el-select>
-            <el-input
-              v-if="selectdevice==$t('equipment.devicename')"
-              v-model="deviceinput"
-              :placeholder="$t('equipment.enterproductname')"
-              size="small"
-              class="selectdetail"
-            />
-            <el-input
-              v-else
-              v-model="deviceinput"
-              :placeholder="$t('equipment.enterdevicenumber')"
-              size="small"
-              class="selectdetail"
-            />
-            <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
-            <el-button
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="getDevices(0)"
-            >{{ $t('developer.search') }}</el-button>
-            <el-button
-              :disabled="multipleTable.length==0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="deleteDevcie"
-            >{{ $t('developer.delete') }}</el-button>
-            <el-button
-              :disabled="multipleTable.length==0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="unactiveDevice"
-            >{{ $t('developer.prohibit') }}</el-button>
-            <el-button
-              :disabled="multipleTable.length==0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="activeDevice"
-            >{{ $t('developer.enable') }}</el-button>
-          </div>
-          <!--第一个表格-->
-          <div class="tabstable">
-            <el-table
-              ref="filterTable"
-              :data="tableData"
-              :row-style="rowClass"
-              style="width: 100%;text-align:center;margin-top:20px;"
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column type="selection" align="center" width="55" />
-              <el-table-column
-                :label="$t('equipment.devicenumber')+'/'+$t('equipment.name')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.devaddr }}</span>
-                  <p style="margin:0;color:green">{{ scope.row.name }}</p>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$t('equipment.state')" align="center">
-                <template slot-scope="scope">
-                  <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{$t('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
+      <div style="margin-top:20px;" class="equdevices">
+        <el-select
+          v-model="equvalue"
+          :disabled="!productenable"
+          class="selectdetail"
+          size="small"
+          @change="selectProductid"
+        >
+          <el-option
+            v-for="(item,index) in proTableData"
+            :label="item.name"
+            :key="index"
+            :value="item.id"
+          />
+        </el-select>
+        <el-select v-model="selectdevice" class="selectdetail" size="small">
+          <el-option :value="$t('equipment.devicename')" />
+          <el-option :value="$t('equipment.devicenumber')" />
+        </el-select>
+        <el-input
+          v-if="selectdevice==$t('equipment.devicename')"
+          v-model="deviceinput"
+          :placeholder="$t('equipment.enterproductname')"
+          size="small"
+          class="selectdetail"
+        />
+        <el-input
+          v-else
+          v-model="deviceinput"
+          :placeholder="$t('equipment.enterdevicenumber')"
+          size="small"
+          class="selectdetail"
+        />
+        <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
+        <el-button
+          size="small"
+          type="primary"
+          class="selectdetail"
+          @click="getDevices(0)"
+        >{{ $t('developer.search') }}</el-button>
+        <el-button
+          :disabled="multipleTable.length==0"
+          size="small"
+          type="primary"
+          class="selectdetail"
+          @click="deleteDevcie"
+        >{{ $t('developer.delete') }}</el-button>
+        <el-button
+          :disabled="multipleTable.length==0"
+          size="small"
+          type="primary"
+          class="selectdetail"
+          @click="unactiveDevice"
+        >{{ $t('developer.prohibit') }}</el-button>
+        <el-button
+          :disabled="multipleTable.length==0"
+          size="small"
+          type="primary"
+          class="selectdetail"
+          @click="activeDevice"
+        >{{ $t('developer.enable') }}</el-button>
+        <el-button size="small">{{ $t('equipment.batchaddition') }}</el-button>
+        <el-button
+          type="primary"
+          size="small"
+          @click="addDeviceForm"
+        >{{ $t('equipment.adddevice') }}</el-button>
+      </div>
+      <!--第一个表格-->
+      <div class="tabstable">
+        <el-table
+          ref="filterTable"
+          :data="tableData"
+          :row-style="rowClass"
+          style="width: 100%;text-align:center;margin-top:20px;"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column type="selection" align="center" width="55" />
+          <el-table-column
+            :label="$t('equipment.devicenumber')+'/'+$t('equipment.name')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.devaddr }}</span>
+              <p style="margin:0;color:green">{{ scope.row.name }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$t('equipment.state')" align="center">
+            <template slot-scope="scope">
+              <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{$t('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
                     <i class="el-icon-question"></i>
                   </el-tooltip>
                   <span class="ACTIVE">已注册</span>
@@ -167,64 +161,64 @@
                   <i class="el-icon-question"></i>
                 </el-tooltip>
                   -->
-                  <span
-                    v-if="scope.row.status=='ONLINE'"
-                    :class="scope.row.status"
-                  >{{ $t('product.online') }}</span>
-                  <el-tooltip
-                    v-if="scope.row.status=='ONLINE'"
-                    content="设备已经上线"
-                    placement="top"
-                  >
-                    <i class="el-icon-question" />
-                  </el-tooltip>
-
-                  <span
-                    v-if="scope.row.status=='OFFLINE'"
-                    :class="scope.row.status"
-                  >{{ $t('product.offline') }}</span>
-                  <el-tooltip
-                    v-if="scope.row.status=='OFFLINE'"
-                    content="设备已经离线"
-                    placement="top"
-                  >
-                    <i class="el-icon-question" />
-                  </el-tooltip>
-                  <span
-                    v-if="scope.row.status!='OFFLINE' && scope.row.status!='ONLINE' "
-                    :class="scope.row.status"
-                  >未注册</span>
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                :label="$t('equipment.product')"
-                prop="productName"
-                align="center"
-              />
-
-              <el-table-column :label="$t('equipment.nodetype')" align="center">
-                <template slot-scope="scope">
-                  <svg-icon
-                    v-if="scope.row.nodeType==0"
-                    icon-class="iot"
-                    style="width:2rem;height:2rem"
-                  />
-                  <svg-icon
-                    v-else
-                    icon-class="wgicon"
-                    style="width:2rem;height:2rem"
-                  />
-                  <!-- <el-tag type="success" >设备</el-tag>
-                  <el-tag type="success" v-else>网关</el-tag>-->
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$t('developer.enable')+'/'+$t('developer.prohibit')"
-                align="center"
+              <span
+                v-if="scope.row.status=='ONLINE'"
+                :class="scope.row.status"
+              >{{ $t('product.online') }}</span>
+              <el-tooltip
+                v-if="scope.row.status=='ONLINE'"
+                content="设备已经上线"
+                placement="top"
               >
-                <template slot-scope="scope">
-                  <!-- <span
+                <i class="el-icon-question" />
+              </el-tooltip>
+
+              <span
+                v-if="scope.row.status=='OFFLINE'"
+                :class="scope.row.status"
+              >{{ $t('product.offline') }}</span>
+              <el-tooltip
+                v-if="scope.row.status=='OFFLINE'"
+                content="设备已经离线"
+                placement="top"
+              >
+                <i class="el-icon-question" />
+              </el-tooltip>
+              <span
+                v-if="scope.row.status!='OFFLINE' && scope.row.status!='ONLINE' "
+                :class="scope.row.status"
+              >未注册</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            :label="$t('equipment.product')"
+            prop="productName"
+            align="center"
+          />
+
+          <el-table-column :label="$t('equipment.nodetype')" align="center">
+            <template slot-scope="scope">
+              <svg-icon
+                v-if="scope.row.nodeType==0"
+                icon-class="iot"
+                style="width:2rem;height:2rem"
+              />
+              <svg-icon
+                v-else
+                icon-class="wgicon"
+                style="width:2rem;height:2rem"
+              />
+              <!-- <el-tag type="success" >设备</el-tag>
+                  <el-tag type="success" v-else>网关</el-tag>-->
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('developer.enable')+'/'+$t('developer.prohibit')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <!-- <span
                     style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#cccccc;vertical-align:middle"
                     v-if="scope.row.isEnable==false"
                   ></span>
@@ -234,16 +228,16 @@
                     v-if="scope.row.isEnable==true"
                   ></span>
                   <span v-if="scope.row.isEnable==true">已启用</span>-->
-                  <el-switch
-                    v-model="scope.row.isEnable"
-                    active-color="#5eb058"
-                    inactive-color="#cccccc"
-                    @change="handelUpdate($event,scope.row,scope.$index)"
-                  />
-                </template>
-              </el-table-column>
+              <el-switch
+                v-model="scope.row.isEnable"
+                active-color="#5eb058"
+                inactive-color="#cccccc"
+                @change="handelUpdate($event,scope.row,scope.$index)"
+              />
+            </template>
+          </el-table-column>
 
-              <!-- <el-table-column :label="$t('equipment.lastonlinetime')" align="center">
+          <!-- <el-table-column :label="$t('equipment.lastonlinetime')" align="center">
                 <template slot-scope="scope">
                   <span
                     v-if="scope.row.lastOnlineTime"
@@ -251,111 +245,74 @@
                   <span v-else>—</span>
                 </template>
               </el-table-column>-->
-              <el-table-column label="创建时间">
-                <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$t('developer.operation')"
-                align="center"
+          <el-table-column label="创建时间">
+            <template slot-scope="scope">
+              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('developer.operation')"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-link
+                :underline="false"
+                type="primary"
+                icon="el-icon-view"
+                @click="deviceToDetail(scope.row)"
+              >{{ $t('equipment.see') }}</el-link>
+              <el-popover
+                :ref="`popover-${scope.$index}`"
+                placement="top"
+                width="300"
               >
-                <template slot-scope="scope">
-                  <el-link
-                    :underline="false"
+                <p>确定删除这个{{ scope.row.name }}设备吗？</p>
+                <div style="text-align: right; margin: 0">
+                  <el-button
+                    size="mini"
+                    @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                  >{{ $t('developer.cancel') }}</el-button>
+                  <el-button
                     type="primary"
-                    icon="el-icon-view"
-                    @click="deviceToDetail(scope.row)"
-                  >{{ $t('equipment.see') }}</el-link>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
-                  >
-                    <p>确定删除这个{{ scope.row.name }}设备吗？</p>
-                    <div style="text-align: right; margin: 0">
-                      <el-button
-                        size="mini"
-                        @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                      >{{ $t('developer.cancel') }}</el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >{{ $t('developer.determine') }}</el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
-                    >{{ $t('developer.delete') }}</el-link>
-                  </el-popover>
-                  <el-link
-                    v-if="scope.row.nodeType==1"
-                    :underline="false"
-                    type="primary"
-                    icon="el-icon-s-unfold"
-                    @click="deviceToChildren(scope.row)"
-                  >{{ $t('equipment.subdevice') }}</el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    icon="el-icon-edit"
-                    @click="editorDevice(scope.row)"
-                  >编辑</el-link>
-                  <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="elpagination" style="margin-top:20px;">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="devicelength"
-                :total="devicetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="deviceSizeChange"
-                @current-change="deviceCurrentChange"
-              />
-            </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane :label="$t('equipment.batchmanagement')" name="second">
-          <el-table :data="pctableData" style="width: 100%;text-align:center">
-            <el-table-column
-              :label="$t('equipment.serialnumber')"
-              type="index"
-              align="center"
-              width="200"
-            />
-            <el-table-column :label="$t('equipment.batchname')" align="center">
-              <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.batch_name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('equipment.createdAt')" align="center">
-              <template slot-scope="scope">
-                <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-              </template>
-            </el-table-column>
-            <!-- <el-table-column label="操作" align="center" width="300">
-              <template slot-scope="scope">
-                <el-button
-                  type="primary"
-                  @click="updatebatch(scope.row,scope.row.id)"
-                  size="mini"
-                >编辑</el-button>
-                <el-button type="danger" @click="deletebatch(scope.row.id)" size="mini">删除</el-button>
-                <el-button
-                  type="success"
-                  @click="selectbatch(scope.row,scope.row.id)"
-                  size="mini"
-                >选择</el-button>
-              </template>
-            </el-table-column>-->
-          </el-table>
-        </el-tab-pane>
-      </el-tabs>
+                    size="mini"
+                    @click="makeSure(scope)"
+                  >{{ $t('developer.determine') }}</el-button>
+                </div>
+                <el-link
+                  slot="reference"
+                  :underline="false"
+                  icon="el-icon-delete"
+                  type="danger"
+                >{{ $t('developer.delete') }}</el-link>
+              </el-popover>
+              <el-link
+                v-if="scope.row.nodeType==1"
+                :underline="false"
+                type="primary"
+                icon="el-icon-s-unfold"
+                @click="deviceToChildren(scope.row)"
+              >{{ $t('equipment.subdevice') }}</el-link>
+              <el-link
+                :underline="false"
+                type="primary"
+                icon="el-icon-edit"
+                @click="editorDevice(scope.row)"
+              >编辑</el-link>
+              <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="elpagination" style="margin-top:20px;">
+          <el-pagination
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="devicelength"
+            :total="devicetotal"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="deviceSizeChange"
+            @current-change="deviceCurrentChange"
+          />
+        </div>
+      </div>
       <!--添加设备弹窗-->
       <el-dialog
         :title="'设备'+equipmentEditor"
@@ -1841,6 +1798,7 @@ export default {
   color: red;
 }
 .equipment .selectdetail {
+  max-width: 200px;
   margin: 10px 0;
 }
 /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
