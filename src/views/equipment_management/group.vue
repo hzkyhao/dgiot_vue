@@ -53,70 +53,17 @@
             <devproduct />
           </el-tab-pane>
           <el-tab-pane label="设备列表" name="设备列表">
-            <div class="devlist">
-              <el-input v-model="filterTable" placeholder="请输入内容" style="width: 200px;" />
-              <el-button type="primary" @click="dialogVisible = true">新增</el-button>
-              <el-table
-                :data="
-                  tables.slice(
-                    (currentPage - 1) * pageSize,
-                    currentPage * pageSize
-                  )
-                "
-                style="width: 100%"
-                row-key="id">
-                <el-table-column label="日期" width="180">
-                  <template slot-scope="scope">
-                    <el-input v-if="scope.row.seen" v-model="scope.row.date" />
-                    <span v-else v-html="format(scope.row.date)" />
-                  </template>
-                </el-table-column>
-                <el-table-column label="姓名" width="180">
-                  <template slot-scope="scope">
-                    <el-input v-if="scope.row.seen" v-model="scope.row.name" size="medium" />
-                    <span v-else size="medium" v-html="format(scope.row.name)" />
-                  </template>
-                </el-table-column>
-                <el-table-column label="地址">
-                  <template slot-scope="scope">
-                    <el-input v-if="scope.row.seen" v-model="scope.row.address" size="medium" />
-                    <span v-else size="medium" v-html="format(scope.row.address)" />
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作">
-                  <template slot-scope="scope">
-                    <el-button
-                      v-if="scope.row.seen"
-                      size="mini"
-                      type="danger"
-                      @click="handleSave(scope.$index, scope.row)">保存</el-button>
-                    <el-button v-else size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-
-                    <el-button
-                      size="mini"
-                      type="danger"
-                      @click.native.prevent="
-                        handleDelete(scope.$index, scope.row, tables)
-                      ">删除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-            <div style="text-align: center;margin-top: 30px;">
-              <el-pagination
-                :total="tables.length"
-                :current-page.sync="currentPage"
-                :page-size="pageSize"
-                :page-sizes="pageSizes"
-                background
-                layout="sizes,prev, pager, next"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" />
-            </div>
+            <devicelist />
           </el-tab-pane>
-          <el-tab-pane label="产品列表" name="产品列表">产品列表</el-tab-pane>
-          <el-tab-pane label="通道列表" name="通道列表">通道列表</el-tab-pane>
-          <el-tab-pane label="用户列表" name="用户列表">用户列表</el-tab-pane>
+          <el-tab-pane label="产品列表" name="产品列表">
+            <productlist />
+          </el-tab-pane>
+          <el-tab-pane label="通道列表" name="通道列表">
+            <resourcechannel />
+          </el-tab-pane>
+          <el-tab-pane label="用户列表" name="用户列表">
+            <userlist />
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -146,11 +93,19 @@
 <script>
 import { roletree, addGroup } from '@/api/home'
 import platform from "@/views/equipment_management/platform_overview";
-import devproduct from '@/views/equipment_management/dev_group'
+import devproduct from '@/views/equipment_management/home_group'
+import devicelist from '@/views/equipment_management/home_index'
+import productlist from '@/views/equipment_management/home_group2'
+import resourcechannel from '@/views/engine/home_resourcechannel'
+import userlist from '@/views/roles/home_structure';
 export default {
   components: {
     platform,
-    devproduct
+    devproduct,
+    devicelist,
+    productlist,
+    resourcechannel,
+    userlist
   },
   data() {
     return {
@@ -366,8 +321,8 @@ export default {
           value
         }) => {
           this.$message({
-            type: "info",
-            message: "修改成功"
+            type: "success",
+            message: "增加节点成功"
           });
           console.log(value);
           console.log(node, JSON.stringify(data));
@@ -415,7 +370,7 @@ export default {
     rename(node, data) {
       console.log(node, data)
       this.editLabel = data.label
-      data.tag = true
+      data.tag.seen = true
     },
     savename(node, data) {
       console.log(node, this.editLabel)
