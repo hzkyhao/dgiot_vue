@@ -1058,20 +1058,6 @@ export default {
       this.start = (val - 1) * this.length
       this.searchProduct()
     },
-    // 运行组态
-    proudctView(row) {
-      // #topoUrl
-
-      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-        var topoUrl = window.location.origin + '/spa'
-      } else {
-        var topoUrl = this.$globalConfig.localTopoUrl
-      }
-      // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#/view`
-      localStorage.setItem('rowId', row.id)
-      window.open(url, '__blank')
-    },
     // 编辑组态
     proudctEdit(row) {
       // #topoUrl
@@ -1086,8 +1072,8 @@ export default {
       localStorage.setItem('rowId', row.id)
       window.open(url, '__blank')
     },
-    // 跳转到组态大屏
-    goTopoview() {
+    // 运行组态
+    proudctView(row) {
       // 判断是线上环境还是线下环境
       if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
         var topoUrl = window.location.origin + '/spa'
@@ -1095,7 +1081,7 @@ export default {
         // eslint-disable-next-line no-redeclare
         var topoUrl = this.$globalConfig.localTopoUrl
       }
-      var url = `${topoUrl}/#/view`
+      var url = `${topoUrl}/#/view/${row.id}`
       window.open(url, '__blank')
     },
     // 导出
