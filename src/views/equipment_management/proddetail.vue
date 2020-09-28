@@ -2,9 +2,7 @@
   <div class="editproduct">
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item
-          :to="{ path: '/roles/product' }"
-        >{{ $t('route.产品管理') }}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/roles/product' }">{{ $t('route.产品管理') }}</el-breadcrumb-item>
         <el-breadcrumb-item>{{ $t('route.产品详情') }}</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="product">
@@ -17,33 +15,21 @@
             <span>ProductSecret:</span>
             <span v-if="isshow==false">
               ********************
-              <el-link
-                :underline="false"
-                type="primary"
-                style="margin-left:5px;cursor:pointer"
-                @click="isshow=true"
-              >{{ $t('product.display') }}</el-link>
+              <el-link :underline="false" type="primary" style="margin-left:5px;cursor:pointer" @click="isshow=true">
+                {{ $t('product.display') }}</el-link>
             </span>
             <span v-else>
               {{ ProductSecret }}
-              <el-link
-                :underline="false"
-                type="primary"
-                style="margin-left:5px;cursor:pointer"
-                @click="isshow=false"
-              >{{ $t('product.hidden') }}</el-link>
+              <el-link :underline="false" type="primary" style="margin-left:5px;cursor:pointer" @click="isshow=false">
+                {{ $t('product.hidden') }}</el-link>
             </span>
           </li>
           <li>
             <span>{{ $t('product.numberofequipment') }}:</span>
             <span>
               {{ form.ProductAll }}
-              <el-link
-                :underline="false"
-                type="primary"
-                style="margin-left:10px;font-size:16px"
-                @click="goToDevices"
-              >{{ $t('product.gotoequipment') }}</el-link>
+              <el-link :underline="false" type="primary" style="margin-left:10px;font-size:16px" @click="goToDevices">
+                {{ $t('product.gotoequipment') }}</el-link>
             </span>
           </li>
           <li>
@@ -51,8 +37,7 @@
               <el-image
                 v-if="productimg"
                 :src="productimg"
-                style="max-width:200px;height:auto;position:relative;top:-40px;"
-              >
+                style="max-width:200px;height:auto;position:relative;top:-40px;">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline" />
                 </div>
@@ -69,37 +54,22 @@
           <div style="background:#ffffff;padding:10px;box-sizing:border-box;">
             <!-- 导出 -->
             <div class="addtopic" style="text-align:right;margin-bottom:10px;">
-              <el-button
-                type="primary"
-                size="small"
-                @click="exportProduct"
-              >{{ $t('product.exportpro') }}</el-button>
+              <el-button type="primary" size="small" @click="exportProduct">{{ $t('product.exportpro') }}</el-button>
             </div>
 
             <div>
-              <table
-                class="mailtable"
-                style="width:100%;"
-                border="0"
-                cellspacing="0"
-                cellpadding="0"
-              >
+              <table class="mailtable" style="width:100%;" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td class="cloumn notbottom">{{ $t('product.productname') }}</td>
                   <td class="notbottom">{{ productdetail.name }}</td>
                   <td class="cloumn notbottom">{{ $t('product.nodetype') }}</td>
-                  <td
-                    v-if="productdetail.nodeType==1"
-                    class="notbottom"
-                  >{{ $t('product.gateway') }}</td>
+                  <td v-if="productdetail.nodeType==1" class="notbottom">{{ $t('product.gateway') }}</td>
                   <td v-else class="notbottom">{{ $t('product.equipment') }}</td>
                   <td class="cloumn notbottom">{{ $t('product.addingtime') }}</td>
                   <td>{{ productdetail.createdAt }}</td>
                 </tr>
                 <tr>
-                  <td
-                    class="cloumn notbottom"
-                  >{{ $t('product.classification') }}</td>
+                  <td class="cloumn notbottom">{{ $t('product.classification') }}</td>
                   <td class="notbottom">{{ productdetail.category }}</td>
                   <td class="cloumn notbottom">
                     {{ $t('product.dynamicregistration') }}
@@ -107,16 +77,12 @@
                       :content="$t('product.text1')"
                       placement="top"
                       style="margin-left:5px;color:#cccccc"
-                      effect="light"
-                    >
+                      effect="light">
                       <i class="el-icon-question" />
                     </el-tooltip>
                   </td>
                   <td class="notbottom">
-                    <span
-                      v-if="dynamicReg==false"
-                      style="color:#cccccc"
-                    >{{ $t('product.close') }}</span>
+                    <span v-if="dynamicReg==false" style="color:#cccccc">{{ $t('product.close') }}</span>
                     <span v-else>{{ $t('product.open') }}</span>
                     <el-switch
                       v-model="dynamicReg"
@@ -124,26 +90,13 @@
                       :inactive-value="false"
                       active-color="#5eb058"
                       inactive-color="#cccccc"
-                      @change="handelUpdate($event,dynamicReg)"
-                    />
+                      @change="handelUpdate($event,dynamicReg)" />
                   </td>
                   <td class="cloumn notbottom">{{ $t('product.networking') }}</td>
-                  <td
-                    v-if="productdetail.netType=='CELLULAR'"
-                    class="notbottom"
-                  >蜂窝(2G/3G/4G)</td>
-                  <td
-                    v-else-if="productdetail.netType=='WIFI'"
-                    class="notbottom"
-                  >WiFi</td>
-                  <td
-                    v-else-if="productdetail.netType=='ETHERNET'"
-                    class="notbottom"
-                  >以太网</td>
-                  <td
-                    v-else-if="productdetail.netType=='LORA'"
-                    class="notbottom"
-                  >LoRaWAN</td>
+                  <td v-if="productdetail.netType=='CELLULAR'" class="notbottom">蜂窝(2G/3G/4G)</td>
+                  <td v-else-if="productdetail.netType=='WIFI'" class="notbottom">WiFi</td>
+                  <td v-else-if="productdetail.netType=='ETHERNET'" class="notbottom">以太网</td>
+                  <td v-else-if="productdetail.netType=='LORA'" class="notbottom">LoRaWAN</td>
                   <td v-else class="notbottom">{{ productdetail.netType }}</td>
                 </tr>
                 <tr>
@@ -158,69 +111,41 @@
         <el-tab-pane :label="'Topic'+$t('product.list')" name="second">
           <div style="background:#ffffff;padding:10px;box-sizing:border-box;">
             <div class="addtopic" style="text-align:right;margin-bottom:10px;">
-              <el-button
-                type="primary"
-                size="small"
-                @click="topicdialogVisible=true"
-              >{{ $t('product.customtopicclass') }}</el-button>
+              <el-button type="primary" size="small" @click="topicdialogVisible=true">
+                {{ $t('product.customtopicclass') }}</el-button>
             </div>
             <el-table
               :data="topicData.slice((topicstart-1)*topiclength,topicstart*topiclength)"
-              style="width: 100%;text-align:center;"
-            >
+              style="width: 100%;text-align:center;">
               <el-table-column label="Topic" align="left">
                 <template slot-scope="scope">
                   <span>{{ scope.row.topic.replace('\$\{ProductId\}', productId) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="$t('product.operationauthority')"
-                align="center"
-              >
+              <el-table-column :label="$t('product.operationauthority')" align="center">
                 <template slot-scope="scope">
                   <span v-if="scope.row.type=='pub'">{{ $t('product.pub') }}</span>
                   <span v-if="scope.row.type=='sub'">{{ $t('product.sub') }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="$t('developer.describe')"
-                prop="desc"
-                align="center"
-              />
-              <el-table-column
-                :label="$t('developer.operation')"
-                align="center"
-              >
+              <el-table-column :label="$t('developer.describe')" prop="desc" align="center" />
+              <el-table-column :label="$t('developer.operation')" align="center">
                 <template slot-scope="scope">
                   <el-button
                     v-if="!scope.row.isdef"
                     type="primary"
                     size="mini"
-                    @click="updatetopic(scope.row,scope.$index)"
-                  >{{ $t('developer.edit') }}</el-button>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
-                  >
+                    @click="updatetopic(scope.row,scope.$index)">{{ $t('developer.edit') }}</el-button>
+                  <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
                     <p>确定删除这个{{ scope.row.topic }}Topic类吗？</p>
                     <div style="text-align: right; margin: 0">
-                      <el-button
-                        size="mini"
-                        @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                      >{{ $t('product.cancel') }}</el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="deletetopic(scope,scope.$index)"
-                      >{{ $t('developer.determine') }}</el-button>
+                      <el-button size="mini" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">
+                        {{ $t('product.cancel') }}</el-button>
+                      <el-button type="primary" size="mini" @click="deletetopic(scope,scope.$index)">
+                        {{ $t('developer.determine') }}</el-button>
                     </div>
-                    <el-button
-                      v-if="!scope.row.isdef"
-                      slot="reference"
-                      type="danger"
-                      size="mini"
-                    >{{ $t('developer.delete') }}</el-button>
+                    <el-button v-if="!scope.row.isdef" slot="reference" type="danger" size="mini">
+                      {{ $t('developer.delete') }}</el-button>
                   </el-popover>
                 </template>
               </el-table-column>
@@ -232,8 +157,7 @@
                 :total="topicData.length"
                 layout="total, sizes, prev, pager, next, jumper"
                 @size-change="topicSizeChange"
-                @current-change="topicCurrentChange"
-              />
+                @current-change="topicCurrentChange" />
             </div>
           </div>
           <!--topic弹窗-->
@@ -241,12 +165,9 @@
             :title="$t('product.definetopicclass')"
             :visible.sync="topicdialogVisible"
             :close-on-click-modal="false"
-            width="40%"
-          >
+            width="40%">
             <div class="topiccontent">
-              <div
-                style="padding:10px;box-sizing:border-box;background:#e6f9fc;font-size:16px;"
-              >
+              <div style="padding:10px;box-sizing:border-box;background:#e6f9fc;font-size:16px;">
                 <i class="el-icon-warning" />
                 {{ $t('product.text2') }}
               </div>
@@ -254,19 +175,11 @@
                 <el-form ref="topicform" :model="topicform" :rules="topicrule">
                   <el-form-item label="Topic类：" prop="topic">
                     <el-input v-model="topicform.topic">
-                      <template
-                        slot="prepend"
-                      >{{ 'thing/'+productId+'/${DevAddr}/' }}</template>
+                      <template slot="prepend">{{ 'thing/'+productId+'/${DevAddr}/' }}</template>
                     </el-input>
                   </el-form-item>
-                  <el-form-item
-                    :label="$t('product.operationauthority')"
-                    prop="type"
-                  >
-                    <el-select
-                      v-model="topicform.type"
-                      :placeholder="$t('product.selectdeviceoperationpermission')"
-                    >
+                  <el-form-item :label="$t('product.operationauthority')" prop="type">
+                    <el-select v-model="topicform.type" :placeholder="$t('product.selectdeviceoperationpermission')">
                       <el-option :label="$t('product.sub')" value="sub" />
                       <el-option :label="$t('product.pub')" value="pub" />
                     </el-select>
@@ -278,36 +191,22 @@
               </div>
             </div>
             <span slot="footer" class="dialog-footer">
-              <el-button
-                @click="topicdialogVisible = false"
-              >{{ $t('developer.cancel') }}</el-button>
-              <el-button
-                type="primary"
-                @click="subTopic('topicform',topicform.isupdated)"
-              >{{ $t('developer.determine') }}</el-button>
+              <el-button @click="topicdialogVisible = false">{{ $t('developer.cancel') }}</el-button>
+              <el-button type="primary" @click="subTopic('topicform',topicform.isupdated)">
+                {{ $t('developer.determine') }}</el-button>
             </span>
           </el-dialog>
         </el-tab-pane>
         <!--功能定义-->
         <el-tab-pane :label="$t('product.physicalmodel')" name="third">
           <div style="text-align:right">
-            <el-button
-              type="primary"
-              size="small"
-              @click="checkschema"
-            >{{ $t('product.viewobjectmodel') }}</el-button>
+            <el-button type="primary" size="small" @click="checkschema">{{ $t('product.viewobjectmodel') }}</el-button>
 
             <!-- 新增自定义属性 -->
-            <el-button
-              type="primary"
-              size="small"
-              @click="createProperty"
-            >{{ $t('product.newcustomattribute') }}</el-button>
-            <el-button
-              type="primary"
-              size="small"
-              @click="addcategory"
-            >{{ $t('product.newstandardattribute') }}</el-button>
+            <el-button type="primary" size="small" @click="createProperty">{{ $t('product.newcustomattribute') }}
+            </el-button>
+            <el-button type="primary" size="small" @click="addcategory">{{ $t('product.newstandardattribute') }}
+            </el-button>
           </div>
           <div>
             <el-table
@@ -316,44 +215,23 @@
               :row-class-name="getRowClass"
               border
               row-key="identifier"
-              style="width: 100%;margin-top:10px;"
-            >
+              style="width: 100%;margin-top:10px;">
               <el-table-column type="expand">
-                <template
-                  v-if="scope.row.dataType.type=='struct'"
-                  slot-scope="scope"
-                  class="opentable"
-                >
-                  <el-table
-                    :data="scope.row.dataType.specs"
-                    style="width:60%;text-align:center;box-sizing:border-box;"
-                  >
-                    <el-table-column
-                      :label="$t('product.identifier')"
-                      align="center"
-                    >
+                <template v-if="scope.row.dataType.type=='struct'" slot-scope="scope" class="opentable">
+                  <el-table :data="scope.row.dataType.specs" style="width:60%;text-align:center;box-sizing:border-box;">
+                    <el-table-column :label="$t('product.identifier')" align="center">
                       <template slot-scope="scope">
                         <span>{{ scope.row.identifier }}</span>
                       </template>
                     </el-table-column>
-                    <el-table-column
-                      :label="$t('product.functionaltypes')"
-                      align="center"
-                    >
+                    <el-table-column :label="$t('product.functionaltypes')" align="center">
                       <template>
                         <span>{{ $t('product.attribute') }}</span>
                       </template>
                     </el-table-column>
 
-                    <el-table-column
-                      :label="$t('product.functionname')"
-                      prop="name"
-                      align="center"
-                    />
-                    <el-table-column
-                      :label="$t('product.datadefinition')"
-                      align="center"
-                    >
+                    <el-table-column :label="$t('product.functionname')" prop="name" align="center" />
+                    <el-table-column :label="$t('product.datadefinition')" align="center">
                       <template slot-scope="scope">
                         <span>{{ scope.row.dataType.type }}</span>
                       </template>
@@ -361,10 +239,7 @@
                   </el-table>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="$t('product.identifier')"
-                prop="identifier"
-              />
+              <el-table-column :label="$t('product.identifier')" prop="identifier" />
               <el-table-column :label="$t('product.functionaltypes')">
                 <template>
                   <span>{{ $t('product.attribute') }}</span>
@@ -379,31 +254,20 @@
               <el-table-column :label="$t('product.datadefinition')">
                 <template slot-scope="scope">
                   <span
-                    v-if="scope.row.dataType.specs&&(scope.row.dataType.type=='double'||scope.row.dataType.type=='float'||scope.row.dataType.type=='int')"
-                  >{{ $t('product.rangeofvalues')+scope.row.dataType.specs.min+'~'+scope.row.dataType.specs.max }}</span>
+                    v-if="scope.row.dataType.specs&&(scope.row.dataType.type=='double'||scope.row.dataType.type=='float'||scope.row.dataType.type=='int')">{{ $t('product.rangeofvalues')+scope.row.dataType.specs.min+'~'+scope.row.dataType.specs.max }}</span>
                   <span
-                    v-else-if="scope.row.dataType.type=='string'"
-                  >{{ $t('product.datalength')+':'+scope.row.dataType.size+$t('product.byte') }}</span>
+                    v-else-if="scope.row.dataType.type=='string'">{{ $t('product.datalength')+':'+scope.row.dataType.size+$t('product.byte') }}</span>
                   <span v-else-if="scope.row.dataType.type=='date'" />
-                  <span
-                    v-else-if="scope.row.dataType.type!='struct'"
-                  >{{ scope.row.dataType.specs }}</span>
+                  <span v-else-if="scope.row.dataType.type!='struct'">{{ scope.row.dataType.specs }}</span>
                   <span v-else />
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')">
                 <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deletewmx(scope.$index)"
-                  >{{ $t('developer.delete') }}</el-button>
+                  <el-button type="danger" size="mini" @click="deletewmx(scope.$index)">{{ $t('developer.delete') }}
+                  </el-button>
 
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="wmxDataFill(scope.row,scope.$index)"
-                  >编辑</el-button>
+                  <el-button type="primary" size="mini" @click="wmxDataFill(scope.row,scope.$index)">编辑</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -415,29 +279,19 @@
               style="margin-top:10px;"
               layout="total, sizes, prev, pager, next, jumper"
               @size-change="wmxSizeChange"
-              @current-change="wmxCurrentChange"
-            />
+              @current-change="wmxCurrentChange" />
           </div>
           <!--取物模型模板-->
           <el-dialog
             :title="$t('product.addfunction')"
             :visible.sync="originwmx"
             :close-on-click-modal="false"
-            width="50%"
-          >
+            width="50%">
             <div>
               <div style="margin:20px 0">
                 <label for>{{ $t('product.classification') }}</label>
-                <el-cascader
-                  v-model="category"
-                  :options="treeData"
-                  @change="handleChange"
-                />
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="getPropData(0)"
-                >{{ $t('developer.search') }}</el-button>
+                <el-cascader v-model="category" :options="treeData" @change="handleChange" />
+                <el-button type="primary" size="mini" @click="getPropData(0)">{{ $t('developer.search') }}</el-button>
               </div>
               <div style="text-align: center;margin-top:10px;">
                 <el-table :data="PropData" style="width:100%;text-align:center">
@@ -446,32 +300,20 @@
                       <span>{{ scope.row.attributes.data.SuperId }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    :label="$t('product.identifier')"
-                    align="center"
-                  >
+                  <el-table-column :label="$t('product.identifier')" align="center">
                     <template slot-scope="scope">
                       <span>{{ scope.row.attributes.type }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    :label="$t('product.applicabletype')"
-                    align="center"
-                  >
+                  <el-table-column :label="$t('product.applicabletype')" align="center">
                     <template slot-scope="scope">
                       <span>{{ scope.row.attributes.data.CategoryName }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    :label="$t('developer.operation')"
-                    align="center"
-                  >
+                  <el-table-column :label="$t('developer.operation')" align="center">
                     <template slot-scope="scope">
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="addProCategory(scope.row)"
-                      >{{ $t('product.add') }}</el-button>
+                      <el-button type="primary" size="mini" @click="addProCategory(scope.row)">{{ $t('product.add') }}
+                      </el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -486,20 +328,13 @@
                   layout="total, sizes, prev, pager, next, jumper"
                   small
                   @size-change="productSizeChange"
-                  @current-change="productCurrentChange"
-                />
+                  @current-change="productCurrentChange" />
               </div>
             </div>
             <span slot="footer" class="dialog-footer">
-              <el-button
-                size="mini"
-                @click="originwmx = false"
-              >{{ $t('developer.cancel') }}</el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="originwmx = false"
-              >{{ $t('developer.determine') }}</el-button>
+              <el-button size="mini" @click="originwmx = false">{{ $t('developer.cancel') }}</el-button>
+              <el-button type="primary" size="mini" @click="originwmx = false">{{ $t('developer.determine') }}
+              </el-button>
             </span>
           </el-dialog>
           <!--添加物模型弹窗-->
@@ -509,32 +344,20 @@
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
             width="40%"
-            top="5vh"
-          >
+            top="5vh">
             <div class="wmxheader">
-              <el-form
-                ref="sizeForm"
-                :model="sizeForm"
-                :rules="sizerule"
-                size="small"
-              >
+              <el-form ref="sizeForm" :model="sizeForm" :rules="sizerule" size="small">
                 <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
                 <el-row :gutter="30">
                   <el-col :span="10">
-                    <el-form-item
-                      :label="$t('product.functionname')"
-                      prop="name"
-                    >
+                    <el-form-item :label="$t('product.functionname')" prop="name">
                       <el-input v-model="sizeForm.name" />
                     </el-form-item>
                   </el-col>
 
                   <el-col :span="10">
-                    <el-form-item
-                      :label="$t('product.identifier')"
-                      prop="identifier"
-                    >
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
                       <el-input v-model="sizeForm.identifier" />
                     </el-form-item>
                     <!--type-->
@@ -542,17 +365,14 @@
                 </el-row>
 
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
-                <div
-                  v-if="sizeForm.type=='int'||sizeForm.type=='float'||sizeForm.type=='double'"
-                >
+                <div v-if="sizeForm.type=='int'||sizeForm.type=='float'||sizeForm.type=='double'">
                   <el-form-item required label="取值范围(数值)">
                     <el-col :span="9">
                       <el-form-item prop="startnumber">
                         <el-input
                           v-model.number="sizeForm.startnumber"
                           :placeholder="$t('product.minimumvalue')"
-                          type="number"
-                        />
+                          type="number" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2">-</el-col>
@@ -562,8 +382,7 @@
                           v-model.number="sizeForm.endnumber"
                           :placeholder="$t('product.maximumvalue')"
                           type="number"
-                          @input="changeValue('sizeForm')"
-                        />
+                          @input="changeValue('sizeForm')" />
                       </el-form-item>
                     </el-col>
                   </el-form-item>
@@ -576,16 +395,12 @@
                           :precision="2"
                           :min="0"
                           :step="0.01"
-                          controls-position="right"
-                        />
+                          controls-position="right" />
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
-                      <el-form-item
-                        :label="$t('product.readandwritetype')"
-                        prop="isread"
-                      >
+                      <el-form-item :label="$t('product.readandwritetype')" prop="isread">
                         <el-radio-group v-model="sizeForm.isread" size="medium">
                           <el-radio label="rw">{{ $t('product.readandwrite') }}</el-radio>
                           <el-radio label="r">{{ $t('product.onlyread') }}</el-radio>
@@ -600,25 +415,13 @@
                       <el-form-item :label="$t('product.datatype')" prop="type">
                         <!--少个@change=selectStruct-->
                         <el-select v-model="sizeForm.type">
-                          <el-option
-                            :label="$t('product.struct')"
-                            value="STRUCT"
-                          />
+                          <el-option :label="$t('product.struct')" value="STRUCT" />
                           <el-option :label="$t('product.init')" value="INT" />
-                          <el-option
-                            :label="$t('product.float')"
-                            value="FLOAT"
-                          />
-                          <el-option
-                            :label="$t('product.double')"
-                            value="DOUBLE"
-                          />
+                          <el-option :label="$t('product.float')" value="FLOAT" />
+                          <el-option :label="$t('product.double')" value="DOUBLE" />
                           <el-option :label="$t('product.bool')" value="BOOL" />
                           <el-option :label="$t('product.enum')" value="ENUM" />
-                          <el-option
-                            :label="$t('product.string')"
-                            value="STRING"
-                          />
+                          <el-option :label="$t('product.string')" value="STRING" />
                           <el-option :label="$t('product.date')" value="DATE" />
                         </el-select>
                       </el-form-item>
@@ -627,17 +430,12 @@
                     <el-col :span="10">
                       <!-- 单位 -->
                       <el-form-item :label="$t('product.unit')">
-                        <el-select
-                          v-model="sizeForm.unit"
-                          :placeholder="$t('product.unit')"
-                          filterable
-                        >
+                        <el-select v-model="sizeForm.unit" :placeholder="$t('product.unit')" filterable>
                           <el-option
                             v-for="(item,index) in allunit"
                             :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
                             :key="index"
-                            :value="item.attributes.data.Symbol"
-                          />
+                            :value="item.attributes.data.Symbol" />
                         </el-select>
                       </el-form-item>
                     </el-col>
@@ -657,10 +455,7 @@
                       <el-col :span="2">-</el-col>
                       <el-col :span="9">
                         <el-form-item>
-                          <el-input
-                            v-model.number="sizeForm.dinumber"
-                            placeholder="数据个数"
-                          />
+                          <el-input v-model.number="sizeForm.dinumber" placeholder="数据个数" />
                         </el-form-item>
                       </el-col>
                     </el-form-item>
@@ -669,94 +464,133 @@
                   <el-row :gutter="30">
                     <el-col :span="10">
                       <el-form-item label="修正系数">
-                        <el-input
-                          v-model="sizeForm.rate"
-                          auto-complete="off"
-                        />
+                        <el-input v-model="sizeForm.rate" auto-complete="off" />
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item label="修正偏移">
-                        <el-input
-                          v-model="sizeForm.offset"
-                          auto-complete="off"
-                        />
+                        <el-input v-model="sizeForm.offset" auto-complete="off" />
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item label="字节序" prop="byteorder">
-                        <el-select
-                          v-model="sizeForm.byteorder"
-                          placeholder="请选择"
-                        >
+                        <el-select v-model="sizeForm.byteorder" placeholder="请选择">
                           <el-option
                             v-for="item in [{value: 'big',label: '大端'},{value:'little',label:'小端'}]"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"
-                          />
+                            :value="item.value" />
                         </el-select>
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item label="协议类型">
-                        <el-select
-                          v-model="sizeForm.protocol"
-                          placeholder="请选择"
-                        >
+                        <el-select v-model="sizeForm.protocol" placeholder="请选择">
                           <el-option
                             v-for="(item,index) in ['normal','modbus']"
                             :key="index"
                             :label="item"
-                            :value="item"
-                          />
+                            :value="item" />
                         </el-select>
                       </el-form-item>
                     </el-col>
                   </el-row>
 
+                  <el-collapse v-model="collapseName" accordion>
+                    <el-collapse-item name="1">
+                      <template slot="title">
+                        <h2 style="font-size:normal;">高级选项</h2>
+                      </template>
+                      <el-row :gutter="30">
+                        <el-col :span="10">
+                          <el-tooltip style="float: left;" effect="dark" placement="right-start">
+
+                            <div slot="content">
+                              设备上行数据经采集公式计算后显示 。<br>
+
+                              公式中的%s为占位符，是固定字段。<br>
+
+                              如：<br>
+
+                              加：%s+10<br>
+
+                              减：%s-10<br>
+
+                              乘：%s*10<br>
+
+                              除：%s/10<br>
+
+                              余数：%s%10
+                            </div>
+                            <i class="el-icon-question" />
+                          </el-tooltip>
+                          <el-form-item label="采集公式" style="float: left;">
+                            <el-input v-model="sizeForm.collection" />
+                          </el-form-item>
+                        </el-col>
+
+                        <el-col :span="10">
+                          <el-tooltip effect="dark" placement="right-start">
+                            <div slot="content">
+                              主动向设备写数据经控制公式计算后下发 。 <br>
+
+                              公式中的%s为占位符，是固定字段。 <br>
+
+                              如： <br>
+
+                              加：%s+10 <br>
+
+                              减：%s-10 <br>
+
+                              乘：%s*10 <br>
+
+                              除：%s/10 <br>
+
+                              余数：%s%10
+                            </div>
+                            <i class="el-icon-question" style="float: left;"/>
+                          </el-tooltip>
+                          <el-form-item label="控制公式" style="float: left;">
+
+                            <el-input v-model="sizeForm.control" />
+                          </el-form-item>
+                          <!--type-->
+                        </el-col>
+                      </el-row>
+                    </el-collapse-item>
+                  </el-collapse>
+
                   <el-row v-show="showNewItem" :gutter="30">
                     <el-col :span="10">
                       <el-form-item label="寄存器状态" prop="byteorder">
-                        <el-select
-                          v-model="sizeForm.operatetype"
-                          placeholder="请选择"
-                        >
+                        <el-select v-model="sizeForm.operatetype" placeholder="请选择">
                           <el-option
                             v-for="item in [{value: 'coilStatus',label: '线圈状态'},{value:'输入状态',label:'输入状态'},{value:'holdingRegister',label:'保持寄存器'},{value:'inputRegister',label:'输入寄存器'}]"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"
-                          />
+                            :value="item.value" />
                         </el-select>
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item label="数据类型">
-                        <el-select
-                          v-model="sizeForm.originaltype"
-                          placeholder="请选择"
-                        >
+                        <el-select v-model="sizeForm.originaltype" placeholder="请选择">
                           <el-option
                             v-for="(item,index) in ['int16','uint16','int32','uint32','int64','uint64','float','double','string','customizedData']"
                             :key="index"
                             :label="item"
-                            :value="item"
-                          />
+                            :value="item" />
                         </el-select>
                       </el-form-item>
                     </el-col>
 
                     <el-col :span="10">
                       <el-form-item label="从机地址">
-                        <el-input
-                          v-model="sizeForm.slaveid"
-                          auto-complete="off"
-                        />
+                        <el-input v-model="sizeForm.slaveid" auto-complete="off" />
                       </el-form-item>
                     </el-col>
                   </el-row>
@@ -773,18 +607,13 @@
                             :placeholder="$t('product.attribute')"
                             class="inputnumber"
                             type="number"
-                            readonly
-                          />
+                            readonly />
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">-</el-col>
                       <el-col :span="11">
                         <el-form-item prop="true">
-                          <el-input
-                            v-model="sizeForm.true"
-                            :placeholder="$t('product.egopen')"
-                            class="inputnumber"
-                          />
+                          <el-input v-model="sizeForm.true" :placeholder="$t('product.egopen')" class="inputnumber" />
                         </el-form-item>
                       </el-col>
                     </div>
@@ -796,18 +625,13 @@
                             :placeholder="$t('product.attribute')"
                             class="inputnumber"
                             type="number"
-                            readonly
-                          />
+                            readonly />
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">-</el-col>
                       <el-col :span="11">
                         <el-form-item prop="true">
-                          <el-input
-                            v-model="sizeForm.false"
-                            :placeholder="$t('egclose')"
-                            class="inputnumber"
-                          />
+                          <el-input v-model="sizeForm.false" :placeholder="$t('egclose')" class="inputnumber" />
                         </el-form-item>
                       </el-col>
                     </div>
@@ -815,21 +639,13 @@
                 </div>
                 <!--枚举型添加格式-->
                 <div v-if="sizeForm.type=='enum'">
-                  <el-form-item
-                    v-for="(item, index) in sizeForm.specs"
-                    :key="index"
-                    required
-                  >
+                  <el-form-item v-for="(item, index) in sizeForm.specs" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
                         :label="$t('product.attribute')+index"
                         :prop="'specs.'+index+'.attribute'"
-                        :rules="[{required: true, message: '输入属性'}]"
-                      >
-                        <el-input
-                          v-model="item.attribute"
-                          :placeholder="$t('product.egnumber0')"
-                        />
+                        :rules="[{required: true, message: '输入属性'}]">
+                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line">-</el-col>
@@ -837,12 +653,8 @@
                       <el-form-item
                         :label="$t('product.attributevalue')+index"
                         :prop="'specs.'+index+'.attributevalue'"
-                        :rules="[{required: true, message: '输入属性值'}]"
-                      >
-                        <el-input
-                          v-model="item.attributevalue"
-                          :placeholder="$t('developer.describe')"
-                        />
+                        :rules="[{required: true, message: '输入属性值'}]">
+                        <el-input v-model="item.attributevalue" :placeholder="$t('developer.describe')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line" />
@@ -852,16 +664,12 @@
                         type="primary"
                         icon="el-icon-minus"
                         style="margin-left:5px;margin-top:30px"
-                        @click.prevent="removeDomain(item)"
-                      >{{ $t('developer.delete') }}</el-link>
+                        @click.prevent="removeDomain(item)">
+                        {{ $t('developer.delete') }}</el-link>
                     </el-col>
                   </el-form-item>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-plus"
-                    type="primary"
-                    @click="addDomain"
-                  >{{ $t('product.add') }}</el-link>
+                  <el-link :underline="false" icon="el-icon-plus" type="primary" @click="addDomain">
+                    {{ $t('product.add') }}</el-link>
                 </div>
                 <!--结构体类型添加格式-->
                 <div v-if="sizeForm.type=='struct'">
@@ -871,8 +679,7 @@
                         v-for="(item,index) in sizeForm.struct"
                         :key="index"
                         value="item"
-                        style="list-style:none;display:flex;"
-                      >
+                        style="list-style:none;display:flex;">
                         <div>
                           <span>{{ $t('product.parametername')+':' }}}</span>
                           <span>{{ item.name }}</span>
@@ -882,22 +689,14 @@
                             :underline="false"
                             type="primary"
                             style="margin-left:20px"
-                            @click="editStruct(item,index)"
-                          >{{ $t('developer.edit') }}</el-link>
-                          <el-link
-                            :underline="false"
-                            type="primary"
-                            @click="deleteStruct(index)"
-                          >{{ $t('developer.delete') }}</el-link>
+                            @click="editStruct(item,index)">{{ $t('developer.edit') }}</el-link>
+                          <el-link :underline="false" type="primary" @click="deleteStruct(index)">
+                            {{ $t('developer.delete') }}</el-link>
                         </div>
                       </li>
                     </ul>
-                    <el-link
-                      :underline="false"
-                      icon="el-icon-plus"
-                      type="primary"
-                      @click="addStruct('structform')"
-                    >{{ $t('product.addparameter') }}</el-link>
+                    <el-link :underline="false" icon="el-icon-plus" type="primary" @click="addStruct('structform')">
+                      {{ $t('product.addparameter') }}</el-link>
                   </el-form-item>
                 </div>
                 <!--字符串添加格式-->
@@ -919,10 +718,7 @@
             <span slot="footer" class="dialog-footer">
               <el-button @click="wmxhandleClose">{{ $t('developer.cancel') }}</el-button>
               <!-- 物模型提交 -->
-              <el-button
-                type="primary"
-                @click="submitForm('sizeForm')"
-              >{{ $t('developer.determine') }}</el-button>
+              <el-button type="primary" @click="submitForm('sizeForm')">{{ $t('developer.determine') }}</el-button>
             </span>
           </el-dialog>
           <!--物模型结构体-->
@@ -931,27 +727,15 @@
             :visible.sync="structdialog"
             :close-on-click-modal="false"
             width="40%"
-            top="15vh"
-          >
+            top="15vh">
             <div class="structheader">
-              <el-form
-                ref="structform"
-                :model="structform"
-                :rules="structrule"
-                size="small"
-              >
+              <el-form ref="structform" :model="structform" :rules="structrule" size="small">
                 <el-row :gutter="30">
                   <el-col :span="10">
-                    <el-form-item
-                      :label="$t('product.functionname')"
-                      prop="name"
-                    >
+                    <el-form-item :label="$t('product.functionname')" prop="name">
                       <el-input v-model="structform.name" />
                     </el-form-item>
-                    <el-form-item
-                      :label="$t('product.identifier')"
-                      prop="identifier"
-                    >
+                    <el-form-item :label="$t('product.identifier')" prop="identifier">
                       <el-input v-model="structform.identifier" />
                     </el-form-item>
                   </el-col>
@@ -960,16 +744,10 @@
                       <el-select v-model="structform.type">
                         <el-option :label="$t('product.init')" value="INT" />
                         <el-option :label="$t('product.float')" value="FLOAT" />
-                        <el-option
-                          :label="$t('product.double')"
-                          value="DOUBLE"
-                        />
+                        <el-option :label="$t('product.double')" value="DOUBLE" />
                         <el-option :label="$t('product.bool')" value="BOOL" />
                         <el-option :label="$t('product.enum')" value="ENUM" />
-                        <el-option
-                          :label="$t('product.string')"
-                          value="STRING"
-                        />
+                        <el-option :label="$t('product.string')" value="STRING" />
                         <el-option :label="$t('product.date')" value="DATE" />
                       </el-select>
                     </el-form-item>
@@ -986,18 +764,13 @@
                     <el-col :span="2">-</el-col>
                     <el-col :span="11">
                       <el-form-item>
-                        <el-input
-                          v-model.number="structform.dinumber"
-                          placeholder="数据长度(字节)"
-                        />
+                        <el-input v-model.number="structform.dinumber" placeholder="数据长度(字节)" />
                       </el-form-item>
                     </el-col>
                   </el-form-item>
                 </div>
 
-                <div
-                  v-if="structform.type=='INT'||structform.type=='FLOAT'||structform.type=='DOUBLE'"
-                >
+                <div v-if="structform.type=='INT'||structform.type=='FLOAT'||structform.type=='DOUBLE'">
                   <el-form-item required label="取值范围(数值)">
                     <el-col :span="9">
                       <el-form-item prop="startnumber">
@@ -1005,8 +778,7 @@
                           v-model.number="structform.startnumber"
                           :placeholder="$t('product.minimumvalue')"
                           type="number"
-                          @input="changeStructValue('structform')"
-                        />
+                          @input="changeStructValue('structform')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2">-</el-col>
@@ -1015,8 +787,7 @@
                         <el-input
                           v-model.number="structform.endnumber"
                           :placeholder="$t('product.maximumvalue')"
-                          type="number"
-                        />
+                          type="number" />
                       </el-form-item>
                     </el-col>
                   </el-form-item>
@@ -1027,22 +798,16 @@
                       :precision="2"
                       :step="0.01"
                       :min="0"
-                      controls-position="right"
-                    />
+                      controls-position="right" />
                   </el-form-item>
 
                   <el-form-item :label="$t('product.unit')">
-                    <el-select
-                      v-model="structform.unit"
-                      :placeholder="$t('product.unit')"
-                      filterable
-                    >
+                    <el-select v-model="structform.unit" :placeholder="$t('product.unit')" filterable>
                       <el-option
                         v-for="(item,index) in allunit"
                         :label="item.attributes.data.Name+'/'+item.attributes.data.Symbol"
                         :key="index"
-                        :value="item.attributes.data.Symbol"
-                      />
+                        :value="item.attributes.data.Symbol" />
                     </el-select>
                   </el-form-item>
                 </div>
@@ -1056,18 +821,13 @@
                             :placeholder="$t('product.attributevalue')"
                             class="inputnumber"
                             type="number"
-                            readonly
-                          />
+                            readonly />
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">-</el-col>
                       <el-col :span="11">
                         <el-form-item prop="true">
-                          <el-input
-                            v-model="structform.true"
-                            :placeholder="$t('product.egopen')"
-                            class="inputnumber"
-                          />
+                          <el-input v-model="structform.true" :placeholder="$t('product.egopen')" class="inputnumber" />
                         </el-form-item>
                       </el-col>
                     </div>
@@ -1079,8 +839,7 @@
                             :placeholder="$t('product.attributevalue')"
                             class="inputnumber"
                             type="number"
-                            readonly
-                          />
+                            readonly />
                         </el-form-item>
                       </el-col>
                       <el-col :span="2">-</el-col>
@@ -1089,29 +848,20 @@
                           <el-input
                             v-model="structform.false"
                             :placeholder="$t('product.egclost')"
-                            class="inputnumber"
-                          />
+                            class="inputnumber" />
                         </el-form-item>
                       </el-col>
                     </div>
                   </el-form-item>
                 </div>
                 <div v-if="structform.type=='ENUM'">
-                  <el-form-item
-                    v-for="(item, index) in structform.specs"
-                    :key="index"
-                    required
-                  >
+                  <el-form-item v-for="(item, index) in structform.specs" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
                         :label="$t('product.attribute')+index"
                         :prop="'specs.'+index+'.attribute'"
-                        :rules="[{required: true, message: '输入属性'}]"
-                      >
-                        <el-input
-                          v-model="item.attribute"
-                          :placeholder="$t('product.egnumber0')"
-                        />
+                        :rules="[{required: true, message: '输入属性'}]">
+                        <el-input v-model="item.attribute" :placeholder="$t('product.egnumber0')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line">-</el-col>
@@ -1119,12 +869,8 @@
                       <el-form-item
                         :label="$t('product.attribute')+index"
                         :prop="'specs.'+index+'.attributevalue'"
-                        :rules="[{required: true, message: '输入属性值'}]"
-                      >
-                        <el-input
-                          v-model="item.attributevalue"
-                          :placeholder="$t('developer.describe')"
-                        />
+                        :rules="[{required: true, message: '输入属性值'}]">
+                        <el-input v-model="item.attributevalue" :placeholder="$t('developer.describe')" />
                       </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line" />
@@ -1134,16 +880,12 @@
                         type="primary"
                         icon="el-icon-minus"
                         style="margin-left:5px;margin-top:30px"
-                        @click.prevent="removeDomain1(item)"
-                      >{{ $t('developer.delete') }}</el-link>
+                        @click.prevent="removeDomain1(item)">
+                        {{ $t('developer.delete') }}</el-link>
                     </el-col>
                   </el-form-item>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-plus"
-                    type="primary"
-                    @click="addDomain1"
-                  >{{ $t('product.add') }}</el-link>
+                  <el-link :underline="false" icon="el-icon-plus" type="primary" @click="addDomain1">
+                    {{ $t('product.add') }}</el-link>
                 </div>
                 <div v-if="structform.type=='STRING'">
                   <el-form-item :label="$t('product.datalength')" prop="string">
@@ -1158,10 +900,7 @@
                     <el-input v-model="structform.date" readonly />
                   </el-form-item>
                 </div>
-                <el-form-item
-                  :label="$t('product.readandwritetype')"
-                  prop="isread"
-                >
+                <el-form-item :label="$t('product.readandwritetype')" prop="isread">
                   <el-radio-group v-model="structform.isread" size="medium">
                     <el-radio label="rw">{{ $t('product.readandwrite') }}</el-radio>
                     <el-radio label="r">{{ $t('product.onlyread') }}</el-radio>
@@ -1170,13 +909,8 @@
               </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-              <el-button
-                @click="structdialog = false"
-              >{{ $t('developer.cancel') }}</el-button>
-              <el-button
-                type="primary"
-                @click="submitStruct('structform')"
-              >{{ $t('developer.determine') }}</el-button>
+              <el-button @click="structdialog = false">{{ $t('developer.cancel') }}</el-button>
+              <el-button type="primary" @click="submitStruct('structform')">{{ $t('developer.determine') }}</el-button>
             </span>
           </el-dialog>
         </el-tab-pane>
@@ -1185,76 +919,37 @@
         <!-- <div> -->
         <el-tab-pane label="物解析" name="fourth">
           <div class="protolheader" style="diaplay:none;">
-            <el-form
-              ref="formInline"
-              :inline="true"
-              :model="formInline"
-              :rules="addRules"
-              class="demo-form-inline"
-            >
+            <el-form ref="formInline" :inline="true" :model="formInline" :rules="addRules" class="demo-form-inline">
               <el-form-item :label="$t('product.protocolname')" prop="name">
-                <el-input
-                  v-model="formInline.name"
-                  :placeholder="$t('product.protocolname')"
-                />
+                <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')" />
               </el-form-item>
               <el-form-item :label="$t('plugins.version')">
-                <el-input
-                  v-model="formInline.version"
-                  :placeholder="$t('plugins.version')"
-                />
+                <el-input v-model="formInline.version" :placeholder="$t('plugins.version')" />
               </el-form-item>
               <el-form-item :label="$t('developer.describe')">
-                <el-input
-                  v-model="formInline.desc"
-                  :placeholder="$t('developer.describe')"
-                />
+                <el-input v-model="formInline.desc" :placeholder="$t('developer.describe')" />
               </el-form-item>
               <el-form-item>
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="subAce('formInline',true)"
-                >{{ $t('product.preservation') }}</el-button>
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="subAce1('formInline')"
-                >设为公共</el-button>
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="chaxun"
-                >{{ $t('product.publicagreementlibrary') }}</el-button>
+                <el-button type="primary" size="small" @click="subAce('formInline',true)">
+                  {{ $t('product.preservation') }}</el-button>
+                <el-button type="primary" size="small" @click="subAce1('formInline')">设为公共</el-button>
+                <el-button type="primary" size="small" @click="chaxun">{{ $t('product.publicagreementlibrary') }}
+                </el-button>
               </el-form-item>
               <el-form-item style="display:block">
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="protol"
-                >{{ $t('product.compile') }}</el-button>
-                <el-button
-                  type="success"
-                  size="small"
-                  @click="updatesubdialog"
-                >热加载</el-button>
+                <el-button type="primary" size="small" @click="protol">{{ $t('product.compile') }}</el-button>
+                <el-button type="success" size="small" @click="updatesubdialog">热加载</el-button>
               </el-form-item>
             </el-form>
           </div>
           <!--通道热加载-->
-          <el-dialog
-            :visible.sync="protoldialog"
-            :close-on-click-modal="false"
-            title="通道热加载"
-            width="50%"
-          >
+          <el-dialog :visible.sync="protoldialog" :close-on-click-modal="false" title="通道热加载" width="50%">
             <el-table
               ref="multipleTable"
               :data="protolchannel"
               :row-class-name="getChannelEnable"
               style="width: 100%;"
-              @selection-change="handleSelectionChange"
-            >
+              @selection-change="handleSelectionChange">
               <el-table-column type="selection" width="55" />
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
@@ -1273,9 +968,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span
-                    v-if="scope.row.attributes.type==1"
-                  >{{ $t('developer.collectionchannel') }}</span>
+                  <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
                   <span v-else>{{ $t('developer.resourcechannel') }}</span>
                 </template>
               </el-table-column>
@@ -1294,16 +987,9 @@
             :title="$t('product.publicagreementlibrary')"
             :visible.sync="dialogTableVisible"
             :close-on-click-modal="false"
-            width="50%"
-          >
-            <el-table
-              :data="gridData"
-              style="width:100%;text-align:center;margin-top:20px;"
-            >
-              <el-table-column
-                :label="$t('product.protocolname')"
-                align="center"
-              >
+            width="50%">
+            <el-table :data="gridData" style="width:100%;text-align:center;margin-top:20px;">
+              <el-table-column :label="$t('product.protocolname')" align="center">
                 <template slot-scope="scope">
                   <span>{{ scope.row.attributes.data.name }}</span>
                 </template>
@@ -1323,22 +1009,12 @@
                   <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="$t('developer.operation')"
-                align="center"
-                width="200"
-              >
+              <el-table-column :label="$t('developer.operation')" align="center" width="200">
                 <template slot-scope="scope">
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="editordata(scope.row)"
-                  >{{ $t('product.clone') }}</el-button>
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deletedata(scope.row.id)"
-                  >{{ $t('developer.delete') }}</el-button>
+                  <el-button type="primary" size="mini" @click="editordata(scope.row)">{{ $t('product.clone') }}
+                  </el-button>
+                  <el-button type="danger" size="mini" @click="deletedata(scope.row.id)">{{ $t('developer.delete') }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1349,8 +1025,7 @@
                 :total="decodertotal"
                 layout="total, sizes, prev, pager, next, jumper"
                 @size-change="decoderSizeChange"
-                @current-change="devicerCurrentChange"
-              />
+                @current-change="devicerCurrentChange" />
             </div>
           </el-dialog>
           <div>
@@ -1360,39 +1035,28 @@
             <pre
               id="editor"
               class="ace_editor"
-              style="min-height:600px;margin-bottom:0;"
-            ><textarea class="ace_text-input" /></pre>
+              style="min-height:600px;margin-bottom:0;"><textarea class="ace_text-input" /></pre>
             <div style="background:#ffffff">
               <label id="plug-name" />
             </div>
-            <div
-              style="color:#c2be9e;background:#272822;border-top:1px solid #dddddd;padding:5px"
-            >
+            <div style="color:#c2be9e;background:#272822;border-top:1px solid #dddddd;padding:5px">
               <span>{{ $t('product.controloutput') }}</span>
             </div>
             <pre
               id="editor2"
               class="ace_editor"
-              style="min-height:300px;margin-bottom:0;margin-top:0"
-            ><textarea class="ace_text-input" /></pre>
+              style="min-height:300px;margin-bottom:0;margin-top:0"><textarea class="ace_text-input" /></pre>
           </div>
         </el-tab-pane>
         <!-- </div> -->
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane :label="$t('product.physicalaccess')" name="fiveth">
           <div class="productchannel" style="text-align:right;padding:10px;">
-            <el-button
-              type="primary"
-              size="small"
-              @click="showAllChannel"
-            >{{ $t('developer.createchannel') }}</el-button>
+            <el-button type="primary" size="small" @click="showAllChannel">{{ $t('developer.createchannel') }}
+            </el-button>
           </div>
           <div>
-            <el-table
-              :data="channelData"
-              :row-class-name="getChannelEnable"
-              style="width: 100%;"
-            >
+            <el-table :data="channelData" :row-class-name="getChannelEnable" style="width: 100%;">
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.id }}</span>
@@ -1410,9 +1074,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span
-                    v-if="scope.row.attributes.type==1"
-                  >{{ $t('developer.collectionchannel') }}</span>
+                  <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
                   <span v-else-if="scope.row.attributes.type==3">任务通道</span>
                 </template>
               </el-table-column>
@@ -1423,21 +1085,10 @@
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" width="350">
                 <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deleteRelation(scope.row)"
-                  >{{ $t('developer.remove') }}</el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="subProTopic(scope.row)"
-                  >订阅日志</el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="updatesub(scope.row)"
-                  >重载配置</el-button>
+                  <el-button type="danger" size="mini" @click="deleteRelation(scope.row)">{{ $t('developer.remove') }}
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
+                  <el-button type="primary" size="mini" @click="updatesub(scope.row)">重载配置</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1448,8 +1099,7 @@
                 :total="channeltotal"
                 layout="total, sizes, prev, pager, next, jumper"
                 @size-change="channelSizeChange"
-                @current-change="channelCurrentChange"
-              />
+                @current-change="channelCurrentChange" />
             </div>
 
             <!--添加通道-->
@@ -1460,37 +1110,18 @@
         </el-tab-pane>-->
         <el-tab-pane label="物存储" name="seven">
           <div class="productchannel" style="text-align:right;padding:10px;">
-            <el-popover
-              title="自定义数据模型提示"
-              placement="right"
-              width="600"
-              trigger="hover"
-              @show="questionModel"
-            >
+            <el-popover title="自定义数据模型提示" placement="right" width="600" trigger="hover" @show="questionModel">
               <pre
                 id="editorinsert"
                 class="ace_editor"
-                style="min-height:400px"
-              ><el-input class="ace_text-input" type="textarea" /></pre>
-              <el-button
-                slot="reference"
-                type="primary"
-                size="mini"
-                icon="el-icon-question"
-              >自定义数据模型帮助</el-button>
+                style="min-height:400px"><el-input class="ace_text-input" type="textarea" /></pre>
+              <el-button slot="reference" type="primary" size="mini" icon="el-icon-question">自定义数据模型帮助</el-button>
             </el-popover>
-            <el-button
-              type="primary"
-              size="small"
-              @click="resourceShowAllChannel"
-            >{{ $t('developer.createchannel') }}</el-button>
+            <el-button type="primary" size="small" @click="resourceShowAllChannel">{{ $t('developer.createchannel') }}
+            </el-button>
           </div>
           <div>
-            <el-table
-              :data="resourcechannelData"
-              :row-class-name="getChannelEnable"
-              style="width: 100%;"
-            >
+            <el-table :data="resourcechannelData" :row-class-name="getChannelEnable" style="width: 100%;">
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.id }}</span>
@@ -1508,9 +1139,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span
-                    v-if="scope.row.attributes.type==1"
-                  >{{ $t('developer.collectionchannel') }}</span>
+                  <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
                   <span v-else>{{ $t('developer.resourcechannel') }}</span>
                 </template>
               </el-table-column>
@@ -1521,22 +1150,11 @@
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" width="350">
                 <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deleteRelation(scope.row)"
-                  >{{ $t('developer.remove') }}</el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="subProTopic(scope.row)"
-                  >订阅日志</el-button>
+                  <el-button type="danger" size="mini" @click="deleteRelation(scope.row)">{{ $t('developer.remove') }}
+                  </el-button>
+                  <el-button type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
 
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="customize(scope.row)"
-                  >自定义模型</el-button>
+                  <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button>
 
                   <!-- <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> -->
                 </template>
@@ -1549,8 +1167,7 @@
                 :total="resourcetotal"
                 layout="total, sizes, prev, pager, next, jumper"
                 @size-change="resourcechannelSizeChange"
-                @current-change="resourcechannelCurrentChange"
-              />
+                @current-change="resourcechannelCurrentChange" />
             </div>
           </div>
         </el-tab-pane>
@@ -1639,28 +1256,22 @@
       </el-tabs>
     </div>
     <!--物模型-->
-    <el-dialog
-      :title="$t('product.viewobjectmodel')"
-      :visible.sync="schemadialogVisible"
-      :close-on-click-modal="false"
-    >
+    <el-dialog :title="$t('product.viewobjectmodel')" :visible.sync="schemadialogVisible" :close-on-click-modal="false">
       <div>
         <div style="background:#ffffff">
           <label id="plug-name" />
         </div>
-        <pre id="editor1" class="ace_editor" style="min-height:400px"><textarea class="ace_text-input" style="overflow:scroll" /></pre>
+        <pre
+          id="editor1"
+          class="ace_editor"
+          style="min-height:400px"><textarea class="ace_text-input" style="overflow:scroll" /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height:30px;">
         <el-button type="primary" @click="preserve">更新</el-button>
       </span>
     </el-dialog>
     <!--通道弹窗-->
-    <el-dialog
-      :visible.sync="innerVisible"
-      :close-on-click-modal="false"
-      title="添加通道"
-      append-to-body
-    >
+    <el-dialog :visible.sync="innerVisible" :close-on-click-modal="false" title="添加通道" append-to-body>
       <div class="addchannel">
         <el-table :data="allchannelData" height="400" style="width: 100%">
           <el-table-column :label="$t('developer.channelnumber')">
@@ -1680,12 +1291,8 @@
           </el-table-column>
           <el-table-column :label="$t('developer.channeltype')">
             <template slot-scope="scope">
-              <span
-                v-if="scope.row.attributes.type==1"
-              >{{ $t('developer.collectionchannel') }}</span>
-              <span
-                v-else-if="scope.row.attributes.type==2"
-              >{{ $t('developer.resourcechannel') }}</span>
+              <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
+              <span v-else-if="scope.row.attributes.type==2">{{ $t('developer.resourcechannel') }}</span>
               <span v-else>任务通道</span>
             </template>
           </el-table-column>
@@ -1696,11 +1303,8 @@
           </el-table-column>
           <el-table-column :label="$t('developer.operation')">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="primary"
-                @click="addProductChannel(scope.row.id)"
-              >{{ $t('developer.add') }}</el-button>
+              <el-button size="mini" type="primary" @click="addProductChannel(scope.row.id)">{{ $t('developer.add') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -1711,8 +1315,7 @@
             :total="allChanneltotal"
             layout="total, sizes, prev, pager, next, jumper"
             @size-change="allChannelSizeChange"
-            @current-change="allChannelCurrentChange"
-          />
+            @current-change="allChannelCurrentChange" />
         </div>
       </div>
     </el-dialog>
@@ -1722,14 +1325,9 @@
       :visible.sync="subdialog"
       :before-close="handleCloseSubdialog"
       :close-on-click-modal="false"
-      width="85%"
-    >
+      width="85%">
       <div style="margin-top:20px;">
-        <pre
-          id="subdialog"
-          class="ace_editor"
-          style="min-height:300px;width:100%"
-        >
+        <pre id="subdialog" class="ace_editor" style="min-height:300px;width:100%">
                       <textarea class="ace_text-input" style="overflow:scroll" />
         </pre>
       </div>
@@ -1742,9 +1340,8 @@
           active-color="#13ce66"
           inactive-color="#ff4949"
           inactive-text="自动刷新"
-          @change="stopsub"
-        />
-        <!-- <el-button type="success" size="mini" @click="stopsub('start')" v-if="subaction=='start'">启动</el-button>
+          @change="stopsub" />
+          <!-- <el-button type="success" size="mini" @click="stopsub('start')" v-if="subaction=='start'">启动</el-button>
         <el-button type="warning" size="mini" @click="stopsub('stop')" v-else>停止</el-button>-->
       </span>
     </el-dialog>
@@ -1755,8 +1352,7 @@
       :show-close="false"
       :before-close="closeWuDialog"
       width="90%"
-      top="1vh"
-    >
+      top="1vh">
       <el-form ref="resourceform" :model="resourceform">
         <div class="wumoxing">
           <el-row>
@@ -1766,8 +1362,7 @@
                   <pre
                     id="editormodel"
                     class="ace_editor"
-                    style="min-height:600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                    style="min-height:600px"><el-input class="ace_text-input" type="textarea" /></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -1777,8 +1372,7 @@
                   <pre
                     id="editorcreate"
                     class="ace_editor"
-                    style="min-height:600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                    style="min-height:600px"><el-input class="ace_text-input" type="textarea" /></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -1795,18 +1389,17 @@
       <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
 
       <div slot="footer" class="dialog-footer">
-        <el-button
-          size="small"
-          class="btn-right"
-          @click="exportDialogShow = false"
-        >关闭</el-button>
+        <el-button size="small" class="btn-right" @click="exportDialogShow = false">关闭</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
 import Parse from 'parse'
-import { getRule, ruleDelete } from '@/api/rules'
+import {
+  getRule,
+  ruleDelete
+} from '@/api/rules'
 import Cookies from 'js-cookie'
 var editor
 var editor1
@@ -1824,11 +1417,20 @@ const Base64 = require('js-base64').Base64
 var setdata = ''
 var isallchannel = false
 var isupdatetrue = ''
-import { Compile, subupadte } from '@/api/systemmanage/system'
-import { getIndustry } from '@/api/applicationManagement'
-import { setTimeout } from 'timers'
+import {
+  Compile,
+  subupadte
+} from '@/api/systemmanage/system'
+import {
+  getIndustry
+} from '@/api/applicationManagement'
+import {
+  setTimeout
+} from 'timers'
 import gql from 'graphql-tag'
-import { postFile } from '@/api/appcontrol'
+import {
+  postFile
+} from '@/api/appcontrol'
 import {
   Websocket,
   sendInfo,
@@ -1836,9 +1438,13 @@ import {
   MSG_EMPTY,
   DISCONNECT_MSG
 } from '@/utils/wxscoket.js'
-// import TaskCollection1 from "./task_collection1";
-import { returnLogin } from '@/utils/return'
-import { error } from 'util'
+  // import TaskCollection1 from "./task_collection1";
+import {
+  returnLogin
+} from '@/utils/return'
+import {
+  error
+} from 'util'
 import $ from 'jquery'
 export default {
   // components: {
@@ -1933,7 +1539,7 @@ export default {
         callback(new Error('步长大于0'))
       } else if (
         value >=
-        this.structform.endnumber - this.structform.startnumber
+          this.structform.endnumber - this.structform.startnumber
       ) {
         callback(new Error('步长必须小于最大值和最小值的差值'))
       } else {
@@ -1942,6 +1548,7 @@ export default {
     }
     return {
       // topic数据
+      collapseName: '1',
       multipleSelection: [],
       protolchannel: [],
       protoldialog: false,
@@ -1960,10 +1567,16 @@ export default {
       decoderstart: 0,
       decoderlength: 10,
       topicrule: {
-        topic: [{ required: true, message: '请输入Topic类', trigger: 'blur' }],
-        type: [
-          { required: true, message: '请选择Topic权限', trigger: 'change' }
-        ]
+        topic: [{
+          required: true,
+          message: '请输入Topic类',
+          trigger: 'blur'
+        }],
+        type: [{
+          required: true,
+          message: '请选择Topic权限',
+          trigger: 'change'
+        }]
       },
       topicstart: 1,
       topiclength: 10,
@@ -1987,71 +1600,159 @@ export default {
       allunit: [],
       sizeForm: this.getFormOrginalData(),
       sizerule: {
-        step: [{ required: true, trigger: 'blur', validator: vailspecs }],
-        string: [
-          { required: true, trigger: 'blur', message: '请输入数据长度' },
-          { type: 'number', message: '数据长度必须为数字' }
+        step: [{
+          required: true,
+          trigger: 'blur',
+          validator: vailspecs
+        }],
+        string: [{
+          required: true,
+          trigger: 'blur',
+          message: '请输入数据长度'
+        },
+        {
+          type: 'number',
+          message: '数据长度必须为数字'
+        }
         ],
-        startnumber: [
-          { validator: validminnumber, required: true, trigger: 'blur' }
-        ],
-        endnumber: [
-          { validator: validmaxnumber, required: true, trigger: 'blur' }
-        ],
-        resource: [
-          { required: true, message: '请选择功能类型', trigger: 'change' }
-        ],
-        true: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        false: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
-        identifier: [
-          { required: true, message: '请输入标识符', trigger: 'blur' }
-        ],
-        dis: [{ required: true, message: '请输入数据标识', trigger: 'blur' }],
-        type: [
-          { required: true, message: '请选择数据类型', trigger: 'change' }
-        ],
-        attribute: [{ required: true, message: '请输入属性', trigger: 'blur' }],
-        attributevalue: [
-          { required: true, message: '请输入属性值', trigger: 'blur' }
-        ],
-        isread: [
-          { required: true, message: '请选择读写类型', trigger: 'change' }
-        ]
+        startnumber: [{
+          validator: validminnumber,
+          required: true,
+          trigger: 'blur'
+        }],
+        endnumber: [{
+          validator: validmaxnumber,
+          required: true,
+          trigger: 'blur'
+        }],
+        resource: [{
+          required: true,
+          message: '请选择功能类型',
+          trigger: 'change'
+        }],
+        true: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        false: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        name: [{
+          required: true,
+          message: '请输入属性名称',
+          trigger: 'blur'
+        }],
+        identifier: [{
+          required: true,
+          message: '请输入标识符',
+          trigger: 'blur'
+        }],
+        dis: [{
+          required: true,
+          message: '请输入数据标识',
+          trigger: 'blur'
+        }],
+        type: [{
+          required: true,
+          message: '请选择数据类型',
+          trigger: 'change'
+        }],
+        attribute: [{
+          required: true,
+          message: '请输入属性',
+          trigger: 'blur'
+        }],
+        attributevalue: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        isread: [{
+          required: true,
+          message: '请选择读写类型',
+          trigger: 'change'
+        }]
       },
       // 结构体判断规则
       structrule: {
-        string: [
-          { required: true, trigger: 'blur', message: '请输入数据长度' },
-          { type: 'number', message: '数据长度必须为数字' }
+        string: [{
+          required: true,
+          trigger: 'blur',
+          message: '请输入数据长度'
+        },
+        {
+          type: 'number',
+          message: '数据长度必须为数字'
+        }
         ],
-        step: [{ required: true, trigger: 'blur', validator: vailstructspecs }],
-        startnumber: [
-          { validator: validstructminnumber, required: true, trigger: 'blur' }
-        ],
-        endnumber: [
-          { validator: validstructmaxnumber, required: true, trigger: 'blur' }
-        ],
-        resource: [
-          { required: true, message: '请选择功能类型', trigger: 'change' }
-        ],
-        true: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        false: [{ required: true, message: '请输入属性值', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入属性名称', trigger: 'blur' }],
-        identifier: [
-          { required: true, message: '请输入标识符', trigger: 'blur' }
-        ],
-        dis: [{ required: true, message: '请输入数据标识', trigger: 'blur' }],
-        type: [
-          { required: true, message: '请选择数据类型', trigger: 'change' }
-        ],
-        attribute: [{ required: true, message: '请输入属性', trigger: 'blur' }],
-        attributevalue: [
-          { required: true, message: '请输入属性值', trigger: 'blur' }
-        ],
-        isread: [
-          { required: true, message: '请选择读写类型', trigger: 'change' }
-        ]
+        step: [{
+          required: true,
+          trigger: 'blur',
+          validator: vailstructspecs
+        }],
+        startnumber: [{
+          validator: validstructminnumber,
+          required: true,
+          trigger: 'blur'
+        }],
+        endnumber: [{
+          validator: validstructmaxnumber,
+          required: true,
+          trigger: 'blur'
+        }],
+        resource: [{
+          required: true,
+          message: '请选择功能类型',
+          trigger: 'change'
+        }],
+        true: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        false: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        name: [{
+          required: true,
+          message: '请输入属性名称',
+          trigger: 'blur'
+        }],
+        identifier: [{
+          required: true,
+          message: '请输入标识符',
+          trigger: 'blur'
+        }],
+        dis: [{
+          required: true,
+          message: '请输入数据标识',
+          trigger: 'blur'
+        }],
+        type: [{
+          required: true,
+          message: '请选择数据类型',
+          trigger: 'change'
+        }],
+        attribute: [{
+          required: true,
+          message: '请输入属性',
+          trigger: 'blur'
+        }],
+        attributevalue: [{
+          required: true,
+          message: '请输入属性值',
+          trigger: 'blur'
+        }],
+        isread: [{
+          required: true,
+          message: '请选择读写类型',
+          trigger: 'change'
+        }]
       },
       structdialog: false,
       structform: {
@@ -2086,25 +1787,30 @@ export default {
       productName: '',
       productdetail: {},
       topicData: [],
-      topic: [
-        {
-          topic: 'thing/${ProductId}/${DevAddr}/post',
-          type: 'pub',
-          desc: '设备上报',
-          isdef: true
-        },
-        {
-          topic: 'thing/${ProductId}/${DevAddr}',
-          type: 'sub',
-          desc: '消息下发',
-          isdef: true
-        }
+      topic: [{
+        topic: 'thing/${ProductId}/${DevAddr}/post',
+        type: 'pub',
+        desc: '设备上报',
+        isdef: true
+      },
+      {
+        topic: 'thing/${ProductId}/${DevAddr}',
+        type: 'sub',
+        desc: '消息下发',
+        isdef: true
+      }
       ],
       isshow: false,
       addRules: {
-        name: [
-          { required: true, message: '请输入协议名称', trigger: 'blur' },
-          { validator: validCode, trigger: 'blur' }
+        name: [{
+          required: true,
+          message: '请输入协议名称',
+          trigger: 'blur'
+        },
+        {
+          validator: validCode,
+          trigger: 'blur'
+        }
         ]
       },
       dialogTableVisible: false,
@@ -2227,12 +1933,10 @@ export default {
         unit: '',
         string: '',
         date: 'String类型的UTC时间戳 (毫秒)',
-        specs: [
-          {
-            attribute: '',
-            attributevalue: ''
-          }
-        ],
+        specs: [{
+          attribute: '',
+          attributevalue: ''
+        }],
         struct: [],
         rate: 1,
         offset: 0,
@@ -2240,23 +1944,23 @@ export default {
         protocol: 'normal',
         operatetype: 'holdingRegister',
         originaltype: 'int16',
-        slaveid: 256
+        slaveid: 256,
+        collection: '',
+        control: ''
       }
     },
     changeValue(formName) {
       this.$refs[formName].validateField('startnumber', errMsg => {
         if (errMsg) {
           return false
-        } else {
-        }
+        } else {}
       })
     },
     changeStructValue(formName) {
       this.$refs[formName].validateField('startnumber', errMsg => {
         if (errMsg) {
           return false
-        } else {
-        }
+        } else {}
       })
     },
     // 判断是否为结构体，可展开
@@ -2337,16 +2041,16 @@ export default {
     exportProduct() {
       var _this = this
       /*
-      postFile (_this.productName).then(response=>{
-        if(response){
-           window.location.origin = "/iotapi/product?name="+_this.productName
+          postFile (_this.productName).then(response=>{
+            if(response){
+               window.location.origin = "/iotapi/product?name="+_this.productName
 
-        }
-      })
-      .catch(function (error) {
-       _this.$message({message: error,type: "error"});
-      });
-      */
+            }
+          })
+          .catch(function (error) {
+           _this.$message({message: error,type: "error"});
+          });
+          */
 
       // let url = Cookies.get('apiserver') + '/product?name=' + _this.productName;
 
@@ -2355,11 +2059,11 @@ export default {
         .get(url)
         .then(function(response) {
           /*      let content = response;
-                _this.exportNameDownload = _this.productName + '.json';
-                var blob = new Blob([content]);
-                _this.exportUrl = URL.createObjectURL(blob);
-                _this.exportDialogShow = true;
-                */
+                    _this.exportNameDownload = _this.productName + '.json';
+                    var blob = new Blob([content]);
+                    _this.exportUrl = URL.createObjectURL(blob);
+                    _this.exportDialogShow = true;
+                    */
 
           if (response) {
             window.open(
@@ -2373,27 +2077,30 @@ export default {
           // window.location.origin = "/iotapi/product?name="+_this.productName;
         })
         .catch(function(error) {
-          _this.$message({ message: error, type: 'error' })
+          _this.$message({
+            message: error,
+            type: 'error'
+          })
         })
 
-      // $.ajax({
-      //   type: 'GET',
-      //   contentType:'application/json',
-      //   dataType:'json',
-      //   headers:{
-      //     "sessionToken":Cookies.get('access_token')
-      //   },
-      //   data:{},
-      //   url: Cookies.get('apiserver') + '/product?name=' + _this.productName,
-      //   success:(response)=>{
-      //     if(response){
+        // $.ajax({
+        //   type: 'GET',
+        //   contentType:'application/json',
+        //   dataType:'json',
+        //   headers:{
+        //     "sessionToken":Cookies.get('access_token')
+        //   },
+        //   data:{},
+        //   url: Cookies.get('apiserver') + '/product?name=' + _this.productName,
+        //   success:(response)=>{
+        //     if(response){
 
-      //    this.exportDialogShow = true;
-      //   _this.exportUrl = ''
-      //   _this.exportName = ''
-      //     }
-      //   }
-      // })
+        //    this.exportDialogShow = true;
+        //   _this.exportUrl = ''
+        //   _this.exportName = ''
+        //     }
+        //   }
+        // })
     },
     // 热加载弹窗
     updatesubdialog() {
@@ -2687,7 +2394,7 @@ export default {
         })
         if (
           row.attributes.config.datamodel &&
-          row.attributes.config.datamodel != ''
+            row.attributes.config.datamodel != ''
         ) {
           editorcreate.setValue(row.attributes.config.datamodel)
         } else {
@@ -2913,8 +2620,8 @@ export default {
             // 提交之前需要先判断类型
             if (
               this.sizeForm.type == 'float' ||
-              this.sizeForm.type == 'double' ||
-              this.sizeForm.type == 'int'
+                this.sizeForm.type == 'double' ||
+                this.sizeForm.type == 'int'
             ) {
               obj = {
                 name: this.sizeForm.name,
@@ -2936,7 +2643,9 @@ export default {
                   protocol: this.sizeForm.protocol,
                   operatetype: this.sizeForm.operatetype,
                   originaltype: this.sizeForm.originaltype,
-                  slaveid: this.sizeForm.slaveid
+                  slaveid: this.sizeForm.slaveid,
+                  collection: this.sizeForm.collection,
+                  control: this.sizeForm.control
                 },
                 required: true,
                 accessMode: this.sizeForm.isread,
@@ -3126,15 +2835,15 @@ export default {
         }
       } else if (rowData.dataType.type == 'enum') {
         /*      var specs = {};
-        this.sizeForm.specs.map(items => {
-          var newkey = items["attribute"];
-          specs[newkey] = items["attributevalue"];
-        }); */
+            this.sizeForm.specs.map(items => {
+              var newkey = items["attribute"];
+              specs[newkey] = items["attributevalue"];
+            }); */
 
         // rowData.dataType.specs.map
         var specsArray = []
 
-        for (let key in rowData.dataType.specs) {
+        for (const key in rowData.dataType.specs) {
           specsArray.push({
             attribute: key,
             attributevalue: rowData.dataType.specs[key]
@@ -3196,8 +2905,8 @@ export default {
           var obj = {}
           if (
             this.structform.type == 'FLOAT' ||
-            this.structform.type == 'DOUBLE' ||
-            this.structform.type == 'INT'
+              this.structform.type == 'DOUBLE' ||
+              this.structform.type == 'INT'
           ) {
             obj = {
               name: this.structform.name,
@@ -3294,8 +3003,7 @@ export default {
           }
           this.$refs[formName].resetFields()
           this.structdialog = false
-        } else {
-        }
+        } else {}
       })
     },
     // 新增结构体
@@ -3329,8 +3037,8 @@ export default {
       this.structform.isread = item.accessMode
       if (
         item.dataType.type == 'float' ||
-        item.dataType.type == 'double' ||
-        item.dataType.type == 'int'
+          item.dataType.type == 'double' ||
+          item.dataType.type == 'int'
       ) {
         this.structform.startnumber = item.dataType.specs.min
         this.structform.endnumber = item.dataType.specs.max
@@ -3425,17 +3133,17 @@ export default {
         datas.equalTo('type', this.category[this.category.length - 1])
       }
       datas.equalTo('data.key', 'category'),
-        datas.count().then(count => {
-          this.producttotal = count
-          datas.find().then(
-            res => {
-              this.PropData = res
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
-        })
+      datas.count().then(count => {
+        this.producttotal = count
+        datas.find().then(
+          res => {
+            this.PropData = res
+          },
+          error => {
+            returnLogin(error)
+          }
+        )
+      })
     },
     productSizeChange(val) {
       this.productlength = val
@@ -3511,7 +3219,7 @@ export default {
               this.formInline.desc = response.attributes.decoder.desc
             } else {
               setdata =
-                'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
+                  'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
             }
             if (!this.productdetail.thing) {
               this.productdetail.thing = {
@@ -3582,7 +3290,7 @@ export default {
       this.sizeForm = this.getFormOrginalData()
 
       /*     this.sizeForm.type = "int";
-      this.$refs["sizeForm"].resetFields(); */
+          this.$refs["sizeForm"].resetFields(); */
     },
     // 协议编辑
     protol() {
@@ -3661,8 +3369,7 @@ export default {
                   isupdatetrue += '保存成功' + '\r\n'
                   editor2.setValue(isupdatetrue)
                 }
-              } else {
-              }
+              } else {}
               this.issub = true
             },
             error => {
@@ -3817,8 +3524,8 @@ export default {
           origin.push(obj)
         } else if (
           items.DataType == 'double' ||
-          items.DataType == 'int' ||
-          items.DataType == 'float'
+            items.DataType == 'int' ||
+            items.DataType == 'float'
         ) {
           var obj = {
             dataType: {
@@ -3852,7 +3559,7 @@ export default {
           JSON.parse(items.DataSpecsList).map(children => {
             if (
               children.childDataType == 'ENUM' ||
-              children.childDataType == 'BOOL'
+                children.childDataType == 'BOOL'
             ) {
               var obj = {
                 dataType: {
@@ -3874,8 +3581,8 @@ export default {
               structobj.dataType.specs.push(obj)
             } else if (
               children.childDataType == 'DOUBLE' ||
-              children.childDataType == 'INT' ||
-              children.childDataType == 'FLOAT'
+                children.childDataType == 'INT' ||
+                children.childDataType == 'FLOAT'
             ) {
               var obj = {
                 dataType: {
@@ -3993,23 +3700,23 @@ export default {
       var date = new Date(timestamp3)
       var Y = date.getFullYear() + '年'
       var M =
-        (date.getMonth() + 1 <= 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '月'
+          (date.getMonth() + 1 <= 10
+            ? '0' + (date.getMonth() + 1)
+            : date.getMonth() + 1) + '月'
       var D =
-        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
-        '日  '
+          (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+          '日  '
       var h =
-        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
-        ':'
+          (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+          ':'
       var m =
-        (date.getMinutes() + 1 <= 10
-          ? '0' + date.getMinutes()
-          : date.getMinutes()) + ':'
+          (date.getMinutes() + 1 <= 10
+            ? '0' + date.getMinutes()
+            : date.getMinutes()) + ':'
       var s =
-        date.getSeconds() + 1 <= 10
-          ? '0' + date.getSeconds()
-          : date.getSeconds()
+          date.getSeconds() + 1 <= 10
+            ? '0' + date.getSeconds()
+            : date.getSeconds()
       return h + m + s + ' '
     },
     // 订阅日志
@@ -4048,7 +3755,9 @@ export default {
         subdialog.gotoLine(subdialog.session.getLength())
       })
       // 订阅
-      var text0 = JSON.stringify({ action: 'start_logger' })
+      var text0 = JSON.stringify({
+        action: 'start_logger'
+      })
       Websocket.subscribe(info, function(res) {
         if (res.result) {
           console.log(info)
@@ -4068,7 +3777,9 @@ export default {
     },
     // 关闭弹窗操作
     handleCloseSubdialog() {
-      var text0 = JSON.stringify({ action: 'stop_logger' })
+      var text0 = JSON.stringify({
+        action: 'stop_logger'
+      })
       var sendInfo = {
         topic: 'channel/' + this.subdialogid + '/' + this.productId,
         text: text0,
@@ -4085,10 +3796,14 @@ export default {
       var text0
       if (value == false) {
         // this.subaction = 'start'
-        text0 = JSON.stringify({ action: 'stop_logger' })
+        text0 = JSON.stringify({
+          action: 'stop_logger'
+        })
       } else {
         // this.subaction = 'stop'
-        text0 = JSON.stringify({ action: 'start_logger' })
+        text0 = JSON.stringify({
+          action: 'start_logger'
+        })
       }
       var sendInfo = {
         topic: 'channel/' + this.subdialogid + '/' + this.productId,
@@ -4102,7 +3817,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           var Topic =
-            'thing/' + this.productId + '/${DevAddr}/' + this.topicform.topic
+              'thing/' + this.productId + '/${DevAddr}/' + this.topicform.topic
           var Product = Parse.Object.extend('Product')
           var product = new Parse.Query(Product)
           product.get(this.productId).then(resultes => {
@@ -4129,10 +3844,12 @@ export default {
                     message: '成功'
                   })
                   this.topicdialogVisible = false
-                  this.$refs[formName].resetFields()
-                  ;(this.topicform.isupdated = -1), (this.topicform.topic = '')
+                  this.$refs[formName].resetFields();
+                  (this.topicform.isupdated = -1), (this.topicform.topic = '')
                   this.topicform.desc = ''
-                  this.handleClick({ name: 'second' })
+                  this.handleClick({
+                    name: 'second'
+                  })
                 }
               },
               error => {
@@ -4175,7 +3892,9 @@ export default {
                 message: '删除成功'
               })
               scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.handleClick({ name: 'second' })
+              this.handleClick({
+                name: 'second'
+              })
             }
           },
           error => {
@@ -4187,7 +3906,7 @@ export default {
     testgraphql() {
       this.$apollo
         .query({
-          query: gql`
+          query: gql `
             ${editorgraphql.getValue()}
           `
         })
@@ -4239,56 +3958,63 @@ export default {
     detailRules(id) {
       this.$router.push({
         path: '/rules_engine/checkengine',
-        query: { id: id }
+        query: {
+          id: id
+        }
       })
     }
   }
 }
+
 </script>
 <style scoped>
-.editproduct {
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
-.mailtable .cloumn {
-  text-align: left;
-  color: #74777a;
-  font-weight: 400;
-  background: #fafafc;
-  width: 200px;
-  font-weight: bold;
-  border-right: 1px solid #ebecec;
-  border-bottom: 1px solid #ebecec;
-}
+  .editproduct {
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 
-.mailtable td {
-  padding: 15px;
-  font-size: 14px;
-  text-align: left;
-  box-sizing: border-box;
-  color: #74777a;
-  border: 1px solid #ebecec;
-}
-.mailtable .notbottom {
-  border-bottom: 0;
-}
+  .mailtable .cloumn {
+    text-align: left;
+    color: #74777a;
+    font-weight: 400;
+    background: #fafafc;
+    width: 200px;
+    font-weight: bold;
+    border-right: 1px solid #ebecec;
+    border-bottom: 1px solid #ebecec;
+  }
 
-.editheader .product ul {
-  width: 100%;
-  height: 50px;
-  padding-left: 0;
-  display: flex;
-  justify-content: space-between;
-}
-.editheader .product ul li {
-  list-style: none;
-  font-size: 16px;
-  text-align: left;
-  color: #74777a;
-}
-/* .editheader .product ul li:first-child,
+  .mailtable td {
+    padding: 15px;
+    font-size: 14px;
+    text-align: left;
+    box-sizing: border-box;
+    color: #74777a;
+    border: 1px solid #ebecec;
+  }
+
+  .mailtable .notbottom {
+    border-bottom: 0;
+  }
+
+  .editheader .product ul {
+    width: 100%;
+    height: 50px;
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .editheader .product ul li {
+    list-style: none;
+    font-size: 16px;
+    text-align: left;
+    color: #74777a;
+  }
+
+  /* .editheader .product ul li:first-child,
 .editheader .product ul li:last-child {
   width: 25%;
   list-style: none;
@@ -4307,130 +4033,160 @@ export default {
   float: left;
   text-align: left;
 } */
+
 </style>
 <style>
-.editproduct .el-tabs__item {
-  font-size: 16px;
-  margin-top: 20px;
-  margin: 0;
-  height: 50px;
-  line-height: 50px;
-  font-family: auto;
-  width: 150px;
-}
-.editproduct .el-tabs__header {
-  margin: 0;
-}
-.editproduct .el-tabs__content {
-  background: #f4f4f4;
-  padding: 20px 10px 0 10px;
-  box-sizing: border-box;
-}
-.editproduct .el-tab-pane {
-  background: #ffffff;
-  padding-top: 10px;
-  box-sizing: border-box;
-}
-.editproduct .el-dialog__body {
-  padding: 0 20px;
-}
-.editproduct .inputnumber {
-  width: auto;
-}
-.editproduct .el-table td,
-.editproduct .el-table th {
-  padding: 5px 0;
-}
-.editproduct .warning {
-  background: #272822;
-  color: #ffffff;
-  width: 100%;
-}
-.editproduct .error {
-  background: #272822;
-  color: #f56c6c;
-  width: 100%;
-}
-.editproduct .el-form-item {
-  margin-bottom: 5px;
-}
-.editproduct .el-form-item__content {
-  clear: both;
-  margin-left: 0;
-}
-.editproduct .el-dialog__header {
-  border-bottom: 1px solid #dddddd;
-}
-.editproduct .el-cascader {
-  width: 60%;
-}
-.editproduct .el-cascader .el-input__inner {
-  height: 30px;
-}
-.editproduct .topiccontent {
-  padding: 10px;
-  box-sizing: border-box;
-}
-.editproduct .topicform .el-select {
-  width: 100%;
-}
-.editproduct .row-expand-cover td:first-child .el-icon-arrow-right {
-  visibility: hidden;
-}
-/* .editproduct .row-expand-cover + tr {
+  .editproduct .el-tabs__item {
+    font-size: 16px;
+    margin-top: 20px;
+    margin: 0;
+    height: 50px;
+    line-height: 50px;
+    font-family: auto;
+    width: 150px;
+  }
+
+  .editproduct .el-tabs__header {
+    margin: 0;
+  }
+
+  .editproduct .el-tabs__content {
+    background: #f4f4f4;
+    padding: 20px 10px 0 10px;
+    box-sizing: border-box;
+  }
+
+  .editproduct .el-tab-pane {
+    background: #ffffff;
+    padding-top: 10px;
+    box-sizing: border-box;
+  }
+
+  .editproduct .el-dialog__body {
+    padding: 0 20px;
+  }
+
+  .editproduct .inputnumber {
+    width: auto;
+  }
+
+  .editproduct .el-table td,
+  .editproduct .el-table th {
+    padding: 5px 0;
+  }
+
+  .editproduct .warning {
+    background: #272822;
+    color: #ffffff;
+    width: 100%;
+  }
+
+  .editproduct .error {
+    background: #272822;
+    color: #f56c6c;
+    width: 100%;
+  }
+
+  .editproduct .el-form-item {
+    margin-bottom: 5px;
+  }
+
+  .editproduct .el-form-item__content {
+    clear: both;
+    margin-left: 0;
+  }
+
+  .editproduct .el-dialog__header {
+    border-bottom: 1px solid #dddddd;
+  }
+
+  .editproduct .el-cascader {
+    width: 60%;
+  }
+
+  .editproduct .el-cascader .el-input__inner {
+    height: 30px;
+  }
+
+  .editproduct .topiccontent {
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .editproduct .topicform .el-select {
+    width: 100%;
+  }
+
+  .editproduct .row-expand-cover td:first-child .el-icon-arrow-right {
+    visibility: hidden;
+  }
+
+  /* .editproduct .row-expand-cover + tr {
   display: none;
 } */
-.editproduct .el-table__expanded-cell {
-  padding: 20px 0 !important;
-  text-align: center;
-  margin: 0 auto;
-  box-sizing: border-box;
-  left: 100px;
-}
-.editproduct .el-table__expanded-cell .el-table th.is-leaf {
-  background: #ced7de9c;
-}
-/* .editproduct #pane-sixeth {
+  .editproduct .el-table__expanded-cell {
+    padding: 20px 0 !important;
+    text-align: center;
+    margin: 0 auto;
+    box-sizing: border-box;
+    left: 100px;
+  }
+
+  .editproduct .el-table__expanded-cell .el-table th.is-leaf {
+    background: #ced7de9c;
+  }
+
+  /* .editproduct #pane-sixeth {
   display: flex;
 } */
-.editproduct .el-col-2 {
-  text-align: center;
-}
-.green_active {
-  color: green;
-}
-.red_active {
-  color: red;
-}
-.wumoxing .el-form-item__content {
-  margin-left: 10px;
-}
-.task_collection .el-form-item__content {
-  clear: none;
-}
-.task_collection .el-form-item {
-  margin-bottom: 10px;
-}
+  .editproduct .el-col-2 {
+    text-align: center;
+  }
+
+  .green_active {
+    color: green;
+  }
+
+  .red_active {
+    color: red;
+  }
+
+  .wumoxing .el-form-item__content {
+    margin-left: 10px;
+  }
+
+  .task_collection .el-form-item__content {
+    clear: none;
+  }
+
+  .task_collection .el-form-item {
+    margin-bottom: 10px;
+  }
+
 </style>
 <style lang="scss" scoped>
-.engintable {
-  width: 100%;
-  height: auto;
-  .engineheader {
-    h3 {
-      float: left;
+  .engintable {
+    width: 100%;
+    height: auto;
+
+    .engineheader {
+      h3 {
+        float: left;
+      }
+    }
+
+    .block {
+      margin-top: 20px;
     }
   }
-  .block {
-    margin-top: 20px;
-  }
-}
-/deep/ .firstcolumn {
-  color: #34c388;
-  cursor: pointer;
-}
 
-.export-p {
-  text-align: center;
-}
+  /deep/ .firstcolumn {
+    color: #34c388;
+    cursor: pointer;
+  }
+
+  .export-p {
+    text-align: center;
+  }
+
 </style>
