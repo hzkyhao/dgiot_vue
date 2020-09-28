@@ -315,7 +315,7 @@ export default {
           })
           localStorage.setItem('list', JSON.stringify(this.routes))
           this.$router.push({
-            path: '/dashboard'
+            path: '/dashboard/platform'
           })
         })
         .catch(e => {
