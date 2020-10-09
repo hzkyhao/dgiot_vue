@@ -406,7 +406,7 @@
                           <!-- 数据类型 -->
                           <el-form-item :label="$t('product.datatype')" prop="type">
                             <!--少个@change=selectStruct-->
-                            <el-select v-model="sizeForm.type">
+                            <el-select v-model="sizeForm.type" @change="selectStruct">
                               <el-option :label="$t('product.struct')" value="STRUCT" />
                               <el-option :label="$t('product.init')" value="INT" />
                               <el-option :label="$t('product.float')" value="FLOAT" />
@@ -717,7 +717,7 @@
                 </div>
 
                 <!--BOOL数据类型添加格式-->
-                <div v-if="sizeForm.type=='bool'">
+                <div v-if="sizeForm.type=='bool' ||sizeForm.type== 'BOOL'">
                   <el-form-item :label="$t('product.attribute')" required>
                     <div style="height:40px;">
                       <el-col :span="11">
@@ -758,7 +758,7 @@
                   </el-form-item>
                 </div>
                 <!--枚举型添加格式-->
-                <div v-if="sizeForm.type=='enum'">
+                <div v-if="sizeForm.type=='enum' ||sizeForm.type== 'ENUM'">
                   <el-form-item v-for="(item, index) in sizeForm.specs" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
@@ -792,7 +792,7 @@
                     {{ $t('product.add') }}</el-link>
                 </div>
                 <!--结构体类型添加格式-->
-                <div v-if="sizeForm.type=='struct'">
+                <div v-if="sizeForm.type=='struct' ||sizeForm.type== 'STRUCT'">
                   <el-form-item label="JSON对象" required>
                     <ul style="margin:0;padding-left:20px;">
                       <li
@@ -820,7 +820,7 @@
                   </el-form-item>
                 </div>
                 <!--字符串添加格式-->
-                <div v-if="sizeForm.type=='string'">
+                <div v-if="sizeForm.type=='string' ||sizeForm.type== 'STRING'">
                   <el-form-item :label="$t('product.datalength')" prop="string">
                     <el-input v-model.number="sizeForm.string" type="number">
                       <template slot="append">{{ $t('product.byte') }}</template>
@@ -828,7 +828,7 @@
                   </el-form-item>
                 </div>
                 <!--date类型添加格式-->
-                <div v-if="sizeForm.type=='date'">
+                <div v-if="sizeForm.type=='date' ||sizeForm.type== 'DATE'">
                   <el-form-item :label="$t('product.timeformat')">
                     <el-input v-model="sizeForm.date" readonly />
                   </el-form-item>
@@ -2046,6 +2046,9 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    selectStruct(v){
+      console.log(v)
+    },
     toggleList() {
       this.showList = !this.showList
     },

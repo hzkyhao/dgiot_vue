@@ -39,3 +39,22 @@ export function addGroup(name) {
     }
   })
 }
+
+// 修改role备注
+export function putRole(role_id, alias) {
+  return request({
+    url: '/classes/_Role/' + role_id,
+    method: 'put',
+    data: {
+      "alias": alias
+    }
+  })
+}
+
+// 删除role
+export function delRole(role_id) {
+  return request({
+    url: '/classes/_Role/' + role_id,
+    method: 'DELETE'
+  })
+}

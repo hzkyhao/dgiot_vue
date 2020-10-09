@@ -22,30 +22,30 @@
         @node-drop="handleDrop"
       >
         <span slot-scope="{ node, data }" class="custom-tree-node">
-          <span v-if="data.tag.seen == true">
-            <el-input v-model="editLabel" />
+          <span v-if="data.roles.seen == true">
+            <el-input v-model="editLabel" style="width: 80%;"/>
           </span>
           <span v-else style="color: #409EFF;">{{ node.label }}</span>
-          <span v-if="data.tag.seen == false" style="margin-left: 5px;">
+          <span v-if="data.roles.seen == false" style="margin-left: 5px;">
             <i
               class="el-icon-plus"
               title="新增"
               style="color: #67C23A
                 ;"
-              @click.stop="append(node, data)"
+              @click.stop="append(data)"
             />
             <i
               class="el-icon-delete"
               title="删除"
               style="color: red;"
-              @click.stop="deletes(node, data)"
+              @click.stop="deletes(data)"
             />
             <i
               class="el-icon-edit"
               title="编辑"
               style="color: #909399
                 ;"
-              @click.stop="rename(node, data)"
+              @click.stop="rename(data)"
             />
           </span>
           <span v-else>
@@ -53,7 +53,7 @@
               slot="suffix"
               class="el-icon-check"
               title="保存"
-              @click.stop="savename(node, data)"
+              @click.stop="savename(data)"
             />
           </span>
         </span>
@@ -76,46 +76,56 @@
         @click="toggleTree()"
       />
     </div>
+    <el-dialog
+      :visible="centerDialogRole"
+      title="添加角色"
+      width="35%"
+      center
+      @close="closeDialogRole"
+    >
+      <addroles ref="addRoleRef" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {
-  roletree,
-  addGroup
-} from "@/api/home";
+import { roletree, addGroup, putRole, delRole } from "@/api/home";
+import addroles from "@/views/roles/rolelist/addroles";
+import { eventBus } from "@/api/eventBus";
 export default {
-  components: {},
+  components: { addroles },
   data() {
     return {
-      tabsNav: [{
-        label: "统计预览",
-        url: "platform"
-      },
-      {
-        label: "虚拟分组",
-        url: "devproduct"
-      },
-      {
-        label: "通道列表",
-        url: "resourcechannel"
-      },
-      {
-        label: "设备列表",
-        url: "devicelist"
-      },
-      {
-        label: "产品列表",
-        url: "productlist"
-      },
-      {
-        label: "规则列表",
-        url: "engine"
-      }
+      tabsNav: [
+        {
+          label: "统计预览",
+          url: "platform"
+        },
+        {
+          label: "虚拟分组",
+          url: "devproduct"
+        },
+        {
+          label: "通道列表",
+          url: "resourcechannel"
+        },
+        {
+          label: "设备列表",
+          url: "devicelist"
+        },
+        {
+          label: "产品列表",
+          url: "productlist"
+        },
+        {
+          label: "规则列表",
+          url: "engine"
+        }
       ],
       numberValidateForm: {
         name: ""
       },
+      centerDialogRole: false,
       editLabel: "",
       filterText: "",
       addForm: {
@@ -127,7 +137,7 @@ export default {
       treeData: [],
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "alias",
         isLeaf: "leaf"
       },
       showTree: true
@@ -136,16 +146,13 @@ export default {
   computed: {
     activeName: {
       get: function() {
-        if (this.$route.path.replace("/dashboard/", "") != '') {
-          return this.$route.path.replace("/dashboard/", "")
+        if (this.$route.path.replace("/dashboard/", "") != "") {
+          return this.$route.path.replace("/dashboard/", "");
         } else {
-          return "platform"
+          return "platform";
         }
       },
-      set: function() {
-
-      }
-
+      set: function() {}
     }
   },
   watch: {
@@ -154,14 +161,18 @@ export default {
     }
   },
   mounted() {
+    eventBus.$on("dialogHide", () => {
+      this.centerDialogRole = false;
+      this.getTree();
+    });
     this.getTree();
   },
   methods: {
     // 页面跳转
     goTo(tab) {
       this.$router.push({
-        path: '/dashboard/' + tab.name
-      })
+        path: "/dashboard/" + tab.name
+      });
     },
     // toggleTree
     toggleTree() {
@@ -169,9 +180,28 @@ export default {
     },
     // 获取角色树
     getTree() {
+      function deepClone(originObject) {
+        var deepObject = Array.isArray(originObject) ? [] : {};
+        if (originObject && typeof originObject === "object") {
+          for (var key in originObject) {
+            if (originObject.roles) {
+              originObject.roles.seen = false
+            }
+            // 如果子属性为引用数据类型，递归复制
+            if (originObject.hasOwnProperty(key)) {
+              if (originObject[key] && typeof originObject[key] === "object") {
+                deepObject[key] = deepClone(originObject[key]);
+              } else {
+                deepObject[key] = originObject[key];
+              }
+            }
+          }
+        }
+        return deepObject;
+      }
       roletree()
         .then(res => {
-          this.treeData = res.results;
+          this.treeData = deepClone(res.results);
           console.log(this.treeData);
         })
         .catch(e => {
@@ -204,55 +234,37 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    append(node, data) {
-      this.$prompt("节点名字", "增加节点", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(({
-          value
-        }) => {
-          this.$message({
-            type: "success",
-            message: "增加节点成功"
-          });
-          console.log(value);
-          console.log(node, JSON.stringify(data));
-          if (data.children) {
-            data["children"].push({
-              id: new Date().getTime(),
-              label: value,
-              tag: {
-                seen: false
-              }
-            });
-          } else {
-            data["children"] = [];
-            data["children"].push({
-              id: new Date().getTime(),
-              label: value,
-              tag: {
-                seen: false
-              }
-            });
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    append(data) {
+      this.centerDialogRole = true;
+      this.$nextTick(() => {
+        this.$refs["addRoleRef"].getData(data);
+      });
     },
-    deletes(node, data) {
-      console.log(node, data.label, "用axios 删");
+    closeDialogRole() {
+      this.centerDialogRole = false;
+      this.getTree();
+    },
+    deletes(data) {
       this.$confirm("此操作将永久删除该节点,包括其子节点", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
-          });
+          delRole(data.objectId)
+            .then(res => {
+              this.getTree();
+              this.$message({
+                type: "success",
+                message: "删除成功!"
+              });
+            })
+            .catch(e => {
+              this.$message({
+                type: "error",
+                message: "删除失败" + e.error
+              });
+            });
         })
         .catch(() => {
           this.$message({
@@ -261,15 +273,25 @@ export default {
           });
         });
     },
-    rename(node, data) {
-      console.log(node, data);
-      this.editLabel = data.label;
-      data.tag.seen = true;
+    rename(data) {
+      this.editLabel = data.alias;
+      data.roles.seen = true;
     },
-    savename(node, data) {
-      console.log(node, this.editLabel);
-      data.label = this.editLabel;
-      data.tag.seen = false;
+    savename(data) {
+      if (data.alias != this.editLabel) {
+        putRole(data.objectId, this.editLabel)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: "编辑成功"
+            });
+            data.alias = this.editLabel;
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }
+      data.roles.seen = false;
     },
     allowDrop(draggingNode, dropNode, type) {
       if (draggingNode.level === dropNode.level) {

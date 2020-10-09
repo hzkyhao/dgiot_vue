@@ -4,7 +4,7 @@
     <div class="role-box">
       <el-form
         :model="roleFormObj"
-        :rules="roleFormRules" 
+        :rules="roleFormRules"
         label-width="80px"
       >
         <el-form-item label="parent" prop="parent">
@@ -20,20 +20,20 @@
         </el-form-item>
 
         <el-form-item label="角色名" prop="name">
-          <el-input v-model="roleFormObj.name"  />
+          <el-input v-model="roleFormObj.name" />
         </el-form-item>
-        <el-form-item label="部门" prop="departmentid">      
+        <el-form-item label="部门" prop="departmentid">
           <el-input
             v-model="roleFormObj.depname"
             placeholder="请输入部门名称"
-            
+
           />
         </el-form-item>
 
-   <!--      <el-form-item label="岗位" prop="departmentid">      
+        <!--      <el-form-item label="岗位" prop="departmentid">
           <el-input
             v-model="roleFormObj.org_type"
-           
+
           />
         </el-form-item> -->
 
@@ -42,7 +42,7 @@
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
             placeholder="请选择角色模版"
-          
+
           >
             <el-option
               v-for="(item, index) in Option.dictOption"
@@ -57,13 +57,13 @@
             v-model="roleFormObj.description"
             placeholder="备注项为必填项"
             type="textarea"
-          
+
           />
         </el-form-item>
         <el-form-item class="el_btn">
-         
+
           <el-button type="warning" @click="resetFrom()">重置</el-button>
- 
+
           <el-button
             v-if="insert == 0 || insert == 1"
             type="success"
@@ -133,27 +133,26 @@ export default {
         ]
       },
       roleList: [],
-      deptInfo:{}
+      deptInfo: {}
     }
   },
   computed: {
 
   },
   mounted() {
-
     // this.nodetree()
     this.searchAllOption()
   },
   methods: {
-    getData(departData){
-        this.deptInfo = departData
+    getData(departData) {
+      this.deptInfo = departData
 
-        this.roleFormObj.ParentId =  this.deptInfo.objectId //this.$store.state.user.departmentObj.objectId
+      this.roleFormObj.ParentId = this.deptInfo.objectId // this.$store.state.user.departmentObj.objectId
 
-        console.log('this.deptInfo', this.deptInfo.objectId)
+      console.log('this.deptInfo', this.deptInfo.objectId)
 
-        //这里有点多余,但不加的话,parent select在视图上无法选中
-        this.searchAllOption()
+      // 这里有点多余,但不加的话,parent select在视图上无法选中
+      this.searchAllOption()
     },
     changeOption(key, val) {
       switch (key) {
@@ -173,7 +172,6 @@ export default {
     },
     // 查询部门  角色
     searchAllOption() {
-
       this.$axiosWen
         .get('/classes/Dict', {
           params: {
@@ -187,19 +185,18 @@ export default {
         })
       this.$axiosWen.get('/classes/_Role').then(res => {
         const tempResults = []
-  
-        if (res.results) {
 
-           res.results.forEach((item, key) => {
-              let obj = {}
-              obj.ParentId = item.ParentId
-              obj.name = item.name
-              obj.objectId = item.objectId
-              obj.org_type = item.org_type
-              obj.desc = item.desc
-              obj.createdAt = item.createdAt
-              tempResults.push(obj)
-            })
+        if (res.results) {
+          res.results.forEach((item, key) => {
+            const obj = {}
+            obj.ParentId = item.ParentId
+            obj.name = item.name
+            obj.objectId = item.objectId
+            obj.org_type = item.org_type
+            obj.desc = item.desc
+            obj.createdAt = item.createdAt
+            tempResults.push(obj)
+          })
 
           this.roleList = tempResults
           this.Option.deptOption = res.results
@@ -225,7 +222,7 @@ export default {
       this.Option.dictvalue = ''
       this.Option.objectId = 0
       this.Option.ParentId = 0
- 
+
       this.treeModu = []
       setTimeout(() => {
         this.searchAllOption()
@@ -291,7 +288,6 @@ export default {
       this.insert = this.$route.query.insert
 
       this.roleId = this.$route.query.roleId
-  
     }
   }
 }

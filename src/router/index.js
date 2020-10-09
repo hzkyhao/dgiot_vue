@@ -80,6 +80,7 @@ export const constantRouterMap = [
         path: "/dashboard",
         name: "首页",
         component: () => import("@/views/equipment_management/group"),
+        redirect: "/dashboard/platform",
         meta: { title: "首页", icon: "platform" },
         children: [
           {
