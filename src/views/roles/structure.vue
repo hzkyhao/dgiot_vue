@@ -12,7 +12,7 @@
             class="demo-ruleForm"
           >
             <el-form-item label="姓名" prop="nick">
-              <el-input v-model="userInfoForm.nick" placeholder="2-5个文字" auto-complete="off" />
+              <el-input v-model="userInfoForm.nick" placeholder="2-7个文字" auto-complete="off" />
             </el-form-item>
 
             <el-form-item label="手机号" prop="phone">
@@ -166,7 +166,7 @@
                     <template slot-scope="scope">
                       <span>
                         {{
-                        new Date(scope.row.createdAt).toLocaleDateString()
+                          new Date(scope.row.createdAt).toLocaleDateString()
                         }}
                       </span>
                     </template>
@@ -255,10 +255,10 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (!/^\w{6,10}$/.test(value)) {
-          // if (!/^([\w]|[.]){6,10}$/.test(value)) {
-          callback(new Error("密码格式不正确"));
-        }
+        // if (!/^\w{6,10}$/.test(value)) {
+        //   // if (!/^([\w]|[.]){6,10}$/.test(value)) {
+        //   callback(new Error("密码格式不正确"));
+        // }
         callback();
       }
     };
@@ -326,12 +326,16 @@ export default {
       userFormRules: {
         account: [{ required: true, message: "请输入账号名", trigger: "blur" }],
         phone: [
-          { required: true, message: "请输入手机号", trigger: "blur" },
+          { required: false, message: "请输入手机号", trigger: "blur" },
           {
             validator: function(rule, value, callback) {
               var MobileRegex = /^1[34578]\d{9}$/;
-              if (!MobileRegex.test(value)) {
-                callback(new Error("手机号码格式不正确！"));
+              if (value) {
+                if (!MobileRegex.test(value)) {
+                  callback(new Error("手机号码格式不正确！"));
+                } else {
+                  callback();
+                }
               } else {
                 callback();
               }
@@ -350,7 +354,7 @@ export default {
         ],
         nick: [
           { required: true, message: "请输入昵称", trigger: "blur" },
-          { min: 2, max: 5, message: "昵称格式不正确", trigger: "blur" }
+          { min: 2, max: 7, message: "昵称格式不正确", trigger: "blur" }
         ],
         email: [
           { required: true, message: "请输入邮箱地址", trigger: "blur" },
