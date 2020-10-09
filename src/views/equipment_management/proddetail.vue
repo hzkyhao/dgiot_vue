@@ -350,11 +350,10 @@
                 <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
 
-
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
                 <div v-if="sizeForm.type=='int'||sizeForm.type=='float'||sizeForm.type=='double'">
                   <el-collapse v-model="collapseName" accordion>
-                    <el-collapse-item  name="1">
+                    <el-collapse-item name="1">
                       <template slot="title">
                         <h3 style="font-size:normal;">数据存储</h3>
                       </template>
@@ -407,14 +406,14 @@
                           <el-form-item :label="$t('product.datatype')" prop="type">
                             <!--少个@change=selectStruct-->
                             <el-select v-model="sizeForm.type" @change="selectStruct">
-                              <el-option :label="$t('product.struct')" value="STRUCT" />
-                              <el-option :label="$t('product.init')" value="INT" />
-                              <el-option :label="$t('product.float')" value="FLOAT" />
-                              <el-option :label="$t('product.double')" value="DOUBLE" />
-                              <el-option :label="$t('product.bool')" value="BOOL" />
-                              <el-option :label="$t('product.enum')" value="ENUM" />
-                              <el-option :label="$t('product.string')" value="STRING" />
-                              <el-option :label="$t('product.date')" value="DATE" />
+                              <el-option :label="$t('product.struct')" value="struct" />
+                              <el-option :label="$t('product.init')" value="int" />
+                              <el-option :label="$t('product.float')" value="float" />
+                              <el-option :label="$t('product.double')" value="double" />
+                              <el-option :label="$t('product.bool')" value="bool" />
+                              <el-option :label="$t('product.enum')" value="enum" />
+                              <el-option :label="$t('product.string')" value="string" />
+                              <el-option :label="$t('product.date')" value="date" />
                             </el-select>
                           </el-form-item>
                         </el-col>
@@ -536,7 +535,7 @@
                           <el-tooltip style="float: left;" effect="dark" placement="right-start">
 
                             <div slot="content">
-                             1. 采集值 设备上行数据经采集公式计算后显示 。<br>
+                              1. 采集值 设备上行数据经采集公式计算后显示 。<br>
 
                               公式中的%s为占位符，是固定字段。<br>
 
@@ -573,8 +572,8 @@
                           <el-form-item label="采集公式" style="width: 100%">
                             <el-input
                               v-model="sizeForm.collection"
-                              type="textarea"
                               :rows="5"
+                              type="textarea"
                               placeholder="%s" />
                           </el-form-item>
                         </el-col>
@@ -583,7 +582,7 @@
                         <el-col :span="22">
                           <el-tooltip effect="dark" placement="right-start">
                             <div slot="content">
-                            1. 采集值:  主动向设备写数据经控制公式计算后下发 。 <br>
+                              1. 采集值:  主动向设备写数据经控制公式计算后下发 。 <br>
 
                               公式中的%s为占位符，是固定字段。 <br>
 
@@ -622,8 +621,8 @@
 
                             <el-input
                               v-model="sizeForm.control"
-                              type="textarea"
                               :rows="5"
+                              type="textarea"
                               placeholder="%s" />
                           </el-form-item>
                           <!--type-->
@@ -717,7 +716,7 @@
                 </div>
 
                 <!--BOOL数据类型添加格式-->
-                <div v-if="sizeForm.type=='bool' ||sizeForm.type== 'BOOL'">
+                <div v-if="sizeForm.type=='bool'">
                   <el-form-item :label="$t('product.attribute')" required>
                     <div style="height:40px;">
                       <el-col :span="11">
@@ -758,7 +757,7 @@
                   </el-form-item>
                 </div>
                 <!--枚举型添加格式-->
-                <div v-if="sizeForm.type=='enum' ||sizeForm.type== 'ENUM'">
+                <div v-if="sizeForm.type=='enum'">
                   <el-form-item v-for="(item, index) in sizeForm.specs" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
@@ -792,7 +791,7 @@
                     {{ $t('product.add') }}</el-link>
                 </div>
                 <!--结构体类型添加格式-->
-                <div v-if="sizeForm.type=='struct' ||sizeForm.type== 'STRUCT'">
+                <div v-if="sizeForm.type=='struct'">
                   <el-form-item label="JSON对象" required>
                     <ul style="margin:0;padding-left:20px;">
                       <li
@@ -820,7 +819,7 @@
                   </el-form-item>
                 </div>
                 <!--字符串添加格式-->
-                <div v-if="sizeForm.type=='string' ||sizeForm.type== 'STRING'">
+                <div v-if="sizeForm.type=='string'">
                   <el-form-item :label="$t('product.datalength')" prop="string">
                     <el-input v-model.number="sizeForm.string" type="number">
                       <template slot="append">{{ $t('product.byte') }}</template>
@@ -828,7 +827,7 @@
                   </el-form-item>
                 </div>
                 <!--date类型添加格式-->
-                <div v-if="sizeForm.type=='date' ||sizeForm.type== 'DATE'">
+                <div v-if="sizeForm.type=='date'">
                   <el-form-item :label="$t('product.timeformat')">
                     <el-input v-model="sizeForm.date" readonly />
                   </el-form-item>
@@ -862,13 +861,13 @@
                   <el-col :span="10">
                     <el-form-item :label="$t('product.datatype')" prop="type">
                       <el-select v-model="structform.type">
-                        <el-option :label="$t('product.init')" value="INT" />
-                        <el-option :label="$t('product.float')" value="FLOAT" />
-                        <el-option :label="$t('product.double')" value="DOUBLE" />
-                        <el-option :label="$t('product.bool')" value="BOOL" />
-                        <el-option :label="$t('product.enum')" value="ENUM" />
-                        <el-option :label="$t('product.string')" value="STRING" />
-                        <el-option :label="$t('product.date')" value="DATE" />
+                        <el-option :label="$t('product.init')" value="int" />
+                        <el-option :label="$t('product.float')" value="float" />
+                        <el-option :label="$t('product.double')" value="double" />
+                        <el-option :label="$t('product.bool')" value="bool" />
+                        <el-option :label="$t('product.enum')" value="enum" />
+                        <el-option :label="$t('product.string')" value="string" />
+                        <el-option :label="$t('product.date')" value="date" />
                       </el-select>
                     </el-form-item>
                   </el-col>
@@ -890,7 +889,7 @@
                   </el-form-item>
                 </div>
 
-                <div v-if="structform.type=='INT'||structform.type=='FLOAT'||structform.type=='DOUBLE'">
+                <div v-if="structform.type=='int'||structform.type=='float'||structform.type=='double'">
                   <el-form-item required label="取值范围(数值)">
                     <el-col :span="9">
                       <el-form-item prop="startnumber">
@@ -931,7 +930,7 @@
                     </el-select>
                   </el-form-item>
                 </div>
-                <div v-if="structform.type=='BOOL'">
+                <div v-if="structform.type=='bool'">
                   <el-form-item :label="$t('product.attribute')" required>
                     <div style="height:40px;">
                       <el-col :span="11">
@@ -974,8 +973,8 @@
                     </div>
                   </el-form-item>
                 </div>
-                <div v-if="structform.type=='ENUM'">
-                  <el-form-item v-for="(item, index) in structform.specs" :key="index" required>
+                <div v-if="structform.type=='enum'">
+                  <el-form-item v-for="(item, index) in structform.specs" v-show="structform.specs.length" :key="index" required>
                     <el-col :span="9">
                       <el-form-item
                         :label="$t('product.attribute')+index"
@@ -1007,7 +1006,7 @@
                   <el-link :underline="false" icon="el-icon-plus" type="primary" @click="addDomain1">
                     {{ $t('product.add') }}</el-link>
                 </div>
-                <div v-if="structform.type=='STRING'">
+                <div v-if="structform.type=='string'">
                   <el-form-item :label="$t('product.datalength')" prop="string">
                     <el-input v-model.number="structform.string" type="number">
                       <template slot="append">{{ $t('product.byte') }}</template>
@@ -1015,7 +1014,7 @@
                   </el-form-item>
                 </div>
                 <!--date类型添加格式-->
-                <div v-if="structform.type=='DATE'">
+                <div v-if="structform.type=='date'">
                   <el-form-item :label="$t('product.timeformat')">
                     <el-input v-model="structform.date" readonly />
                   </el-form-item>
@@ -2046,7 +2045,7 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
-    selectStruct(v){
+    selectStruct(v) {
       console.log(v)
     },
     toggleList() {
@@ -3060,9 +3059,9 @@ export default {
         if (valid) {
           var obj = {}
           if (
-            this.structform.type == 'FLOAT' ||
-              this.structform.type == 'DOUBLE' ||
-              this.structform.type == 'INT'
+            this.structform.type == 'float' ||
+              this.structform.type == 'double' ||
+              this.structform.type == 'int'
           ) {
             obj = {
               name: this.structform.name,
@@ -3083,7 +3082,7 @@ export default {
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
             }
-          } else if (this.structform.type == 'BOOL') {
+          } else if (this.structform.type == 'bool') {
             obj = {
               name: this.structform.name,
               dataType: {
@@ -3101,7 +3100,7 @@ export default {
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
             }
-          } else if (this.structform.type == 'ENUM') {
+          } else if (this.structform.type == 'enum') {
             var specs = {}
             this.structform.specs.map(items => {
               var newkey = items['attribute']
@@ -3121,7 +3120,7 @@ export default {
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
             }
-          } else if (this.structform.type == 'STRING') {
+          } else if (this.structform.type == 'string') {
             obj = {
               name: this.structform.name,
               dataType: {
@@ -3136,7 +3135,7 @@ export default {
               accessMode: this.structform.isread,
               identifier: this.structform.identifier
             }
-          } else if (this.structform.type == 'DATE') {
+          } else if (this.structform.type == 'date') {
             obj = {
               name: this.structform.name,
               dataType: {
@@ -3168,7 +3167,7 @@ export default {
       this.structform = {
         resource: 1,
         identifier: '',
-        type: 'INT',
+        type: 'int',
         startnumber: '',
         endnumber: '',
         step: '',
@@ -3714,8 +3713,8 @@ export default {
           structobj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
           JSON.parse(items.DataSpecsList).map(children => {
             if (
-              children.childDataType == 'ENUM' ||
-                children.childDataType == 'BOOL'
+              children.childDataType == 'enum' ||
+                children.childDataType == 'bool'
             ) {
               var obj = {
                 dataType: {
@@ -3736,9 +3735,9 @@ export default {
               })
               structobj.dataType.specs.push(obj)
             } else if (
-              children.childDataType == 'DOUBLE' ||
-                children.childDataType == 'INT' ||
-                children.childDataType == 'FLOAT'
+              children.childDataType == 'double' ||
+                children.childDataType == 'int' ||
+                children.childDataType == 'float'
             ) {
               var obj = {
                 dataType: {
