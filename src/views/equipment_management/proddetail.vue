@@ -352,11 +352,25 @@
 
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
                 <div v-if="sizeForm.type=='int'||sizeForm.type=='float'||sizeForm.type=='double'">
-                  <el-collapse v-model="collapseName" accordion>
+                  <el-collapse v-model="collapseName">
                     <el-collapse-item name="1">
                       <template slot="title">
                         <h3 style="font-size:normal;">数据存储</h3>
                       </template>
+                      <el-row :gutter="30">
+                        <el-col :span="10">
+                          <el-form-item :label="$t('product.functionname')" prop="name">
+                            <el-input v-model="sizeForm.name" />
+                          </el-form-item>
+                        </el-col>
+
+                        <el-col :span="10">
+                          <el-form-item :label="$t('product.identifier')" prop="identifier">
+                            <el-input v-model="sizeForm.identifier" />
+                          </el-form-item>
+                          <!--type-->
+                        </el-col>
+                      </el-row>
                       <el-form-item required label="取值范围(数值)">
                         <el-col :span="9">
                           <el-form-item prop="startnumber">
@@ -431,26 +445,11 @@
                           </el-form-item>
                         </el-col>
                       </el-row>
-                      <el-row :gutter="30">
-                        <el-col :span="10">
-                          <el-form-item :label="$t('product.functionname')" prop="name">
-                            <el-input v-model="sizeForm.name" />
-                          </el-form-item>
-                        </el-col>
-
-                        <el-col :span="10">
-                          <el-form-item :label="$t('product.identifier')" prop="identifier">
-                            <el-input v-model="sizeForm.identifier" />
-                          </el-form-item>
-                          <!--type-->
-                        </el-col>
-                      </el-row>
                     </el-collapse-item>
                     <el-collapse-item name="2">
                       <template slot="title">
                         <h3 style="font-size:normal;">数据采集</h3>
                       </template>
-                      <el-divider />
                       <el-row :gutter="24">
                         <el-col :span="24">
                           <el-tooltip style="float: left;" effect="dark" placement="right-start">
@@ -1668,6 +1667,10 @@ export default {
     return {
       sizeOption: [
         {
+          label: '20',
+          val: '20'
+        },
+        {
           label: '不采集(计算值)',
           val: '计算值'
         },
@@ -1678,7 +1681,7 @@ export default {
       ],
       // topic数据
       showList: false,
-      collapseName: '1',
+      collapseName: ['1','2','3','4'],
       multipleSelection: [],
       protolchannel: [],
       protoldialog: false,
@@ -1901,8 +1904,8 @@ export default {
         date: 'String类型的UTC时间戳 (毫秒)',
         string: '',
         specs: [],
-        dis: '',
-        dinumber: ''
+        dis: 'Edit-24',
+        dinumber: '528590'
       },
       tableData: [],
       activeName: 'first',
@@ -2053,11 +2056,11 @@ export default {
     },
     getFormOrginalData() {
       return {
-        strategy: '',
+        strategy: '20',
         resource: 1,
         identifier: '',
-        dis: '',
-        dinumber: '',
+        dis: 'Edit-24',
+        dinumber: '528590',
         type: 'int',
         startnumber: '',
         endnumber: '',
@@ -2082,8 +2085,8 @@ export default {
         operatetype: 'holdingRegister',
         originaltype: 'int16',
         slaveid: 256,
-        collection: '',
-        control: ''
+        collection: '%s',
+        control: '%s'
       }
     },
     changeValue(formName) {
