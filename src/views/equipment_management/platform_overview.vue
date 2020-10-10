@@ -2,7 +2,7 @@
   <div class="platform">
     <el-tabs v-model="activeName">
       <el-row>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="platformlist" />
@@ -13,7 +13,7 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="productlist" />
@@ -24,7 +24,7 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="successed" />
@@ -35,7 +35,7 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="devicelist" />
@@ -46,7 +46,7 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="shuliang" />
@@ -57,7 +57,7 @@
             </el-col>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="8" :md="8" :lg="6" :xl="4">
+        <el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="4">
           <el-card class="box-card">
             <el-col :span="12">
               <svg-icon class="card-left" icon-class="onlinelist" />

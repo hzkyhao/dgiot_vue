@@ -1036,7 +1036,7 @@
         <!-- <div style="diaplay:none;"> -->
         <!-- <div> -->
         <el-tab-pane label="物解析" name="fourth">
-          <div class="protolheader" style="diaplay:none;">
+          <div class="protolheader">
             <el-form ref="formInline" :inline="true" :model="formInline" :rules="addRules" class="demo-form-inline">
               <el-form-item :label="$t('product.protocolname')" prop="name">
                 <el-input v-model="formInline.name" :placeholder="$t('product.protocolname')" />
@@ -2119,12 +2119,12 @@ export default {
     },
     handleClick(val) {
       if (val.name == 'fourth') {
-        this.$router.push({
-          path: '/roles/thingsParse',
-          query: {
-            id: this.$route.query.id
-          }
-        })
+        // this.$router.push({
+        //   path: '/roles/thingsParse',
+        //   query: {
+        //     id: this.$route.query.id
+        //   }
+        // })
       } else if (val.name == 'fiveth') {
         this.getProductChannel()
       } else if (val.name == 'second') {

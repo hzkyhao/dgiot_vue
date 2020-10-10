@@ -1,81 +1,91 @@
 <template>
   <div class="group">
-    <div v-if="showTree" class="tree">
-      搜索 :
-      <el-input
-        v-model="filterText"
-        placeholder="输入关键字进行过滤"
-        style="width: 200px;"
-      />
+    <el-container>
+      <el-container>
+        <el-main>
+          <div class="main">
+            <el-drawer
+            direction="ltr"
+            :visible.sync="drawer">
+              <div v-if="showTree" class="tree">
+                搜索 :
+                <el-input
+                  v-model="filterText"
+                  placeholder="输入关键字进行过滤"
+                  style="width: 80%;"
+                />
 
-      <el-tree
-        ref="tree"
-        :data="treeData"
-        :props="defaultProps"
-        :allow-drop="allowDrop"
-        :allow-drag="allowDrag"
-        :filter-node-method="filterNode"
-        default-expand-all
-        class="treeitems"
-        node-key="id"
-        draggable
-        @node-drop="handleDrop"
-      >
-        <span slot-scope="{ node, data }" class="custom-tree-node">
-          <span v-if="data.roles.seen == true">
-            <el-input v-model="editLabel" style="width: 80%;"/>
-          </span>
-          <span v-else style="color: #409EFF;">{{ node.label }}</span>
-          <span v-if="data.roles.seen == false" style="margin-left: 5px;">
+                <el-tree
+                  ref="tree"
+                  :data="treeData"
+                  :props="defaultProps"
+                  :allow-drop="allowDrop"
+                  :allow-drag="allowDrag"
+                  :filter-node-method="filterNode"
+                  default-expand-all
+                  class="treeitems"
+                  node-key="id"
+                  draggable
+                  @node-drop="handleDrop"
+                >
+                  <span slot-scope="{ node, data }" class="custom-tree-node">
+                    <span v-if="data.roles.seen == true">
+                      <el-input v-model="editLabel" style="width: 80%;"/>
+                    </span>
+                    <span v-else style="color: #409EFF;">{{ node.label }}</span>
+                    <span v-if="data.roles.seen == false" style="margin-left: 5px;">
+                      <i
+                        class="el-icon-plus"
+                        title="新增"
+                        style="color: #67C23A
+                          ;"
+                        @click.stop="append(data)"
+                      />
+                      <i
+                        class="el-icon-delete"
+                        title="删除"
+                        style="color: red;"
+                        @click.stop="deletes(data)"
+                      />
+                      <i
+                        class="el-icon-edit"
+                        title="编辑"
+                        style="color: #909399
+                          ;"
+                        @click.stop="rename(data)"
+                      />
+                    </span>
+                    <span v-else>
+                      <i
+                        slot="suffix"
+                        class="el-icon-check"
+                        title="保存"
+                        @click.stop="savename(data)"
+                      />
+                    </span>
+                  </span>
+                </el-tree>
+              </div>
+          </el-drawer>
+            <el-tabs v-model="activeName" @tab-click="goTo" style="display: none;">
+              <el-tab-pane
+                v-for="item in tabsNav"
+                :key="item.url"
+                :label="item.label"
+                :name="item.url"
+              />
+            </el-tabs>
+            <router-view />
+          </div>
+          <div class="setting">
             <i
-              class="el-icon-plus"
-              title="新增"
-              style="color: #67C23A
-                ;"
-              @click.stop="append(data)"
+              :class="[showTree ? 'el-icon-s-fold' : 'el-icon-s-unfold']"
+              @click="toggleTree()"
             />
-            <i
-              class="el-icon-delete"
-              title="删除"
-              style="color: red;"
-              @click.stop="deletes(data)"
-            />
-            <i
-              class="el-icon-edit"
-              title="编辑"
-              style="color: #909399
-                ;"
-              @click.stop="rename(data)"
-            />
-          </span>
-          <span v-else>
-            <i
-              slot="suffix"
-              class="el-icon-check"
-              title="保存"
-              @click.stop="savename(data)"
-            />
-          </span>
-        </span>
-      </el-tree>
-    </div>
-    <div class="main">
-      <el-tabs v-model="activeName" @tab-click="goTo">
-        <el-tab-pane
-          v-for="item in tabsNav"
-          :key="item.url"
-          :label="item.label"
-          :name="item.url"
-        />
-      </el-tabs>
-      <router-view />
-    </div>
-    <div class="setting">
-      <i
-        :class="[showTree ? 'el-icon-s-fold' : 'el-icon-s-unfold']"
-        @click="toggleTree()"
-      />
-    </div>
+          </div>
+        </el-main>
+      </el-container>
+    </el-container>
     <el-dialog
       :visible="centerDialogRole"
       title="添加角色"
@@ -96,6 +106,7 @@ export default {
   components: { addroles },
   data() {
     return {
+      drawer: false,
       tabsNav: [
         {
           label: "统计预览",
@@ -176,7 +187,7 @@ export default {
     },
     // toggleTree
     toggleTree() {
-      this.showTree = !this.showTree;
+      this.drawer = !this.drawer;
     },
     // 获取角色树
     getTree() {
@@ -347,13 +358,51 @@ export default {
   }
 
   /deep/ {
-    .el-tree-node__content {
-      height: 40px;
+    .el-drawer__body{
+      background: #fff !important;
+      margin: 30px;
     }
+    .el-tree-node__content {
+      height: 30px;
+    }
+    .el-drawer{
+      /* z-index: 999;
+      width: 30% !important; */
+    }
+    @media screen and (max-width: 960px) {
+      .el-drawer {
+        z-index: 999;
+      width: 70% !important;
+    }
+    }
+    .is-leaf {
+      display: none;
+    }
+    /* .el-tree-node__content{
+      padding-left: 8px;
+    } */
+    .setting {
+    cursor: pointer;
+    top: 0;
+    right: 20px;
+    font-size: 20px;
+    position: absolute;
+  }
+  .el-header, .el-footer {
+    background-color: #fff;
+  }
+
+
+  .el-main {
+    background-color: #fff;
+  }
   }
 
   .tree {
-    flex: 0 0 300px;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
     /* 左侧固定200px */
   }
 
@@ -361,12 +410,6 @@ export default {
     flex: 1;
   }
 
-  .setting {
-    cursor: pointer;
-    top: 0;
-    right: 20px;
-    font-size: 20px;
-    position: absolute;
-  }
+
 }
 </style>
