@@ -53,7 +53,28 @@ export default {
           name: '首页',
           icon: 'dashboard',
           url: this.dashboard ? this.dashboard : '/dashboard'
-        })
+        },
+        {
+          name: '分组',
+          url: '/dashboard/devproduct'
+        },
+        {
+          name: '通道',
+          url: '/dashboard/resourcechannel'
+        },
+        {
+          name: '设备',
+          url: '/dashboard/devicelist'
+        },
+        {
+          name: '产品',
+          url: '/dashboard/productlist'
+        },
+        {
+          name: '规则',
+          url: '/dashboard/engine'
+        }
+        )
 
         const newArr = cloneData.filter((item, index) => {
           if (['实验仪器管理', '取证设备列表'].includes(item.name)) {

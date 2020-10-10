@@ -163,8 +163,9 @@ export default {
   border-radius: 0px !important;
   .el-scrollbar{
     position:absolute;
-    left:20%;
-    width: 60%;
+    top:10px;
+    left:0%;
+    width: 100%;
   }
   .language{
     height: 50px;
