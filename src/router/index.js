@@ -85,6 +85,7 @@ export const constantRouterMap = [
         children: [
           {
             path: "platform",
+            meta: { title: "首页" },
             component: resolve =>
               require([
                 "@/views/equipment_management/platform_overview"
@@ -92,28 +93,38 @@ export const constantRouterMap = [
           },
           {
             path: "devproduct",
+            meta: { title: "分组" },
             component: resolve =>
               require(["@/views/equipment_management/home_group"], resolve)
           },
           {
             path: "devicelist",
+            meta: { title: "设备" },
             component: resolve =>
               require(["@/views/equipment_management/home_index"], resolve)
           },
           {
             path: "productlist",
+            meta: { title: "产品" },
             component: resolve =>
               require(["@/views/equipment_management/home_group2"], resolve)
           },
           {
             path: "resourcechannel",
+            meta: { title: "通道" },
             component: resolve =>
               require(["@/views/engine/home_resourcechannel"], resolve)
           },
           {
             path: "engine",
+            meta: { title: "规则" },
             component: resolve =>
               require(["@/views/engine/rulesengine"], resolve)
+          },
+          {
+            path: "appmanage",
+            meta: { title: "解码管理" },
+            component: () => import("@/views/systemmanage/appmarage")
           },
           {
             path: "/product",
