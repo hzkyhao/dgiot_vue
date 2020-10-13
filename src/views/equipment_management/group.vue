@@ -79,7 +79,7 @@
           </div>
           <div class="setting">
             <i
-              :class="[showTree ? 'el-icon-s-fold' : 'el-icon-s-unfold']"
+              :class="[drawer ? 'el-icon-s-fold' : 'el-icon-s-unfold']"
               @click="toggleTree()"
             />
           </div>
