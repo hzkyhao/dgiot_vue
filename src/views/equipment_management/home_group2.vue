@@ -15,11 +15,10 @@
             </el-form-item>
             <el-form-item style="float:right;text-align:right">
               <el-button
-                v-show="projectid!=''"
                 type="primary"
                 @click="addproduct"
               >{{ $t('product.createproduct') }}</el-button>
-              <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
+              <!-- <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button> -->
               <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
               <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
 
