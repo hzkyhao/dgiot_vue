@@ -172,8 +172,13 @@ export default {
     height: 50px;
     display: inline-block;
     position: absolute;
-    right: 80px;
+    right: 10%;
   }
+  @media screen and (max-width: 960px) {
+    .language {
+      right: 24%;
+    }
+}
   .username{
     height: 50px;
     display: inline-block;
@@ -306,7 +311,7 @@ export default {
     }
   }
   /deep/ .el-dropdown{
-    left: -100px;
+    /* left: calc(-100px); */
     top: -10px;
     color:#ffffff;
   }
