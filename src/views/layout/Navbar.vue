@@ -164,8 +164,9 @@ export default {
   .el-scrollbar{
     position:absolute;
     top:10px;
-    left:0%;
-    width: 100%;
+    left:10%;
+    width: 80%;
+    overflow-y: hidden;
   }
   .language{
     height: 50px;
