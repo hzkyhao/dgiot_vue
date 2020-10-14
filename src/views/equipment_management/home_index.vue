@@ -346,11 +346,11 @@
             <el-form-item :label="$t('equipment.devicenumber')" prop="devaddr">
               <el-input v-model="deviceform.devaddr" />
             </el-form-item>
-            <el-form-item :label="$t('equipment.batchname')" prop="batchId">
+            <!-- <el-form-item :label="$t('equipment.batchname')" prop="batchId">
               <el-input v-model="deviceform.batchId" disabled>
                 <i slot="suffix" class="el-icon-plus" @click="addDeviceBatch" />
               </el-input>
-            </el-form-item>
+            </el-form-item> -->
             <!-- <el-form-item label="节点类型" prop="nodeType">
               <el-select v-model="deviceform.nodeType" placeholder="请选择节点类型">
                 <el-option label="采集器" :value="0"></el-option>
@@ -1315,11 +1315,11 @@ export default {
       this.deviceform.productid = row.productid
       this.deviceform.brand = row.brand
       this.deviceform.productName = row.productid
-      this.deviceform.batchId = row.batchid
+      // this.deviceform.batchId = row.batchid
       this.deviceform.status = row.status
       this.deviceform.isEnable = row.isEnable
       this.bmapform.address = row.address
-      this.batchid = row.batchid
+      // this.batchid = row.batchid
       this.center.lat = row.latitude
       this.center.lng = row.longitude
       this.addresspointer = row.latitude + ',' + row.longitude
@@ -1370,14 +1370,14 @@ export default {
                 latitude: this.center.lat ? this.center.lat : 0,
                 longitude: this.center.lng ? this.center.lng : 0
               })
-              datas.id = this.batchid
+              // datas.id = this.batchid
               tags.set('assetNum', this.deviceform.assetNum)
               tags.set('devModel', this.deviceform.devModel)
               tags.set('brand', this.deviceform.brand)
               tags.set('location', location)
               tags.set('address', this.deviceform.address)
               tags.set('desc', this.deviceform.desc)
-              tags.set('batchId', datas)
+              // tags.set('batchId', datas)
 
               tags.save().then(
                 resultes => {
@@ -1460,7 +1460,7 @@ export default {
                     latitude: this.center.lat,
                     longitude: this.center.lng
                   })
-                  datas.id = this.batchid
+                  // datas.id = this.batchid
                   tags.set('assetNum', this.deviceform.assetNum)
                   tags.set('devModel', this.deviceform.devModel)
                   tags.set('brand', this.deviceform.brand)
