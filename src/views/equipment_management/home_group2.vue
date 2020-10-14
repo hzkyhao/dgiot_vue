@@ -25,24 +25,24 @@
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="id" label="ProductID" />
-              <el-table-column :label="$t('product.productname')">
+              <el-table-column prop="id" label="ProductID" width="200" />
+              <el-table-column :label="$t('product.productname')" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.attributes.name }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('product.productgrouping')">
+              <el-table-column :label="$t('product.productgrouping')" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.attributes.devType }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('product.nodetype')">
+              <el-table-column :label="$t('product.nodetype')" width="120px">
                 <template slot-scope="scope">
                   <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
                   <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('product.classification')">
+              <el-table-column :label="$t('product.classification')" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.CategoryKey }}</span>
                 </template>
@@ -52,7 +52,7 @@
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('developer.operation')" width="320">
+              <el-table-column :label="$t('developer.operation')" >
                 <template slot-scope="scope">
                   <el-link :underline="false" type="primary" icon="el-icon-view" @click="deviceToDetail(scope.row)">配置
                   </el-link>
