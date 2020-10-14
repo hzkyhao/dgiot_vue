@@ -117,8 +117,14 @@
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
               <el-form-item label="所属应用" prop="roles">
-               <el-input disabled v-model="form.relationApp" placeholder="请选择所属应用"></el-input>
+               <el-input v-model="form.relationApp" placeholder="请选择所属应用">
+                <template slot="append">
+                  <i  style="cursor: pointer;" :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" @click="showTree = !showTree"></i>
+                </template>
+              </el-input>
+              <div v-if="showTree">
                 <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+              </div>
                 <!-- <el-select v-model="form.relationApp" @change="selectApp">
                   <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
                     :value="item.attributes.title" />
@@ -372,7 +378,8 @@
         access_token: '',
         projectid: '',
         projectName: '',
-        allTableDate: []
+        allTableDate: [],
+        showTree:false
       }
     },
     computed: {},
@@ -385,7 +392,7 @@
     },
     methods: {
       handleNodeClick(data) {
-        console.log(data);
+        this.showTree = !this.showTree
         this.form.relationApp = data.alias
       },
       changeNode(val, first) {
