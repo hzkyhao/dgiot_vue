@@ -71,7 +71,7 @@
                     {{ $t('product.equipment') }}</el-link>
                   <el-link :underline="false" icon="el-icon-edit" type="success" @click="editorProduct(scope.row)">修改
                   </el-link>
-                  <el-link :underline="false" icon="el-icon-link" type="primary" @click="proudctView(scope.row)">运行组态
+                  <el-link :underline="false" icon="el-icon-s-promotion" type="primary" @click="proudctView(scope.row)">运行组态
                   </el-link>
                   <el-link
                   :underline="false"
@@ -1111,9 +1111,9 @@
         } else {
           var topoUrl = this.$globalConfig.localTopoUrl
         }
-        // 为了兼容性,暂时传两个相同的值
-        var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
-        window.open(url, '__blank')
+      // 为了兼容性,暂时传两个相同的值
+      var url = `${topoUrl}/#/view/${row.id}`
+      window.open(url, '__blank')
       },
       // 跳转到组态大屏
       goTopoview() {
