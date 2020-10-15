@@ -103,7 +103,7 @@
                   >编 辑</el-link>
                   <el-link
                     :underline="false"
-                    icon="el-icon-link"
+                    icon="el-icon-s-promotion"
                     type="primary"
                     @click="proudctView(scope.row)"
                   >运行组态</el-link>
@@ -1002,7 +1002,7 @@ export default {
         var topoUrl = this.$globalConfig.localTopoUrl
       }
       // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
+      var url = `${topoUrl}/#/view/${row.id}`
       window.open(url, '__blank')
     },
     // 跳转到组态大屏
