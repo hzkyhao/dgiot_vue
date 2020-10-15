@@ -85,8 +85,18 @@
                 />
               </el-form-item>
 
+              <el-form-item label="所属应用" prop="roles">
+                <el-input v-model="form.relationApp" placeholder="请选择所属应用">
+                 <template slot="append">
+                   <i  style="cursor: pointer;" :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" @click="showTree = !showTree"></i>
+                 </template>
+               </el-input>
+               <div v-if="showTree">
+                 <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+               </div>
+               </el-form-item>
               <!-- 所属应用(角色) app -->
-              <el-form-item
+              <!-- <el-form-item
                 :label="$t('application.applicationtype')"
                 :rules="[
                   { required: true, message: '请选择所属应用',trigger: 'blur'},
@@ -102,7 +112,7 @@
                   ></el-option>
               -->
 
-              </el-form-item>
+              <!-- </el-form-item>  -->
               <!--工程产品、-->
               <!-- <el-form-item label="工程产品">
                 <el-select v-model="form.product" multiple placeholder="请选择">
@@ -346,6 +356,12 @@ export default {
       // 参数
       argu: {},
       Notification: '',
+      showTree:false,
+      allApps: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       productlist: [] // 产品合级
     }
   },
@@ -712,8 +728,18 @@ export default {
         }
       })
     },
+    handleNodeClick(data) {
+        this.showTree = !this.showTree
+        this.addchannel.applicationtText = data.alias
+      },
     // 获取行业信息
     Industry() {
+      this.$axiosWen.get('/roletree').then(res => {
+          console.log(res)
+          this.allApps = res.results
+        }).catch(e => {
+          console.log(e)
+        }),
       this.form.options = []
       var Dict = Parse.Object.extend('Dict')
       var datas = new Parse.Query(Dict)
