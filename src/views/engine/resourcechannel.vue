@@ -151,7 +151,7 @@
           </el-form-item>
 
           <!-- 所属应用(角色) app -->
-          <el-form-item
+          <!-- <el-form-item
             :label="$t('application.applicationtype')"
             :rules="[
               { required: true, message: '请选择所属应用',trigger: 'blur'},
@@ -164,7 +164,17 @@
                 :label="item.name"
                 :value="item.name"/>
             </el-select>
-          </el-form-item>
+          </el-form-item> -->
+          <el-form-item label="所属应用" prop="roles">
+            <el-input v-model="addchannel.applicationtText" placeholder="请选择所属应用">
+             <template slot="append">
+               <i  style="cursor: pointer;" :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" @click="showTree = !showTree"></i>
+             </template>
+           </el-input>
+           <div v-if="showTree">
+             <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+           </div>
+           </el-form-item>
 
           <el-col v-for="(item,index) in arrlist" :span="12" :key="index">
             <el-form-item
@@ -321,7 +331,13 @@ export default {
       channelname: '',
       arrlist: [],
       channelId: '',
-      channelrow: []
+      channelrow: [],
+      showTree:false,
+      allApps: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     }
   },
   mounted() {
@@ -418,8 +434,18 @@ export default {
         }
       )
     },
+    handleNodeClick(data) {
+        this.showTree = !this.showTree
+        this.addchannel.applicationtText = data.alias
+      },
     // 初始化弹框数据
     dialogType() {
+      this.$axiosWen.get('/roletree').then(res => {
+          console.log(res)
+          this.allApps = res.results
+        }).catch(e => {
+          console.log(e)
+        }),
       resourceTypes().then(resultes => {
         this.channelregion = resultes
       })
