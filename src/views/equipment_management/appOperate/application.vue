@@ -434,6 +434,7 @@ export default {
         .then(res => {
           this.appdata = res.results;
           this.appdata.map(item => {
+            console.log(item)
             if(item.tag.appconfig.secret){
               item.isshow = false;
             }
