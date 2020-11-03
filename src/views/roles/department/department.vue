@@ -19,24 +19,24 @@
           </el-table-column>
 
           <el-table-column
-            width="180"
             :label="$t('developer.operation')"
+            width="180"
             align="center"
           >
             <template slot-scope="scope">
               <el-button
                 size="small"
-                @click.native="exportRoletemp(scope.row)"
                 type="primary"
-                >更新模版</el-button
+                @click.stop="exportRoletemp(scope.row)"
+              >更新模版</el-button
               >
               <el-button
                 size="small"
-                @click.native="
+                type="danger"
+                @click.stop="
                   handleDelete(scope.$index, scope.row, roletempList)
                 "
-                type="danger"
-                >删除</el-button
+              >删除</el-button
               >
             </template>
           </el-table-column>
@@ -179,12 +179,13 @@
   </div>
 </template>
 <script>
-const Base64 = require('js-base64').Base64s
+const Base64 = require('js-base64').Base64;
 import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
 import { Parse } from "parse";
 import { eventBus } from "@/api/eventBus";
 export default {
   name: "Department",
+  components: {},
   data() {
     const validatorUrl = (rule, value, callback) => {
       var regStr = /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
@@ -215,7 +216,15 @@ export default {
         graphql: [{ trigger: "blur", validator: validatorUrl }],
         rest: [{ trigger: "blur", validator: validatorUrl }]
       },
-      form: {},
+      form: {
+        "file": "http://127.0.0.1:1250/shapes/upload",
+        "rest": "http://127.0.0.1:5080/iotapi",
+        "topo": "http://127.0.0.1:1350/",
+        "expires": 18000,
+        "graphql": "http://127.0.0.1:5080/iotapi/graphql",
+        "secret": "RTc3MDk4MTgxNjAzMTc1MTUxMDY0",
+        "home":"E:/shuwa/4.1.0/shuwa_data_center/datacenter/file/files"
+      },
       roletempList: [],
       dataMenus: [],
       roleMenuList: [],
@@ -226,7 +235,7 @@ export default {
   computed: {
     permissionTreeData() {
       return this.dataPermissions.filter(father => {
-        let branchArr = [];
+        const branchArr = [];
 
         this.dataPermissions.forEach(child => {
           if (father.objectId == child.parentId) {
@@ -248,7 +257,7 @@ export default {
     },
     menuTreeData() {
       return this.dataMenus.filter(father => {
-        let branchArr = this.dataMenus.filter(
+        const branchArr = this.dataMenus.filter(
           child => father.objectId == child.parentId
         );
 
@@ -259,7 +268,6 @@ export default {
       });
     }
   },
-  components: {},
   mounted() {
     this.gettable();
     this.getMenu();
@@ -271,7 +279,7 @@ export default {
   },
 
   methods: {
-    handleClickRefresh(){
+    handleClickRefresh() {
       const ranNum = Math.ceil(Math.random() * 25)
       this.form.secret = Base64.encode(
         String.fromCharCode(65 + ranNum) +
@@ -342,7 +350,7 @@ export default {
         });
     },
     tableRowClassName({ row, rowIndex }) {
-      //把每一行的索引放进row
+      // 把每一行的索引放进row
 
       row.index = rowIndex;
     },
@@ -355,7 +363,11 @@ export default {
       }
     },
     getDetailmenu(row, column, event, cell) {
-      this.form = row.data.tag.appconfig || [];
+      if (row.data.tag && row.data.tag.appconfig) {
+        this.form = row.data.tag.appconfig
+      } else {
+        this.handleClickRefresh()
+      }
       if (column && column.label == "操作") {
         return;
       }
@@ -404,7 +416,7 @@ export default {
             type: "sussess",
             message: "删除成功"
           }),
-            data.splice(index, 1);
+          data.splice(index, 1);
         })
         .catch(e => {
           this.$message({
@@ -420,10 +432,10 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        let checkrole = [];
-        let checkmenu = [];
-        let selectMenu = this.$refs.menusTree.getCheckedNodes();
-        let selectRermission = this.$refs.permissionTree.getCheckedNodes();
+        const checkrole = [];
+        const checkmenu = [];
+        const selectMenu = this.$refs.menusTree.getCheckedNodes();
+        const selectRermission = this.$refs.permissionTree.getCheckedNodes();
 
         if (
           selectMenu &&
@@ -443,7 +455,10 @@ export default {
         }
 
         var newData = row.data;
-
+        if(!row.data.tag){
+          newData.tag = {}
+        }
+        newData['tag'].appconfig = this.form
         newData.menus = checkmenu;
         newData.rules = checkrole;
 
@@ -465,6 +480,8 @@ export default {
             loading.close();
             this.$message({ message: "更新失败" });
           });
+      }).catch(e=>{
+        console.log(e)
       });
     }
   }
