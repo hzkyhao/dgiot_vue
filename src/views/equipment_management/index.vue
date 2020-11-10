@@ -292,7 +292,7 @@
                     >{{ $t('developer.delete') }}</el-link>
                   </el-popover>
                   <el-link
-                    v-if="scope.row.nodeType==1"
+                    v-if="scope.row.nodeType !=0"
                     :underline="false"
                     type="primary"
                     icon="el-icon-s-unfold"
