@@ -340,6 +340,7 @@
             :rules="rules"
             label-width="150px"
           >
+
             <el-form-item :label="$t('equipment.devicename')" prop="name">
               <el-input v-model="deviceform.name" />
             </el-form-item>
