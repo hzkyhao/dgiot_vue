@@ -246,7 +246,7 @@
         <el-tab-pane label="日志服务" name="eighth">日志服务</el-tab-pane>-->
         <el-tab-pane :label="$t('route.在线调试')" name="ninth"/>
         <!--子设备管理-->
-        <el-tab-pane v-if="isshowchild" :label="$t('equipment.subdevice')" name="children">
+        <el-tab-pane v-if="$route.query.nodeType != '0'" :label="$t('equipment.subdevice')" name="children">
           <div class="childrendevices">
             <el-form :inline="true" :model="childrendevices" class="demo-form-inline" size="small">
               <el-form-item :label="$t('equipment.devicenumber')+':'">
@@ -853,7 +853,7 @@ export default {
         }
 
         this.devicedetail = obj
-        if (this.$route.query.nodeType == 1 && this.ischildren == 'true') {
+        if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
           this.activeName = 'children'
           this.isshowchild = true
           this.getDevices()
@@ -878,7 +878,7 @@ export default {
               this.allProudct = response.results
             })
         } else if (
-          this.$route.query.nodeType == 1 &&
+          this.$route.query.nodeType !=0 &&
           this.ischildren == 'false'
         ) {
           this.isshowchild = true

@@ -47,8 +47,9 @@
               </el-table-column>
               <el-table-column :label="$t('product.nodetype')">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
+
                   <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
+                  <span v-else>{{ $t('product.gateway') }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.classification')">
