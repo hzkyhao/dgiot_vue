@@ -84,6 +84,13 @@
               >{{ $t('product.equipment') }}</el-link>
               <el-link
                 :underline="false"
+                :disabled="scope.row.attributes.config.config.cloneState == true"
+                icon="el-icon-link"
+                type="primary"
+                @click="proudctClone(scope.row)"
+              >备份</el-link>
+              <el-link
+                :underline="false"
                 type="primary"
                 icon="el-icon-view"
                 @click="deviceToDetail(scope.row)"
@@ -108,13 +115,15 @@
                   type="danger"
                 >{{ $t('developer.delete') }}</el-link>
               </el-popover>
-              <!-- <el-link
+      </template></el-table-column></el-table></div>
+
+      <!-- <el-link
                 :underline="false"
                 icon="el-icon-edit"
                 type="success"
                 @click="editorProduct(scope.row)"
               >编 辑</el-link> -->
-            </template>
+</div></div></template>
           </el-table-column>
         </el-table>
       </div>
@@ -345,6 +354,7 @@ import { addGroup } from '@/api/home'
 export default {
   data() {
     return {
+      hashkey: '',
       addGroup: {
         name: ''
       },
@@ -676,6 +686,12 @@ export default {
         this.allTableDate = response
         resultes.map(items => {
           response.map(category => {
+            if (items.attributes.config.config && items.attributes.config.config.cloneState == 'undefined') {
+              console.log(items.attributes.config.config)
+              items.attributes.config.cloneState = false
+            }else{
+              console.log(items.attributes.config.config.cloneState)
+            }
             if (items.attributes.category == category.attributes.type) {
               items.CategoryKey = category.attributes.data.CategoryName
             }
@@ -1057,6 +1073,53 @@ export default {
     productCurrentChange(val) {
       this.start = (val - 1) * this.length
       this.searchProduct()
+    },
+    CloneData(row) {
+      const data = {
+        "category": row.attributes.category,
+        "devType": row.attributes.devType,
+        "name": row.attributes.name,
+        "thing": row.attributes.thing
+      }
+      this.$axiosWen.post('/hash/Product', data).then(res => {
+        const { objectId } = res
+        this.hashkey = objectId
+        if (this.hashkey) {
+          this.$axiosWen.post('/classes/Dict', {
+            data: data,
+            "key": this.hashkey,
+            "type": "Product"
+          }).then(res => {
+            this.$message({
+              type: "success",
+              message: "备份成功"
+            })
+          }).catch(e => {
+            this.$message({
+              type: "error",
+              message: `备份失败,原因${e.error}`
+            })
+          })
+        }
+      }).catch(e => {
+        this.$message({
+          type: "error",
+          message: `key生成失败,原因${e.error}`
+        })
+        console.log(e)
+      })
+    },
+    // 克隆组态
+    proudctClone(row) {
+      row.attributes.config.cloneState = true
+      const config = row
+      this.$axiosWen.put(`classes/Product/${row.id}`, {
+        config: config
+      }).then(res => {
+        if (res) {
+          this.CloneData(row)
+        }
+      }).catch(e => { console.log(e) })
     },
     // 编辑组态
     proudctEdit(row) {

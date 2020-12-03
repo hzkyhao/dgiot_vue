@@ -165,6 +165,7 @@ export default {
   },
   data() {
     return {
+      productObj: [],
       pictLoading: false,
       categoryListOptions: [],
       limit: 10,
@@ -220,6 +221,16 @@ export default {
   destroyed() {}, // 生命周期 - 销毁完成
   activated() {},
   methods: {
+    // 查询product
+    getProduct() {
+      this.$axiosWen.get('/classes/Product').then(res => {
+        this.productObj = res.results
+        console.log(this.productObj)
+      }).catch(e => {
+        this.productObj = []
+        console.log(e, "查询product出错")
+      })
+    },
     // 深度克隆
     treeData(paramData) {
       const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
@@ -234,6 +245,7 @@ export default {
       this.categoryList = []
       var Dict = Parse.Object.extend('Dict')
       var datas = new Parse.Query(Dict)
+      this.getProduct()
       datas.equalTo('data.key', 'category')
       datas.limit(1000)
       datas.find().then(
@@ -262,12 +274,18 @@ export default {
           const data = {
             "category": this.moduleForm.category[0],
             "devType": this.moduleForm.devType,
-            "name": this.moduleForm.name,
-            "thing":{}
+            "name": this.moduleForm.name
           }
           this.$axiosWen.post('/hash/Product', data).then(res => {
             const { objectId } = res
             this.hashkey = objectId
+            this.productObj.forEach(i => {
+              console.log(i)
+              if (i.objectId == this.hashkey) {
+                console.log(i.thing)
+                data.thing = i.thing
+              }
+            })
             if (this.hashkey) {
               this.$axiosWen.post('/classes/Dict', {
                 data: data,
@@ -275,7 +293,7 @@ export default {
                 "type": this.moduleForm.type
               }).then(res => {
                 this.$message({
-                  type: "sussess",
+                  type: "success",
                   message: "新建物模型成功"
                 })
                 this.add_module = false
@@ -357,7 +375,7 @@ export default {
         .then(res => {
           rows.splice(index, 1);
           this.$message({
-            type: "sussess",
+            type: "success",
             message: "删除成功"
           })
         })
