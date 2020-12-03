@@ -433,6 +433,11 @@ export const constantRouterMap = [
         meta: { title: "性能监控", icon: "platform" }
       },
       {
+        path: "/modules",
+        meta: { title: "物模型管理" },
+        component: () => import("@/views/systemmanage/modules")
+      },
+      {
         path: "/roles/product",
         name: "产品管理",
         component: () => import("@/views/equipment_management/devproduct"),
