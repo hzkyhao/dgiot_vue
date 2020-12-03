@@ -271,7 +271,7 @@ export default {
                 user.roles[0] ? user.roles[0].name : ''
               )
               this.getNavigation()
-              // this.getApihub()
+              this.getApihub()
             })
             .catch(error => {
               loading.close()
