@@ -413,7 +413,7 @@ export default {
         .delete("/classes/Dict/" + row.objectId)
         .then(res => {
           this.$message({
-            type: "sussess",
+            type: "success",
             message: "删除成功"
           }),
           data.splice(index, 1);
