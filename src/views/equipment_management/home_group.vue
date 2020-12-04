@@ -1144,7 +1144,7 @@ export default {
         // eslint-disable-next-line no-redeclare
         var topoUrl = this.$globalConfig.localTopoUrl
       }
-      var url = `${topoUrl}/#/view/${row.id}`
+      var url = `${topoUrl}/#/views/${row.id}`
       window.open(url, '__blank')
     },
     // 导出
