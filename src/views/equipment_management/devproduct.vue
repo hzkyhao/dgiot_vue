@@ -1003,7 +1003,7 @@ export default {
         var topoUrl = this.$globalConfig.localTopoUrl
       }
       // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#/view/${row.id}`
+      var url = `${topoUrl}/#/views/${row.id}`
       window.open(url, '__blank')
     },
     // 跳转到组态大屏
