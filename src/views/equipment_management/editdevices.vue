@@ -877,13 +877,18 @@ export default {
               // this.productListForReport = response.results
               this.allProudct = response.results
             })
-        } else if (
-          this.$route.query.nodeType !=0 &&
+        }
+        //  else if (
+        //   this.$route.query.nodeType !=0 &&
+        //   this.ischildren == 'false'
+        // ) {
+        //   this.isshowchild = true
+        // }
+        else {
+          console.log("this.$route.query.nodeType",this.$route.query.nodeType)
+          console.log("this.ischildren",this.ischildren)
           this.ischildren == 'false'
-        ) {
           this.isshowchild = true
-        } else {
-          this.isshowchild = false
         }
         // 初始化物模型数据
         this.isupdate = true
