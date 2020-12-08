@@ -902,43 +902,75 @@ export default {
 
       console.log('实时刷新')
 
-      getDev(this.devicedetail.devaddr, this.devicedetail.productid)
+//this.deviceid 李宏杰修改 
+      getDev(this.deviceid, this.devicedetail.productid)
         .then(response => {
           if (response) {
             if (response.results && response.results.length != 0) {
               vm.thirdData.unshift({
                 time: timestampToTime(Math.ceil(new Date().getTime() / 1000)),
-                value: JSON.stringify(response)
+                value: JSON.stringify(response.results)
               })
             }
             vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
-
             // 动态$set,数据更新试图也一样更新，如果只是遍历的话试图回更新过慢
-
             if (vm.properties && response.results) {
-              vm.properties.map((item, index) => {
-                response.results.map((updatedata, updatedindex) => {
-                  if (item.identifier == updatedata.identifier) {
-                    var obj = response.results[updatedindex]
-                    vm.$set(vm.properties, index, obj)
+             // vm.properties.map((item, index) => {
+              //   response.results.map((updatedata, updatedindex) => {
+              //   //  for ( var i = 0; i < response.results. )
+              //   console.log(updatedata[item.identifier])
+              //     if (item.identifier == updatedata.identifier) {
+              //       var obj = response.results[updatedindex]
+              //       vm.$set(vm.properties[index], 'value', updatedata[item.identifier])
+              //     }
+              //  })
+              // })
+             // console.log(vm.properties)
+             vm.properties.map((item, index) => {
+                for (var key in response.results[0]) {
+                  if( item.identifier.toLowerCase() == key.toLowerCase() ){
+                  //    console.log(key,vm.properties[index], response.results[0][key])
+                      vm.$set(vm.properties[index], 'value', response.results[0][key])
                   }
-                })
-              })
+                      }
+             })
 
-              for (var key in dataobj) {
-                response.results.map(items => {
-                  if (key == items.identifier) {
-                    dataobj[key].expectedData.push(items.value)
-                    dataobj[key].actualData.push(
-                      timestampToTime(items.time).substring(11)
-                    )
-                    if (dataobj[key].results && dataobj[key].results.length > 0) {
+             for (var key in dataobj){
+               for (var item in response.results[0]) {
+                 if( key.toLowerCase() == item.toLowerCase() ){
+                    dataobj[key].expectedData.push(response.results[0][item])
+                    console.log(response.results[0][item])
+                     dataobj[key].actualData.push(response.results[0]['createdat'].substring(0 ,11))
+                      if (dataobj[key].results && dataobj[key].results.length > 0) {
                       dataobj[key].results.unshift(items)
                     }
-                    dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
-                  }
+                         //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
+                       dataobj[key].max =100
+
+                 }
+               }
+             }
+
+              // for (var key in dataobj) {
+                response.results.map(items => {
+                 
+                //   console.log('items',items, key.toLowerCase() ,items.identifier)
+                //    // dataobj[key].expectedData.push(items.value)
+                //    dataobj[key].expectedData.push(25)
+                //     dataobj[key].actualData.push(
+                //      items.createdat
+                //     )
+                //     console.log(dataobj[key].actualData)
+                //     if (dataobj[key].results && dataobj[key].results.length > 0) {
+                //       dataobj[key].results.unshift(items)
+                //     }
+                //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
+                //      dataobj[key].max =100
+                // //  }
+
+                console.log("items items", items)
                 })
-              }
+              // }
             }
           }
         })
@@ -952,13 +984,14 @@ export default {
       this.datadialogVisible = true
       var lineChartData = {}
       for (var key in dataobj) {
+        console.log("dataobj",dataobj)
         if (item.identifier == key) {
           this.datafordetail = dataobj[key].data
           lineChartData = dataobj[key]
           this.dataDeviceTotal = dataobj[key].data
         }
       }
-      console.log(lineChartData)
+      console.log('lineChartData===',lineChartData)
       this.lineChartData = lineChartData
     },
     // 定时器启动
@@ -1007,6 +1040,7 @@ export default {
       var devices = new Parse.Query(Devices)
       devices.equalTo('product', val)
       devices.notEqualTo('objectId', this.deviceid)
+      
       devices.notEqualTo('parentId', this.deviceid)
       devices.skip((this.dirstart - 1) * this.dirlength)
       devices.limit(this.dirlength)

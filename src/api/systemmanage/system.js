@@ -67,7 +67,7 @@ export function Compile(code) {
 }
 export function getDev(addr, productId) {
   return request({
-    url: `/device/${productId}/${addr}?keys=last_row(*)`,
+    url: `/device/${addr}?order=createdAt&limit=10&skip=0&keys=last_row(*)`,
     method: 'get',
     params: {
 
