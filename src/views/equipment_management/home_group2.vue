@@ -706,12 +706,14 @@ export default {
              if(items.attributes.config.config){
                console.log(items.attributes.config.config)
              }else{
-              items.attributes.config.config = []
+              items.attributes.config.config = {}
              }
               if (items.attributes.config.config && items.attributes.config.config.cloneState == undefined) {
                 items.attributes.config.config.cloneState = false
               } else {
-                console.log(items.attributes.config.config.cloneState)
+                items.attributes.config.config = {}
+              items.attributes.config.config.cloneState = false
+              console.log(items.attributes.config.cloneState)
               }
               // items.attributes.config['cloneState'] ? items.attributes.config['cloneState'] : false
               items.CategoryKey = category.attributes.data.CategoryName
@@ -850,6 +852,7 @@ export default {
     },
     // 添加产品弹窗
     addproduct() {
+      console.log(new Date())
       this.dialogFormVisible = true
     },
     getParent(id, origin, returnarr) {

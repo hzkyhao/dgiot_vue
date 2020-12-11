@@ -711,6 +711,7 @@ export default {
     },
     // 添加产品弹窗
     addproduct() {
+      console.log(new Date())
       this.dialogFormVisible = true
     },
     getParent(id, origin, returnarr) {

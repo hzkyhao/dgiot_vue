@@ -1,4 +1,4 @@
-
+<!--f27f2683b124-->
 <template>
   <div class="editdevices">
     <div class="editheader">
@@ -194,7 +194,7 @@
 
                   <div class="ta">
                     <span class="fontSize">{{ $t('equipment.updatetime')+':' }}</span>
-                    <span v-if="item.time" class="fontSize">{{ timestampToTime(item.time) }}</span>
+                    <span v-if="item.createdat" class="fontSize" @click="print(properties)">{{ item.createdat.substring(0, 19) }}</span>
                   </div>
                   <div class="ta">
                     <el-link :underline="false" type="primary" @click="dataDetail(item)">查看数据</el-link>
@@ -661,6 +661,9 @@ export default {
     this.timer = null
   },
   methods: {
+    print(item) {
+      console.log(item)
+    },
     tabHandleClick(tab) {
       if (tab.name == 'ninth') {
         this.$router.push({
@@ -769,6 +772,8 @@ export default {
 
         obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'attributes.updatedAt'))
         obj.ip = this.$objGet(resultes, 'attributes.ip')
+
+        console.log(" obj.updatedAt", obj.updatedAt)
 
         obj.basedata = JSON.stringify(resultes.attributes.basedata)
         obj.DeviceName = resultes.attributes.name
@@ -885,8 +890,8 @@ export default {
         //   this.isshowchild = true
         // }
         else {
-          console.log("this.$route.query.nodeType",this.$route.query.nodeType)
-          console.log("this.ischildren",this.ischildren)
+          console.log("this.$route.query.nodeType", this.$route.query.nodeType)
+          console.log("this.ischildren", this.ischildren)
           this.ischildren == 'false'
           this.isshowchild = true
         }
@@ -898,11 +903,32 @@ export default {
     },
     // 实时刷新
     Update() {
+      function deteleObject(obj) {
+        var uniques = [];
+        var stringify = {};
+        for (var i = 0; i < obj.length; i++) {
+          var keys = Object.keys(obj[i]);
+          keys.sort(function(a, b) {
+            return (Number(a) - Number(b));
+          });
+          var str = '';
+          for (var j = 0; j < keys.length; j++) {
+            str += JSON.stringify(keys[j]);
+            str += JSON.stringify(obj[i][keys[j]]);
+          }
+          if (!stringify.hasOwnProperty(str)) {
+            uniques.push(obj[i]);
+            stringify[str] = true;
+          }
+        }
+        uniques = uniques;
+        return uniques;
+      }
       var vm = this
 
       console.log('实时刷新')
 
-//this.deviceid 李宏杰修改 
+      // this.deviceid 李宏杰修改
       getDev(this.deviceid, this.devicedetail.productid)
         .then(response => {
           if (response) {
@@ -915,7 +941,7 @@ export default {
             vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
             // 动态$set,数据更新试图也一样更新，如果只是遍历的话试图回更新过慢
             if (vm.properties && response.results) {
-             // vm.properties.map((item, index) => {
+              // vm.properties.map((item, index) => {
               //   response.results.map((updatedata, updatedindex) => {
               //   //  for ( var i = 0; i < response.results. )
               //   console.log(updatedata[item.identifier])
@@ -925,35 +951,33 @@ export default {
               //     }
               //  })
               // })
-             // console.log(vm.properties)
-             vm.properties.map((item, index) => {
+              // console.log(vm.properties)
+              vm.properties.map((item, index) => {
                 for (var key in response.results[0]) {
-                  if( item.identifier.toLowerCase() == key.toLowerCase() ){
-                  //    console.log(key,vm.properties[index], response.results[0][key])
-                      vm.$set(vm.properties[index], 'value', response.results[0][key])
+                  if (item.identifier.toLowerCase() == key.toLowerCase()) {
+                    item.createdat = response.results[0].createdat
+                    //    console.log(key,vm.properties[index], response.results[0][key])
+                    vm.$set(vm.properties[index], 'value', response.results[0][key])
                   }
-                      }
-             })
+                }
+              })
 
-             for (var key in dataobj){
-               for (var item in response.results[0]) {
-                 if( key.toLowerCase() == item.toLowerCase() ){
-                    dataobj[key].expectedData.push(response.results[0][item])
-                    console.log(response.results[0][item])
-                     dataobj[key].actualData.push(response.results[0]['createdat'].substring(0 ,11))
-                      if (dataobj[key].results && dataobj[key].results.length > 0) {
-                      dataobj[key].results.unshift(items)
+              for (var key in dataobj) {
+                for (var item in response.results[0]) {
+                  if (key.toLowerCase() == item.toLowerCase()) {
+                    dataobj[key].expectedData = Array.from(new Set(dataobj[key].expectedData.push(response.results[0][item])))
+                    dataobj[key].actualData = Array.from(new Set(dataobj[key].actualData.push(response.results[0]['createdat'].substring(0, 19))))
+                    if (dataobj[key].results && dataobj[key].results.length > 0) {
+                      dataobj[key].results = Array.from(new Set(dataobj[key].results.unshift(item)))
                     }
-                         //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
-                       dataobj[key].max =100
-
-                 }
-               }
-             }
+                    //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
+                    // dataobj[key].max =
+                  }
+                }
+              }
 
               // for (var key in dataobj) {
-                response.results.map(items => {
-                 
+              response.results.map(items => {
                 //   console.log('items',items, key.toLowerCase() ,items.identifier)
                 //    // dataobj[key].expectedData.push(items.value)
                 //    dataobj[key].expectedData.push(25)
@@ -969,7 +993,7 @@ export default {
                 // //  }
 
                 console.log("items items", items)
-                })
+              })
               // }
             }
           }
@@ -984,14 +1008,14 @@ export default {
       this.datadialogVisible = true
       var lineChartData = {}
       for (var key in dataobj) {
-        console.log("dataobj",dataobj)
+        console.log("dataobj", dataobj)
         if (item.identifier == key) {
           this.datafordetail = dataobj[key].data
           lineChartData = dataobj[key]
           this.dataDeviceTotal = dataobj[key].data
         }
       }
-      console.log('lineChartData===',lineChartData)
+      console.log('lineChartData===', lineChartData)
       this.lineChartData = lineChartData
     },
     // 定时器启动
@@ -1040,7 +1064,7 @@ export default {
       var devices = new Parse.Query(Devices)
       devices.equalTo('product', val)
       devices.notEqualTo('objectId', this.deviceid)
-      
+
       devices.notEqualTo('parentId', this.deviceid)
       devices.skip((this.dirstart - 1) * this.dirlength)
       devices.limit(this.dirlength)

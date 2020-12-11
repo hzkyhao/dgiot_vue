@@ -115,16 +115,15 @@
                   type="danger"
                 >{{ $t('developer.delete') }}</el-link>
               </el-popover>
-      </template></el-table-column></el-table></div>
+            </template>
+          </el-table-column>
 
-      <!-- <el-link
+          <!-- <el-link
                 :underline="false"
                 icon="el-icon-edit"
                 type="success"
                 @click="editorProduct(scope.row)"
               >编 辑</el-link> -->
-</div></div></template>
-          </el-table-column>
         </el-table>
       </div>
       <div class="elpagination" style="margin-top:20px;">
@@ -689,8 +688,10 @@ export default {
             if (items.attributes.config.config && items.attributes.config.config.cloneState == 'undefined') {
               console.log(items.attributes.config.config)
               items.attributes.config.cloneState = false
-            }else{
-              console.log(items.attributes.config.config.cloneState)
+            } else {
+              items.attributes.config.config = {}
+              items.attributes.config.config.cloneState = false
+              console.log(items.attributes.config.cloneState)
             }
             if (items.attributes.category == category.attributes.type) {
               items.CategoryKey = category.attributes.data.CategoryName
