@@ -703,17 +703,17 @@ export default {
         resultes.map(items => {
           response.map(category => {
             if (items.attributes.category == category.attributes.type) {
-             if(items.attributes.config.config){
-               console.log(items.attributes.config.config)
-             }else{
-              items.attributes.config.config = {}
-             }
+              if (items.attributes.config.config) {
+                console.log(items.attributes.config.config)
+              } else {
+                items.attributes.config.config = {}
+              }
               if (items.attributes.config.config && items.attributes.config.config.cloneState == undefined) {
                 items.attributes.config.config.cloneState = false
               } else {
                 items.attributes.config.config = {}
-              items.attributes.config.config.cloneState = false
-              console.log(items.attributes.config.cloneState)
+                items.attributes.config.config.cloneState = false
+                console.log(items.attributes.config.cloneState)
               }
               // items.attributes.config['cloneState'] ? items.attributes.config['cloneState'] : false
               items.CategoryKey = category.attributes.data.CategoryName
