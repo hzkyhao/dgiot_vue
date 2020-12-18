@@ -127,6 +127,11 @@ export const constantRouterMap = [
             component: () => import("@/views/systemmanage/appmarage")
           },
           {
+            path: "expandprogram",
+            meta: { title: "拓展编程" },
+            component: () => import("@/views/systemmanage/expandprogram")
+          },
+          {
             path: "/product",
             name: "产品管理",
             component: () => import("@/views/equipment_management/devproduct"),
