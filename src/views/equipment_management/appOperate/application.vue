@@ -62,9 +62,9 @@
                       style="margin-left:10px;position:absolute;top:30px"
                       round
                       @click="xianshi(item.objectId)"
-                      >完整密钥</el-button
+                    >完整密钥</el-button
                     >
-                </i>
+                  </i>
                 </dd>
                 <dt>应用名称</dt>
                 <dd v-if="item.name">{{ item.name }}</dd>
@@ -78,8 +78,10 @@
                 <strong>操作:</strong>
               </p>
               <p class="editor">
-                <el-link type="primary" @click="updateapp(item)"
-                  >修改应用</el-link
+                <el-link
+                  type="primary"
+                  @click="updateapp(item)"
+                >修改应用</el-link
                 >
               </p>
               <!-- <p class="editor">
@@ -90,13 +92,17 @@
                 >
               </p> -->
               <p class="editor">
-                <el-link type="primary" @click="nodeDeployment(item)"
-                  >节点部署</el-link
+                <el-link
+                  type="primary"
+                  @click="nodeDeployment(item)"
+                >节点部署</el-link
                 >
               </p>
               <p class="editor">
-                <el-link type="primary" @click="applicationDeployment(item)"
-                  >应用部署</el-link
+                <el-link
+                  type="primary"
+                  @click="applicationDeployment(item)"
+                >应用部署</el-link
                 >
               </p>
             </div>
@@ -148,6 +154,20 @@
               placheholder="请输入应用时间"
             />
             <span style="margin-left:5px;">秒</span>
+          </el-form-item>
+          <el-form-item label="word预览服务器">
+            <el-input
+              v-model="form.wordpreview"
+              style="width:80%"
+              placheholder="请输入word预览服务器地址"
+            />
+          </el-form-item>
+          <el-form-item label="word生产服务器">
+            <el-input
+              v-model="form.wordproduct"
+              style="width:80%"
+              placheholder="请输入word生产服务器地址"
+            />
           </el-form-item>
 
           <el-form-item label="文件资源" prop="file">
@@ -227,6 +247,20 @@
             />
             <span style="margin-left:5px;">秒</span>
           </el-form-item>
+          <el-form-item label="word预览服务器">
+            <el-input
+              v-model="form1.wordpreview"
+              style="width:80%"
+              placheholder="请输入word预览服务器地址"
+            />
+          </el-form-item>
+          <el-form-item label="word生产服务器">
+            <el-input
+              v-model="form1.wordproduct"
+              style="width:80%"
+              placheholder="请输入word生产服务器地址"
+            />
+          </el-form-item>
 
           <el-form-item label="文件资源" prop="file">
             <el-input
@@ -271,8 +305,10 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="update = false">取 消</el-button>
-        <el-button type="primary" @click="updatedDefine('form1')"
-          >确 定</el-button
+        <el-button
+          type="primary"
+          @click="updatedDefine('form1')"
+        >确 定</el-button
         >
       </span>
     </el-dialog>
@@ -310,7 +346,9 @@ export default {
         topo: "",
         secret: "",
         desc: "",
-        home: ""
+        home: "",
+        wordpreview: 'http://pump.iotn2n.com:8012',
+        wordproduct: 'http://pump.iotn2n.com'
       },
       dialogVisible: false,
       form: {
@@ -322,7 +360,9 @@ export default {
         rest: "http://cad.iotn2n.com:5080/iotapi",
         topo: "http://shapes.iotn2n.com/",
         secret: "",
-        home: "D:/shuwa/shuwa_data_center"
+        home: "D:/shuwa/shuwa_data_center",
+        wordpreview: "http://pump.iotn2n.com:8012",
+        wordproduct: "http://pump.iotn2n.com/"
       },
       Rule: {
         desc: [
@@ -435,7 +475,7 @@ export default {
           this.appdata = res.results;
           this.appdata.map(item => {
             console.log(item)
-            if(item.tag.appconfig.secret){
+            if (item.tag.appconfig.secret) {
               item.isshow = false;
             }
           });
@@ -550,7 +590,9 @@ export default {
         rest: this.form1.rest,
         topo: this.form1.topo,
         home: this.form1.home,
-        secret: this.form1.secret
+        secret: this.form1.secret,
+        wordpreview: this.form1.home,
+        wordproduct: this.form1.secret
       };
       var tag = {
         appconfig: {}
@@ -566,7 +608,7 @@ export default {
             type: "success",
             message: "应用修改成功"
           });
-          this.getAppdetail(10,0)
+          this.getAppdetail(10, 0)
           this.update = false;
         })
         .catch(e => {

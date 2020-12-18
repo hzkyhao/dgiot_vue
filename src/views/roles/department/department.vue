@@ -1,3 +1,4 @@
+/*
 <template>
   <div class="department">
     <el-row :gutter="20">
@@ -132,7 +133,20 @@
               />
               <span style="margin-left:5px;">秒</span>
             </el-form-item>
-
+            <el-form-item label="word预览服务器">
+              <el-input
+                v-model="form.wordpreview"
+                style="width:80%"
+                placheholder="请输入word预览服务器地址"
+              />
+            </el-form-item>
+            <el-form-item label="word生产服务器">
+              <el-input
+                v-model="form.wordproduct"
+                style="width:80%"
+                placheholder="请输入word生产服务器地址"
+              />
+            </el-form-item>
             <el-form-item label="文件资源" prop="file">
               <el-input
                 v-model="form.file"
@@ -221,9 +235,11 @@ export default {
         "rest": "http://127.0.0.1:5080/iotapi",
         "topo": "http://127.0.0.1:1350/",
         "expires": 18000,
+        "wordpreview": "http://pump.iotn2n.com:8012",
+        "wordproduct": "http://pump.iotn2n.com/",
         "graphql": "http://127.0.0.1:5080/iotapi/graphql",
         "secret": "RTc3MDk4MTgxNjAzMTc1MTUxMDY0",
-        "home":"E:/shuwa/4.1.0/shuwa_data_center/datacenter/file/files"
+        "home": "E:/shuwa/4.1.0/shuwa_data_center/datacenter/file/files"
       },
       roletempList: [],
       dataMenus: [],
@@ -455,7 +471,7 @@ export default {
         }
 
         var newData = row.data;
-        if(!row.data.tag){
+        if (!row.data.tag) {
           newData.tag = {}
         }
         newData['tag'].appconfig = this.form
@@ -480,7 +496,7 @@ export default {
             loading.close();
             this.$message({ message: "更新失败" });
           });
-      }).catch(e=>{
+      }).catch(e => {
         console.log(e)
       });
     }
