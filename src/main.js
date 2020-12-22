@@ -33,6 +33,11 @@ import Cookies from 'js-cookie'
 // import lang from '@/common/lang' // 中英文翻译
 import BaiduMap from 'vue-baidu-map'
 import 'echarts-liquidfill'
+import VueCodemirror from 'vue-codemirror'
+
+import 'codemirror/lib/codemirror.css'
+
+Vue.use(VueCodemirror)
 Vue.use(BaiduMap, {
   ak: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG' // 官方提供的ak秘钥
 })

@@ -21,16 +21,17 @@ serviceWen.interceptors.request.use(
     }
     config.headers["Accept"] = "application/json";
     config.headers["Content-Type"] = contentType;
-
+    config.headers["sessionToken"] = Cookies.get("sessionToken");
     // console.log('config.url', config.url)
 
-    if (config.url.indexOf("classes/") != -1) {
-      config.headers["sessionToken"] = Cookies.get("sessionToken");
-    } else {
-      // 接口用
-
-      config.headers["sessionToken"] = Cookies.get("sessionToken");
-    }
+    // if (config.url.indexOf("classes/") != -1) {
+    //   config.headers["sessionToken"] = Cookies.get("sessionToken");
+    //   console.log( config.headers["sessionToken"])
+    // } else {
+    //   // 接口用
+    //
+    //   config.headers["sessionToken"] = Cookies.get("sessionToken");
+    // }
 
     return config;
   },
