@@ -58,12 +58,13 @@
               <el-button
                 size="mini"
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
+               
               >调测</el-button
               >
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleDelete(scope.$index, scope.row, 2)"
+                @click="handleRelease(scope.$index,scope.row.type, scope.row.mod)"
               >发布</el-button
               >
               <el-button
@@ -182,6 +183,7 @@ export default {
     };
 
     return {
+      fullscreenLoading: false,
       rules: {
         name: [{ required: true, validator: validCode, trigger: "blur" }],
         language: [
@@ -252,8 +254,8 @@ export default {
       enableSnippets: true,
       enableLiveAutocompletion: true // 设置自动提示
     });
-    this.Industry();
-    this.getAllunit();
+    // this.Industry();
+    // this.getAllunit();
     this.getAllDict();
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName;
@@ -266,9 +268,10 @@ export default {
         .then(_ => {
           this.$axiosWen
             .delete("/exproto", {
-              data: {
+              params: {
                 type: type,
-                mod: mod
+                mod: mod,
+                version :"debug",
               }
             })
             .then(res => {
@@ -284,24 +287,56 @@ export default {
 
     //调试api
     handleTest(index, Rtype, mod){
+     
       let mData = {
-                code: editor.getValue(),
+                code: Base64.encode(editor.getValue()),
                 mod: mod,
-                swagger: this.itemSwagger,
-                type:type
+                swagger: JSON.parse(this.itemSwagger),
+                type:Rtype
             };
-      console.log('itemSwagger==='+ this.itemSwagger);
+      console.log('itemSwagger===' ,mData);
         this.$axiosWen
-            .put("/exproto",  Base64.encode(mData))
+            .put("/exproto",  mData)
             .then(res => {
-              console.log(res);
-              this.AllDict.splice(index, 1);
+              console.log(res.results);
+             editor2.setValue( Base64.decode( res.results ) )
+             this.$message({
+               showClose: true,
+               message: '调测api成功',
+               type: 'success'
+              });
             })
             .catch(e => {
               console.log(e);
+             this.$message.error('api有错误,请检查');
             })
     },
 
+    //发布api
+     handleRelease(index, Rtype, mod){
+       
+      let mData = {
+                code: Base64.encode(editor.getValue()),
+                mod: mod,
+                swagger: JSON.parse(this.itemSwagger),
+                type:Rtype
+            };
+      console.log('itemSwagger===' ,mData);
+        this.$axiosWen
+            .post("/release_exproto",  mData)
+            .then(res => {
+              console.log(res);
+              this.$message({
+                showClose: true,
+                message: '发布api成功',
+                type: 'success'
+            });
+            })
+            .catch(e => {
+              console.log(e);
+              this.$message.error('api有错误,请检查');
+            })
+    },
     /**
      *
      * @param addApi
@@ -317,85 +352,73 @@ export default {
       this.$refs[form].validate(valid => {
         const languageList = {
           python:
-            "IyBjb2Rpbmc9dXRmOAppbXBvcnQgc3lzCmltcG9ydCBvcwppbXBvcnQgcmVxdWVzdHMKaW1wb3J0IGpzb24KaW1wb3J0IGJhc2U2NAppbXBvcnQgbWF0cGxvdGxpYi5weXBsb3QgYXMgcGx0CmZyb20gcHlsYWIgaW1wb3J0IG1wbAppbXBvcnQgbWF0aAppbXBvcnQgdGltZQoKcyA9IHJlcXVlc3RzLnNlc3Npb24oKQpob3N0ID0gJ3B1bXAuaW90bjJuLmNvbScKCiIiIuWujOaIkOaLn+WQiOabsue6v+WPguaVsOiuoeeul+WJjeebuOW6lOWPmOmHj+eahOiuoeeulyIiIgpkZWYgcG9seW5vbWlhbF9maXR0aW5nKGRhdGFfeCxkYXRhX3kpOgogICAgc2l6ZT1sZW4oZGF0YV94KQogICAgaT0wCiAgICBzdW1feCA9IDAKICAgIHN1bV9zcWFyZV94ID0wCiAgICBzdW1fdGhpcmRfcG93ZXJfeCA9IDAKICAgIHN1bV9mb3VyX3Bvd2VyX3ggPSAwCiAgICBhdmVyYWdlX3ggPSAwCiAgICBhdmVyYWdlX3kgPSAwCiAgICBzdW1feSA9IDAKICAgIHN1bV94eSA9IDAKICAgIHN1bV9zcWFyZV94eSA9IDAKICAgIHdoaWxlIGk8c2l6ZToKICAgICAgICBzdW1feCArPSBkYXRhX3hbaV0KICAgICAgICBzdW1feSArPSBkYXRhX3lbaV0KICAgICAgICBzdW1fc3FhcmVfeCArPSBtYXRoLnBvdyhkYXRhX3hbaV0sMikKICAgICAgICBzdW1fdGhpcmRfcG93ZXJfeCArPW1hdGgucG93KGRhdGFfeFtpXSwzKQogICAgICAgIHN1bV9mb3VyX3Bvd2VyX3ggKz1tYXRoLnBvdyhkYXRhX3hbaV0sNCkKICAgICAgICBzdW1feHkgKz1kYXRhX3hbaV0qZGF0YV95W2ldCiAgICAgICAgc3VtX3NxYXJlX3h5ICs9bWF0aC5wb3coZGF0YV94W2ldLDIpKmRhdGFfeVtpXQogICAgICAgIGkgKz0gMTsKICAgIGF2ZXJhZ2VfeD1zdW1feC9zaXplCiAgICBhdmVyYWdlX3k9c3VtX3kvc2l6ZQogICAgcmV0dXJuIFtbc2l6ZSwgc3VtX3gsIHN1bV9zcWFyZV94LCBzdW1feV0KICAgICAgICAsIFtzdW1feCwgc3VtX3NxYXJlX3gsIHN1bV90aGlyZF9wb3dlcl94LCBzdW1feHldCiAgICAgICAgLCBbc3VtX3NxYXJlX3gsc3VtX3RoaXJkX3Bvd2VyX3gsc3VtX2ZvdXJfcG93ZXJfeCxzdW1fc3FhcmVfeHldXQoKCiIiIuWujOaIkOaLn+WQiOabsue6v+WPguaVsOeahOiuoeeulwog5YW25Lit6Kej5pa556iL55qE5pe25YCZ77yM5Yip55So6auY5pav5raI5YWD5rOV6K6h566X55u45bqU55qE5Y+C5pWw5YC8CiIiIgpkZWYgY2FsY3VsYXRlX3BhcmFtZXRlcihkYXRhKToKICAgICNp55So5p2l5o6n5Yi25YiX5YWD57Sg77yMbGluZeaYr+S4gOihjOWFg+e0oCxq55So5p2l5o6n5Yi25b6q546v5qyh5pWwLGRhdGFz55So5p2l5a2Y5YKo5bGA6YOo5Y+Y6YeP44CC5L+d5a2Y5L+u5pS55ZCO55qE5YC8CiAgICBpID0gMDsKICAgIGogPSAwOwogICAgbGluZV9zaXplID0gbGVuKGRhdGEpCgogICAgI+WwhuihjOWIl+W8j+WPmOaNouS4uuS4iuS4ieinkuihjOWIl+W8jwogICAgd2hpbGUgaiA8IGxpbmVfc2l6ZS0xOgogICAgICAgIGxpbmUgPSBkYXRhW2pdCiAgICAgICAgdGVtcCA9IGxpbmVbal0KICAgICAgICB0ZW1wbGV0ZT1bXQogICAgICAgIGZvciB4IGluIGxpbmU6CiAgICAgICAgICAgIHg9eC90ZW1wCiAgICAgICAgICAgIHRlbXBsZXRlLmFwcGVuZCh4KQogICAgICAgIGRhdGFbal09dGVtcGxldGUKICAgICAgICAjZmxhZ+agh+W/l+W6lOivpei/m+ihjOa2iOWFg+eahOihjOaVsAogICAgICAgIGZsYWcgPSBqKzEKICAgICAgICB3aGlsZSBmbGFnIDwgbGluZV9zaXplOgogICAgICAgICAgICB0ZW1wbGV0ZTEgPSBbXQogICAgICAgICAgICB0ZW1wMT1kYXRhW2ZsYWddW2pdCiAgICAgICAgICAgIGkgPSAwCiAgICAgICAgICAgIGZvciB4MSBpbiBkYXRhW2ZsYWddOgogICAgICAgICAgICAgICAgaWYgeDEhPTA6CiAgICAgICAgICAgICAgICAgICAgeDEgPSB4MS0odGVtcDEqdGVtcGxldGVbaV0pCiAgICAgICAgICAgICAgICAgICAgdGVtcGxldGUxLmFwcGVuZCh4MSkKICAgICAgICAgICAgICAgIGVsc2U6CiAgICAgICAgICAgICAgICAgICAgdGVtcGxldGUxLmFwcGVuZCgwKQogICAgICAgICAgICAgICAgaSArPSAxCiAgICAgICAgICAgIGRhdGFbZmxhZ10gPSB0ZW1wbGV0ZTEKICAgICAgICAgICAgZmxhZyArPTEKICAgICAgICBqICs9IDEKCgogICAgI+axguebuOW6lOeahOWPguaVsOWAvAogICAgcGFyYW1ldGVycz1bXQogICAgaT1saW5lX3NpemUtMQogICAgI2rmoIfor4blh4/ljrvlhYPntKDkuKrmlbAKICAgICNmbGFnX3JvbOagh+ivhumZpOmCo+S4gOWIlwogICAgZmxhZ19qPTAKICAgIHJvbF9zaXplPWxlbihkYXRhWzBdKQogICAgZmxhZ19yb2w9cm9sX3NpemUtMgogICAgI+iOt+W+l+ino+eahOS4quaVsAogICAgd2hpbGUgaT49MDoKICAgICAgICBvcGVyYXRlX2xpbmUgPSBkYXRhW2ldCiAgICAgICAgaWYgaT09bGluZV9zaXplLTE6CiAgICAgICAgICAgIHBhcmFtZXRlcj1vcGVyYXRlX2xpbmVbcm9sX3NpemUtMV0vb3BlcmF0ZV9saW5lW2ZsYWdfcm9sXQogICAgICAgICAgICBwYXJhbWV0ZXJzLmFwcGVuZChwYXJhbWV0ZXIpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgZmxhZ19qPShyb2xfc2l6ZS1mbGFnX3JvbC0yKQogICAgICAgICAgICB0ZW1wMj1vcGVyYXRlX2xpbmVbcm9sX3NpemUtMV0KICAgICAgICAgICAgI3Jlc3VsdF9mbGFn5Li66K6/6Zeu5bey5rGC5Ye66Kej55qE5qCH5b+XCiAgICAgICAgICAgIHJlc3VsdF9mbGFnPTAKICAgICAgICAgICAgd2hpbGUgZmxhZ19qPjA6CiAgICAgICAgICAgICAgICB0ZW1wMi09b3BlcmF0ZV9saW5lW2ZsYWdfcm9sK2ZsYWdfal0qcGFyYW1ldGVyc1tyZXN1bHRfZmxhZ10KICAgICAgICAgICAgICAgIHJlc3VsdF9mbGFnKz0xCiAgICAgICAgICAgICAgICBmbGFnX2otPTEKICAgICAgICAgICAgcGFyYW1ldGVyPXRlbXAyL29wZXJhdGVfbGluZVtmbGFnX3JvbF0KICAgICAgICAgICAgcGFyYW1ldGVycy5hcHBlbmQocGFyYW1ldGVyKQogICAgICAgIGZsYWdfcm9sLT0xCiAgICAgICAgaS09MQogICAgcmV0dXJuIHBhcmFtZXRlcnMKCiIiIuiuoeeul+aLn+WQiOabsue6v+eahOWAvCIiIgpkZWYgY2FsY3VsYXRlKGRhdGFfeCxwYXJhbWV0ZXJzKToKICAgIGRhdGF5PVtdCiAgICBmb3IgeCBpbiBkYXRhX3g6CiAgICAgICAgZGF0YXkuYXBwZW5kKHBhcmFtZXRlcnNbMl0rcGFyYW1ldGVyc1sxXSp4K3BhcmFtZXRlcnNbMF0qeCp4KQogICAgcmV0dXJuIGRhdGF5CgoiIiLlrozmiJDlh73mlbDnmoTnu5jliLYiIiIKZGVmIGRyYXcoZmxvdywgbmV3aGVhZCwgaGVhZCwgIG5ld3Bvd2VyLCBwb3dlciwgbmV3ZWZmZWN0LCBlZmZlY3QpOgogICAgcGx0LnBsb3QoZmxvdywgbmV3aGVhZCxsYWJlbD0iSFHmi5/lkIjmm7Lnur8iLGNvbG9yPSJibGFjayIpCiAgICBwbHQuc2NhdHRlcihmbG93LCBoZWFkLGxhYmVsPSJIUeemu+aVo+aVsOaNriIpCgogICAgcGx0LnBsb3QoZmxvdywgbmV3cG93ZXIsIGxhYmVsPSJQUeaLn+WQiOabsue6vyIsY29sb3I9InJlZCIpCiAgICBwbHQuc2NhdHRlcihmbG93WzowXSwgcG93ZXJbOjBdLCBsYWJlbD0iUFHnprvmlaPmlbDmja4iKQoKICAgIHBsdC5wbG90KGZsb3csIG5ld2VmZmVjdCxsYWJlbD0iRVHmi5/lkIjmm7Lnur8iLGNvbG9yPSJibHVlIikKICAgIHBsdC5zY2F0dGVyKGZsb3csIGVmZmVjdCxsYWJlbD0iRVHnprvmlaPmlbDmja4iKQoKICAgIG1wbC5yY1BhcmFtc1snZm9udC5zYW5zLXNlcmlmJ10gPSBbJ1NpbUhlaSddCiAgICBtcGwucmNQYXJhbXNbJ2F4ZXMudW5pY29kZV9taW51cyddID0gRmFsc2UKCiAgICBwbHQudGl0bGUoIuaAp+iDveabsue6v+aLn+WQiOaVsOaNriIpCiAgICBwbHQubGVnZW5kKGxvYz0gImJlc3QiKQogICAgI+iOt+WPluW9k+WJjeaXtumXtAogICAgIyB0aWNrcyA9IHRpbWUudGltZSgpCiAgICAjIGZpbGUgPSAiLi8iICsgJ3t9Jy5mb3JtYXQodGlja3MpICsgIi5wbmciLAogICAgcGx0LnNhdmVmaWcoIi4vZmZmZi5wbmciKQogICAgcGx0LnNob3coKQogICAgIyByZXR1cm4gZmlsZQoKCmRlZiBwb3N0KGFyZ3Msc2Vzc2lvbixlbnYpOgogICAgYm9keSA9IGpzb24ubG9hZHMoYmFzZTY0LmI2NGRlY29kZShhcmdzKS5kZWNvZGUoInV0Zi04IikpCiAgICBwcmludChib2R5KQogICAgIyBzdHJib2R5ID0gJ3t9Jy5mb3JtYXQoYm9keSkKICAgICMgZW5ib2R5ID0gIGJhc2U2NC5iNjRlbmNvZGUoc3RyYm9keS5lbmNvZGUoJ3V0Zi04JykpCiAgICAjIHByaW50KGVuYm9keSkKICAgIHN0YXRlID0ganNvbi5sb2FkcyhiYXNlNjQuYjY0ZGVjb2RlKGVudikuZGVjb2RlKCJ1dGYtOCIpKQogICAgcHJpbnQoc3RhdGUpCiAgICAjIHJlc3R1cmwgPSBzdGF0ZVsncm9sZXMnXVswXVsndGFnJ11bJ2FwcGNvbmZpZyddWydyZXN0J10KICAgICMgcHJpbnQocmVzdHVybCkKICAgICMgcy5oZWFkZXJzLnVwZGF0ZSh7InNlc3Npb25Ub2tlbiI6IHNlc3Npb24sICdDb250ZW50LVR5cGUnOiAnYXBwbGljYXRpb24vanNvbid9KQogICAgIyBydCA9IHMuZ2V0KCd7fS9jbGFzc2VzL0RldmljZT9vcmRlcj1jcmVhdGVkQXQmbGltaXQ9MTAmc2tpcD0wJy5mb3JtYXQocmVzdHVybCksCiAgICAjICAgICAgICAgICAgICBwYXJhbXM9eydvcmRlcic6ICdjcmVhdGVkQXQnLCB9KQogICAgIyBmb3Igcm93IGluIChydC5qc29uKClbJ3Jlc3VsdHMnXSk6CiAgICAjICAgICBwcmludChyb3cpCgogICAgdXJsID0gJ2h0dHA6Ly97fTo2MDIwL3Jlc3Qvc3FsJy5mb3JtYXQoaG9zdCkKICAgICMgY3VybCAtSCAnQXV0aG9yaXphdGlvbjogQmFzaWMgPFRPS0VOPicgLWQgJzxTUUw+JyA8aXA+OjxQT1JUPi9yZXN0L3NxbAogICAgIyBUT0tFTuS4unt1c2VybmFtZX06e3Bhc3N3b3Jkfee7j+i/h0Jhc2U2NOe8lueggeS5i+WQjueahOWtl+espuS4su+8jOS+i+WmgnJvb3Q6dGFvc2RhdGHnvJbnoIHlkI7kuLpjbTl2ZERwMFlXOXpaR0YwWVE9PQogICAgaGVhZGVycyA9IHsnQXV0aG9yaXphdGlvbic6ICdCYXNpYyBjbTl2ZERwMFlXOXpaR0YwWVE9PSd9CiAgICBkYXRhID0gInNlbGVjdCBmbG93LCBoZWFkLCBlZmZlY3QsIHBvd2VyIGZyb20gXyIgKyBib2R5Wydwcm9kdWN0aWQnXSArICIuXyIgKyBib2R5WydkZXZpY2VpZCddICsgIiBvcmRlciBieSBjcmVhdGVkYXQgZGVzYyBsaW1pdCAyMDsiCiAgICByID0gcmVxdWVzdHMucG9zdCh1cmwsIGhlYWRlcnM9aGVhZGVycyxkYXRhPWRhdGEpCiAgICB0ID0gci5jb250ZW50ICMg6K+75Y+W6L+U5Zue55qE5YaF5a65CiAgICB0ID0ganNvbi5sb2Fkcyh0KSAjIOino+eggUpTT07lr7nosaEKICAgIGZsb3cgPSBbXQogICAgaGVhZCA9IFtdCiAgICBlZmZlY3QgPSBbXQogICAgcG93ZXIgPSBbXQogICAgZm9yIHJvdyBpbiAodFsnZGF0YSddKToKICAgICAgICBmbG93LmFwcGVuZChyb3dbMF0pCiAgICAgICAgaGVhZC5hcHBlbmQocm93WzFdKQogICAgICAgIGVmZmVjdC5hcHBlbmQocm93WzJdKQogICAgICAgIHBvd2VyLmFwcGVuZChyb3dbM10pCiAgICBwcmludChmbG93KQogICAgcHJpbnQoaGVhZCkKICAgIHByaW50KGVmZmVjdCkKICAgIHByaW50KHBvd2VyKQogICAgZmxvdyA9ICAgWzAuMDAsICAgIDQwLjIzLCAgODAuOTYsICAxMTkuNzksICAxNDAuMDQsICAxNTkuMTUsIDE3OC44MCwgMTk5LjMyLCAyMjIuMjIsIDI0MC4wNSwgMjUxLjUxLCAyNjEuMjYsIDI4Mi4zNSwgMjk5LjYwLCAzMjIuNzQsIDMzOS4wNiwgMzU4Ljk0LCAzODAuNzddCiAgICBoZWFkID0gICBbNDMuNTUsICAgNDQuMTIsICA0My4xMiwgIDQxLjQ1LCAgIDQwLjk3LCAgIDQwLjExLCAgMzkuMDcsICAzNy41NywgIDM1LjQzLCAgMzQuMDEsICAzMi45MywgIDMyLjEwLCAgMzAuNzAsICAyOS4zMywgIDI2LjcwLCAgMjUuMjcsICAyMi43NiwgIDE5LjY3XQogICAgcG93ZXIgPSBbMTQuNTAwLCAgMTYuNDI2LCAxOC4zMTAsIDIwLjc2OSwgIDIyLjE5NSwgIDIzLjU2NSwgMjQuOTcxLCAyNS45MzYsIDI2Ljg1NiwgMjcuMzY3LCAyNy45NDYsIDI4LDM0MSwgMjkuMDE3LCAyOS41NDMsIDMwLjE0OCwgMzAuNDI2LCAzMC44MjIsIDMwLjg3MV0KICAgIGVmZmVjdCA9IFswLjAwLCAgIDQuODI0LCAgIDkuNDg4LCAgMTMuNDk1LCAgMTUuNTkzLCAgMTcuMzQ1LCAxOC45ODcsIDIwLjM1MiwgMjEuNDAyLCAyMi4xODgsIDIyLjUwOSwgMjIuNzkyLCAyMy41NTksIDIzLjg3OCwgMjMuNDE5LCAyMy4yODcsIDIyLjIwNiwgMjAuMzU5XQoKICAgIGhlYWRkYXRhPXBvbHlub21pYWxfZml0dGluZyhmbG93LGhlYWQpCiAgICBoZWFkcGFyYW1ldGVycz1jYWxjdWxhdGVfcGFyYW1ldGVyKGhlYWRkYXRhKQogICAgbmV3aGVhZD1jYWxjdWxhdGUoZmxvdyxoZWFkcGFyYW1ldGVycykKCiAgICBwb3dlcmRhdGE9cG9seW5vbWlhbF9maXR0aW5nKGZsb3cscG93ZXIpCiAgICBwb3dlcnBhcmFtZXRlcnM9Y2FsY3VsYXRlX3BhcmFtZXRlcihwb3dlcmRhdGEpCiAgICBuZXdwb3dlcj1jYWxjdWxhdGUoZmxvdywgcG93ZXJwYXJhbWV0ZXJzKQoKICAgIGVmZmVjdGRhdGE9cG9seW5vbWlhbF9maXR0aW5nKGZsb3csZWZmZWN0KQogICAgZWZmZWN0cGFyYW1ldGVycz1jYWxjdWxhdGVfcGFyYW1ldGVyKGVmZmVjdGRhdGEpCiAgICBuZXdlZmZlY3Q9Y2FsY3VsYXRlKGZsb3csZWZmZWN0cGFyYW1ldGVycykKICAgIHByaW50KGJvZHlbJ3JlcG9ydGlkJ10pCiAgICBwcmludChzdGF0ZVsndXNlcm5hbWUnXSkKICAgIGRyYXcoZmxvdywgbmV3aGVhZCwgaGVhZCwgbmV3cG93ZXIsIHBvd2VyLCBuZXdlZmZlY3QsIGVmZmVjdCkKICAgICMgdXBsb2FkKGZpbGUsIHN0YXRlWyd1c2VybmFtZSddLCBzZXNzaW9uKQogICAgcmV0dXJuIGFyZ3MKCmRlZiB1cGxvYWQoZmlsZSwgcm9sZW5hbWUsIHNlc3Npb24pOgogICAgdXJsID0gJ2h0dHA6Ly97fToxMjUwL3NoYXBlcy91cGxvYWQnLmZvcm1hdChob3N0KQogICAgZmlsZXMgPSB7J2ZpbGUnOiBvcGVuKGZpbGUsJ3JiJyl9CiAgICBvcHRpb25zID0geydvdXRwdXQnOiAnanNvbicsICdwYXRoJzogJycsICdzY2VuZSc6IHJvbGVuYW1lLCAnYXV0aF90b2tlbic6c2Vzc2lvbn0gICMg5Y+C6ZiF5rWP6KeI5Zmo5LiK5Lyg55qE6YCJ6aG5CiAgICB1cGxvYWRyZXMgPSByZXF1ZXN0cy5wb3N0KHVybCwgZGF0YT1vcHRpb25zLCBmaWxlcz1maWxlcykKICAgIGNvbnRlbnQgPSBqc29uLmxvYWRzKHVwbG9hZHJlcy50ZXh0KQogICAgcHJpbnQoInVwbG9hZEltZyBpcyAiICsgY29udGVudFsidXJsIl0pCiAgICByZXR1cm4gIGNvbnRlbnRbInVybCJdCgpkZWYgbWFpbihhcmd2cyk6CiAgICBwb3N0KGFyZ3ZzWzBdLCBhcmd2c1sxXSkKICAgICNsb2dpbigpCiAgICAjZGV2aWNlKCkKICAgICN1cGxvYWQoKQogICAgcmV0dXJuIDAKCmRlZiBleGl0KCk6CiAgICBvcy5fZXhpdCgwKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgIG1haW4oc3lzLmFyZ3ZbMTpdKQ==",
+            "IyBjb2Rpbmc9dXRmOAppbXBvcnQgb3MKCmRlZiBwb3N0KGFyZ3Msc2Vzc2lvbixlbnYpOgogICAgI2JvZHkgPSBqc29uLmxvYWRzKGJhc2U2NC5iNjRkZWNvZGUoYXJncykuZGVjb2RlKCJ1dGYtOCIpKQogICAgI3ByaW50KGJvZHkpCiAgICAjc3RyYm9keSA9ICd7fScuZm9ybWF0KGJvZHkpCiAgICAjZW5ib2R5ID0gIGJhc2U2NC5iNjRlbmNvZGUoc3RyYm9keS5lbmNvZGUoJ3V0Zi04JykpCiAgICAjcHJpbnQoZW5ib2R5KQogICAgI3N0YXRlID0ganNvbi5sb2FkcyhiYXNlNjQuYjY0ZGVjb2RlKGVudikuZGVjb2RlKCJ1dGYtOCIpKQogICAgI3ByaW50KHN0YXRlKQogICAgIyByZXN0dXJsID0gc3RhdGVbJ3JvbGVzJ11bMF1bJ3RhZyddWydhcHBjb25maWcnXVsncmVzdCddCiAgICAjIHByaW50KHJlc3R1cmwpCiAgICAjIHMuaGVhZGVycy51cGRhdGUoeyJzZXNzaW9uVG9rZW4iOiBzZXNzaW9uLCAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL2pzb24nfSkKICAgICMgcnQgPSBzLmdldCgne30vY2xhc3Nlcy9EZXZpY2U/b3JkZXI9Y3JlYXRlZEF0JmxpbWl0PTEwJnNraXA9MCcuZm9ybWF0KHJlc3R1cmwpLAogICAgIyAgICAgICAgICAgICAgcGFyYW1zPXsnb3JkZXInOiAnY3JlYXRlZEF0JywgfSkKICAgICMgZm9yIHJvdyBpbiAocnQuanNvbigpWydyZXN1bHRzJ10pOgogICAgIyAgICAgcHJpbnQocm93KQogICAgcHJpbnQoYXJncykKICAgIHByaW50KHNlc3Npb24pCiAgICBwcmludChlbnYpCiAgICByZXR1cm4gYXJncwoKZGVmIG1haW4oKToKICAgICN7Im5hbWUiOiJzaHV3YSJ9CiAgICBhcmd2cyA9ICdleUp1WVcxbElqb2ljMmgxZDJFaWZRPT0nCiAgICByZXR1cm4gIHBvc3QoYXJndnMsICdzZXNzaW9uJywnZW52JykKCmRlZiBleGl0KCk6CiAgICBvcy5fZXhpdCgwKQoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIG1haW4oKQ==",
           java: "",
           ruby: ""
         };
+        const pythonName =  "/python_"+this.formLabelAlign.name
         const initParams = {
           code: languageList[this.formLabelAlign.language],
           mod: this.formLabelAlign.name,
-          swagger: {
-            definitions: {},
-            paths: {
-              "/python_report": {
-                post: {
-                  description: "生成报告",
-                  parameters: [
-                    {
-                      description: "生成报告",
-                      in: "body",
-                      name: "data",
-                      required: true,
-                      schema: {
-                        properties: {
-                          deviceid: {
-                            description: "设备ID",
-                            example: "e96eea9ae5",
-                            required: true,
-                            type: "string"
-                          },
-                          productid: {
-                            description: "产品ID",
-                            example: "9c5930e565",
-                            required: true,
-                            type: "string"
-                          },
-                          reportid: {
-                            description: "报告ID",
-                            example: "a58b37f29a",
-                            required: true,
-                            type: "string"
-                          },
-                          where: {
-                            description:
-                              '过滤条件 {"keys":["parentId","name"],"where":{"$or":[{"parentId":"lgtDJDEZlW"},{"objectId":"lgtDJDEZlW"}]}}',
-                            example: '{"keys":["parentId","name"]}',
-                            type: "object"
-                          }
-                        },
-                        type: "object"
-                      }
-                    }
-                  ],
-                  responses: {
-                    "200": {
-                      description: "Returns operation status"
-                    },
-                    "400": {
-                      description: "Bad Request"
-                    },
-                    "401": {
-                      description: "Unauthorized"
-                    },
-                    "403": {
-                      description: "Forbidden"
-                    },
-                    "500": {
-                      description: "Server Internal error"
-                    }
-                  },
-                  summary: "生成报告",
-                  tags: ["EXPROTO"]
-                }
+          swagger:{
+
+    definitions: {},
+    paths: {
+      "/python_hello" : {
+        post: {
+          description: "Python测试API",
+          parameters: [
+            {
+              description: "生成报告",
+              in: "body",
+              name: "data",
+              required: true,
+              schema: {
+                properties: {
+                  name: {
+                    description: "姓名",
+                    example: "shuwa",
+                    required: true,
+                    type: "string"
+                  }
+                },
+                type: "object"
               }
+            }
+          ],
+          responses: {
+            "200": {
+              description: "Returns operation status"
             },
-            tags: [
-              {
-                description: "扩展编程",
-                name: "EXPROTO"
-              }
-            ]
+            "400": {
+              description: "Bad Request"
+            },
+            "401": {
+              description: "Unauthorized"
+            },
+            "403": {
+              description: "Forbidden"
+            },
+            "500": {
+              description: "Server Internal error"
+            }
           },
+          summary: "Python测试API",
+          tags: [
+            "EXPROTO"
+          ]
+        }
+      }
+      
+    },
+    tags: [
+      {
+        description: "扩展编程",
+        name: "EXPROTO"
+      }
+    ]
+  },
+      
           type: this.formLabelAlign.language
         };
         if (valid) {
@@ -446,7 +469,8 @@ export default {
         .get("/exproto", {
           params: {
             type: "python",
-            mod: "all"
+            mod: "all",
+            version:"debug",
           }
         })
         .then(res => {
