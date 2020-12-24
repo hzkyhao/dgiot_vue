@@ -65,6 +65,7 @@
               <el-button type="success" size="small" @click="updatesubdialog"
                 >热加载</el-button
               >
+            
             </el-form-item>
           </el-form>
         </div>
@@ -363,6 +364,7 @@ export default {
     },
     // 得到产品详情
     getProDetail(productId) {
+      console.log('===')
       this.productId = productId;
       editor = ace.edit("editor");
       editor.session.setMode("ace/mode/erlang"); // 设置语言
@@ -425,6 +427,7 @@ export default {
             });
 
             editor.setValue(Base64.decode(setdata));
+
             editor.gotoLine(editor.session.getLength());
             // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
             var Device = Parse.Object.extend("Device");
