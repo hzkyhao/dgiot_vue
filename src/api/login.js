@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function login(username, password) {
   return request({
-    url: 'auth/login',
+    url: 'iotapi/auth/login',
     method: 'post',
     data: JSON.stringify({
       username,
@@ -13,7 +13,7 @@ export function login(username, password) {
 }
 export function gettables(vcaddr, start, length, draw) {
   return request({
-    url: '/data_source/DLT645/vcons',
+    url: 'iotapi/data_source/DLT645/vcons',
     method: 'get',
     params: {
       draw: draw,
@@ -26,7 +26,7 @@ export function gettables(vcaddr, start, length, draw) {
 
 export function gettables1(vcaddr, start, length, draw) {
   return request({
-    url: '/data_source/DLT645/devs',
+    url: 'iotapi/data_source/DLT645/devs',
     method: 'get',
     params: {
       draw,
@@ -39,7 +39,7 @@ export function gettables1(vcaddr, start, length, draw) {
 export function makesure(vcaddr, data) {
   return request({
     method: 'post',
-    url: '/edit_vcon',
+    url: 'iotapi/edit_vcon',
     data: {
       config: data,
       vcaddr: vcaddr
@@ -49,7 +49,7 @@ export function makesure(vcaddr, data) {
 export function startcon(addrs){
   return request({
     method: 'post',
-    url: '/start_dev?type=DLT645&key=vcons',
+    url: 'iotapi/start_dev?type=DLT645&key=vcons',
     data: {
       addrs: addrs
     }
@@ -58,7 +58,7 @@ export function startcon(addrs){
 export function stopcon(addrs){
   return request({
     method: 'post',
-    url: '/stop_dev?type=DLT645&key=vcons',
+    url: 'iotapi/stop_dev?type=DLT645&key=vcons',
     data: {
       addrs: addrs
     }
@@ -67,7 +67,7 @@ export function stopcon(addrs){
 export function submittime(time, vcaddrs) {
   return request({
     method: 'post',
-    url: '/change_time',
+    url: 'iotapi/change_time',
     data: {
       time: time,
       vcaddrs: vcaddrs
@@ -77,7 +77,7 @@ export function submittime(time, vcaddrs) {
 export function getcondetail(start, length, condition, draw) {
   return request({
     method: 'post',
-    url: '/dba/task_statistics',
+    url: 'iotapi/dba/task_statistics',
     data: {
       start: start,
       length: length,
@@ -89,7 +89,7 @@ export function getcondetail(start, length, condition, draw) {
 export function startconnect(vcaddr) {
   return request({
     method: 'post',
-    url: '/start_connect',
+    url: 'iotapi/start_connect',
     data: {
       vcaddr: vcaddr
     }
@@ -98,7 +98,7 @@ export function startconnect(vcaddr) {
 export function detailforcon(start, length, vcaddr, draw) {
   return request({
     method: 'get',
-    url: '/data_source/DLT645/devs',
+    url: 'iotapi/data_source/DLT645/devs',
     params: {
       start: start,
       length: length,
@@ -109,7 +109,7 @@ export function detailforcon(start, length, vcaddr, draw) {
 }
 export function getmeterinfo(addr){
   return request({
-    url: '/data_source/DLT645/devs',
+    url: 'iotapi/data_source/DLT645/devs',
     method: 'get',
     params: {
       'search[regex]': addr
@@ -120,7 +120,7 @@ export function getmeterinfo(addr){
 // 进入二采详情
 export function getdevsreport(start, length, draw, devsreport) {
   return request({
-    url: '/data_source/VMOTE/devs',
+    url: 'iotapi/data_source/VMOTE/devs',
     method: 'get',
     params: {
       draw: draw,
@@ -132,7 +132,7 @@ export function getdevsreport(start, length, draw, devsreport) {
 }
 export function searchdevs(devsreport, start, length, draw) {
   return request({
-    url: '/data_source/VMOTE/devs',
+    url: 'iotapi/data_source/VMOTE/devs',
     method: 'get',
     params: {
       draw: draw,
@@ -159,7 +159,7 @@ export function searchdevs(devsreport, start, length, draw) {
 // }
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: 'iotapi/user/info',
     method: 'get',
     params: { token }
   })
@@ -167,7 +167,7 @@ export function getInfo(token) {
 
 export function logoutBtn() {
   return request({
-    url: '/user/logout',
+    url: 'iotapi/user/logout',
     method: 'post'
     // headers: {
     //   Authorization: "Logout 123456789"
@@ -176,7 +176,7 @@ export function logoutBtn() {
 }
 export function addcon(config) {
   return request({
-    url: '/add_vcon',
+    url: 'iotapi/add_vcon',
     method: 'post',
     data: {
       config: config
@@ -185,7 +185,7 @@ export function addcon(config) {
 }
 export function passwordreset(account, code, password) {
   return request({
-    url: '/verify_code/passwordreset',
+    url: 'iotapi/verify_code/passwordreset',
     method: 'post',
     params: {
       account: account,
@@ -231,7 +231,7 @@ export function timetounix(val){
 }
 export function Phonelogin(phone, nationcode){
   return request({
-    url: '/sendsms?account=' + phone + '&nationcode=' + nationcode,
+    url: 'iotapi/sendsms?account=' + phone + '&nationcode=' + nationcode,
     method: 'post',
     data: {
     }
@@ -239,7 +239,7 @@ export function Phonelogin(phone, nationcode){
 }
 export function Verify(actions, phone, code){
   return request({
-    url: '/verify_code/' + actions + '?account=' + phone + '&code=' + code,
+    url: 'iotapi/verify_code/' + actions + '?account=' + phone + '&code=' + code,
     method: 'post',
     data: {
     }
@@ -247,7 +247,7 @@ export function Verify(actions, phone, code){
 }
 export function UpdatedMenu(role, menus){
   return request({
-    url: '/add_menu',
+    url: 'iotapi/add_menu',
     method: 'put',
     data: {
       role: 'role:' + role,
@@ -257,7 +257,7 @@ export function UpdatedMenu(role, menus){
 }
 export function UpdatedRole(role, roles){
   return request({
-    url: '/add_permission',
+    url: 'iotapi/add_permission',
     method: 'put',
     data: {
       role: 'role:' + role,
@@ -267,7 +267,7 @@ export function UpdatedRole(role, roles){
 }
 export function Sitepro(pro){
   return request({
-    url: '/classes/Site/' + pro,
+    url: 'iotapi/classes/Site/' + pro,
     method: 'get',
     data: {
     }

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function Upload(node, country, province, city, path) {
   return request({
-    url: '/vconcentrator/import_data',
+    url: 'iotapi/vconcentrator/import_data',
     method: 'post',
     data: {
       node: node,
@@ -15,7 +15,7 @@ export function Upload(node, country, province, city, path) {
 }
 export function addmeterforuser(meterdata) {
   return request({
-    url: '/yhgx',
+    url: 'iotapi/yhgx',
     method: 'post',
     data: {
       yhabh: meterdata.yhabh,
@@ -34,7 +34,7 @@ export function addmeterforuser(meterdata) {
 }
 export function CountAll(path) {
   return request({
-    url: '/count/' + path,
+    url: 'iotapi/count/' + path,
     method: 'get',
     data: {}
   })

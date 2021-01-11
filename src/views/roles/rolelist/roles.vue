@@ -368,7 +368,7 @@ export default {
       this.data = []
       this.dataMenus = []
       this.$axiosWen
-        .get('/classes/Menu')
+        .get('iotapi/classes/Menu')
         .then(res => {
           if (res && res.results) {
             this.menuListRes = res.results
@@ -388,7 +388,7 @@ export default {
         })
       //查询部门
       this.$axiosWen
-        .get('/roletree')
+        .get('iotapi/roletree')
         .then(res => {
           this.deptTreeData = res.results
           this.handleNodeClick(this.deptTreeData[0])
@@ -461,7 +461,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.$axiosWen.delete('/classes/_Role/' + row.objectId).then(res => {
+          this.$axiosWen.delete('iotapi/classes/_Role/' + row.objectId).then(res => {
             if (res) {
               this.$message({
                 type: 'success',
@@ -512,7 +512,7 @@ export default {
       this.currentSelectIndex = row.index
 
       this.$axiosWen
-        .get('/role?name=' + row.name)
+        .get('iotapi/role?name=' + row.name)
         .then(res => {
           this.roleItem = res
           if (res && res.menus && res.rules) {
@@ -573,7 +573,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.5)'
       })
       this.$axiosWen
-        .get('/classes/_Role', {
+        .get('iotapi/classes/_Role', {
           params: {
             skip: this.start,
             limit: this.pagesize,
@@ -625,7 +625,7 @@ export default {
     getRoleschema() {
       this.dataPermissions = []
       this.$axiosWen
-        .get('/classes/Permission')
+        .get('iotapi/classes/Permission')
         .then(res => {
           const results = res.results
           this.permissionListRes = results

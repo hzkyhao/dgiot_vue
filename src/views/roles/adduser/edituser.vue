@@ -92,7 +92,7 @@ export default {
       var userid = this.$route.query.id
       // 获取用户详情
       this.$axiosWen
-        .get('/classes/_User/' + userid)
+        .get('iotapi/classes/_User/' + userid)
         .then(res => {
           this.ruleForm2.username = res.nick
           this.ruleForm2.phone = res.phone
@@ -149,7 +149,7 @@ export default {
     },
     getDepartment() {
       this.$axiosWen
-        .get('/roletree')
+        .get('iotapi/roletree')
         .then(res => {
           const results = res.results
           results.forEach(element => {

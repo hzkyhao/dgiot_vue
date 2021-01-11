@@ -6,7 +6,7 @@ import request from '@/utils/request'
 // 获取角色列表
 export function roletree() {
   return request({
-    url: '/roletree',
+    url: 'iotapi/roletree',
     method: 'get'
   })
 }
@@ -17,7 +17,7 @@ export function roletree() {
  */
 export function getGroup() {
   return request({
-    url: '/classes/Product',
+    url: 'iotapi/classes/Product',
     method: 'get',
     params: {
       where: {
@@ -30,7 +30,7 @@ export function getGroup() {
 // 新建虚拟设备分组
 export function addGroup(name) {
   return request({
-    url: '/group',
+    url: 'iotapi/group',
     method: 'post',
     data: {
       "devType": 'shuwa_iot_hub',
@@ -43,7 +43,7 @@ export function addGroup(name) {
 // 修改role备注
 export function putRole(role_id, alias) {
   return request({
-    url: '/classes/_Role/' + role_id,
+    url: 'iotapi/classes/_Role/' + role_id,
     method: 'put',
     data: {
       "alias": alias
@@ -54,7 +54,7 @@ export function putRole(role_id, alias) {
 // 删除role
 export function delRole(role_id) {
   return request({
-    url: '/classes/_Role/' + role_id,
+    url: 'iotapi/classes/_Role/' + role_id,
     method: 'DELETE'
   })
 }

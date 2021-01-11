@@ -9,7 +9,7 @@ const globalConfig = require('../src/config/index')
 
 function getIPAdress() {
   var interfaces = os.networkInterfaces();
-  
+
   for (var devName in interfaces) {
       var iface = interfaces[devName];
       for (var i = 0; i < iface.length; i++) {
@@ -28,7 +28,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/iotapi': {
         // target: 'http://115.159.59.185:5080/iotapi',
         // target: 'http://192.168.2.13:5080/iotapi',
         // target: 'http://ci.iotn2n.com:5080/iotapi',
@@ -41,7 +41,7 @@ module.exports = {
         target:globalConfig.serverURL,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/iotapi': ''
         }
       }
     },

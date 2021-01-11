@@ -1086,7 +1086,7 @@ export default {
         const { objectId } = res
         this.hashkey = objectId
         if (this.hashkey) {
-          this.$axiosWen.post('/classes/Dict', {
+          this.$axiosWen.post('iotapi/classes/Dict', {
             data: data,
             "key": this.hashkey,
             "type": "Product"

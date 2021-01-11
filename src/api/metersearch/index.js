@@ -53,7 +53,7 @@ export function addMeter({ addr, yhdz, organization, pn, vcaddr, gddw, tq, yhmc,
 // 上传
 export function update(table, requests) {
   return request({
-    url: `/classes/${table}`,
+    url: `iotapi/classes/${table}`,
     method: 'post',
     data: {
       requests

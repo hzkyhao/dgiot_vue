@@ -7,7 +7,7 @@ export function get(dictName) {
     size: 9999
   }
   return request({
-    url: '/api/dictDetail',
+    url: '/iotapi/dictDetail',
     method: 'get',
     params
   })
@@ -15,7 +15,7 @@ export function get(dictName) {
 
 export function add(data) {
   return request({
-    url: '/api/dictDetail',
+    url: '/iotapi/dictDetail',
     method: 'post',
     data
   })
@@ -23,14 +23,14 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: '/api/dictDetail/' + id,
+    url: '/iotapi/dictDetail/' + id,
     method: 'delete'
   })
 }
 
 export function edit(data) {
   return request({
-    url: '/api/dictDetail',
+    url: '/iotapi/dictDetail',
     method: 'put',
     data
   })

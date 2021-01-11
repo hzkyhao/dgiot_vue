@@ -240,10 +240,10 @@ export default {
           //     })
           //   })
           this.$axiosWen
-            .post('/login', {
+            .post('iotapi/login', {
               username: this.loginForm.username,
               password: this.loginForm.password
-            })
+            },{headers:{'content-type':'text/plain'}})
             .then(user => {
               loading.close()
               getsession(user.sessionToken)
@@ -304,7 +304,7 @@ export default {
     // params  可选参数 order  limit
     getNavigation() {
       this.$axiosWen
-        .get('/classes/Navigation')
+        .get('iotapi/classes/Navigation')
         .then(res => {
           console.log(res.results)
           var menu = res.results
@@ -324,7 +324,7 @@ export default {
     },
     getApihub() {
       this.$axiosWen
-        .get('/apihub', {
+        .get('iotapi/apihub', {
           params: {
             appname: sessionStorage.getItem('roles'),
             token: this.$Cookies.get('sessionToken')

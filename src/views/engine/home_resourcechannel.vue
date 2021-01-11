@@ -436,7 +436,7 @@ export default {
     },
     // 初始化弹框数据
     dialogType() {
-      this.$axiosWen.get('/roletree').then(res => {
+      this.$axiosWen.get('iotapi/roletree').then(res => {
           console.log(res)
           this.allApps = res.results
         }).catch(e => {
