@@ -50,6 +50,7 @@
 <script>
 import treeTable from '@/components/TreeTable'
 import { getcontrol } from '@/api/getrole'
+import { QueryPermission, getPermission, putPermission } from '@/api/Permission'
 import Parse from 'parse'
 import { utc2beijing } from '@/utils'
 export default {
@@ -106,17 +107,16 @@ export default {
     this.getcontrolrole()
   },
   methods: {
-    handleEdit(row) {
+    async handleEdit(row) {
       this.permissionid = row.objectId
-      var Permission = Parse.Object.extend('Permission')
-      var permission = new Parse.Query(Permission)
-      permission.get(row.objectId).then(resultes => {
-        this.form.name = resultes.attributes.name
-        this.form.description = resultes.attributes.description
-        this.form.alias = resultes.attributes.alias
+      console.log(row, this.permissionid)
+      const resultes = await getPermission(row.objectId)
+      console.log("QueryP", resultes)
+      this.form.name = resultes.name
+      this.form.description = resultes.description
+      this.form.alias = resultes.alias
 
-        this.roleEdit = true
-      })
+      this.roleEdit = true
     },
     handleDelete(row) {
 
@@ -124,38 +124,43 @@ export default {
     addcontrol() {
 
     },
-    getcontrolrole() {
+    async  getcontrolrole() {
       this.data = []
-      var Permission = Parse.Object.extend('Permission')
-      var permission = new Parse.Query(Permission)
-      permission.limit(1000)
-      permission.find().then(res => {
-        res.map(items => {
+      const res = await QueryPermission({ limit: 1000 })
+      if (res.results) {
+        const results = res.results
+        results.map(items => {
           var obj = {}
-          obj.name = items.attributes.name
-          obj.alias = items.attributes.alias
-          obj.objectId = items.id
-          obj.parent = items.attributes.parent.id
-          obj.createtime = utc2beijing(items.attributes.createdAt)
+          obj.name = items.name
+          obj.alias = items.alias
+          obj.objectId = items.objectId
+          obj.parent = items.parent.objectId
+          obj.createtime = utc2beijing(items.createdAt)
           this.data.push(obj)
         })
-      })
+      } else {
+        this.data = []
+      }
     },
     updaterole() {
-      var Permission = Parse.Object.extend('Permission')
-      var permission = new Parse.Query(Permission)
-      permission.get(this.permissionid).then(resultes => {
-        resultes.set('alias', this.form.alias)
-        resultes.set('description', this.form.description)
-        resultes.save().then(res => {
-          this.$message({
-            type: 'success',
-            message: '更新成功'
-          })
+      this.$axiosWen.put(`iotapi/classes/Permission/${this.permissionid}`, {
+        'alias': this.form.alias,
+        'description': this.form.description
+      }).then(res => {
+        this.$message({
+          type: 'success',
+          message: '更新成功'
         })
         this.roleEdit = false
-        this.getcontrolrole()
-      })
+      }).catch(e => { console.log(e) })
+    // .then(resultes => {
+    //     console.log(resultes)
+    //     resultes.set('alias', this.form.alias)
+    //     resultes.set('description', this.form.description)
+
+    //     })
+
+    //   })
     }
   }
 }
