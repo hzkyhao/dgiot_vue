@@ -406,7 +406,7 @@ export default {
         // }
 
         this.$axiosWen
-          .post("/user", {
+          .post("iotapi/user", {
             username: this.userInfoForm.account,
             nick: this.userInfoForm.nick,
             password: this.userInfoForm.password,
@@ -583,7 +583,7 @@ export default {
         type: "warning"
       }).then(() => {
         this.$axiosWen
-          .delete("/user", {
+          .delete("iotapi/user", {
             data: {
               department: this.curDepartmentId,
               username: row.username
@@ -732,7 +732,7 @@ export default {
       this.tempData = [];
       this.pictLoading = true;
       this.$axiosWen
-        .get("/role?name=" + data.name)
+        .get("iotapi/role?name=" + data.name)
         .then(res => {
           const users = res.users;
           this.tempData = users.filter(item => {
@@ -750,7 +750,7 @@ export default {
     searchAllOption() {
       // 获取部门tree树
       this.$axiosWen
-        .get("/roletree")
+        .get("iotapi/roletree")
         .then(res => {
           this.deptTreeData = res.results;
           this.handleNodeClick(this.deptTreeData[0]);

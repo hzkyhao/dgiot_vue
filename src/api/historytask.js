@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function HistoryTask(start, length, di, datetime, searchvalue) {
   return request({
-    url: '/shuwa_task/historyVcaddr',
+    url: 'iotapi/shuwa_task/historyVcaddr',
     method: 'get',
     params: {
       node: null,
@@ -16,7 +16,7 @@ export function HistoryTask(start, length, di, datetime, searchvalue) {
 }
 export function Historydi() {
   return request({
-    url: '/shuwa_task/diList',
+    url: 'iotapi/shuwa_task/diList',
     method: 'get'
   })
 }
@@ -35,7 +35,7 @@ export function Histoymeterdetail(node, di, datetime, vcaddr) {
 }
 export function Diselect() {
   return request({
-    url: '/shuwa_task/diList',
+    url: 'iotapi/shuwa_task/diList',
     method: 'get',
     data: {
     }
@@ -44,7 +44,7 @@ export function Diselect() {
 
 export function Alltasks(start, length, draw, searchvalue) {
   return request({
-    url: '/shuwa_task/task',
+    url: 'iotapi/shuwa_task/task',
     method: 'get',
     params: {
       start: start,
@@ -56,7 +56,7 @@ export function Alltasks(start, length, draw, searchvalue) {
 }
 export function Addtasks(name, frozendate, downchannel, starttime, endtime, meter, freq, unit, upchannel) {
   return request({
-    url: '/shuwa_task/task',
+    url: 'iotapi/shuwa_task/task',
     method: 'post',
     data: {
       name: name,
@@ -73,7 +73,7 @@ export function Addtasks(name, frozendate, downchannel, starttime, endtime, mete
 }
 export function Taskdetail(start, length, tid, rid, starttime, freq, search) {
   return request({
-    url: '/shuwa_task/vcaddr',
+    url: 'iotapi/shuwa_task/vcaddr',
     method: 'get',
     params: {
       start: start,
@@ -88,7 +88,7 @@ export function Taskdetail(start, length, tid, rid, starttime, freq, search) {
 }
 export function Taskmeterdetail(tid, rid, starttime, vcaddr, freq, fdate, di) {
   return request({
-    url: 'shuwa_task/meter',
+    url: 'iotapi/shuwa_task/meter',
     method: 'get',
     params: {
       tid: tid,
@@ -103,7 +103,7 @@ export function Taskmeterdetail(tid, rid, starttime, vcaddr, freq, fdate, di) {
 }
 export function Removetask(id) {
   return request({
-    url: '/shuwa_task/task',
+    url: 'iotapi/shuwa_task/task',
     method: 'DELETE',
     data: {
       id: id
@@ -113,7 +113,7 @@ export function Removetask(id) {
 // 抄表
 export function Supporttask(data) {
   return request({
-    url: '/shuwa_task/readMeter',
+    url: 'iotapi/shuwa_task/readMeter',
     method: 'post',
     data: {
       datetime: data.datetime,

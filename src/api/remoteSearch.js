@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function userSearch(name) {
   return request({
-    url: '/search/user',
+    url: 'iotapi/search/user',
     method: 'get',
     params: { name }
   })

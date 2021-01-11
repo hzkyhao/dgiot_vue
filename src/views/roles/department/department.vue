@@ -307,7 +307,7 @@ export default {
       this.data = [];
       this.dataMenus = [];
       this.$axiosWen
-        .get("/classes/Menu")
+        .get("iotapi/classes/Menu")
         .then(res => {
           if (res && res.results) {
             this.menuListRes = res.results;
@@ -328,7 +328,7 @@ export default {
     },
     gettable(start) {
       this.$axiosWen
-        .get("/classes/Dict", {
+        .get("iotapi/classes/Dict", {
           params: {
             where: {
               type: "roletemp"
@@ -347,7 +347,7 @@ export default {
     getRoleschema() {
       this.dataPermissions = [];
       this.$axiosWen
-        .get("/classes/Permission")
+        .get("iotapi/classes/Permission")
         .then(res => {
           const results = res.results;
           this.permissionListRes = results;
@@ -426,7 +426,7 @@ export default {
     // 删除模板
     handleDelete(index, row, data) {
       this.$axiosWen
-        .delete("/classes/Dict/" + row.objectId)
+        .delete("iotapi/classes/Dict/" + row.objectId)
         .then(res => {
           this.$message({
             type: "success",
@@ -483,7 +483,7 @@ export default {
         });
 
         this.$axiosWen
-          .put("/classes/Dict/" + row.objectId, {
+          .put("iotapi/classes/Dict/" + row.objectId, {
             data: newData
           })
           .then(res => {

@@ -10,7 +10,7 @@ export function hardInfo() {
 }
 export function license() {
   return request({
-    url: '/license',
+    url: '/iotapi/license',
     method: 'get',
     params: {
     }

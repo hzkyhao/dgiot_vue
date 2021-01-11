@@ -223,7 +223,7 @@ export default {
   methods: {
     // 查询product
     getProduct() {
-      this.$axiosWen.get('/classes/Product').then(res => {
+      this.$axiosWen.get('iotapi/classes/Product').then(res => {
         this.productObj = res.results
         console.log(this.productObj)
       }).catch(e => {
@@ -287,7 +287,7 @@ export default {
               }
             })
             if (this.hashkey) {
-              this.$axiosWen.post('/classes/Dict', {
+              this.$axiosWen.post('iotapi/classes/Dict', {
                 data: data,
                 "key": this.hashkey,
                 "type": this.moduleForm.type
@@ -341,7 +341,7 @@ export default {
           where: { type: 'Product' }
         }
       }
-      this.$axiosWen.get('/classes/Dict', { params: params }).then(
+      this.$axiosWen.get('iotapi/classes/Dict', { params: params }).then(
         res => {
           this.pictLoading = false
           this.tableData = res.results
@@ -371,7 +371,7 @@ export default {
       console.log(form)
     },
     handleDelete(index, row, rows) {
-      this.$axiosWen.delete(`/classes/Dict/${row.objectId}`)
+      this.$axiosWen.delete(`iotapi/classes/Dict/${row.objectId}`)
         .then(res => {
           rows.splice(index, 1);
           this.$message({

@@ -65,7 +65,7 @@
               <el-button type="success" size="small" @click="updatesubdialog"
                 >热加载</el-button
               >
-            
+
             </el-form-item>
           </el-form>
         </div>
@@ -324,7 +324,7 @@ export default {
     },
     getAllDict() {
       this.$axiosWen
-        .get("/classes/Product", {
+        .get("iotapi/classes/Product", {
           params: {
             where: { category: { $nin: ["Evidence"] } },
             order: "updatedAt" // -updatedAt  updatedAt

@@ -868,7 +868,7 @@ export default {
             this.allProudct = resultes;
           }); */
 
-          this.$axiosWen.get('/classes/Product', {
+          this.$axiosWen.get('iotapi/classes/Product', {
             params: {
               'where': {
                 objectId: {

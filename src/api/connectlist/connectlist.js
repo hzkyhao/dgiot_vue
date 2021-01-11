@@ -18,7 +18,7 @@ export function report(start, length, concentrator) {
 
 export function connectlist(start, length, concentrator) {
     return request({
-        url: '/data_source/MSC/devs',
+        url: 'iotapi/data_source/MSC/devs',
         method: 'get',
         params: {
             draw: 1,

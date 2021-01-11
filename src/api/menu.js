@@ -3,21 +3,21 @@ import request from '@/utils/request'
 // 获取所有的菜单树
 export function getMenusTree() {
   return request({
-    url: 'api/menus/tree',
+    url: 'iotapi/menus/tree',
     method: 'get'
   })
 }
 
 export function buildMenus() {
   return request({
-    url: 'api/menus/build',
+    url: 'iotapi/menus/build',
     method: 'get'
   })
 }
 
 export function add(data) {
   return request({
-    url: 'api/menus',
+    url: 'iotapi/menus',
     method: 'post',
     data
   })
@@ -32,7 +32,7 @@ export function del(id) {
 
 export function edit(data) {
   return request({
-    url: 'api/menus',
+    url: 'iotapi/menus',
     method: 'put',
     data
   })
