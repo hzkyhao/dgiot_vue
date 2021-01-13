@@ -14,7 +14,7 @@
 //  var serverURL = "http://192.168.2.44:5080/iotapi"
  //var serverURL = "http://192.168.2.51:5080/iotapi"
 //  var serverURL = "http://192.168.2.66:5080/iotapi";
-var serverURL = "http://pump.iotn2n.com";
+var serverURL = "http://p44556672.ump.iotn2n.com";
 
 // var serverURL = "http://132.232.121.164:5080/iotapi";
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"

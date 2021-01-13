@@ -27,7 +27,7 @@
           <el-select v-model="formInline.app" placeholder="应用商名称">
             <el-option
               v-for="(item,index) in applist"
-              :label="item.attributes.name"
+              :label="item.name"
               :key="index"
               :value="item.id"
             />
@@ -51,33 +51,33 @@
         <el-table-column label="编号" type="index" width="50" align="center"/>
         <el-table-column label="客户名称" align="center" width="100">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.customer_name }}</span>
+            <span>{{ scope.row.customer_name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="客户应用" align="center" width="200">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.appname }}</span>
+            <span>{{ scope.row.appname }}</span>
           </template>
         </el-table-column>
         <el-table-column label="版本" align="center" width="100">
           <template slot-scope="scope">
-            <span v-if="scope.row.attributes.product">{{ scope.row.attributes.product.shuwa_iot_software }}</span>
+            <span v-if="scope.row.product">{{ scope.row.product.shuwa_iot_software }}</span>
           </template>
         </el-table-column>
         <el-table-column label="服务器IP" align="center" width="150">
           <template slot-scope="scope">
-            <p>{{ scope.row.attributes.private_ip+ '(私)' }}</p>
-            <p>{{ scope.row.attributes.public_ip+ '(公)' }}</p>
+            <p v-if="scope.row.private_ip">{{ scope.row.private_ip+ '(私)'}}</p>
+            <p v-if="scope.row.public_ip">{{ scope.row.public_ip+ '(公)'}}</p>
           </template>
         </el-table-column>
         <el-table-column label="服务器配置" align="center" width="150">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.row.private_ip">
             <el-popover trigger="hover" placement="top">
-              <p>IP地址: {{ scope.row.attributes.private_ip }}</p>
-              <p>MAC地址: {{ scope.row.attributes.mac }}</p>
+              <p>IP地址: {{ scope.row.private_ip}}</p>
+              <p>MAC地址: {{ scope.row.mac}}</p>
               <div slot="reference" class="name-wrapper">
                 <el-tag effect="dark">
-                  <span>{{ scope.row.attributes.core+'核'+scope.row.attributes.memory+' '+scope.row.attributes.disk+'内存' }}</span>
+                  <span>{{ scope.row.core+'核'+scope.row.memory+' '+scope.row.disk+'内存' }}</span>
                 </el-tag>
               </div>
             </el-popover>
@@ -86,32 +86,33 @@
 
         <el-table-column label="机器码" align="center" show-overflow-tooltip width="200">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.key }}</span>
+            <span>{{ scope.row.key }}</span>
           </template>
         </el-table-column>
         <el-table-column label="授权码" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.license }}</span>
+            <span>{{ scope.row.license }}</span>
           </template>
         </el-table-column>
         <el-table-column label="连接状态" align="center" width="100">
           <template slot-scope="scope">
-            <span v-if="scope.row.attributes.is_online==true" style="color:green">在线</span>
+            <span v-if="scope.row.is_online==true" style="color:green">在线</span>
             <span v-else style="color:red">离线</span>
           </template>
         </el-table-column>
         <el-table-column label="部署情况" align="center" width="100">
           <template slot-scope="scope">
-            <span v-if="scope.row.attributes.status=='unauthorized'" style="color:red">未授权</span>
-            <span v-else-if="scope.row.attributes.status=='start_install'" style="color:green">开始部署</span>
-            <span v-else-if="scope.row.attributes.status=='installing'" style="color:green">部署中</span>
+            <span v-if="scope.row.status=='unauthorized'" style="color:red">未授权</span>
+            <span v-else-if="scope.row.status=='start_install'" style="color:green">开始部署</span>
+            <span v-else-if="scope.row.status=='installing'" style="color:green">部署中</span>
             <span v-else style="color:green">部署完成</span>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" width="500">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleDetail(scope.$index, scope.row)" >详 情</el-button>
-            <el-button size="mini" type="primary" icon="el-icon-s-operation" @click="addserver(scope.row)">在线安装</el-button>
+            <el-button size="mini" @click="handleDetail(scope.$index, scope.row)">详 情</el-button>
+            <el-button size="mini" type="primary" icon="el-icon-s-operation" @click="addserver(scope.row)">在线安装
+            </el-button>
             <el-button size="mini" type="success" @click="uploadLicense1(scope.row)">离线安装</el-button>
             <el-button size="mini" type="primary" @click="onlineLictool(scope.row)">在线升级</el-button>
             <el-button size="mini" type="success" @click="offlineLictool(scope.row)">离线升级</el-button>
@@ -238,8 +239,8 @@
             <el-option
               v-for="(item,index) in applist"
               :key="index"
-              :label="item.attributes.desc"
-              :value="item.attributes.desc"
+              :label="item.desc"
+              :value="item.desc"
             />
           </el-select>
         </el-form-item>
@@ -313,10 +314,10 @@
     </el-dialog>
   </div>
 </template>
-<script>
-import Parse from 'parse'
-import { returnLogin } from '@/utils/return'
-import { uploadServer, uploadLicense, offlineServer } from '@/api/applicationManagement'
+<script>import Parse from 'parse'
+import {returnLogin} from '@/utils/return'
+import {uploadServer, uploadLicense, offlineServer} from '@/api/applicationManagement'
+
 var product = {}
 export default {
   data() {
@@ -358,7 +359,7 @@ export default {
       },
       onlineformrule: {
         name: [
-          { required: true, message: '请输入要更新的版本号', trigger: 'blur' }
+          {required: true, message: '请输入要更新的版本号', trigger: 'blur'}
         ]
       },
       licensedetail: {},
@@ -401,26 +402,26 @@ export default {
       applist: [],
       rules: {
         name: [
-          { required: true, message: '请输入预计设计规模' },
-          { type: 'number', message: '预计设计规模 必须为数字值' }
+          {required: true, message: '请输入预计设计规模'},
+          {type: 'number', message: '预计设计规模 必须为数字值'}
         ],
         region: [
-          { required: true, message: '请选择应用类型', trigger: 'change' }
+          {required: true, message: '请选择应用类型', trigger: 'change'}
         ],
         appname: [
-          { required: true, message: '请选择需要应用', trigger: 'change' }
+          {required: true, message: '请选择需要应用', trigger: 'change'}
         ],
         version: [
-          { required: true, message: '请选择应用版本', trigger: 'change' }
+          {required: true, message: '请选择应用版本', trigger: 'change'}
         ],
         licensekey: [
-          { required: true, message: 'license必填', trigger: 'blur' }
+          {required: true, message: 'license必填', trigger: 'blur'}
         ],
         username: [
-          { required: true, message: '客户名称必填', trigger: 'blur' }
+          {required: true, message: '客户名称必填', trigger: 'blur'}
         ],
         version: [
-          { required: true, message: '应用版本必填', trigger: 'blur' }
+          {required: true, message: '应用版本必填', trigger: 'blur'}
         ],
         date1: [
           {
@@ -440,24 +441,24 @@ export default {
         ]
       },
       serverrules: {
-        app: [{ required: true, message: '请选择客户名称', trigger: 'change' }],
+        app: [{required: true, message: '请选择客户名称', trigger: 'change'}],
         serverip: [
-          { required: true, message: '请输入服务器私网IP', trigger: 'blur' },
+          {required: true, message: '请输入服务器私网IP', trigger: 'blur'},
           {
             validator: validUrl
           }
         ],
         publicip: [
-          { required: true, message: '请输入服务器公网IP', trigger: 'blur' },
+          {required: true, message: '请输入服务器公网IP', trigger: 'blur'},
           {
             validator: validUrl
           }
         ],
         mac: [
-          { required: true, message: '请输入服务器MAC地址', trigger: 'blur' }
+          {required: true, message: '请输入服务器MAC地址', trigger: 'blur'}
         ],
         serverhe: [
-          { required: true, message: '请输入服务器配置' },
+          {required: true, message: '请输入服务器配置'},
           {
             validator: valiNumberPass1,
             type: 'number',
@@ -465,22 +466,22 @@ export default {
           }
         ],
         serverg: [
-          { required: true, message: '请输入服务器配置' },
-          { type: 'number', message: '服务器配置必须为数字值' }
+          {required: true, message: '请输入服务器配置'},
+          {type: 'number', message: '服务器配置必须为数字值'}
         ],
         serverkey: [
-          { required: true, message: '请输入机器码', trigger: 'blur' },
-          { validator: validKey }
+          {required: true, message: '请输入机器码', trigger: 'blur'},
+          {validator: validKey}
         ],
         customer_name: [
-          { required: true, message: '请输入用户名称', trigger: 'blur' }
+          {required: true, message: '请输入用户名称', trigger: 'blur'}
         ],
         disk: [
-          { required: true, message: '请输入服务器内存' },
-          { type: 'number', message: '服务器内存必须为数字值' }
+          {required: true, message: '请输入服务器内存'},
+          {type: 'number', message: '服务器内存必须为数字值'}
         ],
         stauts: [
-          { required: true, message: '请选择服务器状态', trigger: 'change' }
+          {required: true, message: '请选择服务器状态', trigger: 'change'}
         ]
       },
       pickerOptionsStart: {
@@ -533,7 +534,6 @@ export default {
     if (this.$route.query.appid) {
       this.formInline.app = this.$route.query.appid
     }
-
     this.getOrigin(0)
     this.appid = this.$route.query.appid
     this.appsecret = this.$route.query.appsecret
@@ -541,102 +541,136 @@ export default {
   },
   methods: {
     addServer() {
+      // initFrom
+      this.serverForm = {
+          app: '',
+          serverip: '127.7.0.1',
+          serverhe: 4,
+          serverg: 8,
+          serverkey: 'EtXWoGpE74FnpANsLGDvj9uwkat8c7AU',
+          license: '127.7.0.1',
+          online: false,
+          customer_name: 'addServe',
+          disk: Number('50G'.replace(/G/g, '')),
+          status: 'unauthorized',
+          publicip: '127.7.0.1',
+          mac: '127.7.0.1'
+      },
       this.serverdialogVisible = true
     },
     serverOption(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var License = Parse.Object.extend('License')
-          var license = new License()
-          var APP = Parse.Object.extend('App')
-          var app = new APP()
-          var acl = new Parse.ACL()
-          app.id = this.serverForm.app
-          // var userId = Parse.User.current().id;
-
-          acl.setRoleReadAccess(this.serverForm.app, true)
-          acl.setRoleWriteAccess(this.serverForm.app, true)
-
-          license.set('key', this.serverForm.serverkey)
-          license.set('private_ip', this.serverForm.serverip)
-          license.set('is_online', this.serverForm.online)
-          license.set('customer_name', this.serverForm.customer_name)
-          license.set('public_ip', this.serverForm.publicip)
-          license.set('disk', this.serverForm.disk + 'G')
-          license.set('core', this.serverForm.serverhe)
-          license.set('memory', this.serverForm.serverg + 'G')
-          license.set('mac', this.serverForm.mac)
-          license.set('license', this.serverForm.license)
-          license.set('app', app)
-          license.set('ACL', acl)
-          license.save().then(
-            resultes => {
-              if (resultes) {
+          const aclKey1 = this.$Cookies.get('appids')
+          const setAcl = {}
+          setAcl[aclKey1] = {
+            read: true,
+            write: true,
+          }
+          var params = {ACL: setAcl}
+          params.appname = this.serverForm.customer_name
+          params.detail = {}
+          params.product = {}
+          params.key = this.serverForm.serverkey
+          params.private_ip = this.serverForm.serverip
+          params.is_online = this.serverForm.online
+          params.customer_name = this.serverForm.customer_name
+          params.public_ip = this.serverForm.publicip
+          params.disk = this.serverForm.disk + 'G'
+          params.core = this.serverForm.serverhe
+          params.memory = this.serverForm.serverg + 'G'
+          params.mac = this.serverForm.mac
+          params.license = this.serverForm.license
+          params.app = {
+            "__type": "Pointer",
+            "className": "App",
+            "objectId": this.serverForm.app
+          },
+            this.$axiosWen.post('classes/License', params, {headers: {'authorization': 'Basic YWRtaW46c3dTV2lvdG4ybi5jb20='}}).then(res => {
+              if (res) {
                 this.$message('添加成功')
                 this.$refs[formName].resetFields()
                 this.getOrigin(0)
                 this.serverdialogVisible = false
               }
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
+            }).catch(e => {
+              console.log(e);
+            });
+          // license.save().then(
+          //   resultes => {
+          //     if (resultes) {
+          //       this.$message('添加成功')
+          //       this.$refs[formName].resetFields()
+          //       this.getOrigin(0)
+          //       this.serverdialogVisible = false
+          //     }
+          //   },
+          //   error => {
+          //     returnLogin(error)
+          //   }
+          // )
         } else {
           console.log('error.submit')
         }
       })
     },
-    // 初始化应用data
+    // // 初始化应用data  parse query
+    // getApp() {
+    //   var APP = Parse.Object.extend('App')
+    //   var app = new Parse.Query(APP)
+    //   app.find().then(
+    //     response => {
+    //       if (response) {
+    //         this.applist = response
+    //       }
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
+    // 初始化应用data  axios query
     getApp() {
-      var APP = Parse.Object.extend('App')
-      var app = new Parse.Query(APP)
-      app.find().then(
-        response => {
-          if (response) {
-            this.applist = response
-          }
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      this.$axios.get('/iotapi/classes/App')
+        .then(res => {
+          this.applist = res.results
+        }).catch(e => {
+        console.log(e);
+      });
     },
     // 初始化数
     getOrigin(isstart) {
-      if (isstart == 0) {
+      if (isstart === 0) {
         this.start = 0
       }
-      var License = Parse.Object.extend('License')
-      var license = new Parse.Query(License)
-      if (this.formInline.region != 1) {
-        license.equalTo('is_online', this.formInline.region)
+      var params = {
+        order: '-updatedAt',
+        skip: this.start,
+        limit: this.pagesize,
+        keys: 'count(*)',
+        where: {}
       }
-      if (this.formInline.app != '') {
-        license.equalTo('app', this.formInline.app)
+      if (this.formInline.region !== 1) {
+        params.where.is_online = this.formInline.region
+        // params.is_online=this.formInline.region
       }
-      if (this.formInline.user != '') {
-        license.matches('customer_name', this.formInline.user, 'i')
+      if (this.formInline.app !== '') {
+        params.app = this.formInline.app
       }
-      if (this.formInline.version != '') {
-        license.equalTo('type', this.formInline.version)
+      if (this.formInline.user !== '') {
+        params.where.customer_name = this.formInline.user
       }
-      license.ascending('-updatedAt')
-      license.skip(this.start)
-      license.limit(this.pagesize)
-      license.count().then(count => {
-        this.total = count
-        license.find().then(
-          resultes => {
-            if (resultes) {
-              this.tableData = resultes
-            }
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
-      })
+      if (this.formInline.version !== '') {
+        params.type = this.formInline.version
+      }
+      // console.log('search license is', params)
+      this.$axios.get('iotapi/classes/License', {params: params}).then(res => {
+        // console.log(res)
+        this.total = res.count
+        this.tableData = res.results
+      }).catch(e => {
+        console.log(e);
+      });
     },
     // 分页
     handleSizeChange(val) {
@@ -765,8 +799,8 @@ export default {
       uploadServer(row.attributes.license).then(resultes => {
         window.open(
           window.location.origin +
-            '/iotapi/licsetup?license=' +
-            row.attributes.license,
+          '/iotapi/licsetup?license=' +
+          row.attributes.license,
           '_blank'
         )
       })
@@ -804,8 +838,8 @@ export default {
       offlineServer(row.attributes.license).then(resultes => {
         window.open(
           window.location.origin +
-            '/iotapi/licsetup?license=' +
-            row.attributes.license,
+          '/iotapi/licsetup?license=' +
+          row.attributes.license,
           '_blank'
         )
       })
@@ -817,10 +851,10 @@ export default {
           if (resultes) {
             window.open(
               window.location.origin +
-                '/iotapi/lictool?appid=' +
-                this.appid +
-                '&appsecret=' +
-                this.appsecret,
+              '/iotapi/lictool?appid=' +
+              this.appid +
+              '&appsecret=' +
+              this.appsecret,
               '_blank'
             )
           }
@@ -833,52 +867,61 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.serverlist {
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  background: #fff;
-  .servercontent {
-    .el-form {
-      text-align: right;
-    }
-  }
-  .serverpagina {
-    margin-top: 20px;
-  }
-  /deep/ .el-dialog__body {
-    .el-form {
-      display: flex;
-      flex-wrap: wrap;
-      .el-form-item {
-        width: 50%;
-        /deep/.el-select {
-          width: 100%;
-        }
-      }
-      /deep/ .notall {
-        width: 100%;
-        text-align: center;
-      }
-      /deep/ .el-col-11 {
-        .el-form-item {
-          width: 100%;
-        }
-      }
-      /deep/ .el-col-2 {
-        text-align: center;
+  .serverlist {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+
+    .servercontent {
+      .el-form {
+        text-align: right;
       }
     }
-  }
-  @media screen and (max-width: 1350px) {
+
+    .serverpagina {
+      margin-top: 20px;
+    }
+
     /deep/ .el-dialog__body {
       .el-form {
+        display: flex;
+        flex-wrap: wrap;
+
         .el-form-item {
+          width: 50%;
+
+          /deep/ .el-select {
+            width: 100%;
+          }
+        }
+
+        /deep/ .notall {
           width: 100%;
+          text-align: center;
+        }
+
+        /deep/ .el-col-11 {
+          .el-form-item {
+            width: 100%;
+          }
+        }
+
+        /deep/ .el-col-2 {
+          text-align: center;
+        }
+      }
+    }
+
+    @media screen and (max-width: 1350px) {
+      /deep/ .el-dialog__body {
+        .el-form {
+          .el-form-item {
+            width: 100%;
+          }
         }
       }
     }
   }
-}
 </style>
