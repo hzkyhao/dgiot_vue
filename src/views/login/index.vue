@@ -21,7 +21,6 @@
           <p>{{ title }}</p>
         </div>
         <div v-show="false" style="margin: 20px">
-          <el-radio v-model="roleType" disabled label="pump">水泵登录</el-radio>
           <el-radio v-model="roleType" label="default">平台登录</el-radio>
         </div>
         <!-- <h5 style="text-align:center;font-size:20px;color:rgba(0, 0, 0, 0.647058823529412);margin:20px 0;">账号密码登录</h5> -->
