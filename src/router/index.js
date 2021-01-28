@@ -209,12 +209,6 @@ export const constantRouterMap = [
         meta: { title: "插件管理", icon: "appmanage" }
       },
       {
-        path: "/roles/tasklistmanage",
-        name: "任务管理",
-        component: () => import("@/views/equipment_management/tasklistmanage"),
-        meta: { title: "任务管理", icon: "tasklistmanage" }
-      },
-      {
         path: "/roles/thing",
         name: "设备管理",
         component: () => import("@/views/equipment_management/index"),

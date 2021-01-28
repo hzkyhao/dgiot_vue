@@ -19,3 +19,5 @@ WebTopo-master/src/statics/shapes
 spa/
 **/*.ts
 *.zip
+*.lock
+*.lock.json
