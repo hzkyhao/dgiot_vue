@@ -12,9 +12,9 @@
 //  var serverURL = "http://148.70.50.192:5080/iotapi"
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
 //  var serverURL = "http://192.168.2.44:5080/iotapi"
- //var serverURL = "http://192.168.2.51:5080/iotapi"
+// var serverURL = "http://192.168.2.51:5080/iotapi"
 //  var serverURL = "http://192.168.2.66:5080/iotapi";
-var serverURL = "http://p44556672.ump.iotn2n.com";
+var serverURL = "http://132.232.119.105/";
 
 // var serverURL = "http://132.232.121.164:5080/iotapi";
 //  var serverURL = "http://cad.iotn2n.com:5080/iotapi"
@@ -24,7 +24,7 @@ var serverURL = "http://p44556672.ump.iotn2n.com";
 // var serverURL = "http://120.25.171.26:5080/iotapi"
 // var serverURL =  'http://shapes.iotn2n.com:5080/iotapi'
 
-//var serverURL =  'http://192.168.2.71:5080/iotapi'
+// var serverURL =  'http://192.168.2.71:5080/iotapi'
 
 var localTopoUrl = "http://192.168.2.58:8339";
 var hostname = null;
