@@ -301,9 +301,9 @@
   </div>
 </template>
 <script>
+import { queryDict } from '@/api/devproduct/index'
 const Base64 = require('js-base64').Base64
 import { getIndustry } from '@/api/applicationManagement'
-import Parse from 'parse'
 import { setTimeout } from 'timers'
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -440,17 +440,6 @@ export default {
           { label: '自定义', value: 'OTHER' }
         ]
       }
-    },
-    getRoles() {
-      return new Promise((resolve, reject) => {
-        var App = Parse.Object.extend('App')
-        var query = new Parse.Query(App)
-        query.find().then(res => {
-          resolve(res)
-        }, error => {
-          reject(error)
-        })
-      })
     },
     selectApp(val) {
       if (!val) {
@@ -607,22 +596,33 @@ export default {
       return date // 2017-03-31 16:02:06
     },
     // 得到category
-    getDict(resultes, category) {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.containedIn('type', category)
-      datas.limit(1000)
-      datas.find().then(response => {
-        this.allTableDate = response
-        resultes.map(items => {
-          response.map(category => {
-            if (items.attributes.category == category.attributes.type) {
-              items.CategoryKey = category.attributes.data.CategoryName
-            }
-          })
-        })
-        this.proTableData = resultes
-      })
+    // getDict(resultes, category) {
+    //   var Dict = Parse.Object.extend('Dict')
+    //   var datas = new Parse.Query(Dict)
+    //   datas.containedIn('type', category)
+    //   datas.limit(1000)
+    //   datas.find().then(response => {
+    //     this.allTableDate = response
+    //     resultes.map(items => {
+    //       response.map(category => {
+    //         if (items.attributes.category == category.attributes.type) {
+    //           items.CategoryKey = category.attributes.data.CategoryName
+    //         }
+    //       })
+    //     })
+    //     this.proTableData = resultes
+    //   })
+    // },
+    async getDict(resultes, category) {
+      console.log(resultes, category)
+      const parsms = {
+        limit: 1000,
+        where: {
+          'data.key': 'category'
+        }
+      }
+      const res = await queryDict(parsms)
+      console.log("res", res)
     },
     searchProduct(start) {
       if (start == 0) {
