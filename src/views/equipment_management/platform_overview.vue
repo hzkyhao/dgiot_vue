@@ -82,27 +82,27 @@
           <el-card class="box-card" shadow="always">
             <div slot="header" class="clearfix">
               <span style="font-weight: bolder;">{{
-                item.attributes.title
+                item.title
               }}</span>
             </div>
             <div class="text item">
               <span>工程单位：</span>
-              <span>{{ item.attributes.userUnit }}</span>
+              <span>{{ item.userUnit }}</span>
             </div>
             <div class="text item">
               <span>服务规模：</span>
-              <span>{{ item.attributes.scale }}</span>
+              <span>{{ item.scale }}</span>
             </div>
             <div class="text item">
               <span>所属行业：</span>
-              <span>{{ item.attributes.category }}</span>
+              <span>{{ item.category }}</span>
             </div>
             <div class="text item">
               <span>更新时间：</span>
               <span>{{
-                new Date(item.attributes.updatedAt).toLocaleDateString() +
+                new Date(item.updatedAt).toLocaleDateString() +
                   " " +
-                  new Date(item.attributes.updatedAt).toLocaleTimeString()
+                  new Date(item.updatedAt).toLocaleTimeString()
               }}</span>
             </div>
             <div class="text item" style="float:right;">
