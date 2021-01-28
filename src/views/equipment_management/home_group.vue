@@ -338,7 +338,9 @@
   </div>
 </template>
 <script>
-import { queryDict, queryRole, queryProduct } from '@/api/devproduct/index'
+import { queryProduct } from '@/api/Product/index'
+import { queryDict } from '@/api/Dict/index'
+import { queryRole } from '@/api/Role/index'
 const Base64 = require('js-base64').Base64
 import { getIndustry } from '@/api/applicationManagement'
 import Parse from 'parse'
@@ -665,33 +667,6 @@ export default {
         .replace(/\.[\d]{3}Z/, '')
       return date // 2017-03-31 16:02:06
     },
-    // // 得到category
-    // getDict(resultes, category) {
-    //   var Dict = Parse.Object.extend('Dict')
-    //   var datas = new Parse.Query(Dict)
-    //   datas.containedIn('type', category)
-    //   datas.limit(1000)
-    //   datas.find().then(response => {
-    //     this.allTableDate = response
-    //     resultes.map(items => {
-    //       response.map(category => {
-    //         if (items.attributes.config.config && items.attributes.config.config.cloneState == 'undefined') {
-    //           console.log(items.attributes.config.config)
-    //           items.attributes.config.cloneState = false
-    //         } else {
-    //           items.attributes.config.config = {}
-    //           items.attributes.config.config.cloneState = false
-    //           console.log(items.attributes.config.cloneState)
-    //         }
-    //         if (items.attributes.category == category.attributes.type) {
-    //           items.CategoryKey = category.attributes.data.CategoryName
-    //         }
-    //       })
-    //     })
-    //     this.groupData = resultes
-    //   })
-    // },
-
     async getDict(resultes, category) {
       console.log(resultes, category)
       const parsms = {
@@ -722,11 +697,12 @@ export default {
       this.groupData = results
       this.total = this.groupData.length
       console.log(this.groupData)
-      // this.getRoles().then(data => {
-      //   this.allApps = data
-      // }).catch(error => {
-      //   returnLogin(error)
-      // })
+
+      const resApps = await queryRole({
+        limit: 100
+      })
+
+      this.allApps = resApps.results
     },
     handleClose() {
       this.dialogFormVisible = false
@@ -1090,7 +1066,7 @@ export default {
     // 编辑组态
     proudctEdit(row) {
       // #topoUrl
-      console.log('编辑组态 row is',row)
+      console.log('编辑组态 row is', row)
       if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
         var topoUrl = window.location.origin + '/spa'
       } else {

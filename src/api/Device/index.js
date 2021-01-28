@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export async function queryDict(params) {
+export async function queryDevice(params) {
   return request({
-    url: 'iotapi/classes/Dict',
+    url: 'iotapi/classes/Device',
     method: "get",
     headers: {
       'accept': 'application/json',
@@ -12,9 +12,9 @@ export async function queryDict(params) {
   });
 }
 
-export async function queryRole(params) {
+export async function delete_Device(params) {
   return request({
-    url: 'iotapi/classes/_Role',
+    url: 'iotapi/classes/Channel',
     method: "get",
     headers: {
       'accept': 'application/json',
@@ -25,9 +25,9 @@ export async function queryRole(params) {
 }
 
 
-export async function queryProduct(params) {
+export async function put_Device(params) {
   return request({
-    url: 'iotapi/classes/Product',
+    url: 'iotapi/classes/Channel',
     method: "get",
     headers: {
       'accept': 'application/json',
@@ -37,3 +37,15 @@ export async function queryProduct(params) {
   });
 }
 
+
+export async function queryChannel(params) {
+  return request({
+    url: 'iotapi/classes/Channel',
+    method: "get",
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    params
+  });
+}

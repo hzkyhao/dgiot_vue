@@ -301,7 +301,7 @@
   </div>
 </template>
 <script>
-import { queryDict } from '@/api/devproduct/index'
+import { queryDict } from '@/api/Dict/index'
 const Base64 = require('js-base64').Base64
 import { getIndustry } from '@/api/applicationManagement'
 import { setTimeout } from 'timers'
