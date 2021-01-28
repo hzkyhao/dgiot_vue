@@ -121,7 +121,7 @@
 
             <el-tab-pane label="测试" name="swagger">
               <iframe
-                src="http://pump.iotn2n.com:5080/swagger/#/Crond"
+                :src="swaggerPath"
                 width="100%"
                 height="700vh"
               />
@@ -209,6 +209,7 @@ export default {
         ProductKey: "",
         ProductAll: 0
       },
+      swaggerPath:'',
       decoderstart: 0,
       decodertotal: 0,
       decoderlength: 10,
@@ -239,11 +240,21 @@ export default {
     };
   },
   computed: {
-    tableFilterData() {
+      tableFilterData() {
       return null;
     }
   },
   mounted() {
+    const hostIncludes = ["192.168.2.69","192.168.2.58","127.0.0.1","localhost"]
+    const {hostname} = location
+
+    if(!hostIncludes.includes(hostname)){
+    this.swaggerPath =    hostname+''+':5080/swagger/#/'
+    }else {
+    this.swaggerPath ='http://pump.iotn2n.com:5080/swagger/#/'
+    }
+    console.log(` this.swaggerPath is ${this.swaggerPath}`)
+
     // editor编辑器使用
     editor2 = ace.edit("editor2");
     editor2.session.setMode("ace/mode/python"); // 设置语言
