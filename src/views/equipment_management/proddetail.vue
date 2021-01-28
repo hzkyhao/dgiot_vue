@@ -335,12 +335,11 @@
         <!--功能定义-->
         <el-tab-pane :label="$t('product.physicalmodel')" name="third">
           <div style="text-align:right">
-            <el-button
-              type="primary"
-              size="small"
-              @click="checkAddTest"
-            >李宏杰新增按钮</el-button
-            >
+<!--            <el-button-->
+<!--              type="primary"-->
+<!--              size="small"-->
+<!--              @click="checkAddTest"-->
+<!--            >李宏杰新增按钮</el-button>-->
             <el-button type="primary" size="small" @click="checkschema">{{
               $t("product.viewobjectmodel")
             }}</el-button>
@@ -2239,7 +2238,7 @@
               :name="item.name"
             >
               <div class="diaCollRightCls">
-                 
+
              <el-row style="margin:10px">
                <el-button type="success">测试</el-button>
                <el-button type="info" @click="onReductionTap(index)">还原</el-button>
@@ -2765,7 +2764,7 @@ export default {
       wmxtotal: 20,
       wmxData: [],
       editorList:[],
-      
+
       warningeditror: [],
       channellength: 10,
       channelstart: 0,
@@ -4264,7 +4263,7 @@ export default {
           });
     },
 
-    
+
 
     //右上角关闭页面
     handleCloseCollecttion(done) {
