@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/transaction/list',
+    url: 'iotapi/transaction/list',
     method: 'get',
     params: query
   })

@@ -33,23 +33,23 @@
         </el-button></el-form-item>
       </el-form>
       <div class="protable">
-        <el-table :data="proTableData" style="width: 100%">
+        <el-table :data="groupData" style="width: 100%">
           <el-table-column prop="id" label="ProductID"/>
           <el-table-column :label="$t('product.productname')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.name }}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('product.productgrouping')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.devType }}</span>
+              <span>{{ scope.row.devType }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('product.nodetype')">
             <template slot-scope="scope" style="text-align: center;">
-              <span v-if="scope.row.attributes.nodeType==1">{{ $t('product.gateway') }}</span>
-              <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
-              <span v-if="scope.row.attributes.nodeType==2">分组</span>
+              <span v-if="scope.row.nodeType==1">{{ $t('product.gateway') }}</span>
+              <span v-if="scope.row.nodeType==0">{{ $t('product.equipment') }}</span>
+              <span v-if="scope.row.nodeType==2">分组</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('product.classification')">
@@ -82,13 +82,13 @@
                 type="primary"
                 @click="GoTodevices(scope.row)"
               >{{ $t('product.equipment') }}</el-link>
-              <el-link
+              <!-- <el-link
                 :underline="false"
-                :disabled="scope.row.attributes.config.config.cloneState == true"
+                :disabled="scope.row.config.config.cloneState == true"
                 icon="el-icon-link"
                 type="primary"
                 @click="proudctClone(scope.row)"
-              >备份</el-link>
+              >备份</el-link> -->
               <el-link
                 :underline="false"
                 type="primary"
@@ -286,7 +286,7 @@
                 prop="name"
             /></el-col>
             <el-col :span="18">
-              <el-input v-model.number="addGroup.name" type="text" autocomplete="off"/></el-form-item>
+              <el-input v-model="addGroup.name" type="text" autocomplete="off"/></el-form-item>
             </el-col>
           </el-row>
           </el-form-item>
@@ -338,6 +338,9 @@
   </div>
 </template>
 <script>
+import { queryProduct } from '@/api/Product/index'
+import { queryDict } from '@/api/Dict/index'
+import { queryRole } from '@/api/Role/index'
 const Base64 = require('js-base64').Base64
 import { getIndustry } from '@/api/applicationManagement'
 import Parse from 'parse'
@@ -372,7 +375,7 @@ export default {
       uploadData: {},
       fileList: [],
       productIdentifier: '',
-      proTableData: [],
+      groupData: [],
       formLabelWidth: '80px',
       dialogFormVisible: false,
       importDialogShow: false,
@@ -509,17 +512,6 @@ export default {
           { label: '自定义', value: 'OTHER' }
         ]
       }
-    },
-    getRoles() {
-      return new Promise((resolve, reject) => {
-        var App = Parse.Object.extend('App')
-        var query = new Parse.Query(App)
-        query.find().then(res => {
-          resolve(res)
-        }, error => {
-          reject(error)
-        })
-      })
     },
     selectApp(val) {
       if (!val) {
@@ -675,113 +667,42 @@ export default {
         .replace(/\.[\d]{3}Z/, '')
       return date // 2017-03-31 16:02:06
     },
-    // 得到category
-    getDict(resultes, category) {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.containedIn('type', category)
-      datas.limit(1000)
-      datas.find().then(response => {
-        this.allTableDate = response
-        resultes.map(items => {
-          response.map(category => {
-            if (items.attributes.config.config && items.attributes.config.config.cloneState == 'undefined') {
-              console.log(items.attributes.config.config)
-              items.attributes.config.cloneState = false
-            } else {
-              items.attributes.config.config = {}
-              items.attributes.config.config.cloneState = false
-              console.log(items.attributes.config.cloneState)
-            }
-            if (items.attributes.category == category.attributes.type) {
-              items.CategoryKey = category.attributes.data.CategoryName
-            }
-          })
-        })
-        this.proTableData = resultes
-      })
+    async getDict(resultes, category) {
+      console.log(resultes, category)
+      const parsms = {
+        limit: 1000,
+        where: {
+          'data.key': 'category'
+        }
+      }
+      const { results } = await queryDict(parsms)
+      // this.groupData = results
+      console.log("res", results)
     },
-    searchProduct(start) {
+
+    async searchProduct(start) {
       if (start == 0) {
         this.start = 0
       }
-      var category = []
-      if (this.$route.query.project) {
-        this.projectid = this.$route.query.project
-        var Project = Parse.Object.extend('Project')
-        var project = new Parse.Query(Project)
-        project.get(this.projectid).then(response => {
-          this.projectName = response.attributes.title
-          this.form.relationApp = response.attributes.title
-          this.getRoles().then(data => {
-            this.allApps = data
-            this.selectApp(response.attributes.title)
-          }).catch(error => {
-            returnLogin(error)
-          })
-
-          var relation = response.relation('product')
-          var query = relation.query()
-          if (this.formInline.productname != '') {
-            query.matches('name', this.formInline.productname, 'i')
-          }
-          query.ascending('-updatedAt')
-          query.skip(this.start)
-          query.limit(this.length)
-          query.count().then(count => {
-            this.total = count
-            query.find().then(resultes => {
-              if (resultes) {
-                resultes.map(items => {
-                  if (
-                    items.attributes.category != '' &&
-                    items.attributes.category
-                  ) {
-                    category.push(items.attributes.category)
-                  }
-                })
-                this.getDict(resultes, category)
-              }
-            })
-          })
-        })
-      } else {
-        var Product = Parse.Object.extend('Product')
-        var product = new Parse.Query(Product)
-        if (this.formInline.productname != '') {
-          product.matches('name', this.formInline.productname, 'i')
+      const params = {
+        order: '-updatedAt',
+        skip: this.start,
+        limit: this.length,
+        where: {
+          nodeType: '2'
         }
-        this.getRoles().then(data => {
-          this.allApps = data
-        }).catch(error => {
-          returnLogin(error)
-        })
-        product.ascending('-updatedAt')
-        product.skip(this.start)
-        product.limit(this.length)
-        product.equalTo('nodeType', 2)
-        product.count().then(
-          count => {
-            this.total = count
-            product.find().then(resultes => {
-              if (resultes) {
-                resultes.map(items => {
-                  if (
-                    items.attributes.category != '' &&
-                    items.attributes.category
-                  ) {
-                    category.push(items.attributes.category)
-                  }
-                })
-                this.getDict(resultes, category)
-              }
-            })
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
       }
+      const { results } = await queryProduct(params)
+      console.log("results", results)
+      this.groupData = results
+      this.total = this.groupData.length
+      console.log(this.groupData)
+
+      const resApps = await queryRole({
+        limit: 100
+      })
+
+      this.allApps = resApps.results
     },
     handleClose() {
       this.dialogFormVisible = false
@@ -837,32 +758,32 @@ export default {
     },
     handleChange() {},
     // 查询样品
-    Industry() {
-      this.categoryList = []
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('data.key', 'category')
-      datas.limit(1000)
-      datas.find().then(
-        response => {
-          if (response) {
-            response.map(items => {
-              var obj = {}
-              obj.value = items.attributes.type
-              obj.label = items.attributes.data.CategoryName
-              obj.id = items.attributes.data.Id
-              obj.parentid = items.attributes.data.SuperId
-              this.categoryList.push(obj)
-            })
-            // this.searchProduct();
-            this.categoryListOptions = this.treeData(this.categoryList)
-          }
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
-    },
+    // Industry() {
+    //   this.categoryList = []
+    //   var Dict = Parse.Object.extend('Dict')
+    //   var datas = new Parse.Query(Dict)
+    //   datas.equalTo('data.key', 'category')
+    //   datas.limit(1000)
+    //   datas.find().then(
+    //     response => {
+    //       if (response) {
+    //         response.map(items => {
+    // var obj = {}
+    // obj.value = items.attributes.type
+    // obj.label = items.attributes.data.CategoryName
+    // obj.id = items.attributes.data.Id
+    // obj.parentid = items.attributes.data.SuperId
+    // this.categoryList.push(obj)
+    //         })
+    //         // this.searchProduct();
+    //         this.categoryListOptions = this.treeData(this.categoryList)
+    //       }
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
     // distinct(a, b) {
     //     let arr = a.concat(b);
 
@@ -872,6 +793,26 @@ export default {
     //     })
 
     // },
+
+    async Industry() {
+      this.categoryList = []
+      const parsms = {
+        limit: 1000,
+        where: {
+          'data.key': 'category'
+        }
+      }
+      const { results } = await queryDict(parsms)
+      results.map(items => {
+        var obj = {}
+        obj.value = items.type
+        obj.label = items.data.CategoryName
+        obj.id = items.data.Id
+        obj.parentid = items.data.SuperId
+        this.categoryList.push(obj)
+      })
+      this.categoryListOptions = this.treeData(this.categoryList)
+    },
 
     submitForm(formName) {
       var objectId = Parse.User.current().id
@@ -1086,7 +1027,7 @@ export default {
         const { objectId } = res
         this.hashkey = objectId
         if (this.hashkey) {
-          this.$axiosWen.post('/classes/Dict', {
+          this.$axiosWen.post('iotapi/classes/Dict', {
             data: data,
             "key": this.hashkey,
             "type": "Product"
@@ -1125,15 +1066,15 @@ export default {
     // 编辑组态
     proudctEdit(row) {
       // #topoUrl
-
+      console.log('编辑组态 row is', row)
       if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
         var topoUrl = window.location.origin + '/spa'
       } else {
         var topoUrl = this.$globalConfig.localTopoUrl
       }
       // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#?drawProudctid=${row.id}&proudctid=${row.id}`
-      localStorage.setItem('rowId', row.id)
+      var url = `${topoUrl}/#?drawProudctid=${row.objectId}&proudctid=${row.objectId}`
+      localStorage.setItem('rowId', row.objectId)
       window.open(url, '__blank')
     },
     // 运行组态

@@ -463,7 +463,7 @@ export default {
     getAppdetail(pagesize, start) {
       console.log(pagesize, start);
       this.$axiosWen
-        .get("classes/_Role", {
+        .get("iotapi/classes/_Role", {
           params: {
             skip: start,
             limit: pagesize,

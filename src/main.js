@@ -22,7 +22,6 @@ import i18n from './common/language'
 import echarts from 'echarts'
 import VueResource from 'vue-resource'
 import '@/icons' // icon
-import '@/icons1' // icon
 import '@/permission' // permission control
 import './assets/iconfont/iconfont.css'
 // 引入Animate.css

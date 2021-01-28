@@ -399,7 +399,7 @@ export default {
         this.formData = new FormData(); // new一个formData事件
         this.formData.append("file", this.file); // 将file属性添加到formData里
         this.$axios
-          .post("/menu", this.formData)
+          .post("iotapi/menu", this.formData)
           .then(res => {
             this.$message({
               type: "success",
@@ -433,13 +433,13 @@ export default {
         //MenuForm.fathername数组最后一个元素
         parent.id = this.MenuForm.fathername[
           this.MenuForm.fathername.length - 1
-        ];  
+        ];
 
-        let pid =  resultes.attributes.parent.id 
-       
+        let pid =  resultes.attributes.parent.id
+
        if(pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id){
           resultes.set("parent", parent);
-        } 
+        }
         resultes.save().then(res => {
           Promise.all([
             this.MenuForm.roles.map(items => this.getuseracl(resultes, items))

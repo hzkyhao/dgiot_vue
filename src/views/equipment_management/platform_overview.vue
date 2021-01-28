@@ -82,27 +82,27 @@
           <el-card class="box-card" shadow="always">
             <div slot="header" class="clearfix">
               <span style="font-weight: bolder;">{{
-                item.attributes.title
+                item.title
               }}</span>
             </div>
             <div class="text item">
               <span>工程单位：</span>
-              <span>{{ item.attributes.userUnit }}</span>
+              <span>{{ item.userUnit }}</span>
             </div>
             <div class="text item">
               <span>服务规模：</span>
-              <span>{{ item.attributes.scale }}</span>
+              <span>{{ item.scale }}</span>
             </div>
             <div class="text item">
               <span>所属行业：</span>
-              <span>{{ item.attributes.category }}</span>
+              <span>{{ item.category }}</span>
             </div>
             <div class="text item">
               <span>更新时间：</span>
               <span>{{
-                new Date(item.attributes.updatedAt).toLocaleDateString() +
+                new Date(item.updatedAt).toLocaleDateString() +
                   " " +
-                  new Date(item.attributes.updatedAt).toLocaleTimeString()
+                  new Date(item.updatedAt).toLocaleTimeString()
               }}</span>
             </div>
             <div class="text item" style="float:right;">
@@ -134,7 +134,7 @@
 </template>
 <script>
 import Parse from "parse";
-import { batch } from "@/api/data";
+import { batch, getProduct, getApp, getProject, getDevice } from "@/api/data";
 export default {
   components: {
   },
@@ -176,89 +176,133 @@ export default {
         }
       });
     },
-    query() {
-      batch("batch", {
-        requests: [
-          {
-            method: "GET",
-            path: "/classes/Project",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Product",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/App",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1,
-              where: {
-                status: "ACTIVE"
-              }
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1,
-              where: {
-                status: "ONLINE"
-              }
-            }
-          }
-        ]
-      }).then(res => {
-        this.project_count = res[0].success ? res[0].success.count : "-";
-        this.product_count = res[1].success ? res[1].success.count : "-";
-        this.app_count = res[2].success ? res[2].success.count : "-";
-        this.dev_count = res[3].success ? res[3].success.count : "-";
-        this.dev_active_count = res[4].success ? res[4].success.count : "-";
-        this.dev_online_count = res[5].success ? res[5].success.count : "-";
-      });
+    async query() {
+      const queryProduct = await getProduct({
+        limit: 0,
+        count: 1
+      })
 
-      var Project = Parse.Object.extend("Project");
-      var project = new Parse.Query(Project);
-      project.limit = 30;
-      project.find().then(
-        response => {
-          if (response) {
-            this.projectList = response;
-          }
-        },
-        error => {
-          console.log(error);
+      const queryProject = await getProject({
+        limit: 0,
+        count: 1
+      })
+
+      const queryApp = await getApp({
+        limit: 0,
+        count: 1
+      })
+
+      const queryACTIVEDevice = await getDevice({
+        limit: 0,
+        count: 1,
+        where: {
+          status: "ACTIVE"
         }
-      );
+      })
+
+      const queryONLINEDevice = await getDevice({
+        limit: 0,
+        count: 1,
+        where: {
+          status: "ONLINE"
+        }
+      })
+      console.log(queryProject)
+      this.project_count = queryProject.count || "-";
+      this.product_count = queryProduct.count || "-";
+      this.app_count = queryApp.count || "-";
+      this.dev_count = queryProject.count || "-";
+      this.dev_active_count = queryACTIVEDevice.count || "-";
+      this.dev_online_count = queryONLINEDevice.count || "-";
+      // batch("/batch", {
+      //   requests: [
+      //     {
+      //       method: "GET",
+      //       path: "/classes/Project",
+      //       body: {
+      //         limit: 0,
+      //         count: 1
+      //       }
+      //     },
+      //     {
+      //       method: "GET",
+      //       path: "/classes/Product",
+      //       body: {
+      //         limit: 0,
+      //         count: 1
+      //       }
+      //     },
+      //     {
+      //       method: "GET",
+      //       path: "/classes/App",
+      //       body: {
+      //         limit: 0,
+      //         count: 1
+      //       }
+      //     },
+      //     {
+      //       method: "GET",
+      //       path: "/classes/Device",
+      //       body: {
+      //         limit: 0,
+      //         count: 1
+      //       }
+      //     },
+      //     {
+      //       method: "GET",
+      //       path: "/classes/Device",
+      //       body: {
+      //         limit: 0,
+      //         count: 1,
+      //         where: {
+      //           status: "ACTIVE"
+      //         }
+      //       }
+      //     },
+      //     {
+      //       method: "GET",
+      //       path: "/classes/Device",
+      //       body: {
+      //         limit: 0,
+      //         count: 1,
+      //         where: {
+      //           status: "ONLINE"
+      //         }
+      //       }
+      //     }
+      //   ]
+      // }).then(res => {
+      //   this.project_count = res[0].success ? res[0].success.count : "-";
+      //   this.product_count = res[1].success ? res[1].success.count : "-";
+      //   this.app_count = res[2].success ? res[2].success.count : "-";
+      //   this.dev_count = res[3].success ? res[3].success.count : "-";
+      //   this.dev_active_count = res[4].success ? res[4].success.count : "-";
+      //   this.dev_online_count = res[5].success ? res[5].success.count : "-";
+      // });
+
+
+      const Project = await getProject({
+        limit: 30,
+      })
+      this.projectList = Project.results
+      console.log(Project,'Project')
+
+    //   var Project = Parse.Object.extend("Project");
+    //   var project = new Parse.Query(Project);
+    //   project.limit = 30;
+    //   project.find().then(
+    //     response => {
+    //       if (response) {
+    //         this.projectList = response;
+    //       }
+    //     },
+    //     error => {
+    //       console.log(error);
+    //     }
+    //   );
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .platform {

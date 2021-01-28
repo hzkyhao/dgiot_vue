@@ -13,7 +13,7 @@ export function Upload({ file }) {
 // 获取行业信息
 export function getIndustry({ order, limit, skip, keys, include, where }) {
   return request({
-    url: '/classes/Datas',
+    url: 'iotapi/classes/Datas',
     method: 'get',
     params: {
       order,
@@ -29,7 +29,7 @@ export function getIndustry({ order, limit, skip, keys, include, where }) {
 // 查询应用信息
 export function getProject({ order, limit, skip, keys, include, where }) {
   return request({
-    url: `/classes/Project`,
+    url: `iotapi/classes/Project`,
     method: 'get',
     params: {
       order,
@@ -45,7 +45,7 @@ export function getProject({ order, limit, skip, keys, include, where }) {
 // 添加应用信息
 export function addApp(body) {
   return request({
-    url: `/classes/App`,
+    url: `iotapi/classes/App`,
     method: 'post',
     data: {
       ACL: {
@@ -81,7 +81,7 @@ export function addApp(body) {
 // 修改工程信息
 export function updateApp(id, body) {
   return request({
-    url: `/classes/App/${id}`,
+    url: `iotapi/classes/App/${id}`,
     method: 'put',
     data: {
       copyright: body.copyright,
@@ -128,7 +128,7 @@ export function handleZero(value) {
 }
 export function uploadLicense(appid, appsecret, shuwa_iot_software) {
   return request({
-    url: `/lictool`,
+    url: `iotapi/lictool`,
     method: 'get',
     params: {
       appid: appid,
@@ -139,7 +139,7 @@ export function uploadLicense(appid, appsecret, shuwa_iot_software) {
 }
 export function uploadServer(license) {
   return request({
-    url: `/licsetup`,
+    url: `iotapi/licsetup`,
     method: 'get',
     params: {
       license: license
@@ -148,7 +148,7 @@ export function uploadServer(license) {
 }
 export function offlineServer(license) {
   return request({
-    url: `/licupdate`,
+    url: `iotapi/licupdate`,
     method: 'get',
     params: {
       license: license
@@ -157,7 +157,7 @@ export function offlineServer(license) {
 }
 export function setUpLictool(appname) {
   return request({
-    url: '/iotapp',
+    url: 'iotapi/iotapp',
     method: 'post',
     data: {
       appname: appname

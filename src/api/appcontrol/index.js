@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function Addapp(expries, desc, secret, param) {
   return request({
-    url: '/classes/App',
+    url: 'iotapi/classes/App',
     method: 'post',
     data: {
       config: {
@@ -20,7 +20,7 @@ export function Addapp(expries, desc, secret, param) {
 }
 export function createRole(appid, secret, desc) {
   return request({
-    url: '/approle',
+    url: 'iotapi/approle',
     method: 'post',
     data: {
       appid: appid,
@@ -31,7 +31,7 @@ export function createRole(appid, secret, desc) {
 }
 export function pumpToken() {
   return request({
-    url: '/pump_token',
+    url: 'iotapi/pump_token',
     method: 'get',
     params: {
 
@@ -40,7 +40,7 @@ export function pumpToken() {
 }
 export function getServer(pro) {
   return request({
-    url: '/apihub',
+    url: 'iotapi/apihub',
     method: 'get',
     params: {
       appname: pro
