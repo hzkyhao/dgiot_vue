@@ -17,11 +17,10 @@
             :src="logosrc || index_logo"
             alt="logo"
             style="width:80px;height:80px;"
-          />
+          >
           <p>{{ title }}</p>
         </div>
         <div v-show="false" style="margin: 20px">
-          <el-radio v-model="roleType" disabled label="pump">水泵登录</el-radio>
           <el-radio v-model="roleType" label="default">平台登录</el-radio>
         </div>
         <!-- <h5 style="text-align:center;font-size:20px;color:rgba(0, 0, 0, 0.647058823529412);margin:20px 0;">账号密码登录</h5> -->
@@ -86,7 +85,6 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-import { Parse } from 'parse'
 import { getsession } from '@/utils/wxscoket.js'
 import { Sitepro } from '@/api/login'
 import { license } from '@/api/license'
@@ -169,7 +167,6 @@ export default {
     },
     // 获取标题
     getTitle() {
-      // Parse.User.logOut();
       Sitepro(this.roleType).then(resultes => {
         if (!resultes) {
           resultes = {}
@@ -212,52 +209,14 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           const loading = this.$loading()
-          // Parse.User.logIn(this.loginForm.username, this.loginForm.password)
-          //   .then(user => {
-          //     getsession(user.attributes.sessionToken)
-
-          //     this.$Cookies.set('sessionToken', user.attributes.sessionToken)
-          //     this.$Cookies.set('username', user.attributes.username)
-
-          //     this.$store.dispatch('setRoles', user.attributes.roles)
-          //     var Menu = Parse.Object.extend('Navigation')
-          //     var menu = new Parse.Query(Menu)
-          //     menu.find().then(menu => {
-          //       var menu1 = menu
-          //       menu1.map(items => {
-          //         if (items.attributes.parent) {
-          //           this.routes.push(items)
-          //         }
-          //       })
-          //       sessionStorage.setItem('username', user.attributes.username)
-          //       sessionStorage.setItem('roles', user.attributes.roles[0] ? user.attributes.roles[0].alias : '')
-
-          //       this.$Cookies.set('appids', user.attributes.roles[0] ? user.attributes.roles[0].name : '')
-
-          //       localStorage.setItem('list', JSON.stringify(this.routes))
-
-          //       this.$router.push({ path: '/dashboard' })
-          //     })
-          //   })
           this.$axiosWen
-            .post('/login', {
+            .post('iotapi/login', {
               username: this.loginForm.username,
               password: this.loginForm.password
-            })
+            }, { headers: { 'content-type': 'text/plain' }})
             .then(user => {
               loading.close()
               getsession(user.sessionToken)
-
-              // 设置当前用户
-              Parse.User.become(user.sessionToken).then(
-                function(user) {
-                  console.log('当前用户设置成功', Parse.User.current())
-                },
-                function(error) {
-                  console.log('当前用户设置失败')
-                }
-              )
-
               this.$Cookies.set('sessionToken', user.sessionToken)
               this.$Cookies.set('username', user.username)
               this.$store.dispatch('setRoles', user.roles)
@@ -304,7 +263,7 @@ export default {
     // params  可选参数 order  limit
     getNavigation() {
       this.$axiosWen
-        .get('/classes/Navigation')
+        .get('iotapi/classes/Navigation')
         .then(res => {
           console.log(res.results)
           var menu = res.results
@@ -324,7 +283,7 @@ export default {
     },
     getApihub() {
       this.$axiosWen
-        .get('/apihub', {
+        .get('iotapi/apihub', {
           params: {
             appname: sessionStorage.getItem('roles'),
             token: this.$Cookies.get('sessionToken')

@@ -734,7 +734,7 @@ export default {
       },
     // 获取行业信息
     Industry() {
-      this.$axiosWen.get('/roletree').then(res => {
+      this.$axiosWen.get('iotapi/roletree').then(res => {
           console.log(res)
           this.allApps = res.results
         }).catch(e => {

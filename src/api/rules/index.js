@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function resourceTypes() {
   return request({
-    url: '/resource_types',
+    url: 'iotapi/resource_types',
     method: 'get',
     params: {}
   })

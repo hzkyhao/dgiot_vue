@@ -461,9 +461,6 @@
             </span>
           </el-dialog>
         </el-tab-pane>
-        <el-tab-pane v-if="isshowchild" label="设备指令" name="instruct">
-          <Instruct :product-id="productid" :devices-id="deviceid" />
-        </el-tab-pane>
       </el-tabs>
       <!--data数据dialog-->
       <el-dialog
@@ -532,12 +529,10 @@ import { prototype } from 'stream'
 import LineChart from '../dashboard/admin/components/LineChart'
 import $ from 'jquery'
 import { returnLogin } from '@/utils/return'
-import Instruct from '../devicemanage/instruct_manage'
 var dataobj = {}
 export default {
   components: {
-    LineChart,
-    Instruct
+    LineChart
   },
   filters: {
     filterVal(val) {
@@ -868,7 +863,7 @@ export default {
             this.allProudct = resultes;
           }); */
 
-          this.$axiosWen.get('/classes/Product', {
+          this.$axiosWen.get('iotapi/classes/Product', {
             params: {
               'where': {
                 objectId: {

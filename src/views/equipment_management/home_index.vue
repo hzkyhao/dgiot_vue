@@ -554,6 +554,7 @@
   </div>
 </template>
 <script>
+import { query_object, get_object, del_object, update_object } from "@/api/shuwa_parse"
 import Parse from 'parse'
 import { Promise } from 'q'
 import Cookies from 'js-cookie'
@@ -904,122 +905,152 @@ export default {
         }
       )
     },
-    // 查询设备
-    getDevices(start) {
-      var _this = this
-      if (start == 0) {
-        this.devicestart = 0
-      }
+    async getDevices(start) {
       this.tableData = []
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
+      const params = {
+        limit: this.devicelength,
+        skip: this.devicestart,
+        order: '-updatedAt',
+        include: 'product',
+        where: {}
+      }
       if (this.deviceinput != '') {
         if (this.selectdevice == '设备名称') {
-          devices.equalTo('name', this.deviceinput)
+          params.where.name = this.deviceinput
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          params.where.devaddr = this.deviceinput
         }
       }
       if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+        params.where.devaddr = this.devicenumber
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        params.where.product = this.equvalue
       }
 
-      devices.limit(this.devicelength)
-      devices.skip(this.devicestart)
-      devices.ascending('-updatedAt')
-      devices.include('tag')
-      devices.include('product')
-      // devices.doesNotExist('basedata')
-      devices.count().then(
-        count => {
-          this.devicetotal = count
-          devices.find().then(resultes => {
-            if (resultes) {
-              resultes.map(items => {
-                var obj = {}
-                obj.id = items.id
-
-                obj.name = items.attributes.name ? items.attributes.name : ''
-
-                obj.status = _this.$objGet(items, 'attributes.status')
-                obj.originstatus = _this.$objGet(items, 'attributes.status')
-                obj.nodeType = _this.$objGet(
-                  items,
-                  'attributes.product.attributes.nodeType'
-                )
-                obj.desc = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.desc'
-                )
-                obj.productName = _this.$objGet(
-                  items,
-                  'attributes.product.attributes.name'
-                )
-
-                obj.devaddr = items.attributes.devaddr
-                  ? items.attributes.devaddr
-                  : ''
-                obj.isEnable = items.attributes.isEnable
-                  ? items.attributes.isEnable
-                  : false
-                obj.productid = items.attributes.product
-                  ? items.attributes.product.id
-                  : ''
-                obj.devModel = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.devModel'
-                )
-                obj.brand = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.brand'
-                )
-                obj.address = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.address'
-                )
-                obj.assetNum = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.assetNum'
-                )
-                obj.createdAt = items.createdAt ? items.createdAt : ''
-                obj.productid = _this.$objGet(items, 'attributes.product.id')
-
-                if (items.attributes.tag) {
-                  obj.tagid = _this.$objGet(items, 'attributes.tag.id')
-                  if (items.attributes.tag.attributes.location) {
-                    obj.latitude =
-                      items.attributes.tag.attributes.location._latitude
-                    obj.longitude =
-                      items.attributes.tag.attributes.location._longitude
-                  } else {
-                    obj.latitude = ''
-                    obj.longitude = ''
-                  }
-                  if (items.attributes.tag.attributes.batchId) {
-                    obj.batchid = items.attributes.tag.attributes.batchId.id
-                  } else {
-                    obj.batchid = ''
-                  }
-                } else {
-                  obj.latitude = ''
-                  obj.longitude = ''
-                  obj.batchid = ''
-                }
-                this.tableData.push(obj)
-              })
-              this.getActiveDevices()
-              this.getOnlineDevices()
-            }
-          })
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      if (start == 0) {
+        this.devicestart = 0
+      }
+      const { results } = await query_object('Device', params)
+      console.log(`search Device is ${results}`)
     },
+
+    // // 查询设备
+    // getDevices(start) {
+    //   var _this = this
+    //   if (start == 0) {
+    //     this.devicestart = 0
+    //   }
+    //   this.tableData = []
+    //   var Device = Parse.Object.extend('Device')
+    //   var devices = new Parse.Query(Device)
+    //   if (this.deviceinput != '') {
+    //     if (this.selectdevice == '设备名称') {
+    //       devices.equalTo('name', this.deviceinput)
+    //     } else {
+    //       devices.equalTo('devaddr', this.deviceinput)
+    //     }
+    //   }
+    //   if (this.devicenumber != '') {
+    //     devices.equalTo('devaddr', this.devicenumber)
+    //   }
+    //   if (this.equvalue != 0) {
+    //     devices.equalTo('product', this.equvalue)
+    //   }
+
+    //   devices.limit(this.devicelength)
+    //   devices.skip(this.devicestart)
+    //   devices.ascending('-updatedAt')
+    //   devices.include('tag')
+    //   devices.include('product')
+    //   // devices.doesNotExist('basedata')
+    //   devices.count().then(
+    //     count => {
+    //       this.devicetotal = count
+    //       devices.find().then(resultes => {
+    //         if (resultes) {
+    //           resultes.map(items => {
+    //             var obj = {}
+    //             obj.id = items.id
+
+    //             obj.name = items.attributes.name ? items.attributes.name : ''
+
+    //             obj.status = _this.$objGet(items, 'attributes.status')
+    //             obj.originstatus = _this.$objGet(items, 'attributes.status')
+    //             obj.nodeType = _this.$objGet(
+    //               items,
+    //               'attributes.product.attributes.nodeType'
+    //             )
+    //             obj.desc = _this.$objGet(
+    //               items,
+    //               'attributes.tag.attributes.desc'
+    //             )
+    //             obj.productName = _this.$objGet(
+    //               items,
+    //               'attributes.product.attributes.name'
+    //             )
+
+    //             obj.devaddr = items.attributes.devaddr
+    //               ? items.attributes.devaddr
+    //               : ''
+    //             obj.isEnable = items.attributes.isEnable
+    //               ? items.attributes.isEnable
+    //               : false
+    //             obj.productid = items.attributes.product
+    //               ? items.attributes.product.id
+    //               : ''
+    //             obj.devModel = _this.$objGet(
+    //               items,
+    //               'attributes.tag.attributes.devModel'
+    //             )
+    //             obj.brand = _this.$objGet(
+    //               items,
+    //               'attributes.tag.attributes.brand'
+    //             )
+    //             obj.address = _this.$objGet(
+    //               items,
+    //               'attributes.tag.attributes.address'
+    //             )
+    //             obj.assetNum = _this.$objGet(
+    //               items,
+    //               'attributes.tag.attributes.assetNum'
+    //             )
+    //             obj.createdAt = items.createdAt ? items.createdAt : ''
+    //             obj.productid = _this.$objGet(items, 'attributes.product.id')
+
+    //             if (items.attributes.tag) {
+    //               obj.tagid = _this.$objGet(items, 'attributes.tag.id')
+    //               if (items.attributes.tag.attributes.location) {
+    //                 obj.latitude =
+    //                   items.attributes.tag.attributes.location._latitude
+    //                 obj.longitude =
+    //                   items.attributes.tag.attributes.location._longitude
+    //               } else {
+    //                 obj.latitude = ''
+    //                 obj.longitude = ''
+    //               }
+    //               if (items.attributes.tag.attributes.batchId) {
+    //                 obj.batchid = items.attributes.tag.attributes.batchId.id
+    //               } else {
+    //                 obj.batchid = ''
+    //               }
+    //             } else {
+    //               obj.latitude = ''
+    //               obj.longitude = ''
+    //               obj.batchid = ''
+    //             }
+    //             this.tableData.push(obj)
+    //           })
+    //           this.getActiveDevices()
+    //           this.getOnlineDevices()
+    //         }
+    //       })
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
     // 状态设备编辑
     handelUpdate(event, row, index) {
       var newData1 = {}

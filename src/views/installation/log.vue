@@ -97,7 +97,7 @@
   </div>
 </template>
 <script>
-import { getLog, joinLog } from '@/api/installation/index'
+import { getLog, joinLog } from '@/api/installation'
 export default {
   data() {
     return {

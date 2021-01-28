@@ -173,7 +173,7 @@ export default {
     // 查询部门  角色
     searchAllOption() {
       this.$axiosWen
-        .get('/classes/Dict', {
+        .get('iotapi/classes/Dict', {
           params: {
             where: {
               type: 'roletemp'
@@ -183,7 +183,7 @@ export default {
         .then(res => {
           this.Option.dictOption = res.results
         })
-      this.$axiosWen.get('/classes/_Role').then(res => {
+      this.$axiosWen.get('iotapi/classes/_Role').then(res => {
         const tempResults = []
 
         if (res.results) {

@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      imgsrc: require('../../imgages/banner.png'),
+      imgsrc: '',
       username: '',
       roles: '',
       type: '',

@@ -4,7 +4,6 @@ import { Message } from "element-ui";
 import Cookies from "js-cookie";
 
 axios.defaults.withCredentials = true;
-
 const serviceWen = axios.create({
   baseURL: process.env.BASE_API,
   timeout: 8000
@@ -13,14 +12,8 @@ const serviceWen = axios.create({
 // request拦截器
 serviceWen.interceptors.request.use(
   config => {
-    let contentType = "application/json";
-    if (config.url == "/login") {
-      contentType = "text/plain";
-    } else {
-      contentType = "application/json";
-    }
     config.headers["Accept"] = "application/json";
-    config.headers["Content-Type"] = contentType;
+    config.headers["Content-Type"] = "application/json";
     config.headers["sessionToken"] = Cookies.get("sessionToken");
     // console.log('config.url', config.url)
 

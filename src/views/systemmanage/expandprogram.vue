@@ -58,7 +58,7 @@
               <el-button
                 size="mini"
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
-               
+
               >调测</el-button
               >
               <el-button
@@ -84,7 +84,7 @@
         <div class="protolheader">
           <el-tabs v-model="activeName">
             <el-tab-pane label="设计" name="design">
-               
+
               <json-edit ref="jsonEditor" v-model="itemSwagger" />
             </el-tab-pane>
             <el-tab-pane label="编码" name="code">
@@ -121,7 +121,7 @@
 
             <el-tab-pane label="测试" name="swagger">
               <iframe
-                src="http://pump.iotn2n.com:5080/swagger/#/Crond"
+                :src="swaggerPath"
                 width="100%"
                 height="700vh"
               />
@@ -209,6 +209,7 @@ export default {
         ProductKey: "",
         ProductAll: 0
       },
+      swaggerPath:'',
       decoderstart: 0,
       decodertotal: 0,
       decoderlength: 10,
@@ -239,11 +240,21 @@ export default {
     };
   },
   computed: {
-    tableFilterData() {
+      tableFilterData() {
       return null;
     }
   },
   mounted() {
+    const hostIncludes = ["192.168.2.69","192.168.2.58","127.0.0.1","localhost"]
+    const {hostname} = location
+
+    if(!hostIncludes.includes(hostname)){
+    this.swaggerPath =    hostname+''+':5080/swagger/#/'
+    }else {
+    this.swaggerPath ='http://pump.iotn2n.com:5080/swagger/#/'
+    }
+    console.log(` this.swaggerPath is ${this.swaggerPath}`)
+
     // editor编辑器使用
     editor2 = ace.edit("editor2");
     editor2.session.setMode("ace/mode/python"); // 设置语言
@@ -267,11 +278,11 @@ export default {
       this.$confirm("确认要下架该api吗？")
         .then(_ => {
           this.$axiosWen
-            .delete("/exproto", {
+            .delete("iotapi/exproto", {
               params: {
                 type: type,
                 mod: mod,
-                version :"debug",
+                version: "debug"
               }
             })
             .then(res => {
@@ -285,57 +296,55 @@ export default {
         .catch(_ => {});
     },
 
-    //调试api
-    handleTest(index, Rtype, mod){
-     
-      let mData = {
-                code: Base64.encode(editor.getValue()),
-                mod: mod,
-                swagger: JSON.parse(this.itemSwagger),
-                type:Rtype
-            };
-      console.log('itemSwagger===' ,mData);
-        this.$axiosWen
-            .put("/exproto",  mData)
-            .then(res => {
-              console.log(res.results);
-             editor2.setValue( Base64.decode( res.results ) )
-             this.$message({
-               showClose: true,
-               message: '调测api成功',
-               type: 'success'
-              });
-            })
-            .catch(e => {
-              console.log(e);
-             this.$message.error('api有错误,请检查');
-            })
+    // 调试api
+    handleTest(index, Rtype, mod) {
+      const mData = {
+        code: Base64.encode(editor.getValue()),
+        mod: mod,
+        swagger: JSON.parse(this.itemSwagger),
+        type: Rtype
+      };
+      console.log('itemSwagger===', mData);
+      this.$axiosWen
+        .put("iotapi/exproto", mData)
+        .then(res => {
+          console.log(res.results);
+          editor2.setValue(Base64.decode(res.results))
+          this.$message({
+            showClose: true,
+            message: '调测api成功',
+            type: 'success'
+          });
+        })
+        .catch(e => {
+          console.log(e);
+          this.$message.error('api有错误,请检查');
+        })
     },
 
-    //发布api
-     handleRelease(index, Rtype, mod){
-       
-      let mData = {
-                code: Base64.encode(editor.getValue()),
-                mod: mod,
-                swagger: JSON.parse(this.itemSwagger),
-                type:Rtype
-            };
-      console.log('itemSwagger===' ,mData);
-        this.$axiosWen
-            .post("/release_exproto",  mData)
-            .then(res => {
-              console.log(res);
-              this.$message({
-                showClose: true,
-                message: '发布api成功',
-                type: 'success'
-            });
-            })
-            .catch(e => {
-              console.log(e);
-              this.$message.error('api有错误,请检查');
-            })
+    // 发布api
+    handleRelease(index, Rtype, mod) {
+      const mData = {
+        code: Base64.encode(editor.getValue()),
+        mod: mod,
+        swagger: JSON.parse(this.itemSwagger),
+        type: Rtype
+      };
+      console.log('itemSwagger===', mData);
+      this.$axiosWen
+        .post("iotapi/release_exproto", mData)
+        .then(res => {
+          console.log(res);
+          this.$message({
+            showClose: true,
+            message: '发布api成功',
+            type: 'success'
+          });
+        })
+        .catch(e => {
+          console.log(e);
+          this.$message.error('api有错误,请检查');
+        })
     },
     /**
      *
@@ -356,74 +365,74 @@ export default {
           java: "",
           ruby: ""
         };
-        const pythonName =  "/python_"+this.formLabelAlign.name
+        const pythonName = "/python_" + this.formLabelAlign.name
         const initParams = {
           code: languageList[this.formLabelAlign.language],
           mod: this.formLabelAlign.name,
-          swagger:{
+          swagger: {
 
-    definitions: {},
-    paths: {
-      "/python_hello" : {
-        post: {
-          description: "Python测试API",
-          parameters: [
-            {
-              description: "生成报告",
-              in: "body",
-              name: "data",
-              required: true,
-              schema: {
-                properties: {
-                  name: {
-                    description: "姓名",
-                    example: "shuwa",
-                    required: true,
-                    type: "string"
-                  }
-                },
-                type: "object"
+            definitions: {},
+            paths: {
+              "/python_hello": {
+                post: {
+                  description: "Python测试API",
+                  parameters: [
+                    {
+                      description: "生成报告",
+                      in: "body",
+                      name: "data",
+                      required: true,
+                      schema: {
+                        properties: {
+                          name: {
+                            description: "姓名",
+                            example: "shuwa",
+                            required: true,
+                            type: "string"
+                          }
+                        },
+                        type: "object"
+                      }
+                    }
+                  ],
+                  responses: {
+                    "200": {
+                      description: "Returns operation status"
+                    },
+                    "400": {
+                      description: "Bad Request"
+                    },
+                    "401": {
+                      description: "Unauthorized"
+                    },
+                    "403": {
+                      description: "Forbidden"
+                    },
+                    "500": {
+                      description: "Server Internal error"
+                    }
+                  },
+                  summary: "Python测试API",
+                  tags: [
+                    "EXPROTO"
+                  ]
+                }
               }
-            }
-          ],
-          responses: {
-            "200": {
-              description: "Returns operation status"
+
             },
-            "400": {
-              description: "Bad Request"
-            },
-            "401": {
-              description: "Unauthorized"
-            },
-            "403": {
-              description: "Forbidden"
-            },
-            "500": {
-              description: "Server Internal error"
-            }
+            tags: [
+              {
+                description: "扩展编程",
+                name: "EXPROTO"
+              }
+            ]
           },
-          summary: "Python测试API",
-          tags: [
-            "EXPROTO"
-          ]
-        }
-      }
-      
-    },
-    tags: [
-      {
-        description: "扩展编程",
-        name: "EXPROTO"
-      }
-    ]
-  },
-      
+
           type: this.formLabelAlign.language
         };
         if (valid) {
           this.$axiosWen
-            .post("/exproto", initParams)
+            .post("iotapi/exproto", initParams)
             .then(r => {
               this.apiDialog = false;
               this.$message({
@@ -466,11 +475,11 @@ export default {
     },
     getAllDict() {
       this.$axiosWen
-        .get("/exproto", {
+        .get("iotapi/exproto", {
           params: {
             type: "python",
             mod: "all",
-            version:"debug",
+            version: "debug"
           }
         })
         .then(res => {
