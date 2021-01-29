@@ -965,7 +965,7 @@ export default {
                 Math.ceil(Math.random() * 10000000) +
                 Number(new Date())
             )
-            const aclKey ='role' + ':' +  this.form.relationApp
+            const aclKey = 'role' + ':' + this.form.relationApp
             const setAcl = {}
             setAcl[aclKey] = {
               read: true,
@@ -1178,7 +1178,7 @@ export default {
       this.$router.push({
         path: '/roles/thing',
         query: {
-          productid: row.id
+          productid: row.objectId
         }
       })
     },
