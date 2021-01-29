@@ -85,10 +85,6 @@ export async function update_object(tabclass, ObjectId, data) {
     return request({
       url: `iotapi/classes/${tabclass}/${ObjectId}`,
       method: "PUT",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json"
-      },
       data
     });
   } else {

@@ -45,14 +45,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error); // for debug
-    if (error.response.status === 504) {
+    console.log(error.response); // for debug
+    if (error.response.data.code === 504) {
       Message({
         message: "请求超时",
         type: "error",
         duration: 2 * 1000
       });
-    } else if (error.response.status === 401) {
+    } else if (error.response.data.codea === 401) {
       Message({
         message: "您权限过期,请重新登录",
         type: "warning",
@@ -65,12 +65,12 @@ service.interceptors.response.use(
       Cookies.set("sessionToken", "" - 1);
       localStorage.removeItem("list");
       location.href = "/#/login";
-    } else if (error.response.status === 403) {
+    } else if (error.response.data.code === 403) {
       console.log("没有操作权限");
 
       return Promise.reject(error.response.data);
     } else {
-      return Promise.reject(error.response.data);
+      return error.response.data
     }
   }
 );
