@@ -1,6 +1,6 @@
 <template>
   <div class="equipment">
-    <h3 style="margin:0;">{{ $t('equipment.equipmentstatistics') }}</h3>
+    <h3 style="margin:0;">{{ $t("equipment.equipmentstatistics") }}</h3>
     <div class="equ_header">
       <ul>
         <li>
@@ -8,7 +8,7 @@
             <span class="svg-container">
               <svg-icon icon-class="devicelist" />
             </span>
-            {{ $t('equipment.totalequipment') }}
+            {{ $t("equipment.totalequipment") }}
             <el-tooltip
               :content="$t('equipment.totalequipment')"
               placement="top"
@@ -23,7 +23,7 @@
             <span class="svg-container">
               <svg-icon icon-class="shuliang" />
             </span>
-            {{ $t('equipment.activationdevice') }}
+            {{ $t("equipment.activationdevice") }}
             <el-tooltip :content="$t('equipment.totalactive')" placement="top">
               <i class="el-icon-question" />
             </el-tooltip>
@@ -35,7 +35,7 @@
             <span class="svg-container">
               <svg-icon icon-class="onlinelist" />
             </span>
-            {{ $t('equipment.onlinedevices') }}
+            {{ $t("equipment.onlinedevices") }}
             <el-tooltip :content="$t('equipment.totalonline')" placement="top">
               <i class="el-icon-question" />
             </el-tooltip>
@@ -64,12 +64,12 @@
         <el-tab-pane :label="$t('route.设备管理')" name="first">
           <div>
             <div>
-              <el-button size="small">{{ $t('equipment.batchaddition') }}</el-button>
-              <el-button
-                type="primary"
-                size="small"
-                @click="addDeviceForm"
-              >{{ $t('equipment.adddevice') }}</el-button>
+              <el-button size="small">{{
+                $t("equipment.batchaddition")
+              }}</el-button>
+              <el-button type="primary" size="small" @click="addDeviceForm">{{
+                $t("equipment.adddevice")
+              }}</el-button>
             </div>
           </div>
           <div style="margin-top:20px;" class="equdevices">
@@ -81,7 +81,7 @@
               @change="selectProductid"
             >
               <el-option
-                v-for="(item,index) in proTableData"
+                v-for="(item, index) in proTableData"
                 :label="item.name"
                 :key="index"
                 :value="item.id"
@@ -92,7 +92,7 @@
               <el-option :value="$t('equipment.devicenumber')" />
             </el-select>
             <el-input
-              v-if="selectdevice==$t('equipment.devicename')"
+              v-if="selectdevice == $t('equipment.devicename')"
               v-model="deviceinput"
               :placeholder="$t('equipment.enterproductname')"
               size="small"
@@ -111,28 +111,32 @@
               type="primary"
               class="selectdetail"
               @click="getDevices(0)"
-            >{{ $t('developer.search') }}</el-button>
+            >{{ $t("developer.search") }}</el-button
+            >
             <el-button
-              :disabled="multipleTable.length==0"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               class="selectdetail"
               @click="deleteDevcie"
-            >{{ $t('developer.delete') }}</el-button>
+            >{{ $t("developer.delete") }}</el-button
+            >
             <el-button
-              :disabled="multipleTable.length==0"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               class="selectdetail"
               @click="unactiveDevice"
-            >{{ $t('developer.prohibit') }}</el-button>
+            >{{ $t("developer.prohibit") }}</el-button
+            >
             <el-button
-              :disabled="multipleTable.length==0"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               class="selectdetail"
               @click="activeDevice"
-            >{{ $t('developer.enable') }}</el-button>
+            >{{ $t("developer.enable") }}</el-button
+            >
           </div>
           <!--第一个表格-->
           <div class="tabstable">
@@ -145,7 +149,9 @@
             >
               <el-table-column type="selection" align="center" width="55" />
               <el-table-column
-                :label="$t('equipment.devicenumber')+'/'+$t('equipment.name')"
+                :label="
+                  $t('equipment.devicenumber') + '/' + $t('equipment.name')
+                "
                 align="center"
               >
                 <template slot-scope="scope">
@@ -168,11 +174,12 @@
                 </el-tooltip>
                   -->
                   <span
-                    v-if="scope.row.status=='ONLINE'"
+                    v-if="scope.row.status == 'ONLINE'"
                     :class="scope.row.status"
-                  >{{ $t('product.online') }}</span>
+                  >{{ $t("product.online") }}</span
+                  >
                   <el-tooltip
-                    v-if="scope.row.status=='ONLINE'"
+                    v-if="scope.row.status == 'ONLINE'"
                     content="设备已经上线"
                     placement="top"
                   >
@@ -180,20 +187,25 @@
                   </el-tooltip>
 
                   <span
-                    v-if="scope.row.status=='OFFLINE'"
+                    v-if="scope.row.status == 'OFFLINE'"
                     :class="scope.row.status"
-                  >{{ $t('product.offline') }}</span>
+                  >{{ $t("product.offline") }}</span
+                  >
                   <el-tooltip
-                    v-if="scope.row.status=='OFFLINE'"
+                    v-if="scope.row.status == 'OFFLINE'"
                     content="设备已经离线"
                     placement="top"
                   >
                     <i class="el-icon-question" />
                   </el-tooltip>
                   <span
-                    v-if="scope.row.status!='OFFLINE' && scope.row.status!='ONLINE' "
+                    v-if="
+                      scope.row.status != 'OFFLINE' &&
+                        scope.row.status != 'ONLINE'
+                    "
                     :class="scope.row.status"
-                  >未注册</span>
+                  >未注册</span
+                  >
                 </template>
               </el-table-column>
 
@@ -206,7 +218,7 @@
               <el-table-column :label="$t('equipment.nodetype')" align="center">
                 <template slot-scope="scope">
                   <svg-icon
-                    v-if="scope.row.nodeType==0"
+                    v-if="scope.row.nodeType == 0"
                     icon-class="iot"
                     style="width:2rem;height:2rem"
                   />
@@ -220,7 +232,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$t('developer.enable')+'/'+$t('developer.prohibit')"
+                :label="$t('developer.enable') + '/' + $t('developer.prohibit')"
                 align="center"
               >
                 <template slot-scope="scope">
@@ -238,7 +250,7 @@
                     v-model="scope.row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event,scope.row,scope.$index)"
+                    @change="handelUpdate($event, scope.row, scope.$index)"
                   />
                 </template>
               </el-table-column>
@@ -266,7 +278,8 @@
                     type="primary"
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
-                  >{{ $t('equipment.see') }}</el-link>
+                  >{{ $t("equipment.see") }}</el-link
+                  >
                   <el-popover
                     :ref="`popover-${scope.$index}`"
                     placement="top"
@@ -276,35 +289,46 @@
                     <div style="text-align: right; margin: 0">
                       <el-button
                         size="mini"
-                        @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                      >{{ $t('developer.cancel') }}</el-button>
+                        @click="
+                          scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        "
+                      >{{ $t("developer.cancel") }}</el-button
+                      >
                       <el-button
                         type="primary"
                         size="mini"
                         @click="makeSure(scope)"
-                      >{{ $t('developer.determine') }}</el-button>
+                      >{{ $t("developer.determine") }}</el-button
+                      >
                     </div>
                     <el-link
                       slot="reference"
                       :underline="false"
                       icon="el-icon-delete"
                       type="danger"
-                    >{{ $t('developer.delete') }}</el-link>
+                    >{{ $t("developer.delete") }}</el-link
+                    >
                   </el-popover>
                   <el-link
-                    v-if="scope.row.nodeType !=0"
+                    v-if="scope.row.nodeType != 0"
                     :underline="false"
                     type="primary"
                     icon="el-icon-s-unfold"
                     @click="deviceToChildren(scope.row)"
-                  >{{ $t('equipment.subdevice') }}</el-link>
+                  >{{ $t("equipment.subdevice") }}</el-link
+                  >
                   <el-link
                     :underline="false"
                     type="primary"
                     icon="el-icon-edit"
                     @click="editorDevice(scope.row)"
-                  >编辑</el-link>
-                  <el-link type="primary" @click="goEdit(scope.row)">视图</el-link>
+                  >编辑</el-link
+                  >
+                  <el-link
+                    type="primary"
+                    @click="goEdit(scope.row)"
+                  >视图</el-link
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -330,7 +354,7 @@
             />
             <el-table-column :label="$t('equipment.batchname')" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.batch_name }}</span>
+                <span>{{ scope.row.data.batch_name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('equipment.createdAt')" align="center">
@@ -342,13 +366,13 @@
               <template slot-scope="scope">
                 <el-button
                   type="primary"
-                  @click="updatebatch(scope.row,scope.row.id)"
+                  @click="updatebatch(scope.row,scope.row.objectId)"
                   size="mini"
                 >编辑</el-button>
-                <el-button type="danger" @click="deletebatch(scope.row.id)" size="mini">删除</el-button>
+                <el-button type="danger" @click="deletebatch(scope.row.objectId)" size="mini">删除</el-button>
                 <el-button
                   type="success"
-                  @click="selectbatch(scope.row,scope.row.id)"
+                  @click="selectbatch(scope.row,scope.row.objectId)"
                   size="mini"
                 >选择</el-button>
               </template>
@@ -358,7 +382,7 @@
       </el-tabs>
       <!--添加设备弹窗-->
       <el-dialog
-        :title="'设备'+equipmentEditor"
+        :title="'设备' + equipmentEditor"
         :visible.sync="devicedialogVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
@@ -366,7 +390,7 @@
       >
         <div slot="title" class="header-title">
           <span class="title-name">
-            {{ '设备'+equipmentEditor }}
+            {{ "设备" + equipmentEditor }}
             <el-tooltip
               :content="$t('equipment.text')"
               placement="top"
@@ -407,11 +431,11 @@
               <el-select
                 v-model="deviceform.productName"
                 :placeholder="$t('equipment.entername')"
-                :disabled="!productenable||!changeproduct"
+                :disabled="!productenable || !changeproduct"
                 @change="rolesSelect"
               >
                 <el-option
-                  v-for="(item,index) in proTableData1"
+                  v-for="(item, index) in proTableData1"
                   :label="item.name"
                   :key="index"
                   :value="item.id"
@@ -433,18 +457,19 @@
             <el-form-item :label="$t('developer.describe')">
               <el-input
                 v-model="deviceform.desc"
-                :autosize="{ minRows: 4, maxRows: 4}"
+                :autosize="{ minRows: 4, maxRows: 4 }"
                 type="textarea"
               />
             </el-form-item>
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            @click="submitForm('deviceform')"
-          >{{ $t('developer.determine') }}</el-button>
-          <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
+          <el-button type="primary" @click="submitForm('deviceform')">{{
+            $t("developer.determine")
+          }}</el-button>
+          <el-button @click="handleClose">{{
+            $t("developer.cancel")
+          }}</el-button>
         </span>
       </el-dialog>
       <!--第二个个弹窗批次添加-->
@@ -476,10 +501,9 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click="addbatch('pcformInline')"
-              >{{ $t('equipment.addbatch') }}</el-button>
+              <el-button type="primary" @click="addbatch('pcformInline')">{{
+                $t("equipment.addbatch")
+              }}</el-button>
             </el-form-item>
           </el-form>
           <el-table
@@ -495,7 +519,7 @@
             />
             <el-table-column :label="$t('equipment.batchname')" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.batch_name }}</span>
+                <span>{{ scope.row.data.batch_name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('equipment.createdAt')" align="center">
@@ -512,18 +536,21 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="updatebatch(scope.row,scope.row.id)"
-                >{{ $t('developer.edit') }}</el-button>
+                  @click="updatebatch(scope.row, scope.row.objectId)"
+                >{{ $t("developer.edit") }}</el-button
+                >
                 <el-button
                   type="danger"
                   size="mini"
-                  @click="deletebatch(scope.row.id)"
-                >{{ $t('developer.delete') }}</el-button>
+                  @click="deletebatch(scope.row.objectId)"
+                >{{ $t("developer.delete") }}</el-button
+                >
                 <el-button
                   type="success"
                   size="mini"
-                  @click="selectbatch(scope.row,scope.row.id)"
-                >选择</el-button>
+                  @click="selectbatch(scope.row, scope.row.objectId)"
+                >选择</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -596,48 +623,48 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
-import { Promise } from 'q'
-import Cookies from 'js-cookie'
-import elDragDialog from '@/directive/el-dragDialog' // base on element-ui
-import { BmlMarkerClusterer } from 'vue-baidu-map'
-import { utc2beijing } from '@/utils'
-import { returnLogin } from '@/utils/return'
+import Parse from "parse";
+import { Promise } from "q";
+import Cookies from "js-cookie";
+import elDragDialog from "@/directive/el-dragDialog"; // base on element-ui
+import { BmlMarkerClusterer } from "vue-baidu-map";
+import { utc2beijing } from "@/utils";
+import { returnLogin } from "@/utils/return";
 
-var language
-var pcdata
+var language;
+var pcdata;
 export default {
   components: {
     elDragDialog
   },
   data() {
     const CheckDevaddr = function(rule, value, callback) {
-      var reg = /[0-9A-Za-z]$/
-      if (value == '') {
-        callback(new Error('设备地址不能为空'))
+      var reg = /[0-9A-Za-z]$/;
+      if (value == "") {
+        callback(new Error("设备地址不能为空"));
       } else {
         if (!reg.test(value)) {
-          callback(new Error('设备地址必须为大小写字母数字'))
+          callback(new Error("设备地址必须为大小写字母数字"));
         } else {
-          callback()
+          callback();
         }
       }
-    }
+    };
     return {
-      productimg: '',
+      productimg: "",
       bmapdialogVisible: false,
-      onlineall: '',
-      activeall: '',
-      userId: '',
-      batchid: '',
+      onlineall: "",
+      activeall: "",
+      userId: "",
+      batchid: "",
       pcdialogVisible: false,
       devicedialogVisible: false,
-      equvalue: '0',
+      equvalue: "0",
       cities: [],
-      activeName: 'first',
-      selectdevice: '',
-      deviceinput: '',
-      devicenumber: '',
+      activeName: "first",
+      selectdevice: "",
+      deviceinput: "",
+      devicenumber: "",
       multipleTable: [],
       selectRow: [],
       devicelength: 10,
@@ -645,63 +672,63 @@ export default {
       devicetotal: 0,
       visible2: false,
       deviceform: {
-        name: '',
-        devaddr: '',
-        batchId: '',
-        desc: '',
+        name: "",
+        devaddr: "",
+        batchId: "",
+        desc: "",
         nodeType: 0,
-        devType: '',
-        netType: '',
-        assetNum: '',
-        devModel: '',
-        address: '',
-        productName: '',
-        status: '',
-        isEnable: '',
-        brand: ''
+        devType: "",
+        netType: "",
+        assetNum: "",
+        devModel: "",
+        address: "",
+        productName: "",
+        status: "",
+        isEnable: "",
+        brand: ""
       },
       rules: {
-        name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
+        name: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
         devaddr: [
-          { required: true, message: '请输入设备编号', trigger: 'blur' },
+          { required: true, message: "请输入设备编号", trigger: "blur" },
           { validator: CheckDevaddr }
         ],
         batchId: [
-          { required: true, message: '请输入设备批次', trigger: 'blur' }
+          { required: true, message: "请输入设备批次", trigger: "blur" }
         ],
         nodeType: [
-          { required: true, message: '请输入设备类型', trigger: 'blur' }
+          { required: true, message: "请输入设备类型", trigger: "blur" }
         ],
         netType: [
-          { required: true, message: '请选择网络格式', trigger: 'change' }
+          { required: true, message: "请选择网络格式", trigger: "change" }
         ],
         devType: [
-          { required: true, message: '请选择设备类型', trigger: 'change' }
+          { required: true, message: "请选择设备类型", trigger: "change" }
         ],
         productName: [
-          { required: true, message: '请选择产品名称', trigger: 'change' }
+          { required: true, message: "请选择产品名称", trigger: "change" }
         ]
       },
       pcformrule: {
         pcname: [
-          { required: true, message: '请输入批次名称', trigger: 'blur' }
+          { required: true, message: "请输入批次名称", trigger: "blur" }
         ],
         createdtime: [
           {
-            type: 'date',
+            type: "date",
             required: true,
-            message: '请选择创建时间',
-            trigger: 'change'
+            message: "请选择创建时间",
+            trigger: "change"
           }
         ]
       },
       pcformInline: {
-        pcnumber: '',
-        pcname: '',
-        createdtime: ''
+        pcnumber: "",
+        pcname: "",
+        createdtime: ""
       },
       pctableData: [],
-      equipmentEditor: '添加',
+      equipmentEditor: "添加",
       tableData: [],
       options: [],
       proTableData: [],
@@ -711,133 +738,147 @@ export default {
       center: { lng: 0, lat: 0 }, // 经纬度
       zoom: 13, // 地图展示级别
       bmapform: {
-        keyword: '',
-        location: '',
-        address: ''
+        keyword: "",
+        location: "",
+        address: ""
       },
-      deviceid: '',
+      deviceid: "",
       map: null,
-      addresspointer: '',
+      addresspointer: "",
       productenable: true,
       changeproduct: true,
-      tagsid: '',
+      tagsid: "",
       productroleslist: []
-    }
+    };
   },
   watch: {
     multipleTable(data) {
-      this.selectRow = []
+      this.selectRow = [];
       if (data.length > 0) {
         data.forEach((item, index) => {
-          this.selectRow.push(this.tableData.indexOf(item))
-        })
+          this.selectRow.push(this.tableData.indexOf(item));
+        });
       }
     }
   },
   mounted() {
-    this.userId = Parse.User.current().id
+    this.userId = this.$route.query.productid;
     // this.getRole();
-    this.searchProduct()
-    this.addDeviceBatch(0)
-    language = Cookies.get('language')
-    this.$store.dispatch('getUserId', '111')
+    this.searchProduct();
+    this.addDeviceBatch(0);
+    language = Cookies.get("language");
+    this.$store.dispatch("getUserId", "111");
     if (this.$route.query.productid) {
-      this.selectProductid(this.$route.query.productid)
+      this.selectProductid(this.$route.query.productid);
     }
   },
   methods: {
     rolesSelect(val) {
-      this.productroleslist = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
+      this.productroleslist = [];
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
       product.get(val).then(
         response => {
           if (response) {
             for (var key in response.attributes.ACL.permissionsById) {
-              this.productroleslist.push(key.substr(5))
+              this.productroleslist.push(key.substr(5));
             }
           }
-          console.log(this.productroleslist)
+          console.log(this.productroleslist);
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     goEdit(row) {
-      console.log(row)
+      console.log(row);
       // #topoUrl
       // window.open(
       //   `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
       //   '_blank'
       // )
-      if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
-        var topoUrl = window.location.origin + '/spa'
+      if (this.$globalConfig.serverURL.substr(0, 1) == "/") {
+        var topoUrl = window.location.origin + "/spa";
       } else {
-        var topoUrl = this.$globalConfig.localTopoUrl
+        var topoUrl = this.$globalConfig.localTopoUrl;
       }
-      var url = `${topoUrl}/#?devaddr=${row.devaddr}&proudctid=${row.productid}`
-      window.open(url, '__blank')
-      localStorage.setItem('topoData', JSON.stringify(row.config))
+      var url = `${topoUrl}/#?devaddr=${row.devaddr}&proudctid=${
+        row.productid
+      }`;
+      window.open(url, "__blank");
+      localStorage.setItem("topoData", JSON.stringify(row.config));
       // window.open(
       //   `http://192.168.2.58:8339/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
       //   '_blank'
       // )
     },
     // 从产品处进来
-    selectProductid(val) {
-      this.productroleslist = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.get(val).then(
-        response => {
-          if (response) {
-            for (var key in response.attributes.ACL.permissionsById) {
-              this.productroleslist.push(key.substr(5))
-            }
-          }
-          this.productimg = response.attributes.icon
-        },
-        error => {
-          returnLogin(error)
+    async selectProductid(val) {
+      this.productroleslist = [];
+      const parsms = {};
+      const { results } = await this.$query_object("Product", parsms);
+      const res = results.filter(i => {
+        return i.objectId == val;
+      });
+      console.log(val, results, res);
+      for (var key in res[0].ACL) {
+        if (key.includes("role")) {
+          this.productroleslist.push(key.substr(5));
+          console.log(key, this.productroleslist);
         }
-      )
+      }
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.get(val).then(
+      //   response => {
+      //     if (response) {
+      //       for (var key in response.attributes.ACL.permissionsById) {
+      //         this.productroleslist.push(key.substr(5))
+      //       }
+      //     }
+      //     this.productimg = response.attributes.icon
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     addressSure() {
-      var localSearch = new BMap.LocalSearch(this.map)
-      localSearch.enableAutoViewport() // 允许自动调节窗体大小
-      var _this = this
+      var localSearch = new BMap.LocalSearch(this.map);
+      localSearch.enableAutoViewport(); // 允许自动调节窗体大小
+      var _this = this;
       //       localSearch.setSearchCompleteCallback(function (searchResult) {
       //         console.log(searchResult)
       // 　　　　var poi = searchResult.getPoi(0);
       // 　　　　console.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
       // 　　　　_this.map.centerAndZoom(poi.point, 13);
       // 　　});
-      if (this.bmapform.address == '') {
-        this.deviceform.address = this.bmapform.keyword
+      if (this.bmapform.address == "") {
+        this.deviceform.address = this.bmapform.keyword;
       }
-      localSearch.search(this.bmapform.keyword)
-      this.bmapdialogVisible = false
+      localSearch.search(this.bmapform.keyword);
+      this.bmapdialogVisible = false;
     },
     handler({ BMap, map }) {
-      this.center.lng = 120.2
-      this.center.lat = 30.26667
-      this.zoom = this.zoom
-      this.map = map
+      this.center.lng = 120.2;
+      this.center.lat = 30.26667;
+      this.zoom = this.zoom;
+      this.map = map;
     },
     mapClick(e) {
-      this.center.lng = e.point.lng
-      this.center.lat = e.point.lat
+      this.center.lng = e.point.lng;
+      this.center.lat = e.point.lat;
       this.addresspointer =
-        e.point.lng.toFixed(6) + ',' + e.point.lat.toFixed(6)
-      const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
+        e.point.lng.toFixed(6) + "," + e.point.lat.toFixed(6);
+      const geocoder = new BMap.Geocoder(); // 创建地址解析器的实例
       //  let Marker = new BMap.Marker()
       geocoder.getLocation(e.point, rs => {
         // this.add.site = rs.address;
         //  Marker.closeInfoWindow()
         //   console.log(rs)
-        this.bmapform.address = rs.address
-        this.deviceform.address = rs.address
+        this.bmapform.address = rs.address;
+        this.deviceform.address = rs.address;
         // 地址描述(string)=
         // console.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
         // console.log(rs.addressComponents);//结构化的地址描述(object)
@@ -848,289 +889,367 @@ export default {
         // console.log(rs.addressComponents.streetNumber); //门牌号
         // console.log(rs.surroundingPois); //附近的POI点(array)
         // console.log(rs.business); //商圈字段，代表此点所属的商圈(string)
-      })
+      });
     },
     // 地图更新
     updateLocation() {
-      this.bmapdialogVisible = true
+      this.bmapdialogVisible = true;
     },
     handleClosebmap() {
-      this.bmapdialogVisible = false
+      this.bmapdialogVisible = false;
     },
     // 激活设备
     getActiveDevices() {
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.equalTo('status', 'ACTIVE')
-      if (this.deviceinput != '') {
+      var Device = Parse.Object.extend("Device");
+      var devices = new Parse.Query(Device);
+      devices.equalTo("status", "ACTIVE");
+      if (this.deviceinput != "") {
         if (
-          this.selectdevice == '设备名称' ||
-          this.selectdevice == 'Device Name'
+          this.selectdevice == "设备名称" ||
+          this.selectdevice == "Device Name"
         ) {
-          devices.equalTo('name', this.deviceinput)
+          devices.equalTo("name", this.deviceinput);
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          devices.equalTo("devaddr", this.deviceinput);
         }
       }
-      if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+      if (this.devicenumber != "") {
+        devices.equalTo("devaddr", this.devicenumber);
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        devices.equalTo("product", this.equvalue);
       }
       devices.count().then(
         active => {
-          this.activeall = active
+          this.activeall = active;
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
     getOnlineDevices() {
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.equalTo('status', 'ONLINE')
-      if (this.deviceinput != '') {
-        if (this.selectdevice == '设备名称') {
-          devices.equalTo('name', this.deviceinput)
+      var Device = Parse.Object.extend("Device");
+      var devices = new Parse.Query(Device);
+      devices.equalTo("status", "ONLINE");
+      if (this.deviceinput != "") {
+        if (this.selectdevice == "设备名称") {
+          devices.equalTo("name", this.deviceinput);
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          devices.equalTo("devaddr", this.deviceinput);
         }
       }
-      if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+      if (this.devicenumber != "") {
+        devices.equalTo("devaddr", this.devicenumber);
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        devices.equalTo("product", this.equvalue);
       }
       devices.count().then(
         online => {
-          this.onlineall = online
+          this.onlineall = online;
         },
         error => {
-          returnLogin(error)
+          returnLogin(error);
         }
-      )
+      );
     },
 
-    // 查询产品
-    searchProduct() {
-      this.proTableData = []
-      this.proTableData1 = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.limit(10000)
-      product.find().then(
-        resultes => {
-          resultes.map(items => {
-            var obj = {}
-            obj.id = items.id
-            obj.name = items.attributes.name
-            this.proTableData.push(obj)
-            this.proTableData1.push(obj)
-          })
+    // // 查询产品
+    // searchProduct() {
+    //   this.proTableData = []
+    //   this.proTableData1 = []
+    //   var Product = Parse.Object.extend('Product')
+    //   var product = new Parse.Query(Product)
+    //   product.limit(10000)
+    //   product.find().then(
+    //     resultes => {
+    //       resultes.map(items => {
+    //         var obj = {}
+    //         obj.id = items.id
+    //         obj.name = items.attributes.name
+    //         this.proTableData.push(obj)
+    //         this.proTableData1.push(obj)
+    //       })
 
-          this.proTableData.unshift({
-            name: language == 'zh' ? '全部产品' : 'All Products',
-            id: '0'
-          })
-          if (this.$route.query.productid) {
-            this.equvalue = this.$route.query.productid
-            this.productenable = false
-          }
-          this.getDevices()
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+    //       this.proTableData.unshift({
+    //         name: language == 'zh' ? '全部产品' : 'All Products',
+    //         id: '0'
+    //       })
+    //       if (this.$route.query.productid) {
+    //         this.equvalue = this.$route.query.productid
+    //         this.productenable = false
+    //       }
+    //       this.getDevices()
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
+
+    async searchProduct() {
+      this.proTableData = [];
+      this.proTableData1 = [];
+      var category = [];
+      const parsms = {
+        order: "-updatedAt",
+        limit: 10,
+        where: {}
+      };
+      const { results } = await this.$query_object("Product", parsms);
+      results.map(items => {
+        var obj = {};
+        obj.id = items.objectId;
+        obj.name = items.name;
+        this.proTableData.push(obj);
+        this.proTableData1.push(obj);
+      });
+      this.proTableData.unshift({
+        name: language == "zh" ? "全部产品" : "All Products",
+        id: "0"
+      });
+      if (this.$route.query.productid) {
+        this.equvalue = this.$route.query.productid;
+        this.productenable = false;
+      }
+      this.getDevices();
+      console.log("results", results);
     },
     // 查询设备
-    getDevices(start) {
-      var _this = this
-      if (start == 0) {
-        this.devicestart = 0
+    async getDevices(start) {
+      if (start === 0) {
+        this.devicestart = 0;
       }
-      this.tableData = []
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      if (this.deviceinput != '') {
-        if (this.selectdevice == '设备名称') {
-          devices.equalTo('name', this.deviceinput)
+      this.tableData = [];
+      var parsms = {
+        order: "-updatedAt",
+        limit: this.devicelength,
+        skip: this.devicestart,
+        keys: "count(*)",
+        include: "tag,product",
+        where: {}
+      };
+      if (this.deviceinput != "") {
+        if (this.selectdevice == "设备名称") {
+          parsms.where["name"] = this.deviceinput;
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          parsms.where["devaddr"] = this.deviceinput;
         }
       }
-      if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+      if (this.devicenumber != "") {
+        parsms.where["devaddr"] = this.devicenumber;
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        parsms.where["product"] = this.equvalue;
       }
 
-      devices.limit(this.devicelength)
-      devices.skip(this.devicestart)
-      devices.ascending('-updatedAt')
-      devices.include('tag')
-      devices.include('product')
+      const { results } = await this.$query_object("Device", parsms);
+      this.devicetotal = results.length;
+      var obj = {};
+      results.map(items => {
+        obj.status = this.$objGet(items, 'status')
+        obj.id = items.objectId;
+        obj.name = items.name ? items.name : "";
+        obj.originstatus = this.$objGet(items, "status");
+        obj.nodeType = this.$objGet(items, "product.nodeType");
+        obj.desc = this.$objGet(
+          items,
+          'tag.desc'
+        ) || items.detail.desc
+        obj.productName = this.$objGet(
+          items,
+          'product.name'
+        )
+        obj.devaddr = items.devaddr
+          ? items.devaddr
+          : ''
+        obj.isEnable = items.isEnable
+          ? items.isEnable
+          : false
+        obj.productid = items.product
+          ? items.product.id
+          : ''
+        obj.devModel = this.$objGet(
+          items,
+          'tag.devModel'
+        )
+        obj.brand = this.$objGet(
+          items,
+          'tag.brand'
+        )
+        obj.address = this.$objGet(
+          items,
+          'tag.address'
+        )
+        obj.assetNum = this.$objGet(
+          items,
+          'tag.assetNum'
+        )
+        obj.createdAt = items.createdAt ? items.createdAt : ''
+        obj.productid = this.$objGet(items, 'product.id')
+      });
+      this.tableData.push(obj)
+      console.log(obj);
+      //2021年1月29日 还需要处理数据
       // devices.doesNotExist('basedata')
-      devices.count().then(
-        count => {
-          this.devicetotal = count
-          devices.find().then(resultes => {
-            if (resultes) {
-              resultes.map(items => {
-                var obj = {}
-                obj.id = items.id
+      // devices.count().then(
+      //   count => {
+      //     this.devicetotal = count
+      //     devices.find().then(resultes => {
+      //       if (resultes) {
+      //         resultes.map(items => {
+      //           var obj = {}
+      //           obj.id = items.id
 
-                obj.name = items.attributes.name ? items.attributes.name : ''
+      //           obj.name = items.attributes.name ? items.attributes.name : ''
 
-                obj.status = _this.$objGet(items, 'attributes.status')
-                obj.originstatus = _this.$objGet(items, 'attributes.status')
-                obj.nodeType = _this.$objGet(
-                  items,
-                  'attributes.product.attributes.nodeType'
-                )
-                obj.desc = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.desc'
-                )
-                obj.productName = _this.$objGet(
-                  items,
-                  'attributes.product.attributes.name'
-                )
+      //           obj.status = _this.$objGet(items, 'attributes.status')
+      //           obj.originstatus = _this.$objGet(items, 'attributes.status')
+      //           obj.nodeType = _this.$objGet(
+      //             items,
+      //             'attributes.product.attributes.nodeType'
+      //           )
+      //           obj.desc = _this.$objGet(
+      //             items,
+      //             'attributes.tag.attributes.desc'
+      //           )
+      //           obj.productName = _this.$objGet(
+      //             items,
+      //             'attributes.product.attributes.name'
+      //           )
 
-                obj.devaddr = items.attributes.devaddr
-                  ? items.attributes.devaddr
-                  : ''
-                obj.isEnable = items.attributes.isEnable
-                  ? items.attributes.isEnable
-                  : false
-                obj.productid = items.attributes.product
-                  ? items.attributes.product.id
-                  : ''
-                obj.devModel = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.devModel'
-                )
-                obj.brand = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.brand'
-                )
-                obj.address = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.address'
-                )
-                obj.assetNum = _this.$objGet(
-                  items,
-                  'attributes.tag.attributes.assetNum'
-                )
-                obj.createdAt = items.createdAt ? items.createdAt : ''
-                obj.productid = _this.$objGet(items, 'attributes.product.id')
+      //           obj.devaddr = items.attributes.devaddr
+      //             ? items.attributes.devaddr
+      //             : ''
+      //           obj.isEnable = items.attributes.isEnable
+      //             ? items.attributes.isEnable
+      //             : false
+      //           obj.productid = items.attributes.product
+      //             ? items.attributes.product.id
+      //             : ''
+      //           obj.devModel = _this.$objGet(
+      //             items,
+      //             'attributes.tag.attributes.devModel'
+      //           )
+      //           obj.brand = _this.$objGet(
+      //             items,
+      //             'attributes.tag.attributes.brand'
+      //           )
+      //           obj.address = _this.$objGet(
+      //             items,
+      //             'attributes.tag.attributes.address'
+      //           )
+      //           obj.assetNum = _this.$objGet(
+      //             items,
+      //             'attributes.tag.attributes.assetNum'
+      //           )
+      //           obj.createdAt = items.createdAt ? items.createdAt : ''
+      //           obj.productid = _this.$objGet(items, 'attributes.product.id')
 
-                if (items.attributes.tag) {
-                  obj.tagid = _this.$objGet(items, 'attributes.tag.id')
-                  if (items.attributes.tag.attributes.location) {
-                    obj.latitude =
-                      items.attributes.tag.attributes.location._latitude
-                    obj.longitude =
-                      items.attributes.tag.attributes.location._longitude
-                  } else {
-                    obj.latitude = ''
-                    obj.longitude = ''
-                  }
-                  if (items.attributes.tag.attributes.batchId) {
-                    obj.batchid = items.attributes.tag.attributes.batchId.id
-                  } else {
-                    obj.batchid = ''
-                  }
-                } else {
-                  obj.latitude = ''
-                  obj.longitude = ''
-                  obj.batchid = ''
-                }
-                this.tableData.push(obj)
-              })
-              this.getActiveDevices()
-              this.getOnlineDevices()
-            }
-          })
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      //           if (items.attributes.tag) {
+      //             obj.tagid = _this.$objGet(items, 'attributes.tag.id')
+      //             if (items.attributes.tag.attributes.location) {
+      //               obj.latitude =
+      //                 items.attributes.tag.attributes.location._latitude
+      //               obj.longitude =
+      //                 items.attributes.tag.attributes.location._longitude
+      //             } else {
+      //               obj.latitude = ''
+      //               obj.longitude = ''
+      //             }
+      //             if (items.attributes.tag.attributes.batchId) {
+      //               obj.batchid = items.attributes.tag.attributes.batchId.id
+      //             } else {
+      //               obj.batchid = ''
+      //             }
+      //           } else {
+      //             obj.latitude = ''
+      //             obj.longitude = ''
+      //             obj.batchid = ''
+      //           }
+      //           this.tableData.push(obj)
+      //         })
+      //         this.getActiveDevices()
+      //         this.getOnlineDevices()
+      //       }
+      //     })
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     // 状态设备编辑
     handelUpdate(event, row, index) {
-      var newData1 = {}
+      var newData1 = {};
       for (var key in row) {
-        newData1[key] = row[key]
+        newData1[key] = row[key];
       }
-      newData1.isEnable = newData1.isEnable != true
-      this.tableData[index] = newData1
-      this.$confirm('是否修改此设备状态?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      newData1.isEnable = newData1.isEnable != true;
+      this.tableData[index] = newData1;
+      this.$confirm("是否修改此设备状态?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
-          var newData2 = {}
+          var newData2 = {};
           for (var key in row) {
-            newData2[key] = row[key]
+            newData2[key] = row[key];
           }
-          newData2.isEnable = newData2.isEnable == true
+          newData2.isEnable = newData2.isEnable == true;
           //   this.tableData[index] = newData2
-          var Device = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Device)
-          devices.get(row.id).then(
+          var Device = Parse.Object.extend("Device");
+          var devices = new Parse.Query(Device);
+          devices.get(row.objectId).then(
             object => {
-              object.set('isEnable', newData2.isEnable)
+              object.set("isEnable", newData2.isEnable);
               object.save().then(resultes => {
                 this.$message({
-                  type: 'success',
-                  message: '状态修改成功'
-                })
-              })
-              this.getDevices()
+                  type: "success",
+                  message: "状态修改成功"
+                });
+              });
+              this.getDevices();
             },
             error => {
-              returnLogin(error)
+              returnLogin(error);
             }
-          )
+          );
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消修改'
-          })
-          const newData = row
-          newData.isEnable = newData.isEnable != true
-          this.tableData[index] = newData
-        })
+            type: "info",
+            message: "已取消修改"
+          });
+          const newData = row;
+          newData.isEnable = newData.isEnable != true;
+          this.tableData[index] = newData;
+        });
     },
     timestampToTime(timestamp) {
-      var date = new Date(timestamp * 1000)
-      var Y = date.getFullYear() + '-'
+      var date = new Date(timestamp * 1000);
+      var Y = date.getFullYear() + "-";
       var M =
         (date.getMonth() + 1 < 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '-'
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
       var D =
-        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) + ' '
+        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
+        " ";
       var h =
-        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
-        ':'
+        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
+        ":";
       var m =
         (date.getMinutes() + 1 <= 10
-          ? '0' + date.getMinutes()
-          : date.getMinutes()) + ':'
+          ? "0" + date.getMinutes()
+          : date.getMinutes()) + ":";
       var s =
         date.getSeconds() + 1 <= 10
-          ? '0' + date.getSeconds()
-          : date.getSeconds()
-      return Y + M + D + h + m + s
+          ? "0" + date.getSeconds()
+          : date.getSeconds();
+      return Y + M + D + h + m + s;
     },
     // 得到权限
     // getRole() {
@@ -1156,578 +1275,686 @@ export default {
       // 转为正常的时间格式 年-月-日 时:分:秒
       var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
         .toISOString()
-        .replace(/T/g, ' ')
-        .replace(/\.[\d]{3}Z/, '')
-      return date // 2017-03-31 16:02:06
+        .replace(/T/g, " ")
+        .replace(/\.[\d]{3}Z/, "");
+      return date; // 2017-03-31 16:02:06
     },
     filterTag(value, row) {
-      return row.tag === value
+      return row.tag === value;
     },
     /* 设备列表选中 */
     handleSelectionChange(val) {
-      this.multipleTable = val
-      console.log(this.multipleTable)
+      this.multipleTable = val;
+      console.log(this.multipleTable);
     },
     // 删除设备
     deleteDevcie(val) {
       Promise.all([
         this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Device)
+          var Device = Parse.Object.extend("Device");
+          var devices = new Parse.Query(Device);
           devices.get(item.id).then(resultes => {
-            resultes.destroy().then(resultes => {})
-          })
+            resultes.destroy().then(resultes => {});
+          });
         })
       ])
         .then(data => {
           if (data.length != 0) {
             this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-            this.getDevices()
+              message: "删除成功",
+              type: "success"
+            });
+            this.getDevices();
           } else {
             this.$message({
-              message: '删除失败',
-              type: 'error'
-            })
+              message: "删除失败",
+              type: "error"
+            });
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     // 设备多个启用和禁用
     unactiveDevice(val) {
       Promise.all([
         this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Device()
-          devices.id = item.id
-          devices.set('isEnable', false)
-          devices.save().then(resultes => {})
+          var Device = Parse.Object.extend("Device");
+          var devices = new Device();
+          devices.id = item.id;
+          devices.set("isEnable", false);
+          devices.save().then(resultes => {});
         })
       ])
         .then(data => {
           if (data && data.length != 0) {
             this.$message({
-              message: '禁用成功',
-              type: 'success'
-            })
-            this.getDevices()
+              message: "禁用成功",
+              type: "success"
+            });
+            this.getDevices();
           } else {
             this.$message({
-              message: '禁用失败',
-              type: 'error'
-            })
+              message: "禁用失败",
+              type: "error"
+            });
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     activeDevice(val) {
       Promise.all([
         this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Device()
-          devices.id = item.id
-          devices.set('isEnable', true)
-          devices.save().then(resultes => {})
+          var Device = Parse.Object.extend("Device");
+          var devices = new Device();
+          devices.id = item.id;
+          devices.set("isEnable", true);
+          devices.save().then(resultes => {});
         })
       ])
         .then(data => {
           if (data && data.length != 0) {
             this.$message({
-              message: '启用成功',
-              type: 'success'
-            })
-            this.getDevices()
+              message: "启用成功",
+              type: "success"
+            });
+            this.getDevices();
           } else {
             this.$message({
-              message: '启用失败',
-              type: 'error'
-            })
+              message: "启用失败",
+              type: "error"
+            });
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     /* @pamras 选中高亮*/
     rowClass({ row, rowIndex }) {
       if (this.selectRow.includes(rowIndex)) {
-        console.log(rowIndex)
-        return { 'background-color': 'rgba(185, 221, 249, 0.3)' }
+        console.log(rowIndex);
+        return { "background-color": "rgba(185, 221, 249, 0.3)" };
       }
     },
     /* @param deviceSizeChange 设备列表分页*/
 
     deviceSizeChange(val) {
-      this.devicelength = val
-      this.getDevices()
+      this.devicelength = val;
+      this.getDevices();
     },
     deviceCurrentChange(val) {
-      this.devicestart = (val - 1) * this.devicelength
-      this.getDevices()
+      this.devicestart = (val - 1) * this.devicelength;
+      this.getDevices();
     },
     /* 关闭添加设备弹窗*/
     handleClose() {
-      this.devicedialogVisible = false
-      this.equipmentEditor = '添加'
+      this.devicedialogVisible = false;
+      this.equipmentEditor = "添加";
     },
     addDeviceForm() {
-      this.devicedialogVisible = true
-      this.equipmentEditor = '添加'
+      this.devicedialogVisible = true;
+      this.equipmentEditor = "添加";
       if (this.$route.query.productid) {
-        this.deviceform.productName = this.$route.query.productid
+        this.deviceform.productName = this.$route.query.productid;
       } else {
         if (this.equvalue != 0) {
-          this.changeproduct = false
-          this.deviceform.productName = this.equvalue
+          this.changeproduct = false;
+          this.deviceform.productName = this.equvalue;
         } else {
-          this.deviceform.productName = ''
+          this.deviceform.productName = "";
         }
       }
     },
     /* 关闭批次弹窗*/
     handleClose1() {
-      this.pcdialogVisible = false
-      this.batchid = ''
+      this.pcdialogVisible = false;
+      this.batchid = "";
       this.pcformInline = {
-        pcname: '',
-        createdtime: ''
-      }
+        pcname: "",
+        createdtime: ""
+      };
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.get(scope.row.id).then(resultes => {
+      var Device = Parse.Object.extend("Device");
+      var devices = new Parse.Query(Device);
+      devices.get(scope.row.objectId).then(resultes => {
         resultes.destroy().then(
           response => {
             if (response) {
               this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.getDevices()
+                type: "success",
+                message: "删除成功"
+              });
+              scope._self.$refs[`popover-${scope.$index}`].doClose();
+              this.getDevices();
             }
           },
           error => {
-            returnLogin(error)
+            returnLogin(error);
           }
-        )
-      })
+        );
+      });
     },
     // 增加批次
-    addDeviceBatch(isdialog) {
+    async addDeviceBatch(isdialog) {
       if (isdialog == 0) {
-        this.pcdialogVisible = false
+        this.pcdialogVisible = false;
       } else {
-        this.pcdialogVisible = true
+        this.pcdialogVisible = true;
       }
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('type', 'batch_number')
-      datas.ascending('-createdAt')
-      datas.find().then(
-        resultes => {
-          if (resultes) {
-            this.pctableData = resultes
-            pcdata = resultes
-          }
-        },
-        error => {
-          returnLogin(error)
+
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.equalTo('type', 'batch_number')
+      // datas.ascending('-createdAt')
+      // datas.find().then(
+      //   resultes => {
+      //     if (resultes) {
+      //       this.pctableData = resultes
+      //       pcdata = resultes
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
+      var parsms = {
+        order: "-createdAt",
+        where: {
+          type: "batch_number"
         }
-      )
+      };
+      const { results } = await this.$query_object("Dict", parsms);
+      this.pctableData = results;
     },
     /* device添加表单提交*/
     editorDevice(row) {
-      console.log(row)
-      this.deviceid = row.id
-      this.devicedialogVisible = true
-      this.deviceform.devaddr = row.devaddr
-      this.deviceform.name = row.name
-      this.deviceform.assetNum = row.assetNum
-      this.deviceform.devModel = row.devModel
-      this.deviceform.desc = row.desc
-      this.deviceform.productid = row.productid
-      this.deviceform.brand = row.brand
-      this.deviceform.productName = row.productid
-      this.deviceform.batchId = row.batchid
-      this.deviceform.status = row.status
-      this.deviceform.isEnable = row.isEnable
-      this.bmapform.address = row.address
-      this.batchid = row.batchid
-      this.center.lat = row.latitude
-      this.center.lng = row.longitude
-      this.addresspointer = row.latitude + ',' + row.longitude
-      this.deviceform.address = row.address
-      this.tagsid = row.tagid
-      this.equipmentEditor = '编辑'
-      this.rolesSelect(row.productid)
+      console.log(row);
+      this.deviceid = row.objectId;
+      this.devicedialogVisible = true;
+      this.deviceform.devaddr = row.devaddr;
+      this.deviceform.name = row.name;
+      this.deviceform.assetNum = row.assetNum;
+      this.deviceform.devModel = row.devModel;
+      this.deviceform.desc = row.desc;
+      this.deviceform.productid = row.productid;
+      this.deviceform.brand = row.brand;
+      this.deviceform.productName = row.productid;
+      this.deviceform.batchId = row.batchid;
+      this.deviceform.status = row.status;
+      this.deviceform.isEnable = row.isEnable;
+      this.bmapform.address = row.address;
+      this.batchid = row.batchid;
+      this.center.lat = row.latitude;
+      this.center.lng = row.longitude;
+      this.addresspointer = row.latitude + "," + row.longitude;
+      this.deviceform.address = row.address;
+      this.tagsid = row.tagid;
+      this.equipmentEditor = "编辑";
+      this.rolesSelect(row.productid);
       this.getBatch()
         .then(results => {
-          console.log(results)
+          console.log(results);
           this.pctableData.map(item => {
             if (item.id == row.batchid) {
-              console.log(item)
-              this.deviceform.batchId = item.attributes.data.batch_name
+              console.log(item);
+              this.deviceform.batchId = item.attributes.data.batch_name;
             }
-          })
+          });
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     getBatch() {
       return new Promise((resolve, reject) => {
         if (pcdata.length > 0) {
-          resolve(pcdata)
+          resolve(pcdata);
         } else {
-          reject(false)
+          reject(false);
         }
-      })
+      });
     },
+    // submitForm(formName) {
+    //   this.$refs[formName].validate(valid => {
+    //     if (valid) {
+    //       var Device = Parse.Object.extend('Device')
+    //       var devices1 = new Parse.Query(Device)
+    //       var Product = Parse.Object.extend('Product')
+    //       var product = new Product()
+    //       var Dict = Parse.Object.extend('Dict')
+    //       var datas = new Dict()
+    //       var acl = new Parse.ACL()
+    //       if (this.deviceid != '') {
+    //         var Promise1 = new Promise((resolve, reject) => {
+    //           var Tags = Parse.Object.extend('Tag')
+    //           var tags = new Tags()
+    //           tags.id = this.tagsid
+
+    //           var location = new Parse.GeoPoint({
+    //             latitude: this.center.lat ? this.center.lat : 0,
+    //             longitude: this.center.lng ? this.center.lng : 0
+    //           })
+    //           datas.id = this.batchid
+    //           tags.set('assetNum', this.deviceform.assetNum)
+    //           tags.set('devModel', this.deviceform.devModel)
+    //           tags.set('brand', this.deviceform.brand)
+    //           tags.set('location', location)
+    //           tags.set('address', this.deviceform.address)
+    //           tags.set('desc', this.deviceform.desc)
+    //           tags.set('batchId', datas)
+
+    //           tags.save().then(
+    //             resultes => {
+    //               resolve(resultes)
+    //             },
+    //             error => {
+    //               reject(error)
+    //             }
+    //           )
+    //         })
+    //           .then(data => {
+    //             console.log('Tags updated')
+
+    //             var Tags1 = Parse.Object.extend('Tag')
+    //             var tags1 = new Tags1()
+    //             tags1.id = data.id
+    //             var devices = new Device()
+    //             devices.id = this.deviceid
+    //             devices.set('status', this.deviceform.status)
+    //             devices.set('isEnable', this.deviceform.isEnable)
+    //             product.id = this.deviceform.productName
+    //             devices.set('product', product)
+    //             devices.set('tag', tags1)
+    //             this.productroleslist.map(item => {
+    //               acl.setRoleReadAccess(item, true)
+    //               acl.setRoleWriteAccess(item, true)
+    //             })
+
+    //             devices.set('ACL', acl)
+    //             devices.set('devaddr', this.deviceform.devaddr)
+    //             devices.set('name', this.deviceform.name)
+    //             devices.save().then(
+    //               resultes => {
+    //                 if (resultes) {
+    //                   this.$message({
+    //                     type: 'success',
+    //                     message: `${
+    //                       this.deviceid != '' ? '编辑成功' : '添加成功'
+    //                     }`
+    //                   })
+    //                   this.devicedialogVisible = false
+    //                   this.equipmentEditor = '添加'
+    //                   this.batchid = ''
+    //                   this.getDevices()
+    //                   this.deviceid = ''
+    //                   this.$refs['deviceform'].resetFields()
+    //                   this.deviceform.assetNum = ''
+    //                   this.deviceform.devModel = ''
+    //                   this.deviceform.address = ''
+    //                   this.deviceform.desc = ''
+    //                   this.deviceform.brand = ''
+    //                 }
+    //               },
+    //               error => {
+    //                 console.log('Device error', error)
+
+    //                 returnLogin(error)
+    //               }
+    //             )
+    //           })
+    //           .catch(error => {
+    //             console.log('p error ###'.error)
+
+    //             reject(error)
+    //           })
+    //       } else {
+    //         console.log('### devaddrid kong')
+
+    //         devices1.equalTo('devaddr', this.deviceform.devaddr)
+    //         devices1.equalTo('name', this.deviceform.name)
+    //         devices1.find().then(resultes => {
+    //           if (resultes.length > 0) {
+    //             this.$message('此设备已被创建')
+    //             return
+    //           } else {
+    //             var Promise2 = new Promise((reslove, reject) => {
+    //               var Tags = Parse.Object.extend('Tag')
+    //               var tags = new Tags()
+    //               var location = new Parse.GeoPoint({
+    //                 latitude: this.center.lat,
+    //                 longitude: this.center.lng
+    //               })
+    //               datas.id = this.batchid
+    //               tags.set('assetNum', this.deviceform.assetNum)
+    //               tags.set('devModel', this.deviceform.devModel)
+    //               tags.set('brand', this.deviceform.brand)
+    //               tags.set('location', location)
+    //               tags.set('address', this.bmapform.address)
+    //               tags.set('desc', this.deviceform.desc)
+    //               tags.set('batchId', datas)
+    //               tags.save().then(
+    //                 resultes => {
+    //                   reslove(resultes)
+    //                 },
+    //                 error => {
+    //                   console.log('Tag ##3', error)
+
+    //                   reject(error)
+    //                 }
+    //               )
+    //             })
+    //               .then(data => {
+    //                 console.log(data)
+    //                 var Tags1 = Parse.Object.extend('Tag')
+    //                 var tags1 = new Tags1()
+    //                 tags1.id = data.id
+    //                 var Device1 = Parse.Object.extend('Device')
+    //                 var devices = new Device1()
+    //                 product.id = this.deviceform.productName
+    //                 devices.set('product', product)
+    //                 devices.set('status', 'OFFLINE')
+    //                 devices.set('isEnable', false)
+    //                 this.productroleslist.map(item => {
+    //                   acl.setRoleReadAccess(item, true)
+    //                   acl.setRoleWriteAccess(item, true)
+    //                 })
+    //                 devices.set('ACL', acl)
+    //                 devices.set('devaddr', this.deviceform.devaddr)
+    //                 devices.set('name', this.deviceform.name)
+    //                 devices.set('tag', tags1)
+    //                 devices.save().then(
+    //                   resultes => {
+    //                     if (resultes) {
+    //                       this.$message({
+    //                         type: 'success',
+    //                         message: `${
+    //                           this.deviceid != '' ? '编辑成功' : '添加成功'
+    //                         }`
+    //                       })
+    //                       this.devicedialogVisible = false
+    //                       this.equipmentEditor = '添加'
+    //                       this.batchid = ''
+    //                       this.getDevices()
+    //                       this.deviceid = ''
+    //                       this.$refs['deviceform'].resetFields()
+    //                       this.deviceform.assetNum = ''
+    //                       this.deviceform.devModel = ''
+    //                       this.deviceform.address = ''
+    //                       this.deviceform.desc = ''
+    //                       this.deviceform.brand = ''
+    //                     }
+    //                   },
+    //                   error => {
+    //                     console.log('##4 error', error)
+
+    //                     returnLogin(error)
+    //                   }
+    //                 )
+    //               })
+    //               .catch(error => {
+    //                 console.log('##7 error', error)
+    //                 returnLogin(error)
+    //               })
+    //           }
+    //         })
+    //       }
+    //     } else {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '请按照要求填写参数'
+    //       })
+    //       return false
+    //     }
+    //   })
+    // },
     submitForm(formName) {
+      var initparams = {
+        devaddr: this.deviceform.devaddr,
+        name: this.deviceform.name
+      };
+      var params = {};
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var Device = Parse.Object.extend('Device')
-          var devices1 = new Parse.Query(Device)
-          var Product = Parse.Object.extend('Product')
-          var product = new Product()
-          var Dict = Parse.Object.extend('Dict')
-          var datas = new Dict()
-          var acl = new Parse.ACL()
-          if (this.deviceid != '') {
-            var Promise1 = new Promise((resolve, reject) => {
-              var Tags = Parse.Object.extend('Tag')
-              var tags = new Tags()
-              tags.id = this.tagsid
-
-              var location = new Parse.GeoPoint({
-                latitude: this.center.lat ? this.center.lat : 0,
-                longitude: this.center.lng ? this.center.lng : 0
-              })
-              datas.id = this.batchid
-              tags.set('assetNum', this.deviceform.assetNum)
-              tags.set('devModel', this.deviceform.devModel)
-              tags.set('brand', this.deviceform.brand)
-              tags.set('location', location)
-              tags.set('address', this.deviceform.address)
-              tags.set('desc', this.deviceform.desc)
-              tags.set('batchId', datas)
-
-              tags.save().then(
-                resultes => {
-                  resolve(resultes)
-                },
-                error => {
-                  reject(error)
-                }
-              )
-            })
-              .then(data => {
-                console.log('Tags updated')
-
-                var Tags1 = Parse.Object.extend('Tag')
-                var tags1 = new Tags1()
-                tags1.id = data.id
-                var devices = new Device()
-                devices.id = this.deviceid
-                devices.set('status', this.deviceform.status)
-                devices.set('isEnable', this.deviceform.isEnable)
-                product.id = this.deviceform.productName
-                devices.set('product', product)
-                devices.set('tag', tags1)
-                this.productroleslist.map(item => {
-                  acl.setRoleReadAccess(item, true)
-                  acl.setRoleWriteAccess(item, true)
-                })
-
-                devices.set('ACL', acl)
-                devices.set('devaddr', this.deviceform.devaddr)
-                devices.set('name', this.deviceform.name)
-                devices.save().then(
-                  resultes => {
-                    if (resultes) {
-                      this.$message({
-                        type: 'success',
-                        message: `${
-                          this.deviceid != '' ? '编辑成功' : '添加成功'
-                        }`
-                      })
-                      this.devicedialogVisible = false
-                      this.equipmentEditor = '添加'
-                      this.batchid = ''
-                      this.getDevices()
-                      this.deviceid = ''
-                      this.$refs['deviceform'].resetFields()
-                      this.deviceform.assetNum = ''
-                      this.deviceform.devModel = ''
-                      this.deviceform.address = ''
-                      this.deviceform.desc = ''
-                      this.deviceform.brand = ''
-                    }
-                  },
-                  error => {
-                    console.log('Device error', error)
-
-                    returnLogin(error)
-                  }
-                )
-              })
-              .catch(error => {
-                console.log('p error ###'.error)
-
-                reject(error)
-              })
+          if (this.deviceid != "") {
+            var addparams = {
+            }
+            params = Object.assign(initparams, addparams)
+            this.edit_Device(params);
           } else {
-            console.log('### devaddrid kong')
-
-            devices1.equalTo('devaddr', this.deviceform.devaddr)
-            devices1.equalTo('name', this.deviceform.name)
-            devices1.find().then(resultes => {
-              if (resultes.length > 0) {
-                this.$message('此设备已被创建')
-                return
-              } else {
-                var Promise2 = new Promise((reslove, reject) => {
-                  var Tags = Parse.Object.extend('Tag')
-                  var tags = new Tags()
-                  var location = new Parse.GeoPoint({
-                    latitude: this.center.lat,
-                    longitude: this.center.lng
-                  })
-                  datas.id = this.batchid
-                  tags.set('assetNum', this.deviceform.assetNum)
-                  tags.set('devModel', this.deviceform.devModel)
-                  tags.set('brand', this.deviceform.brand)
-                  tags.set('location', location)
-                  tags.set('address', this.bmapform.address)
-                  tags.set('desc', this.deviceform.desc)
-                  tags.set('batchId', datas)
-                  tags.save().then(
-                    resultes => {
-                      reslove(resultes)
-                    },
-                    error => {
-                      console.log('Tag ##3', error)
-
-                      reject(error)
-                    }
-                  )
-                })
-                  .then(data => {
-                    console.log(data)
-                    var Tags1 = Parse.Object.extend('Tag')
-                    var tags1 = new Tags1()
-                    tags1.id = data.id
-                    var Device1 = Parse.Object.extend('Device')
-                    var devices = new Device1()
-                    product.id = this.deviceform.productName
-                    devices.set('product', product)
-                    devices.set('status', 'OFFLINE')
-                    devices.set('isEnable', false)
-                    this.productroleslist.map(item => {
-                      acl.setRoleReadAccess(item, true)
-                      acl.setRoleWriteAccess(item, true)
-                    })
-                    devices.set('ACL', acl)
-                    devices.set('devaddr', this.deviceform.devaddr)
-                    devices.set('name', this.deviceform.name)
-                    devices.set('tag', tags1)
-                    devices.save().then(
-                      resultes => {
-                        if (resultes) {
-                          this.$message({
-                            type: 'success',
-                            message: `${
-                              this.deviceid != '' ? '编辑成功' : '添加成功'
-                            }`
-                          })
-                          this.devicedialogVisible = false
-                          this.equipmentEditor = '添加'
-                          this.batchid = ''
-                          this.getDevices()
-                          this.deviceid = ''
-                          this.$refs['deviceform'].resetFields()
-                          this.deviceform.assetNum = ''
-                          this.deviceform.devModel = ''
-                          this.deviceform.address = ''
-                          this.deviceform.desc = ''
-                          this.deviceform.brand = ''
-                        }
-                      },
-                      error => {
-                        console.log('##4 error', error)
-
-                        returnLogin(error)
-                      }
-                    )
-                  })
-                  .catch(error => {
-                    console.log('##7 error', error)
-                    returnLogin(error)
-                  })
+            const aclKey = 'role' + ':' + this.productroleslist[0]
+            const set_acl = {}
+            set_acl[aclKey] = {
+              read: true,
+              write: true
+            }
+            var createParams = {
+              ACL: set_acl,
+              detail: {
+                assetNum: this.deviceform.assetNum,
+                devModel: this.deviceform.devModel,
+                brand: this.deviceform.brand,
+                address: this.deviceform.address,
+                desc: this.deviceform.desc
+              },
+              isEnable: false,
+              status: false,
+              location: {
+                "__type": "GeoPoint",
+                "latitude": this.center.lat ? this.center.lat : 0,
+                "longitude": this.center.lng ? this.center.lng : 0
               }
-            })
+            }
+            params = Object.assign(initparams, createParams)
+            this.create_Device(params);
           }
         } else {
-          this.$message({
-            type: 'error',
-            message: '请按照要求填写参数'
-          })
-          return false
+          this.$message("必填项未填");
         }
-      })
+      });
+    },
+    async create_Device(parsms) {
+      const { results } = await this.$create_object("Device", parsms)
+      console.log(results)
+    },
+    async edit_Device(parsms) {
+      const { results } = await this.$create_object("Device", parsms)
+      console.log(results)
     },
     /* @pamars addbatch添加批次名称 */
     addbatch(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.batchid == '') {
-            var Dict = Parse.Object.extend('Dict')
-            var datas = new Dict()
-            var acl = new Parse.ACL()
-            datas.set('data', {
-              batch_name: this.pcformInline.pcname,
-              createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-            })
-            datas.set('type', 'batch_number')
-            acl.setReadAccess(this.userId, true)
-            acl.setWriteAccess(this.userId, true)
-            datas.set('ACL', acl)
-            datas.save().then(
-              resultes => {
-                this.$message({
-                  message: '新增成功',
-                  type: 'success'
-                })
-                this.$refs[formName].resetFields()
-                this.addDeviceBatch()
+          if (this.batchid === "") {
+            // 这里是创建批次
+            const aclKey = 'role' + ':' + this.productroleslist[0]
+            const set_acl = {}
+            set_acl[aclKey] = {
+              read: true,
+              write: true
+            }
+            const parsms = {
+              data: {
+                batch_name: this.pcformInline.pcname,
+                createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
               },
-              error => {
-                returnLogin(error)
-              }
-            )
-          } else {
-            var Dict = Parse.Object.extend('Dict')
-            var datas = new Dict()
-            datas.id = this.batchid
-
-            datas.set('data', {
-              batch_name: this.pcformInline.pcname,
-              createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-            })
-            datas.save().then(
-              resultes => {
-                if (resultes) {
+              ACL: set_acl,
+              type: "batch_number"
+            };
+            console.log(parsms)
+            this.$create_object("Dict", parsms)
+              .then(res => {
+                console.log(res);
+                if (!res.error) {
                   this.$message({
-                    message: '修改成功',
+                    message: '新增成功',
                     type: 'success'
                   })
-                  this.batchid = ''
-                  this.pcformInline = {
-                    pcname: '',
-                    createdtime: ''
-                  }
                   this.$refs[formName].resetFields()
-                  this.addDeviceBatch()
+                  this.addDeviceBatch(0)
+                } else {
+                  this.$message({
+                    message: `新增失败${res.error}`,
+                    type: 'error'
+                  })
                 }
-              },
-              error => {
-                returnLogin(error)
-              }
-            )
+              })
+              .catch(e => {
+                console.log(e);
+              });
+            // var Dict = Parse.Object.extend('Dict')
+            // var datas = new Dict()
+            // var acl = new Parse.ACL()
+            // datas.set('data', {
+            //   batch_name: this.pcformInline.pcname,
+            //   createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+            // })
+            // datas.set('type', 'batch_number')
+            // acl.setReadAccess(this.userId, true)
+            // acl.setWriteAccess(this.userId, true)
+            // datas.set('ACL', acl)
+            // datas.save().then(
+            //   resultes => {
+            //     this.$message({
+            //       message: '新增成功',
+            //       type: 'success'
+            //     })
+            //     this.$refs[formName].resetFields()
+            //     this.addDeviceBatch()
+            //   },
+            //   error => {
+            //     returnLogin(error)
+            //   }
+            // )
+          } else {
+            // var Dict = Parse.Object.extend('Dict')
+            // var datas = new Dict()
+            // datas.id = this.batchid
+            // datas.set('data', {
+            //   batch_name: this.pcformInline.pcname,
+            //   createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+            // })
+            // datas.save().then(
+            //   resultes => {
+            //     if (resultes) {
+            //       this.$message({
+            //         message: '修改成功',
+            //         type: 'success'
+            //       })
+            //       this.batchid = ''
+            //       this.pcformInline = {
+            //         pcname: '',
+            //         createdtime: ''
+            //       }
+            //       this.$refs[formName].resetFields()
+            //       this.addDeviceBatch()
+            //     }
+            //   },
+            //   error => {
+            //     returnLogin(error)
+            //   }
+            // )
           }
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     // 编辑批次
     updatebatch(row, id) {
       // this.pcdialogVisible=true
-      this.pcformInline.pcname = row.attributes.data.batch_name
-      this.pcformInline.createdtime = row.attributes.data.createdtime * 1000
-      this.batchid = id
+      this.pcformInline.pcname = row.data.batch_name;
+      this.pcformInline.createdtime = row.data.createdtime * 1000;
+      this.batchid = id;
     },
     // 删除批次
     deletebatch(id) {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
+      var Dict = Parse.Object.extend("Dict");
+      var datas = new Parse.Query(Dict);
       datas.get(id).then(resultes => {
         resultes.destroy().then(
           res => {
             if (res) {
               this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              this.addDeviceBatch()
+                type: "success",
+                message: "删除成功"
+              });
+              this.addDeviceBatch();
             }
           },
           error => {
-            returnLogin(error)
+            returnLogin(error);
           }
-        )
-      })
+        );
+      });
     },
     // 选择批次
     selectbatch(row, id) {
-      this.batchid = id
-      this.deviceform.pc = row.attributes.data.batch_name
-      this.deviceform.batchId = row.attributes.data.batch_name
-      this.pcdialogVisible = false
+      this.batchid = id;
+      this.deviceform.pc = row.data.batch_name;
+      this.deviceform.batchId = row.data.batch_name;
+      this.pcdialogVisible = false;
     },
     // 设备详情
     deviceToDetail(row) {
       this.$router.push({
-        path: '/roles/editdevices',
+        path: "/roles/editdevices",
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
-          ischildren: 'false'
+          ischildren: "false"
         }
-      })
+      });
     },
     handleClick(tab, event) {
-      if (tab.name == 'second') {
-        var Dict = Parse.Object.extend('Dict')
-        var datas = new Parse.Query(Dict)
-        datas.equalTo('type', 'batch_number')
-        datas.ascending('-createdAt')
-        datas.find().then(
-          resultes => {
-            if (resultes) {
-              this.pctableData = resultes
-            }
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
+      if (tab.name == "second") {
+        this.queryDict();
+        // var Dict = Parse.Object.extend('Dict')
+        // var datas = new Parse.Query(Dict)
+        // datas.equalTo('type', 'batch_number')
+        // datas.ascending('-createdAt')
+        // datas.find().then(
+        //   resultes => {
+        //     if (resultes) {
+        //       this.pctableData = resultes
+        //     }
+        //   },
+        //   error => {
+        //     returnLogin(error)
+        //   }
+        // )
       }
+    },
+    async queryDict() {
+      var parsms = {
+        order: "-createdAt",
+        where: {
+          type: "batch_number"
+        }
+      };
+      const { results } = await this.$query_object("Dict", parsms);
+      this.pctableData = results;
     },
     // 前往子设备
     deviceToChildren(row) {
       this.$router.push({
-        path: '/roles/editdevices',
+        path: "/roles/editdevices",
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
-          ischildren: 'true'
+          ischildren: "true"
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .equipment {
@@ -1857,4 +2084,3 @@ export default {
     margin-right: 4px;
 } */
 </style>
-
