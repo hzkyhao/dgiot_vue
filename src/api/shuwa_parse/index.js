@@ -6,7 +6,7 @@ import { Message } from "element-ui";
  * @param {*} params    对应参数 必传  可为{}
  */
 export async function query_object(tabclass, params) {
-  if (tabclass) {
+  if (tabclass && params) {
     return request({
       url: `iotapi/classes/${tabclass}`,
       method: "get",
@@ -18,7 +18,7 @@ export async function query_object(tabclass, params) {
     });
   } else {
     return Message({
-      message: "tabclass 字段为必传",
+      message: "tabclass 和 params 字段为必传",
       type: "error",
       duration: 1 * 1000
     });
@@ -93,7 +93,7 @@ export async function update_object(tabclass, ObjectId, data) {
     });
   } else {
     return Message({
-      message: "tabclass 和 ObjectId字段为必传",
+      message: "tabclass  ObjectId 和 data 字段为必传",
       type: "error",
       duration: 1 * 1000
     });
