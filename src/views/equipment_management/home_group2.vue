@@ -52,7 +52,7 @@
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('developer.operation')" >
+              <el-table-column :label="$t('developer.operation')">
                 <template slot-scope="scope">
                   <el-link :underline="false" type="primary" icon="el-icon-view" @click="deviceToDetail(scope.row)">配置
                   </el-link>
@@ -71,14 +71,11 @@
                     {{ $t('product.equipment') }}</el-link>
                   <el-link :underline="false" icon="el-icon-edit" type="success" @click="editorProduct(scope.row)">修改
                   </el-link>
-                  <el-link :underline="false" icon="el-icon-s-promotion" type="primary" @click="proudctView(scope.row)">运行组态
+                  <el-link :underline="false" icon="el-icon-s-promotion" type="primary" @click="proudctView(scope.row)">
+                    运行组态
                   </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-link"
-                    type="primary"
-                    @click="proudctEdit(scope.row)"
-                  >编辑组态</el-link>
+                  <el-link :underline="false" icon="el-icon-link" type="primary" @click="proudctEdit(scope.row)">编辑组态
+                  </el-link>
                   <!-- <el-link
                     :disabled="scope.row.config.config.cloneState == true"
                     :underline="false"
@@ -139,14 +136,17 @@
 
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
-              <el-form-item label="所属应用" prop="roles">
+              <el-form-item v-show="custom_status =='add'" label="所属应用" prop="roles">
                 <el-input v-model="form.relationApp" placeholder="请选择所属应用">
                   <template slot="append">
-                    <i :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" style="cursor: pointer;" @click="showTree = !showTree"/>
+                    <i
+                      :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']"
+                      style="cursor: pointer;"
+                      @click="showTree = !showTree" />
                   </template>
                 </el-input>
                 <div v-if="showTree">
-                  <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"/>
+                  <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick" />
                 </div>
                 <!-- <el-select v-model="form.relationApp" @change="selectApp">
                   <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
@@ -289,6 +289,8 @@ import {
 export default {
   data() {
     return {
+      custom_row: {},
+      custom_status: 'add',
       hashkey: '',
       defaultProps: {
         children: 'children',
@@ -693,7 +695,7 @@ export default {
       return date // 2017-03-31 16:02:06
     },
     // 得到category
-    async getDict(resultes, category) {
+    async getDict(category) {
       category = [...new Set(category)]
       const parsms = {
         limit: 1000,
@@ -705,8 +707,6 @@ export default {
       const Dictres = await this.$query_object('Dict', parsms)
       console.log(Dictres, "results category")
       this.allTableDate = Dictres.results
-      this.proTableData = resultes
-      this.total = this.proTableData.length
     },
     async searchProduct(start) {
       if (start == 0) {
@@ -729,12 +729,15 @@ export default {
       results.map(items => {
         if (
           items.category != '' &&
-                    items.category && items.devType != 'report'
+            items.category && items.devType != 'report'
         ) {
           category.push(items.category)
         }
       })
-      this.getDict(results, category)
+      this.proTableData = results
+      this.total = results.length
+
+      // this.getDict( category)
       // product.ascending('-updatedAt')
       // product.skip(this.start)
       // product.limit(this.length)
@@ -848,7 +851,7 @@ export default {
     },
     // 添加产品弹窗
     addproduct() {
-      console.log(new Date())
+      this.custom_status = 'add'
       this.dialogFormVisible = true
     },
     getParent(id, origin, returnarr) {
@@ -860,7 +863,7 @@ export default {
           returnarr.unshift(item.value)
         }
       })
-      this.form.category = returnarr
+      this.form.category = returnarr[0]
       return returnarr
     },
     // 查找Industry父级
@@ -872,27 +875,28 @@ export default {
       })
     },
     editorProduct(row) {
+      this.custom_status = 'edit'
+      this.custom_row = row
       // this.form.roles = [];
       this.form.relationApp = ''
       this.dialogFormVisible = true
-      this.productid = row.id
-      this.getIndustryParent(row.attributes.category, this.categoryList)
-      this.form.desc = row.attributes.desc
-      this.form.name = row.attributes.name
-      this.form.nodeType = row.attributes.nodeType
-      this.form.netType = row.attributes.netType
-      this.form.devType = row.attributes.devType
-      this.form.productSecret = row.attributes.productSecret
-      this.changeNode(row.attributes.nodeType, 0)
-      if (row.attributes.icon) {
-        this.imageUrl = row.attributes.icon
+      this.productid = row.objectId
+      this.getIndustryParent(row.category, this.categoryList)
+      this.form.desc = row.desc
+      this.form.name = row.name
+      this.form.nodeType = row.nodeType
+      this.form.netType = row.netType
+      this.form.devType = row.devType
+      this.form.productSecret = row.productSecret
+      this.changeNode(row.nodeType, 0)
+      if (row.icon) {
+        this.imageUrl = row.icon
       }
-      for (var key in row.attributes.ACL.permissionsById) {
+      for (var key in row.ACL.permissionsById) {
         this.form.relationApp = key ? key.substr(5) : ''
       }
       this.selectApp(this.form.relationApp)
     },
-    handleChange() {},
     // 查询样品
     // Industry() {
     //   this.categoryList = []
@@ -942,32 +946,83 @@ export default {
       console.log(results)
     },
     submitForm(formName) {
+      var params = {}
+      var initparams = {
+        name: this.form.name,
+        nodeType: this.form.nodeType,
+        netType: this.form.netType,
+        icon: this.imageUrl,
+        devType: this.form.devType,
+        desc: this.form.desc
+      }
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 判断是新增产品还是修改
-          if (this.productid == '') {
-            const params = {}
-            this.addProduct(params)
+          if (this.custom_status === 'add') {
+            var ranNum = Math.ceil(Math.random() * 25)
+            var productSecret = Base64.encode(
+              String.fromCharCode(65 + ranNum) +
+                Math.ceil(Math.random() * 10000000) +
+                Number(new Date())
+            )
+            const aclKey ='role' + ':' +  this.form.relationApp
+            const setAcl = {}
+            setAcl[aclKey] = {
+              read: true,
+              write: true
+            }
+            var addparams = {
+              category: this.form.category[this.form.category.length - 1],
+              productSecret: productSecret,
+              ACL: setAcl,
+              topics: [],
+              dynamicReg: false
+            }
+            params = Object.assign(initparams, addparams)
+            this.createProduct(params)
           } else {
-            const params = {}
+            console.log(this.custom_row)
+            var editparams = {}
+            params = Object.assign(initparams, editparams)
             this.editProduct(params)
           }
-          var ranNum = Math.ceil(Math.random() * 25)
-          var productSecret = Base64.encode(
-            String.fromCharCode(65 + ranNum) +
-              Math.ceil(Math.random() * 10000000) +
-              Number(new Date())
-          )
         } else {
           this.$message('必填项未填')
         }
       })
     },
-    async addProduct() {
-      const { results } = await this.$create_object()
+    async createProduct(params) {
+      const res = await this.$create_object('Product', params)
+      console.log(res)
+      if (res.objectId) {
+        this.initQuery('产品创建成功', 'success')
+      } else {
+        this.$message({
+          type: "error",
+          message: res.error
+        })
+      }
     },
-    async editProduct() {
-      const { results } = await this.$update_object()
+    async editProduct(data) {
+      const res = await this.$update_object('Product', this.custom_row.objectId, data)
+      if (res.updatedAt) {
+        this.initQuery('产品修改成功', 'success')
+      } else {
+        this.$message({
+          type: "error",
+          message: res.error
+        })
+      }
+    },
+    initQuery(msg, type) {
+      this.$message({
+        type: type || "info",
+        message: msg
+      })
+      this.dialogFormVisible = false
+      this.resetProductForm()
+      this.$refs['ruleForm'].resetFields()
+      this.searchProduct()
     },
     // submitForm(formName) {
     //   this.$refs[formName].validate(valid => {
@@ -1282,7 +1337,6 @@ export default {
     padding: 20px;
     box-sizing: border-box;
   }
-
 </style>
 <style>
   .devproduct .el-tabs__header {
@@ -1378,5 +1432,4 @@ export default {
     position:absolute;
     right:0;
   } */
-
 </style>
