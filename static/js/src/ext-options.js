@@ -190,7 +190,6 @@ var supportedModes = {
     Glsl:        ["glsl|frag|vert"],
     Gobstones:   ["gbs"],
     golang:      ["go"],
-    GraphQLSchema: ["gql"],
     Groovy:      ["groovy"],
     HAML:        ["haml"],
     Handlebars:  ["hbs|handlebars|tpl|mustache"],
@@ -398,7 +397,7 @@ define("ace/ext/options",["require","exports","module","ace/ext/menu_tools/overl
 "use strict";
 var overlayPage = require('./menu_tools/overlay_page').overlayPage;
 
- 
+
 var dom = require("../lib/dom");
 var oop = require("../lib/oop");
 var config = require("../config");
@@ -413,8 +412,8 @@ themelist.themes.forEach(function(x) {
     themes[x.isDark ? "Dark" : "Bright"].push({ caption: x.caption, value: x.theme });
 });
 
-var modes = modelist.modes.map(function(x){ 
-    return { caption: x.caption, value: x.mode }; 
+var modes = modelist.modes.map(function(x){
+    return { caption: x.caption, value: x.mode };
 });
 
 
@@ -588,29 +587,29 @@ var OptionPanel = function(editor, element) {
 };
 
 (function() {
-    
+
     oop.implement(this, EventEmitter);
-    
+
     this.add = function(config) {
         if (config.Main)
             oop.mixin(optionGroups.Main, config.Main);
         if (config.More)
             oop.mixin(optionGroups.More, config.More);
     };
-    
+
     this.render = function() {
         this.container.innerHTML = "";
-        buildDom(["table", {id: "controls"}, 
+        buildDom(["table", {id: "controls"},
             this.renderOptionGroup(optionGroups.Main),
             ["tr", null, ["td", {colspan: 2},
-                ["table", {id: "more-controls"}, 
+                ["table", {id: "more-controls"},
                     this.renderOptionGroup(optionGroups.More)
                 ]
             ]],
             ["tr", null, ["td", {colspan: 2}, "version " + config.version]]
         ], this.container);
     };
-    
+
     this.renderOptionGroup = function(group) {
         return Object.keys(group).map(function(key, i) {
             var item = group[key];
@@ -625,7 +624,7 @@ var OptionPanel = function(editor, element) {
             return this.renderOption(item.label, item);
         }, this);
     };
-    
+
     this.renderOptionControl = function(key, option) {
         var self = this;
         if (Array.isArray(option)) {
@@ -634,9 +633,9 @@ var OptionPanel = function(editor, element) {
             });
         }
         var control;
-        
+
         var value = self.getOption(option);
-        
+
         if (option.values && option.type != "checkbox") {
             if (typeof option.values == "string")
                 option.values = option.values.split("|");
@@ -644,12 +643,12 @@ var OptionPanel = function(editor, element) {
                 return { value: v, name: v };
             });
         }
-        
+
         if (option.type == "buttonBar") {
             control = ["div", option.items.map(function(item) {
-                return ["button", { 
-                    value: item.value, 
-                    ace_selected_button: value == item.value, 
+                return ["button", {
+                    value: item.value,
+                    ace_selected_button: value == item.value,
                     onclick: function() {
                         self.setOption(option, item.value);
                         var nodes = this.parentNode.querySelectorAll("[ace_selected_button]");
@@ -657,7 +656,7 @@ var OptionPanel = function(editor, element) {
                             nodes[i].removeAttribute("ace_selected_button");
                         }
                         this.setAttribute("ace_selected_button", true);
-                    } 
+                    }
                 }, item.desc || item.caption || item.name];
             })];
         } else if (option.type == "number") {
@@ -679,8 +678,8 @@ var OptionPanel = function(editor, element) {
                     return ["option", { value: item.value || item.name }, item.desc || item.caption || item.name];
                 });
             };
-            
-            var items = Array.isArray(option.items) 
+
+            var items = Array.isArray(option.items)
                 ? buildItems(option.items)
                 : Object.keys(option.items).map(function(key) {
                     return ["optgroup", {"label": key}, buildItems(option.items[key])];
@@ -703,7 +702,7 @@ var OptionPanel = function(editor, element) {
         }
         return control;
     };
-    
+
     this.renderOption = function(key, option) {
         if (option.path && !option.onchange && !this.editor.$options[option.path])
             return;
@@ -714,7 +713,7 @@ var OptionPanel = function(editor, element) {
             ["label", {for: safeKey}, key]
         ], ["td", control]];
     };
-    
+
     this.setOption = function(option, value) {
         if (typeof option == "string")
             option = this.options[option];
@@ -730,13 +729,13 @@ var OptionPanel = function(editor, element) {
             this.editor.setOption(option.path, value);
         this._signal("setOption", {name: option.path, value: value});
     };
-    
+
     this.getOption = function(option) {
         if (option.getValue)
             return option.getValue();
         return this.editor.getOption(option.path);
     };
-    
+
 }).call(OptionPanel.prototype);
 
 exports.OptionPanel = OptionPanel;
@@ -749,4 +748,3 @@ exports.OptionPanel = OptionPanel;
                         }
                     });
                 })();
-            

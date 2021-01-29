@@ -84,7 +84,6 @@ var supportedModes = {
     Glsl:        ["glsl|frag|vert"],
     Gobstones:   ["gbs"],
     golang:      ["go"],
-    GraphQLSchema: ["gql"],
     Groovy:      ["groovy"],
     HAML:        ["haml"],
     Handlebars:  ["hbs|handlebars|tpl|mustache"],
@@ -235,4 +234,3 @@ module.exports = {
                         }
                     });
                 })();
-            

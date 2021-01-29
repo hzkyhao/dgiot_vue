@@ -16,7 +16,7 @@ export async function QueryPermission(params) {
 export async function getPermission(params) {
   return request({
     url: `iotapi/classes/Permission/${params}`,
-    method: "get",
+    method: "get"
   });
 }
 

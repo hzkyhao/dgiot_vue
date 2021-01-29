@@ -107,8 +107,6 @@ export async function update_object(tabclass, ObjectId, data) {
  */
 
 export async function create_object(tabclass, data) {
-
-
   if (tabclass && data) {
     return request({
       url: `iotapi/classes/${tabclass}`,
@@ -126,6 +124,4 @@ export async function create_object(tabclass, data) {
       duration: 1 * 1000
     });
   }
-
-
 }

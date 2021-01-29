@@ -5,8 +5,8 @@
         <el-main>
           <div class="main">
             <el-drawer
-            direction="ltr"
-            :visible.sync="drawer">
+              :visible.sync="drawer"
+              direction="ltr">
               <div v-if="showTree" class="tree">
                 搜索 :
                 <el-input
@@ -66,8 +66,8 @@
                   </span>
                 </el-tree>
               </div>
-          </el-drawer>
-            <el-tabs v-model="activeName" @tab-click="goTo" style="display: none;">
+            </el-drawer>
+            <el-tabs v-model="activeName" style="display: none;" @tab-click="goTo">
               <el-tab-pane
                 v-for="item in tabsNav"
                 :key="item.url"
@@ -392,7 +392,6 @@ export default {
     background-color: #fff;
   }
 
-
   .el-main {
     background-color: #fff;
   }
@@ -409,7 +408,6 @@ export default {
   .main {
     flex: 1;
   }
-
 
 }
 </style>

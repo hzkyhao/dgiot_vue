@@ -280,12 +280,11 @@ export default {
       //   this.dev_online_count = res[5].success ? res[5].success.count : "-";
       // });
 
-
       const Project = await getProject({
-        limit: 30,
+        limit: 30
       })
       this.projectList = Project.results
-      console.log(Project,'Project')
+      console.log(Project, 'Project')
 
     //   var Project = Parse.Object.extend("Project");
     //   var project = new Parse.Query(Project);
