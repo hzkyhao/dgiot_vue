@@ -25,7 +25,7 @@
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="id" label="ProductID" width="200" />
+              <el-table-column prop="objectId" label="ProductID" width="200" />
               <el-table-column :label="$t('product.productname')" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
