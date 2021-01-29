@@ -944,6 +944,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          // 判断是新增产品还是修改
+          if (this.productid == '') {
+            const params = {}
+            this.addProduct(params)
+          } else {
+            const params = {}
+            this.editProduct(params)
+          }
           var ranNum = Math.ceil(Math.random() * 25)
           var productSecret = Base64.encode(
             String.fromCharCode(65 + ranNum) +
@@ -951,12 +959,7 @@ export default {
               Number(new Date())
           )
         } else {
-          // 判断是新增产品还是修改
-          if (this.productid == '') {
-            this.addProduct()
-          } else {
-            this.editProduct()
-          }
+          this.$message('必填项未填')
         }
       })
     },
@@ -964,7 +967,7 @@ export default {
       const { results } = await this.$create_object()
     },
     async editProduct() {
-      const { results } = await this.$update_object ()
+      const { results } = await this.$update_object()
     },
     // submitForm(formName) {
     //   this.$refs[formName].validate(valid => {
