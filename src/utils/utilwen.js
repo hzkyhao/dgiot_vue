@@ -154,10 +154,10 @@ function timestampToTime(timestamp, full) {
 }
 export default {
   install(Vue, options) {
-    (Vue.prototype.getData = function () {
+    (Vue.prototype.getData = function() {
       console.log("I am a method in plug-in");
     }),
-      Vue.prototype.$axiosWen = serviceWen
+    Vue.prototype.$axiosWen = serviceWen
     Vue.prototype.$create_object = create_object;
     Vue.prototype.$update_object = update_object;
     Vue.prototype.$del_object = del_object;

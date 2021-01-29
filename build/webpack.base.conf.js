@@ -94,18 +94,13 @@ module.exports = {
           limit: 1200,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      },
-      {
-        test: /\.(graphql|gql)$/,
-        exclude: /node_modules/,
-        loader: 'graphql-tag/loader'
-        },
+      }
     ]
   },
   plugins: [
     new VueLoaderPlugin(),
-    // new webpack.optimize.CommonsChunkPlugin('common.js'), 
-    // new webpack.ProvidePlugin({ jQuery: "jquery", $: "jquery" }) 
+    // new webpack.optimize.CommonsChunkPlugin('common.js'),
+    // new webpack.ProvidePlugin({ jQuery: "jquery", $: "jquery" })
  ],
    externals: {
     'vue': 'Vue',
@@ -128,6 +123,6 @@ module.exports = {
     child_process: 'empty'
   },
   performance: {
-    hints:false 
-  },  
+    hints:false
+  },
 }

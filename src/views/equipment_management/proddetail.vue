@@ -2239,12 +2239,12 @@
               :name="item.name"
             >
               <div class="diaCollRightCls">
-                 
-             <el-row style="margin:10px">
-               <el-button type="success">测试</el-button>
-               <el-button type="info" @click="onReductionTap(index)">还原</el-button>
-               <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
-               </el-row>
+
+                <el-row style="margin:10px">
+                  <el-button type="success">测试</el-button>
+                  <el-button type="info" @click="onReductionTap(index)">还原</el-button>
+                  <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
+                </el-row>
 
                 <pre
                   :id="item.name"
@@ -2283,7 +2283,7 @@ var isupdatetrue = "";
 import { Compile, subupadte } from "@/api/systemmanage/system";
 import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
@@ -2764,8 +2764,8 @@ export default {
       wmxPageSize: 10,
       wmxtotal: 20,
       wmxData: [],
-      editorList:[],
-      
+      editorList: [],
+
       warningeditror: [],
       channellength: 10,
       channelstart: 0,
@@ -3697,12 +3697,12 @@ export default {
               };
             }
 
-//检测到
+            // 检测到
             if (this.wmxSituation == "新增") {
               console.log("新增");
               this.productdetail.thing.properties.unshift(obj);
             } else if (this.wmxSituation == "编辑") {
-              console.log("编辑"+obj);
+              console.log("编辑" + obj);
               this.productdetail.thing.properties[this.modifyIndex] = obj;
             }
 
@@ -4141,14 +4141,14 @@ export default {
       this.editableTabs.push({
         title: this.wmxData[0].identifier,
         name: this.wmxData[0].identifier,
-        leftItemPos:0,
+        leftItemPos: 0,
         content: this.wmxData[0].dataForm.collection
       });
 
-      //进入先添加一个默认显示的
+      // 进入先添加一个默认显示的
       if (this.ed3isShow == false) {
         setTimeout(() => {
-          //editor3 = ace.edit(this.wmxData[0].identifier);
+          // editor3 = ace.edit(this.wmxData[0].identifier);
           this.editorList.push(ace.edit(this.wmxData[0].identifier));
           this.editorList[0].session.setMode("ace/mode/erlang"); // 设置语言
           this.editorList[0].setTheme("ace/theme/monokai"); // 设置主题
@@ -4160,20 +4160,20 @@ export default {
             enableLiveAutocompletion: true // 设置自动提示
           });
           this.ed3isShow = true;
-        //  this.editorList.push(editor3);
+          //  this.editorList.push(editor3);
           console.log(this.wmxData);
           this.editorList[0].setValue(this.wmxData[0].dataForm.collection);
         }, 1);
       }
-       //this.menuTabClick(this.wmxData)
+      // this.menuTabClick(this.wmxData)
     },
     //
     handleRightTopTabClick(tab, event) {
       this.activeIndex = tab.label
-        console.log(tab.label);
-      },
-      //左边切换,先判断是否添加过
-    menuTabClick(item , itemPos) {
+      console.log(tab.label);
+    },
+    // 左边切换,先判断是否添加过
+    menuTabClick(item, itemPos) {
       // 先判断是否添加过
       this.activeIndex = item.identifier;
       const tabs = this.editableTabs;
@@ -4181,16 +4181,16 @@ export default {
       let mIndex = 0;
       tabs.forEach((tab, index) => {
         if (tab.name === item.identifier) {
-          console.log("tab.name   "+tab.name ,"   item.identifier   "+item.identifier , "   index  " + index) ;
+          console.log("tab.name   " + tab.name, "   item.identifier   " + item.identifier, "   index  " + index);
           isAdd = true;
-          mIndex = index ;
+          mIndex = index;
         }
       });
       if (isAdd == false) {
         this.editableTabs.push({
           title: item.identifier,
           name: item.identifier,
-          leftItemPos:itemPos,
+          leftItemPos: itemPos,
           content: item.dataForm.collection
         })
         setTimeout(() => {
@@ -4211,62 +4211,59 @@ export default {
         this.rightCollection = item.dataForm.collection;
       } else {
         this.editableTabsValue = item.identifier;
-        console.log("this.editorList ==  "+this.editorList.length)
+        console.log("this.editorList ==  " + this.editorList.length)
         this.editorList[mIndex].setValue(item.dataForm.collection);
       }
     },
-    //关闭上面的单个tab
+    // 关闭上面的单个tab
     removeTab(targetName) {
-      let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              let nextTab = tabs[index + 1] || tabs[index - 1];
-              if (nextTab) {
-                activeName = nextTab.name;
-              }
+      const tabs = this.editableTabs;
+      let activeName = this.editableTabsValue;
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            const nextTab = tabs[index + 1] || tabs[index - 1];
+            if (nextTab) {
+              activeName = nextTab.name;
             }
-          });
-        }
- this.editableTabsValue = activeName;
-              this.activeIndex = activeName;
-             this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-
+          }
+        });
+      }
+      this.editableTabsValue = activeName;
+      this.activeIndex = activeName;
+      this.editableTabs = tabs.filter(tab => tab.name !== targetName);
     },
 
-    //保存
-    onSaveTap(index){
-       let leftPos = this.editableTabs[index].leftItemPos;
-          var obj = {};
-          var Product = Parse.Object.extend("Product");
-          var product = new Parse.Query(Product);
-          product.get(this.productId).then(response => {
-            this.productdetail.thing.properties[leftPos].dataForm.collection = this.editorList[index].getValue();
-            console.log("-------"+this.productdetail.thing.properties[leftPos].dataForm.collection);
-            response.set("thing", this.productdetail.thing);
-            response.save().then(
-              resultes => {
-                if (resultes) {
-                  this.$message({
-                    type: "success",
-                    message: "添加成功"
-                  });
-                    this.getProDetail();
-                  //this.$refs[formName].resetFields();
-                //  this.wmxdialogVisible = false;
-                }
-              },
-              error => {
-                returnLogin(error);
-              }
-           );
-          });
+    // 保存
+    onSaveTap(index) {
+      const leftPos = this.editableTabs[index].leftItemPos;
+      var obj = {};
+      var Product = Parse.Object.extend("Product");
+      var product = new Parse.Query(Product);
+      product.get(this.productId).then(response => {
+        this.productdetail.thing.properties[leftPos].dataForm.collection = this.editorList[index].getValue();
+        console.log("-------" + this.productdetail.thing.properties[leftPos].dataForm.collection);
+        response.set("thing", this.productdetail.thing);
+        response.save().then(
+          resultes => {
+            if (resultes) {
+              this.$message({
+                type: "success",
+                message: "添加成功"
+              });
+              this.getProDetail();
+              // this.$refs[formName].resetFields();
+              //  this.wmxdialogVisible = false;
+            }
+          },
+          error => {
+            returnLogin(error);
+          }
+        );
+      });
     },
 
-    
-
-    //右上角关闭页面
+    // 右上角关闭页面
     handleCloseCollecttion(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
@@ -4275,17 +4272,15 @@ export default {
         .catch(_ => {});
     },
 
-//还原
-    onReductionTap(index){
-      let leftPos = this.editableTabs[index].leftItemPos;
-      console.log( this.wmxData[leftPos].dataForm.collection)
+    // 还原
+    onReductionTap(index) {
+      const leftPos = this.editableTabs[index].leftItemPos;
+      console.log(this.wmxData[leftPos].dataForm.collection)
 
       this.editorList[index].setValue(this.wmxData[leftPos].dataForm.collection);
     },
 
-
-
-    //李宏杰添加结束
+    // 李宏杰添加结束
 
     // 查看物模型模板
     checkschema() {
@@ -4360,12 +4355,12 @@ export default {
                 properties: []
               };
             }
-            console.log( '=====',this.wmxData )
+            console.log('=====', this.wmxData)
             this.wmxData = [];
             this.wmxData = this.productdetail.thing.properties.filter(item => {
               return item.name && item.dataType;
             });
-console.log( '----------',this.wmxData )
+            console.log('----------', this.wmxData)
             editor.setValue(Base64.decode(setdata));
             editor.gotoLine(editor.session.getLength());
             // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
@@ -5040,19 +5035,23 @@ console.log( '----------',this.wmxData )
       });
     },
     testgraphql() {
-      this.$apollo
-        .query({
-          query: gql`
-            ${editorgraphql.getValue()}
-          `
-        })
-        .then(resultes => {
-          editor5.setValue(JSON.stringify(resultes, null, 4));
-        })
-        .catch(error => {
-          console.log(error);
-          this.$message(error);
-        });
+
+      // 删除 graphql 可能需要整合
+
+
+      // this.$apollo
+      //   .query({
+      //     query: gql`
+      //       ${editorgraphql.getValue()}
+      //     `
+      //   })
+      //   .then(resultes => {
+      //     editor5.setValue(JSON.stringify(resultes, null, 4));
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //     this.$message(error);
+      //   });
     },
     // 规则tab显示
     orginRule() {

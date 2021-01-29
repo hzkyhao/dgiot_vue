@@ -167,14 +167,14 @@
           </el-form-item> -->
           <el-form-item label="所属应用" prop="roles">
             <el-input v-model="addchannel.applicationtText" placeholder="请选择所属应用">
-             <template slot="append">
-               <i  style="cursor: pointer;" :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" @click="showTree = !showTree"></i>
-             </template>
-           </el-input>
-           <div v-if="showTree">
-             <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-           </div>
-           </el-form-item>
+              <template slot="append">
+                <i :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" style="cursor: pointer;" @click="showTree = !showTree"/>
+              </template>
+            </el-input>
+            <div v-if="showTree">
+              <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"/>
+            </div>
+          </el-form-item>
 
           <el-col v-for="(item,index) in arrlist" :span="12" :key="index">
             <el-form-item
@@ -332,7 +332,7 @@ export default {
       arrlist: [],
       channelId: '',
       channelrow: [],
-      showTree:false,
+      showTree: false,
       allApps: [],
       defaultProps: {
         children: 'children',
@@ -435,17 +435,17 @@ export default {
       )
     },
     handleNodeClick(data) {
-        this.showTree = !this.showTree
-        this.addchannel.applicationtText = data.alias
-      },
+      this.showTree = !this.showTree
+      this.addchannel.applicationtText = data.alias
+    },
     // 初始化弹框数据
     dialogType() {
       this.$axiosWen.get('iotapi/roletree').then(res => {
-          console.log(res)
-          this.allApps = res.results
-        }).catch(e => {
-          console.log(e)
-        }),
+        console.log(res)
+        this.allApps = res.results
+      }).catch(e => {
+        console.log(e)
+      }),
       resourceTypes().then(resultes => {
         this.channelregion = resultes
       })
