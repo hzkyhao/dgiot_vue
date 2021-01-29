@@ -34,7 +34,7 @@
       </el-form>
       <div class="protable">
         <el-table :data="groupData" style="width: 100%">
-          <el-table-column prop="id" label="ProductID"/>
+          <el-table-column prop="objectId" label="ProductID"/>
           <el-table-column :label="$t('product.productname')">
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>

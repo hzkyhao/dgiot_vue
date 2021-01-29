@@ -1,20 +1,28 @@
-import request from '@/utils/request'
-
+import request from "@/utils/request";
+import { Message } from "element-ui";
 /**
  * 数蛙全局通用接口方法 查询
  * @param {*} tabclass  表名 必传 不可为空
  * @param {*} params    对应参数 必传  可为{}
  */
 export async function query_object(tabclass, params) {
-  return request({
-    url: `iotapi/classes/${tabclass}`,
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+  if (tabclass) {
+    return request({
+      url: `iotapi/classes/${tabclass}`,
+      method: "get",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      params
+    });
+  } else {
+    return Message({
+      message: "tabclass 字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
 }
 
 /**
@@ -23,16 +31,23 @@ export async function query_object(tabclass, params) {
  * @param {*} ObjectId   对应查询id 必传
  */
 export async function get_object(tabclass, ObjectId) {
-  return request({
-    url: `iotapi/classes/${tabclass}/${ObjectId}`,
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });
+  if (tabclass && ObjectId) {
+    return request({
+      url: `iotapi/classes/${tabclass}/${ObjectId}`,
+      method: "get",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    });
+  } else {
+    return Message({
+      message: "tabclass 和 ObjectId字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
 }
-
 
 /**
  * 数蛙全局通用接口方法 删除单条数据
@@ -41,16 +56,23 @@ export async function get_object(tabclass, ObjectId) {
  */
 
 export async function del_object(tabclass, ObjectId) {
-  return request({
-    url: `iotapi/classes/${tabclass}/${ObjectId}`,
-    method: "DELETE",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  });
+  if (tabclass && ObjectId) {
+    return request({
+      url: `iotapi/classes/${tabclass}/${ObjectId}`,
+      method: "DELETE",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    });
+  } else {
+    return Message({
+      message: "tabclass 和 ObjectId字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
 }
-
 
 /**
  * 数蛙全局通用接口方法 更新单条数据
@@ -59,15 +81,23 @@ export async function del_object(tabclass, ObjectId) {
  * @param {*} data 更新的参数 必传
  */
 export async function update_object(tabclass, ObjectId, data) {
-  return request({
-    url: `iotapi/classes/${tabclass}/${ObjectId}`,
-    method: "PUT",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    data
-  });
+  if (tabclass && ObjectId && data) {
+    return request({
+      url: `iotapi/classes/${tabclass}/${ObjectId}`,
+      method: "PUT",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      data
+    });
+  } else {
+    return Message({
+      message: "tabclass 和 ObjectId字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
 }
 
 /**
@@ -77,13 +107,25 @@ export async function update_object(tabclass, ObjectId, data) {
  */
 
 export async function create_object(tabclass, data) {
-  return request({
-    url: `iotapi/classes/${tabclass}`,
-    method: "POST",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    data
-  });
+
+
+  if (tabclass && data) {
+    return request({
+      url: `iotapi/classes/${tabclass}`,
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      data
+    });
+  } else {
+    return Message({
+      message: "tabclass 和 data字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
+
+
 }
