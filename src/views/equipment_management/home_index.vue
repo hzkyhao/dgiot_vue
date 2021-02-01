@@ -839,59 +839,56 @@ export default {
       this.bmapdialogVisible = false
     },
     // 激活设备
-    getActiveDevices() {
-      var devices = new Parse.Query(Device)
-      devices.equalTo('status', 'ACTIVE')
+    async getActiveDevices() {
+      var params = {
+        'where':{
+          'status':'ACTIVE'
+         }
+      }
       if (this.deviceinput != '') {
         if (
           this.selectdevice == '设备名称' ||
           this.selectdevice == 'Device Name'
         ) {
-          devices.equalTo('name', this.deviceinput)
+          params.where.name = this.deviceinput
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          params.where.devaddr = this.deviceinput
         }
       }
       if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+        params.where.devaddr = this.devicenumber
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        params.where.product = this.equvalue
       }
-      devices.count().then(
-        active => {
-          this.activeall = active
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      var devices = await this.$queryDevice(params) 
+      this.activeall = devices.results.length
+      
     },
-    getOnlineDevices() {
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.equalTo('status', 'ONLINE')
+    async getOnlineDevices() {
+      var params = {
+        'where':{
+          'status': 'ONLINE'
+        }
+         
+      }
+     
       if (this.deviceinput != '') {
         if (this.selectdevice == '设备名称') {
-          devices.equalTo('name', this.deviceinput)
+          params.where.name = this.deviceinput
         } else {
-          devices.equalTo('devaddr', this.deviceinput)
+          params.where.devaddr = this.deviceinput
         }
       }
       if (this.devicenumber != '') {
-        devices.equalTo('devaddr', this.devicenumber)
+        params.where.devaddr = this.devicenumber
       }
       if (this.equvalue != 0) {
-        devices.equalTo('product', this.equvalue)
+        params.where.product = this.equvalue
       }
-      devices.count().then(
-        online => {
-          this.onlineall = online
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      var devices = await this.$queryDevice(params) 
+      this.onlineall = devices.results.length
+    
     },
 
     // 查询产品
@@ -903,10 +900,10 @@ export default {
       this.proTableData = Product.results
       this.proTableData1 = Product.results
 
-      // this.proTableData1.unshift({
-      //     name: language == 'zh' ? '全部产品' : 'All Products',
-      //     id: '0'
-      // })
+      this.proTableData1.unshift({
+          name: language == 'zh' ? '全部产品' : 'All Products',
+          id: '0'
+      })
       // var Product = Parse.Object.extend('Product')
       // var product = new Parse.Query(Product)
       // product.limit(10000)
@@ -924,7 +921,7 @@ export default {
       //       this.equvalue = this.$route.query.productid
       //       this.productenable = false
       //     }
-      //     this.getDevices()
+      this.getDevices()
       //   },
       //   error => {
       //     returnLogin(error)
@@ -958,14 +955,16 @@ export default {
       if (start == 0) {
         this.devicestart = 0
       }
-      const res = await query_object('Device', params)
-
-      // console.log(`search Device is ${results}`)
+      const res = await this.$queryDevice(params)
       this.tableData = res.results
+      
       this.devicetotal = res.count
 
       // 查询激活设备
-      // this.getActiveDevices()
+      this.getActiveDevices()
+
+      // 查询在线设备
+      this.getOnlineDevices()
     },
 
     // // 查询设备
