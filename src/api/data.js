@@ -8,9 +8,9 @@ export function initData(url, params) {
   });
 }
 export function batch(url, data) {
-  console.log(url,data,'axios from batch')
+  console.log(url, data, 'axios from batch')
   return request({
-    url: 'iotapi'+url,
+    url: 'iotapi' + url,
     method: "post",
     headers: {
       'accept': 'application/json',

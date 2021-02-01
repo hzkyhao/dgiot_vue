@@ -120,7 +120,7 @@
                 layout="prev, pager, next"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-              ></el-pagination>
+              />
             </div>
           </div>
         </div>
@@ -221,12 +221,12 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">
           {{
-          $t("developer.cancel")
+            $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="addacl">
           {{
-          $t("developer.determine")
+            $t("developer.determine")
           }}
         </el-button>
       </span>
@@ -266,12 +266,12 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleEdit = false">
           {{
-          $t("developer.cancel")
+            $t("developer.cancel")
           }}
         </el-button>
         <el-button type="primary" @click="updaterole">
           {{
-          $t("developer.determine")
+            $t("developer.determine")
           }}
         </el-button>
       </div>

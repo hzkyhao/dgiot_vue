@@ -6,10 +6,13 @@
         type="primary"
         icon="el-icon-search"
         style="margin-left:20px;"
-        >{{ $t("developer.search") }}</el-button
+      >{{ $t("developer.search") }}</el-button
       >
-      <el-button type="primary" @click="centerUploadBox"
-        >导入菜单<i class="el-icon-upload el-icon--right"
+      <el-button
+        type="primary"
+        @click="centerUploadBox"
+      >导入菜单<i
+        class="el-icon-upload el-icon--right"
       /></el-button>
       <input
         v-show="false"
@@ -18,7 +21,7 @@
         value="上传菜单"
         type="file"
         @change="handleFileChange"
-      />
+      >
 
       <!-- <el-button type="primary" icon="el-icon-plus" @click="dialogVisible=true">新增一级菜单</el-button> -->
     </div>
@@ -89,7 +92,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addmenus(scope.row)"
-          >{{ $t("menu.childrenmenu") }}</el-button
+        >{{ $t("menu.childrenmenu") }}</el-button
         >
         <el-button
           v-if="scope.row.objectId != 0"
@@ -97,7 +100,7 @@
           type="success"
           icon="el-icon-edit"
           @click="handleEdit(scope.row)"
-          >{{ $t("developer.edit") }}</el-button
+        >{{ $t("developer.edit") }}</el-button
         >
         <el-button
           v-if="scope.row.objectId != 0"
@@ -105,7 +108,7 @@
           type="danger"
           icon="el-icon-delete"
           @click="handleDelete(scope.row)"
-          >{{ $t("developer.delete") }}</el-button
+        >{{ $t("developer.delete") }}</el-button
         >
       </template>
     </tree-table>
@@ -430,14 +433,14 @@ export default {
         resultes.set("name", this.MenuForm.name);
         resultes.set("orderBy", Number(this.MenuForm.number));
 
-        //MenuForm.fathername数组最后一个元素
+        // MenuForm.fathername数组最后一个元素
         parent.id = this.MenuForm.fathername[
           this.MenuForm.fathername.length - 1
         ];
 
-        let pid =  resultes.attributes.parent.id
+        const pid = resultes.attributes.parent.id
 
-       if(pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id){
+        if (pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id) {
           resultes.set("parent", parent);
         }
         resultes.save().then(res => {
@@ -523,9 +526,9 @@ export default {
           this.menuid = "";
           this.getMenu();
         }),
-          error => {
-            console.log("error");
-          };
+        error => {
+          console.log("error");
+        };
       } else if (this.menuid != "" && this.isaddmenu) {
         var Object = Parse.Object.extend("Menu");
         var object = new Object();
@@ -555,9 +558,9 @@ export default {
           this.dialogVisible = false;
           this.getMenu();
         }),
-          error => {
-            console.log("error");
-          };
+        error => {
+          console.log("error");
+        };
       }
 
       // this.parentid=obj.id;

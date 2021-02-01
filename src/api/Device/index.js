@@ -24,7 +24,6 @@ export async function delete_Device(params) {
   });
 }
 
-
 export async function put_Device(params) {
   return request({
     url: 'iotapi/classes/Channel',
@@ -36,7 +35,6 @@ export async function put_Device(params) {
     params
   });
 }
-
 
 export async function queryChannel(params) {
   return request({

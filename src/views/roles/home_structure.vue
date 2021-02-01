@@ -166,7 +166,7 @@
                     <template slot-scope="scope">
                       <span>
                         {{
-                        new Date(scope.row.createdAt).toLocaleDateString()
+                          new Date(scope.row.createdAt).toLocaleDateString()
                         }}
                       </span>
                     </template>

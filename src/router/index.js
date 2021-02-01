@@ -131,7 +131,7 @@ export const constantRouterMap = [
             name: "产品管理",
             component: () => import("@/views/equipment_management/devproduct"),
             meta: { title: "产品管理", icon: "product" }
-          },
+          }
         ]
       }
     ]

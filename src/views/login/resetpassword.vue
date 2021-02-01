@@ -10,7 +10,7 @@
         class="login-form"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" />
+          <img :src="logosrc" alt="logo" style="width:80px;height:80px;" >
           <p>重置密码</p>
         </div>
 
