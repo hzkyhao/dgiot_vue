@@ -742,45 +742,187 @@ export default {
         }
       )
     },
-    // 初始化
-    getDeviceDetail() {
+    // // 初始化
+    // getDeviceDetail() {
+    //   var vm = this
+    //   this.deviceid = this.$route.query.deviceid
+    //   this.ischildren = this.$route.query.ischildren
+    //
+    //   var Product = Parse.Object.extend('Product')
+    //   var product = new Parse.Query(Product)
+    //
+    //   var Devices = Parse.Object.extend('Device')
+    //   var devices = new Parse.Query(Devices)
+    //   devices.get(this.deviceid).then(resultes => {
+    //     var obj = {}
+    //     this.productid = this.$objGet(resultes, 'attributes.product.id')
+    //     this.devicedevaddr = this.$objGet(resultes, 'attributes.devaddr')
+    //     obj.id = resultes.id
+    //     obj.createdAt = utc2beijing(resultes.createdAt)
+    //     obj.productName = this.$objGet(resultes, 'attributes.product.attributes.name')
+    //     obj.productid = this.$objGet(resultes, 'attributes.product.id')
+    //     obj.address = this.$objGet(resultes, 'attributes.address')
+    //
+    //     obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'attributes.lastOnlineTime'), true)
+    //
+    //     obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'attributes.updatedAt'))
+    //     obj.ip = this.$objGet(resultes, 'attributes.ip')
+    //
+    //     console.log(" obj.updatedAt", obj.updatedAt)
+    //
+    //     obj.basedata = JSON.stringify(resultes.attributes.basedata)
+    //     obj.DeviceName = resultes.attributes.name
+    //     obj.status = resultes.attributes.status
+    //     obj.desc = this.$objGet(resultes, 'attributes.desc')
+    //     obj.devaddr = this.$objGet(resultes, 'attributes.devaddr')
+    //     obj.nodeType = this.$objGet(resultes, 'attributes.product.attributes.nodeType')
+    //     // obj.node = resultes.attributes.tag.attributes.node
+    //     obj.devType = this.$objGet(resultes, 'attributes.product.attributes.devType')
+    //     obj.productSecret = this.$objGet(resultes, 'attributes.product.attributes.productSecret')
+    //
+    //     const thingTemp = vm.$objGet(resultes, 'attributes.product.attributes.thing')
+    //
+    //     if (thingTemp) {
+    //       vm.properties = JSON.parse(
+    //         JSON.stringify(
+    //           thingTemp.properties
+    //         )
+    //       )
+    //
+    //       console.log('vm.properties ', vm.properties)
+    //
+    //       vm.properties.map(items => {
+    //         dataobj[items['identifier']] = {
+    //           expectedData: [],
+    //           actualData: [],
+    //           results: [],
+    //           title:
+    //             items['dataType']['type'] == 'int' ||
+    //             items['dataType']['type'] == 'float' ||
+    //             items['dataType']['type'] == 'double'
+    //               ? items['name'] +
+    //                 '(' +
+    //                 items['dataType']['specs']['unit'] +
+    //                 ')'
+    //               : items['name'],
+    //           data: [],
+    //           max: 0
+    //         }
+    //       })
+    //     } else {
+    //       product.get(vm.productid).then(
+    //         resultes => {
+    //           vm.properties = JSON.parse(
+    //             JSON.stringify(vm.$objGet(resultes, 'attributes.thing.properties'))
+    //           )
+    //
+    //           if (vm.properties) {
+    //             vm.properties.map(items => {
+    //               dataobj[items['identifier']] = {
+    //                 expectedData: [],
+    //                 actualData: [],
+    //                 results: [],
+    //                 title:
+    //                   items['dataType']['type'] == 'int' ||
+    //                   items['dataType']['type'] == 'float' ||
+    //                   items['dataType']['type'] == 'double'
+    //                     ? items['name'] +
+    //                       '(' +
+    //                       items['dataType']['specs']['unit'] +
+    //                       ')'
+    //                     : items['name'],
+    //                 data: [],
+    //                 max: 0
+    //               }
+    //             })
+    //           } else {
+    //             console.log('product resultes none')
+    //           }
+    //         },
+    //         error => {
+    //           returnLogin(error)
+    //         }
+    //       )
+    //     }
+    //     if (resultes.attributes.product.attributes.topics) {
+    //       this.topicData = resultes.attributes.product.attributes.topics.concat(
+    //         this.topic
+    //       )
+    //     } else {
+    //       this.topicData = this.topic
+    //     }
+    //
+    //     this.devicedetail = obj
+    //     if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
+    //       this.activeName = 'children'
+    //       this.isshowchild = true
+    //       this.getDevices()
+    //
+    //       /* product.find().then(resultes => {
+    //         console.log('产品列表 ###');
+    //         this.allProudct = resultes;
+    //       }); */
+    //
+    //       this.$axiosWen.get('iotapi/classes/Product', {
+    //         params: {
+    //           'where': {
+    //             objectId: {
+    //               $ne: vm.productid
+    //             }
+    //           },
+    //           'order': 'updatedAt' // -updatedAt  updatedAt
+    //         }
+    //       })
+    //         .then(response => {
+    //           // this.productListForReport = response.results
+    //           this.allProudct = response.results
+    //         })
+    //     }
+    //     //  else if (
+    //     //   this.$route.query.nodeType !=0 &&
+    //     //   this.ischildren == 'false'
+    //     // ) {
+    //     //   this.isshowchild = true
+    //     // }
+    //     else {
+    //       console.log("this.$route.query.nodeType", this.$route.query.nodeType)
+    //       console.log("this.ischildren", this.ischildren)
+    //       this.ischildren == 'false'
+    //       this.isshowchild = true
+    //     }
+    //     // 初始化物模型数据
+    //     this.isupdate = true
+    //     // this.Update()
+    //     this.updateTrue(true)
+    //   })
+    // },
+    // 实时刷新
+    async getDeviceDetail() {
       var vm = this
       this.deviceid = this.$route.query.deviceid
       this.ischildren = this.$route.query.ischildren
-
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-
-      var Devices = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Devices)
-      devices.get(this.deviceid).then(resultes => {
+      const resultes = await this.$get_object('Device', this.deviceid)
+      if (resultes.objectId) {
         var obj = {}
-        this.productid = this.$objGet(resultes, 'attributes.product.id')
-        this.devicedevaddr = this.$objGet(resultes, 'attributes.devaddr')
-        obj.id = resultes.id
+        this.productid = this.$objGet(resultes, 'product.objectId')
+        this.devicedevaddr = this.$objGet(resultes, 'devaddr')
+        obj.id = resultes.objectId
         obj.createdAt = utc2beijing(resultes.createdAt)
-        obj.productName = this.$objGet(resultes, 'attributes.product.attributes.name')
-        obj.productid = this.$objGet(resultes, 'attributes.product.id')
-        obj.address = this.$objGet(resultes, 'attributes.address')
-
-        obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'attributes.lastOnlineTime'), true)
-
-        obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'attributes.updatedAt'))
-        obj.ip = this.$objGet(resultes, 'attributes.ip')
-
-        console.log(" obj.updatedAt", obj.updatedAt)
-
-        obj.basedata = JSON.stringify(resultes.attributes.basedata)
-        obj.DeviceName = resultes.attributes.name
-        obj.status = resultes.attributes.status
-        obj.desc = this.$objGet(resultes, 'attributes.desc')
-        obj.devaddr = this.$objGet(resultes, 'attributes.devaddr')
-        obj.nodeType = this.$objGet(resultes, 'attributes.product.attributes.nodeType')
-        // obj.node = resultes.attributes.tag.attributes.node
-        obj.devType = this.$objGet(resultes, 'attributes.product.attributes.devType')
-        obj.productSecret = this.$objGet(resultes, 'attributes.product.attributes.productSecret')
-
-        const thingTemp = vm.$objGet(resultes, 'attributes.product.attributes.thing')
+        obj.productName = this.$objGet(resultes, 'product.name')
+        obj.productid = this.$objGet(resultes, 'product.objectId')
+        obj.address = this.$objGet(resultes, 'address')
+        // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
+        obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'resultes.updatedAt'))
+        obj.ip = this.$objGet(resultes, 'ip')
+        obj.basedata = JSON.stringify(resultes.basedata)
+        obj.DeviceName = resultes.name
+        obj.status = resultes.status
+        obj.desc = this.$objGet(resultes, 'desc')
+        obj.devaddr = this.$objGet(resultes, 'devaddr')
+        obj.nodeType = this.$objGet(resultes, 'product.nodeType')
+        obj.devType = this.$objGet(resultes, 'product.devType')
+        obj.productSecret = this.$objGet(resultes, 'product.productSecret')
+        const thingTemp = vm.$objGet(resultes, 'product.thing')
 
         if (thingTemp) {
           vm.properties = JSON.parse(
@@ -797,106 +939,145 @@ export default {
               actualData: [],
               results: [],
               title:
-                items['dataType']['type'] == 'int' ||
-                items['dataType']['type'] == 'float' ||
-                items['dataType']['type'] == 'double'
-                  ? items['name'] +
-                    '(' +
-                    items['dataType']['specs']['unit'] +
-                    ')'
-                  : items['name'],
+                    items['dataType']['type'] == 'int' ||
+                    items['dataType']['type'] == 'float' ||
+                    items['dataType']['type'] == 'double'
+                      ? items['name'] +
+                        '(' +
+                        items['dataType']['specs']['unit'] +
+                        ')'
+                      : items['name'],
               data: [],
               max: 0
             }
           })
         } else {
-          product.get(vm.productid).then(
-            resultes => {
-              vm.properties = JSON.parse(
-                JSON.stringify(vm.$objGet(resultes, 'attributes.thing.properties'))
-              )
-
-              if (vm.properties) {
-                vm.properties.map(items => {
-                  dataobj[items['identifier']] = {
-                    expectedData: [],
-                    actualData: [],
-                    results: [],
-                    title:
-                      items['dataType']['type'] == 'int' ||
-                      items['dataType']['type'] == 'float' ||
-                      items['dataType']['type'] == 'double'
-                        ? items['name'] +
-                          '(' +
-                          items['dataType']['specs']['unit'] +
-                          ')'
-                        : items['name'],
-                    data: [],
-                    max: 0
-                  }
-                })
-              } else {
-                console.log('product resultes none')
-              }
-            },
-            error => {
-              returnLogin(error)
+          this.$axiosWen('iotapi/classes/Product/' + vm.productid).then(resultes => {
+            console.log(resultes)
+            vm.properties = JSON.parse(
+              JSON.stringify(vm.$objGet(resultes, 'attributes.thing.properties'))
+            )
+            if (vm.properties) {
+              vm.properties.map(items => {
+                dataobj[items['identifier']] = {
+                  expectedData: [],
+                  actualData: [],
+                  results: [],
+                  title:
+                              items['dataType']['type'] === 'int' ||
+                              items['dataType']['type'] === 'float' ||
+                              items['dataType']['type'] === 'double'
+                                ? items['name'] +
+                                  '(' +
+                                  items['dataType']['specs']['unit'] +
+                                  ')'
+                                : items['name'],
+                  data: [],
+                  max: 0
+                }
+              })
+            } else {
+              console.log('product resultes none')
             }
-          )
+          }).catch(e => {
+            this.$message(e.error)
+          })
+          if (resultes.product.topics) {
+            this.topicData = resultes.product.topics.concat(
+              this.topic
+            )
+          } else {
+            this.topicData = this.topic
+          }
+          this.devicedetail = obj
+
+          if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
+            this.activeName = 'children'
+            this.isshowchild = true
+            this.getDevices()
+
+            /* product.find().then(resultes => {
+                  console.log('产品列表 ###');
+                  this.allProudct = resultes;
+                }); */
+
+            this.$axiosWen.get('iotapi/classes/Product', {
+              params: {
+                'where': {
+                  objectId: {
+                    $ne: vm.productid
+                  }
+                },
+                'order': 'updatedAt' // -updatedAt  updatedAt
+              }
+            })
+              .then(response => {
+                // this.productListForReport = response.results
+                this.allProudct = response.results
+              })
+          }
+          //  else if (
+          //   this.$route.query.nodeType !=0 &&
+          //   this.ischildren == 'false'
+          // ) {
+          //   this.isshowchild = true
+          // }
+          else {
+            console.log("this.$route.query.nodeType", this.$route.query.nodeType)
+            console.log("this.ischildren", this.ischildren)
+            this.ischildren == 'false'
+            this.isshowchild = true
+          }
+          // 初始化物模型数据
+          this.isupdate = true
+          // this.Update()
+          this.updateTrue(true)
+
+          // product.get(vm.productid).then(
+          //   resultes => {
+          //     vm.properties = JSON.parse(
+          //       JSON.stringify(vm.$objGet(resultes, 'thing.properties'))
+          //     )
+          //
+          //     if (vm.properties) {
+          //       vm.properties.map(items => {
+          //         dataobj[items['identifier']] = {
+          //           expectedData: [],
+          //           actualData: [],
+          //           results: [],
+          //           title:
+          //                 items['dataType']['type'] == 'int' ||
+          //                 items['dataType']['type'] == 'float' ||
+          //                 items['dataType']['type'] == 'double'
+          //                   ? items['name'] +
+          //                     '(' +
+          //                     items['dataType']['specs']['unit'] +
+          //                     ')'
+          //                   : items['name'],
+          //           data: [],
+          //           max: 0
+          //         }
+          //       })
+          //     } else {
+          //       console.log('product resultes none')
+          //     }
+          //   },
+          //   error => {
+          //     returnLogin(error)
+          //   }
+          // )
         }
-        if (resultes.attributes.product.attributes.topics) {
-          this.topicData = resultes.attributes.product.attributes.topics.concat(
+        if (resultes.product.topics) {
+          this.topicData = resultes.product.topics.concat(
             this.topic
           )
         } else {
           this.topicData = this.topic
         }
-
-        this.devicedetail = obj
-        if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
-          this.activeName = 'children'
-          this.isshowchild = true
-          this.getDevices()
-
-          /* product.find().then(resultes => {
-            console.log('产品列表 ###');
-            this.allProudct = resultes;
-          }); */
-
-          this.$axiosWen.get('iotapi/classes/Product', {
-            params: {
-              'where': {
-                objectId: {
-                  $ne: vm.productid
-                }
-              },
-              'order': 'updatedAt' // -updatedAt  updatedAt
-            }
-          })
-            .then(response => {
-              // this.productListForReport = response.results
-              this.allProudct = response.results
-            })
-        }
-        //  else if (
-        //   this.$route.query.nodeType !=0 &&
-        //   this.ischildren == 'false'
-        // ) {
-        //   this.isshowchild = true
-        // }
-        else {
-          console.log("this.$route.query.nodeType", this.$route.query.nodeType)
-          console.log("this.ischildren", this.ischildren)
-          this.ischildren == 'false'
-          this.isshowchild = true
-        }
-        // 初始化物模型数据
-        this.isupdate = true
-        // this.Update()
-        this.updateTrue(true)
-      })
+      } else {
+        this.$message('objectId 未返回')
+      }
     },
-    // 实时刷新
     Update() {
       function deteleObject(obj) {
         var uniques = [];
