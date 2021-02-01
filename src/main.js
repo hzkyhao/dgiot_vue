@@ -1,6 +1,4 @@
 const Vue = require("vue");
-const ElementUI = require("element-ui");
-
 import "normalize.css/normalize.css"; // A modern alternative to CSS resets
 import "@/styles/index.scss"; // global css
 import App from "./App";
@@ -44,34 +42,6 @@ Vue.prototype.$axios = service;
 Vue.prototype.$NProgress = NProgress;
 Vue.prototype.$globalConfig = globalConfig;
 Vue.prototype.$Cookies = Cookies;
-
-var msgparam = {}
-// 全局重写 element 的$message 弹框事件
-// es6 箭头函数
-Vue.prototype.$message = (msg) => {
-  if (!msg) {
-    return;
-  }
-  if (typeof msg === "object") {
-    if (!msg.message) {
-      var jsonString = JSON.stringify(msg);
-    }
-    msgparam = {
-      type: msg.type ? msg.type : "warn",
-      message: msg.message ? msg.message : jsonString,
-      duration: msg.duration ? msg.duration : 800,
-      showClose: msg.showClose ? msg.showClose : true
-    };
-  } else {
-    msgparam = {
-      message: msg,
-      duration: 800,
-      showClose: true
-    };
-  }
-  ElementUI.Message(msgparam);
-};
-
 Vue.use(VueResource);
 Vue.config.productionTip = false;
 router.beforeEach((to, from, next) => {
