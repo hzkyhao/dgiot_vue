@@ -29,6 +29,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+
     clientLogLevel: 'warning',
     historyApiFallback: true,
     hot: true,
@@ -93,3 +94,5 @@ module.exports = new Promise((resolve, reject) => {
     }
   })
 })
+
+

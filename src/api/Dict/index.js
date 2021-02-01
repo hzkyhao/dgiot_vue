@@ -1,9 +1,8 @@
+
+
+
+
 import { query_object, get_object, del_object, update_object, create_object } from '@/api/shuwa_parse'
-
-export async function queryDict(params) {
-  return query_object('Dict', params)
-}
-
 export async function getBatchNumer() {
   const params = {
     order: "-createdAt",
