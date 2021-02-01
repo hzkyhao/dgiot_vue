@@ -20,7 +20,6 @@
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-              </el-button>
             </el-form-item>
           </el-form>
           <div class="protable">
@@ -725,7 +724,7 @@ export default {
         parsms.where.name = this.formInline.productname
       }
       const { results } = await this.$query_object('Product', parsms)
-      console.log("results", results)
+      // console.log("results", results)
       results.map(items => {
         if (
           items.category != '' &&
@@ -1170,7 +1169,7 @@ export default {
       this.$router.push({
         path: '/roles/detailproduct',
         query: {
-          id: row.id
+          id: row.objectId
         }
       })
     },

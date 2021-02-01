@@ -520,6 +520,7 @@
   </div>
 </template>
 <script>
+import { getTdDevice } from "@/api/Device/index.js"
 import Parse from 'parse'
 import { utc2beijing } from '@/utils/index'
 import { timestampToTime } from '@/api/login'
@@ -1105,8 +1106,9 @@ export default {
       console.log('实时刷新')
 
       // this.deviceid 李宏杰修改
-      getDev(this.deviceid, this.devicedetail.productid)
+      getTdDevice(this.deviceid) // 此方法数据渲染还需调整 todo
         .then(response => {
+          console.log(response, "response")
           if (response) {
             if (response.results && response.results.length != 0) {
               vm.thirdData.unshift({

@@ -335,12 +335,11 @@
         <!--功能定义-->
         <el-tab-pane :label="$t('product.physicalmodel')" name="third">
           <div style="text-align:right">
-            <el-button
-              type="primary"
-              size="small"
-              @click="checkAddTest"
-            >李宏杰新增按钮</el-button
-            >
+            <!--            <el-button-->
+            <!--              type="primary"-->
+            <!--              size="small"-->
+            <!--              @click="checkAddTest"-->
+            <!--            >李宏杰新增按钮</el-button>-->
             <el-button type="primary" size="small" @click="checkschema">{{
               $t("product.viewobjectmodel")
             }}</el-button>
@@ -515,7 +514,7 @@
                 <el-table :data="PropData" style="width:100%;text-align:center">
                   <el-table-column label="ID" align="center">
                     <template slot-scope="scope">
-                      <span>{{ scope.row.attributes.data.SuperId }}</span>
+                      <span>{{ scope.row.data.SuperId }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -523,7 +522,7 @@
                     align="center"
                   >
                     <template slot-scope="scope">
-                      <span>{{ scope.row.attributes.type }}</span>
+                      <span>{{ scope.row.type }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -531,7 +530,7 @@
                     align="center"
                   >
                     <template slot-scope="scope">
-                      <span>{{ scope.row.attributes.data.CategoryName }}</span>
+                      <span>{{ scope.row.data.CategoryName }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -742,12 +741,12 @@
                               <el-option
                                 v-for="(item, index) in allunit"
                                 :label="
-                                  item.attributes.data.Name +
+                                  item.data.Name +
                                     '/' +
-                                    item.attributes.data.Symbol
+                                    item.data.Symbol
                                 "
                                 :key="index"
-                                :value="item.attributes.data.Symbol"
+                                :value="item.data.Symbol"
                               />
                             </el-select>
                           </el-form-item>
@@ -1393,12 +1392,12 @@
                       <el-option
                         v-for="(item, index) in allunit"
                         :label="
-                          item.attributes.data.Name +
+                          item.data.Name +
                             '/' +
-                            item.attributes.data.Symbol
+                            item.data.Symbol
                         "
                         :key="index"
-                        :value="item.attributes.data.Symbol"
+                        :value="item.data.Symbol"
                       />
                     </el-select>
                   </el-form-item>
@@ -1631,7 +1630,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
@@ -1641,7 +1640,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.type == 1">{{
+                  <span v-if="scope.row.type == 1">{{
                     $t("developer.collectionchannel")
                   }}</span>
                   <span v-else>{{ $t("developer.resourcechannel") }}</span>
@@ -1649,7 +1648,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.servicetype')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.cType }}</span>
+                  <span>{{ scope.row.cType }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -1677,22 +1676,22 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.data.name }}</span>
+                  <span>{{ scope.row.data.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('plugins.version')" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.data.version }}</span>
+                  <span>{{ scope.row.data.version }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.describe')" align="center">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.data.desc }}</span>
+                  <span>{{ scope.row.data.desc }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="创建时间" align="center">
                 <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
+                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1775,7 +1774,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
@@ -1785,18 +1784,18 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.type == 1">{{
+                  <span v-if="scope.row.type == 1">{{
                     $t("developer.collectionchannel")
                   }}</span>
                   <span
-                    v-else-if="scope.row.attributes.type == 3"
+                    v-else-if="scope.row.type == 3"
                   >任务通道</span
                   >
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.servicetype')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.cType }}</span>
+                  <span>{{ scope.row.cType }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" width="350">
@@ -1881,7 +1880,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
@@ -1891,7 +1890,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
                 <template slot-scope="scope">
-                  <span v-if="scope.row.attributes.type == 1">{{
+                  <span v-if="scope.row.type == 1">{{
                     $t("developer.collectionchannel")
                   }}</span>
                   <span v-else>{{ $t("developer.resourcechannel") }}</span>
@@ -1899,7 +1898,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.servicetype')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.cType }}</span>
+                  <span>{{ scope.row.cType }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.operation')" width="350">
@@ -2056,12 +2055,12 @@
         <el-table :data="allchannelData" height="400" style="width: 100%">
           <el-table-column :label="$t('developer.channelnumber')">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channelname')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.name }}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channeladdr')">
@@ -2071,10 +2070,10 @@
           </el-table-column>
           <el-table-column :label="$t('developer.channeltype')">
             <template slot-scope="scope">
-              <span v-if="scope.row.attributes.type == 1">{{
+              <span v-if="scope.row.type == 1">{{
                 $t("developer.collectionchannel")
               }}</span>
-              <span v-else-if="scope.row.attributes.type == 2">{{
+              <span v-else-if="scope.row.type == 2">{{
                 $t("developer.resourcechannel")
               }}</span>
               <span v-else>任务通道</span>
@@ -2082,7 +2081,7 @@
           </el-table-column>
           <el-table-column :label="$t('developer.servicetype')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.cType }}</span>
+              <span>{{ scope.row.cType }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.operation')">
@@ -2090,7 +2089,7 @@
               <el-button
                 size="mini"
                 type="primary"
-                @click="addProductChannel(scope.row.id)"
+                @click="addProductChannel(scope.row.objectId)"
               >{{ $t("developer.add") }}
               </el-button>
             </template>
@@ -2240,11 +2239,19 @@
             >
               <div class="diaCollRightCls">
 
+                <<<<<<< HEAD
                 <el-row style="margin:10px">
                   <el-button type="success">测试</el-button>
                   <el-button type="info" @click="onReductionTap(index)">还原</el-button>
                   <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
                 </el-row>
+                =======
+                <el-row style="margin:10px">
+                  <el-button type="success">测试</el-button>
+                  <el-button type="info" @click="onReductionTap(index)">还原</el-button>
+                  <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
+                </el-row>
+                >>>>>>> d85e08d128dacdb196c5741e70f62d4d0f547074
 
                 <pre
                   :id="item.name"
@@ -2260,6 +2267,8 @@
   </div>
 </template>
 <script>
+import { getDeviceCountByProduct } from "@/api/Device/index";
+import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
 import Parse from "parse";
 import { getRule, ruleDelete } from "@/api/rules";
 import Cookies from "js-cookie";
@@ -2926,7 +2935,7 @@ export default {
       }
     },
     getChannelEnable(row, rowIndex) {
-      if (row.row.attributes.isEnable == true) {
+      if (row.row.isEnable == true) {
         return "green_active";
       } else {
         return "red_active";
@@ -2955,43 +2964,48 @@ export default {
         this.subtimer = null;
       }
     },
-    getAllunit() {
+    async getAllunit() {
       this.allunit = [];
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      var arr = [{}];
-      datas.equalTo("type", "unit");
-      datas.limit(1000);
-      datas.find().then(
-        response => {
-          this.allunit = response.concat([]);
-          this.allunit.unshift({
-            attributes: {
-              data: {
-                Name: "无",
-                Symbol: ""
-              }
-            }
-          });
-        },
-        error => {
-          returnLogin(error);
+      const params = {
+        limit: 100,
+        where: {
+          "type": 'unit'
         }
-      );
+      }
+      this.$query_object('Dict', params).then(response => {
+        this.allunit = response.concat([]);
+        this.allunit.unshift({
+          attributes: {
+            data: {
+              Name: "无",
+              Symbol: ""
+            }
+          }
+        });
+      }).catch(err => {
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     getTopic() {
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      product.get(this.productId).then(
-        resultes => {
-          if (resultes) {
-            this.topicData = resultes.attributes.topics.concat(this.topic);
-          }
-        },
-        error => {
-          returnLogin(error);
+      // var Product = Parse.Object.extend("Product");
+      // var product = new Parse.Query(Product);
+      // product.get(this.productId).then(
+      //   resultes => {
+      //     if (resultes) {
+      //       this.topicData = resultes.topics.concat(this.topic);
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error);
+      //   }
+      // );
+      this.$get_object("Product", this.productId).then(resultes => {
+        if (resultes) {
+          this.topicData = resultes.topics.concat(this.topic);
         }
-      );
+      }).catch(err => {
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     exportProduct() {
       var _this = this;
@@ -3058,25 +3072,24 @@ export default {
       // })
     },
     // 热加载弹窗
-    updatesubdialog() {
+    async updatesubdialog() {
       this.protoldialog = true;
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
       var Product = Parse.Object.extend("Product");
       var product = new Product();
       product.id = this.productId;
-      query.equalTo("product", product);
-      query.equalTo("type", "1");
-      query.ascending("-updatedAt");
-      query.find().then(
-        res => {
-          this.protolchannel = res;
-          this.$refs.multipleTable.toggleAllSelection();
-        },
-        error => {
-          returnLogin(error);
+      const params = {
+        limit: 100,
+        where: {
+          "product": product,
+          "type": '1'
         }
-      );
+      }
+      this.$query_object('Channel', params).then(res => {
+        this.protolchannel = res;
+        this.$refs.multipleTable.toggleAllSelection();
+      }).catch(err => {
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     // 通道全选
     handleSelectionChange(val) {
@@ -3121,32 +3134,20 @@ export default {
       }
     },
     getProductChannel() {
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
       var Product = Parse.Object.extend("Product");
       var product = new Product();
       product.id = this.productId;
-      query.equalTo("product", product);
-      query.containedIn("type", ["1", "3"]);
-      query.skip(this.channelstart);
-      query.limit(this.channellength);
-      query.ascending("-updatedAt");
-      query.count().then(
-        count => {
-          this.channeltotal = count;
-          query.find().then(res => {
-            this.channelData = res;
-            if (res.length == 0) {
-              isallchannel = true;
-            } else {
-              isallchannel = false;
-            }
-          });
-        },
-        error => {
-          returnLogin(error);
+      const params = {
+        keys: 'count(*)',
+        limit: this.channellength,
+        skip: this.channelstart,
+        where: {
+          "product": product
         }
-      );
+      }
+      getChannelCountByProduct(params).then(res => {
+        console.log('res', res)
+      })
     },
     getResourceChannel() {
       var Channel = Parse.Object.extend("Channel");
@@ -3159,53 +3160,41 @@ export default {
       query.skip(this.channelstart);
       query.limit(this.channellength);
       query.ascending("-updatedAt");
-      query.count().then(
-        count => {
-          this.resourcetotal = count;
-          query.find().then(res => {
-            this.resourcechannelData = res;
-            if (res.length == 0) {
-              isallchannel = true;
-            } else {
-              isallchannel = false;
-            }
-          });
-        },
-        error => {
-          returnLogin(error);
+
+      const params = {
+        keys: 'count(*)',
+        skip: this.channelstart,
+        limit: this.channellength,
+        where: {
+          type: { '$in': ["2"] },
+          product: product
         }
-      );
+      }
+      getChannelCountByProduct(params).then(res => {
+        this.resourcetotal = res.count;
+        this.resourcechannelData = res.results;
+      })
     },
     // 添加关联
-    addProductChannel(id) {
-      var Channel = Parse.Object.extend("Channel");
-      var channel = new Channel();
-      channel.id = id;
-      var relation = channel.relation("product");
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.set("objectId", this.productId);
-      relation.add(product);
-      channel.save().then(
-        res => {
-          if (res) {
-            this.$message({
-              type: "success",
-              message: "添加成功"
-            });
-            if (this.channeltype == 1) {
-              this.showAllChannel();
-              this.getProductChannel();
-            } else {
-              this.resourceShowAllChannel();
-              this.getResourceChannel();
-            }
-          }
-        },
-        error => {
-          returnLogin(error);
+    async addProductChannel(id) {
+      const params = {
+        "product":
+          { "__op": "AddRelation", "objects": [{ "__type": "Pointer", "className": "Product", "objectId": this.productId }] }
+      }
+      const res = await saveChanne(id, params)
+      if (res) {
+        this.$message({
+          type: "success",
+          message: "添加成功"
+        });
+        if (this.channeltype == 1) {
+          this.showAllChannel();
+          this.getProductChannel();
+        } else {
+          this.resourceShowAllChannel();
+          this.getResourceChannel();
         }
-      );
+      }
     },
     // 解除关联
     deleteRelation(row) {
@@ -3258,29 +3247,26 @@ export default {
     showAllChannel() {
       this.channeltype = 1;
       this.innerVisible = true;
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
       var Product = Parse.Object.extend("Product");
       var product = new Product();
       product.id = this.productId;
-      query.skip(this.allChannelstart);
-      query.limit(this.allChannellength);
-      query.containedIn("type", ["1", "3"]);
-      query.ascending("-updatedAt");
-      if (!isallchannel) {
-        query.notEqualTo("product", product);
-      }
-      query.count().then(
-        count => {
-          this.allChanneltotal = count;
-          query.find().then(resultes => {
-            this.allchannelData = resultes;
-          });
-        },
-        error => {
-          returnLogin(error);
+
+      const params = {
+        keys: 'count(*)',
+        skip: this.allChannelstart,
+        limit: this.allChannellength,
+        where: {
+          type: { '$in': ["1", "3"] }
         }
-      );
+      }
+      if (isallchannel) {
+        params.where.product = product
+      }
+      getChannelCountByProduct(params).then(res => {
+        console.log('res', res)
+        this.allChanneltotal = res.count;
+        this.allchannelData = res.results;
+      })
     },
     allChannelSizeChange(val) {
       this.allChannellength = val;
@@ -3294,38 +3280,33 @@ export default {
     resourceShowAllChannel() {
       this.channeltype = 2;
       this.innerVisible = true;
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
       var Product = Parse.Object.extend("Product");
       var product = new Product();
       product.id = this.productId;
-      query.skip(this.resourcestart);
-      query.limit(this.resourcelength);
-      query.equalTo("type", "2");
-      query.ascending("-updatedAt");
-      if (!isallchannel) {
-        query.notEqualTo("product", product);
-      }
-      query.count().then(
-        count => {
-          this.allChanneltotal = count;
-          query.find().then(resultes => {
-            this.allchannelData = resultes;
-          });
-        },
-        error => {
-          returnLogin(error);
+      const params = {
+        keys: 'count(*)',
+        skip: this.resourcestart,
+        limit: this.resourcelength,
+        where: {
+          type: { '$in': ["2"] }
         }
-      );
+      }
+      if (isallchannel) {
+        params.where.product = product
+      }
+      getChannelCountByProduct(params).then(res => {
+        this.allChanneltotal = res.count;
+        this.allchannelData = res.results;
+      })
     },
     // 自定义模型弹窗
     customize(row) {
       this.resourcedialogFormVisible = true;
       this.resourcechannelid = row.id;
-      // for (var key in row.attributes.config) {
-      //   channelrow[key] = row.attributes.config[key];
+      // for (var key in row.config) {
+      //   channelrow[key] = row.config[key];
       // }
-      channelrow = JSON.parse(JSON.stringify(row.attributes.config));
+      channelrow = JSON.parse(JSON.stringify(row.config));
       // console.log(row,channelrow)
       setTimeout(() => {
         editormodel = ace.edit("editormodel");
@@ -3348,10 +3329,10 @@ export default {
           enableLiveAutocompletion: true // 设置自动提示
         });
         if (
-          row.attributes.config.datamodel &&
-          row.attributes.config.datamodel != ""
+          row.config.datamodel &&
+          row.config.datamodel != ""
         ) {
-          editorcreate.setValue(row.attributes.config.datamodel);
+          editorcreate.setValue(row.config.datamodel);
         } else {
           editorcreate.setValue(`{
             "vars":{
@@ -3402,8 +3383,8 @@ export default {
         //     enableSnippets: true,
         //     enableLiveAutocompletion: true // 设置自动提示
         //   });
-        //   if(row.attributes.config.subtable){
-        //     editorsubtable.setValue(row.attributes.config.subtable)
+        //   if(row.config.subtable){
+        //     editorsubtable.setValue(row.config.subtable)
         //   }else{
         //     editorsubtable.setValue('')
         //   }
@@ -4073,10 +4054,10 @@ export default {
     //       if (response) {
     //         response.map(items => {
     //           var obj = {};
-    //           obj.value = items.attributes.type;
-    //           obj.label = items.attributes.data.CategoryName;
-    //           obj.id = items.attributes.data.Id;
-    //           obj.parentid = items.attributes.data.SuperId;
+    //           obj.value = items.type;
+    //           obj.label = items.data.CategoryName;
+    //           obj.id = items.data.Id;
+    //           obj.parentid = items.data.SuperId;
     //           this.option.push(obj);
     //         });
     //         this.getProDetail();
@@ -4277,7 +4258,6 @@ export default {
       });
     },
 
-    // 右上角关闭页面
     handleCloseCollecttion(done) {
       this.$confirm("确认关闭？")
         .then(_ => {
@@ -4321,86 +4301,63 @@ export default {
         enableSnippets: true,
         enableLiveAutocompletion: true // 设置自动提示
       });
-
-      // editor6 = ace.edit("editor6");
-      // editor6.session.setMode("ace/mode/json"); // 设置语言
-      // editor6.setTheme("ace/theme/twilight"); // 设置主题
-      // editor6.setOptions({
-      //   enableBasicAutocompletion: true,
-      //   enableSnippets: true,
-      //   enableLiveAutocompletion: true // 设置自动提示
-      // });
-
-      // this.productId = this.$route.query.id;
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(this.productId).then(
-      //   response => {
-      //     if (response) {
-      //       this.productName = response.attributes.name;
-      //       for (var key in response.attributes) {
-      //         this.productdetail[key] = response.attributes[key];
-      //       }
-      //       this.option.map(items => {
-      //         if (this.productdetail.category == items.value) {
-      //           this.productdetail.category = items.label;
-      //         }
-      //       });
-      //       this.productdetail.createdAt = this.utc2beijing(response.createdAt);
-      //       this.productdetail.id = response.id;
-      //       this.dynamicReg = response.attributes.dynamicReg;
-      //       this.productdetail.isshow = 0;
-      //       this.form.Productname = response.attributes.name;
-      //       this.ProductSecret = response.attributes.productSecret;
-      //       this.form.Productkey = this.productId;
-      //       // window.location.origin
-      //       this.productimg = response.attributes.icon;
-      //       if (response.attributes.decoder) {
-      //         setdata = response.attributes.decoder.code;
-      //         this.formInline.name = response.attributes.decoder.name;
-      //         this.formInline.version = response.attributes.decoder.version;
-      //         this.formInline.desc = response.attributes.decoder.desc;
-      //       } else {
-      //         setdata =
-      //           "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
-      //       }
-      //       if (!this.productdetail.thing) {
-      //         this.productdetail.thing = {
-      //           properties: []
-      //         };
-      //       }
-      //       console.log('=====', this.wmxData)
-      //       this.wmxData = [];
-      //       this.wmxData = this.productdetail.thing.properties.filter(item => {
-      //         return item.name && item.dataType;
-      //       });
-      //       console.log('----------', this.wmxData)
-      //       editor.setValue(Base64.decode(setdata));
-      //       editor.gotoLine(editor.session.getLength());
-      //       // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-      //       var Device = Parse.Object.extend("Device");
-      //       var devices = new Parse.Query(Device);
-      //
-      //       devices.equalTo("product", this.productId);
-      //       devices.skip(0);
-      //       devices.count().then(count => {
-      //         this.form.ProductAll = count;
-      //       });
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
-      //  todo
       // 需要找到 this.productId 并传入
       this.productId = this.$route.query.id;
-      console.log('4396',this.productId)
-      this.$get_object("Product", this.productId).then(res => {
-        console.log(res, '$get_object')
+      this.queryDeviceCount(this.productId)
+      this.$get_object("Product", this.productId).then(response => {
+        // console.log("response", response)
+        if (response) {
+          this.productName = response.name;
+          for (var key in response) {
+            this.productdetail[key] = response[key];
+          }
+          this.option.map(items => {
+            if (this.productdetail.category == items.value) {
+              this.productdetail.category = items.label;
+            }
+          });
+          this.productdetail.createdAt = this.utc2beijing(response.createdAt);
+          this.productdetail.id = response.id;
+          this.dynamicReg = response.dynamicReg;
+          this.productdetail.isshow = 0;
+          this.form.Productname = response.name;
+          this.ProductSecret = response.productSecret;
+          this.form.Productkey = this.productId;
+          // window.location.origin
+          this.productimg = response.icon;
+          if (response.decoder) {
+            setdata = response.decoder.code;
+            this.formInline.name = response.decoder.name;
+            this.formInline.version = response.decoder.version;
+            this.formInline.desc = response.decoder.desc;
+          } else {
+            setdata =
+              "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
+          }
+          if (!this.productdetail.thing) {
+            this.productdetail.thing = {
+              properties: []
+            };
+          }
+          console.log('=====', this.wmxData)
+          this.wmxData = [];
+          this.wmxData = this.productdetail.thing.properties.filter(item => {
+            return item.name && item.dataType;
+          });
+          console.log('----------', this.wmxData)
+          editor.setValue(Base64.decode(setdata));
+          editor.gotoLine(editor.session.getLength());
+          // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+          var Device = Parse.Object.extend("Device");
+          var devices = new Parse.Query(Device);
+        }
       }).catch(err => {
-        this.$$baseMessage('请求出错', err.error, 3000)
+        this.$baseMessage('请求出错', err.error, 3000)
       })
+    },
+    // 查询设备总数
+    async queryDeviceCount(productId) {
+      this.form.ProductAll = await getDeviceCountByProduct(productId)
     },
     // 产品修改
     handelUpdate(event, row) {
@@ -4631,11 +4588,11 @@ export default {
       );
     },
     editordata(row) {
-      this.formInline.name = row.attributes.data.name;
-      this.formInline.version = row.attributes.data.version;
-      this.formInline.desc = row.attributes.data.desc;
-      this.formInline.resource = row.attributes.data.enable;
-      editor.setValue(Base64.decode(row.attributes.data.code));
+      this.formInline.name = row.data.name;
+      this.formInline.version = row.data.version;
+      this.formInline.desc = row.data.desc;
+      this.formInline.resource = row.data.enable;
+      editor.setValue(Base64.decode(row.data.code));
       this.dialogTableVisible = false;
     },
     goToDevices() {
@@ -4774,15 +4731,15 @@ export default {
       var product = new Parse.Query(Product);
       var Dict = Parse.Object.extend("Dict");
       var datas = new Parse.Query(Dict);
-      datas.equalTo("type", row.attributes.type);
+      datas.equalTo("type", row.type);
       datas.equalTo("data.key", "detail");
       datas.find().then(
         res => {
           if (res.length) {
-            if (res[0].attributes.data.Ability) {
+            if (res[0].data.Ability) {
               this.TypeInstall(
                 this.productdetail.thing.properties,
-                res[0].attributes.data.Ability
+                res[0].data.Ability
               );
               product.get(this.productId).then(resultes => {
                 resultes.set("thing", this.productdetail.thing);
@@ -4974,46 +4931,46 @@ export default {
             "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
           var Product = Parse.Object.extend("Product");
           var product = new Parse.Query(Product);
-          product.get(this.productId).then(resultes => {
-            var addTopic = {
-              topic: Topic,
-              type: this.topicform.type,
-              desc: this.topicform.desc
-            };
-            var arr = [];
-            arr.push(addTopic);
-            if (isupdated == -1) {
-              arr = arr.concat(resultes.attributes.topics);
-              resultes.set("topics", arr);
-            } else {
-              var topicupdated = resultes.attributes.topics.concat([]);
-              topicupdated[isupdated] = addTopic;
-              resultes.set("topics", topicupdated);
-            }
-            resultes.save().then(
-              response => {
-                if (response) {
-                  this.$message({
-                    type: "success",
-                    message: "成功"
-                  });
-                  this.topicdialogVisible = false;
-                  this.$refs[formName].resetFields();
-                  (this.topicform.isupdated = -1), (this.topicform.topic = "");
-                  this.topicform.desc = "";
-                  this.handleClick({
-                    name: "second"
-                  });
-                }
-              },
-              error => {
-                returnLogin(error);
-              }
-            );
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
+        //   product.get(this.productId).then(resultes => {
+        //     var addTopic = {
+        //       topic: Topic,
+        //       type: this.topicform.type,
+        //       desc: this.topicform.desc
+        //     };
+        //     var arr = [];
+        //     arr.push(addTopic);
+        //     if (isupdated == -1) {
+        //       arr = arr.concat(resultes.topics);
+        //       resultes.set("topics", arr);
+        //     } else {
+        //       var topicupdated = resultes.topics.concat([]);
+        //       topicupdated[isupdated] = addTopic;
+        //       resultes.set("topics", topicupdated);
+        //     }
+        //     resultes.save().then(
+        //       response => {
+        //         if (response) {
+        //           this.$message({
+        //             type: "success",
+        //             message: "成功"
+        //           });
+        //           this.topicdialogVisible = false;
+        //           this.$refs[formName].resetFields();
+        //           (this.topicform.isupdated = -1), (this.topicform.topic = "");
+        //           this.topicform.desc = "";
+        //           this.handleClick({
+        //             name: "second"
+        //           });
+        //         }
+        //       },
+        //       error => {
+        //         returnLogin(error);
+        //       }
+        //     );
+        //   });
+        // } else {
+        //   console.log("error submit!!");
+        //   return false;
         }
       });
     },
@@ -5035,7 +4992,7 @@ export default {
       var Product = Parse.Object.extend("Product");
       var product = new Parse.Query(Product);
       product.get(this.productId).then(resultes => {
-        var topic = resultes.attributes.topics.concat([]);
+        var topic = resultes.topics.concat([]);
         topic.splice(index, 1);
         resultes.set("topics", topic);
         resultes.save().then(
