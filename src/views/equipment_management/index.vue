@@ -155,8 +155,8 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.devaddr }}</span>
-                  <p style="margin:0;color:green">{{ scope.row.name }}</p>
+                  <span>{{ scope.row.name }}</span>
+                  <p style="margin:0;color:green">{{ scope.row.devaddr }}</p>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('equipment.state')" align="center">
@@ -781,9 +781,13 @@ export default {
         response => {
           if (response) {
             console.log(`res=`)
-            console.log(response)
-            for (var key in response.results) {
-              this.productroleslist.push(key.ACL.role);
+            console.log(response.results)
+            
+            for (var key in response.results[0].ACL) {
+              if (key.includes("role")) {
+                this.productroleslist.push(key.substr(5));
+               
+              }
             }
           }
           console.log(this.productroleslist);
@@ -1052,8 +1056,9 @@ export default {
 
       const { results } = await this.$queryDevice(parsms);
       this.devicetotal = results.length;
-      var obj = {};
+     
       results.map(items => {
+        var obj = {}
         obj.status = this.$objGet(items, 'status')
         obj.id = items.objectId;
         obj.name = items.name ? items.name : "";
@@ -1225,23 +1230,25 @@ export default {
           }
           newData2.isEnable = newData2.isEnable == true;
           //   this.tableData[index] = newData2
-          var Device = Parse.Object.extend("Device");
-          var devices = new Parse.Query(Device);
-          devices.get(row.objectId).then(
-            object => {
-              object.set("isEnable", newData2.isEnable);
-              object.save().then(resultes => {
-                this.$message({
-                  type: "success",
-                  message: "状态修改成功"
-                });
-              });
-              this.getDevices();
-            },
-            error => {
-              returnLogin(error);
-            }
-          );
+          var params = {
+            "isEnable" : newData2.isEnable
+          };
+          console.log(row.id)
+          this.$putDevice(row.id,params).then(respone=>{
+              if(!respone.error){
+                this.initQuery("状态修改成功",'success')
+                this.getDevices();
+              }
+              else{
+                this.initQuery("状态修改失败",'error')
+              }
+             
+              
+          }),
+          error => {
+            returnLogin(error);
+          }
+          
         })
         .catch(() => {
           this.$message({
@@ -1428,6 +1435,7 @@ export default {
     },
     /* 添加设备弹窗 */
     addDeviceForm() {
+      this.deviceid = ''
       this.devicedialogVisible = true;
       this.equipmentEditor = "添加";
       if (this.$route.query.productid) {
@@ -1440,6 +1448,7 @@ export default {
           this.deviceform.productName = "";
         }
       }
+      
     },
     /* 关闭批次弹窗*/
     handleClose1() {
@@ -1453,25 +1462,19 @@ export default {
     /* el-popover点击关闭*/
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
-      var Device = Parse.Object.extend("Device");
-      var devices = new Parse.Query(Device);
-      devices.get(scope.row.objectId).then(resultes => {
-        resultes.destroy().then(
-          response => {
-            if (response) {
-              this.$message({
-                type: "success",
-                message: "删除成功"
-              });
-              scope._self.$refs[`popover-${scope.$index}`].doClose();
-              this.getDevices();
-            }
-          },
-          error => {
-            returnLogin(error);
+      this.$deleteDevice(scope.row.id).then(response => {
+          if(!response.error){
+            this.initQuery('删除成功','success')
+            scope._self.$refs[`popover-${scope.$index}`].doClose();
+            this.getDevices();
           }
-        );
-      });
+          else{
+            scope._self.$refs[`popover-${scope.$index}`].doClose();
+            this.initQuery('删除失败','error')
+          }
+
+      })
+      
     },
     // 增加批次
     async addDeviceBatch(isdialog) {
@@ -1501,35 +1504,38 @@ export default {
     },
     /* device添加表单提交*/
     editorDevice(row) {
-      console.log(row);
-      this.deviceid = row.objectId;
+      this.deviceid = row.id;
       this.devicedialogVisible = true;
-      this.deviceform.devaddr = row.devaddr;
-      this.deviceform.name = row.name;
-      this.deviceform.assetNum = row.assetNum;
-      this.deviceform.devModel = row.devModel;
-      this.deviceform.desc = row.desc;
-      this.deviceform.productid = row.productid;
-      this.deviceform.brand = row.brand;
+      this.deviceform = {
+          devaddr : row.devaddr,
+          name : row.name,
+          assetNum : row.assetNum,
+          devModel : row.devModel,
+          desc : row.desc,
+          productid : row.productid,
+          brand : row.brand,
+          batchId : row.batchid,
+          status : row.status,
+          isEnable : row.isEnable,
+          address : row.address
+      }
+      
       if (this.$route.query.productid) {
-        this.deviceform.productName = this.$route.query.productid;
+        this.deviceform['productName'] = this.$route.query.productid;
       } else {
         if (this.equvalue != 0) {
           this.changeproduct = false;
-          this.deviceform.productName = this.equvalue;
+          this.deviceform['productName'] = this.equvalue;
         } else {
-          this.deviceform.productName = "";
+          this.deviceform['productName'] = "";
         }
       }
-      this.deviceform.batchId = row.batchid;
-      this.deviceform.status = row.status;
-      this.deviceform.isEnable = row.isEnable;
       this.bmapform.address = row.address;
       this.batchid = row.batchid;
       this.center.lat = row.latitude;
       this.center.lng = row.longitude;
       this.addresspointer = row.latitude + "," + row.longitude;
-      this.deviceform.address = row.address;
+      
       this.tagsid = row.tagid;
       this.equipmentEditor = "编辑";
       this.rolesSelect(row.productid);
@@ -1758,52 +1764,120 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.deviceid != "") {
-            var addparams = {
+            var params = {
+               where:{
+                 devaddr:this.deviceform.devaddr
+               }
             }
-            params = Object.assign(initparams, addparams)
-            this.edit_Device(params);
+            this.$queryDevice(params).then(respone => {
+                if(respone.results.length==0){
+                  const aclKey = 'role' + ':' + this.productroleslist[0]
+                  const set_acl = {}
+                  set_acl[aclKey] = {
+                    read: true,
+                    write: true
+                  }
+                  var editParams = {
+                    ACL: set_acl,
+                    detail: {
+                      assetNum: this.deviceform.assetNum,
+                      devModel: this.deviceform.devModel,
+                      brand: this.deviceform.brand,
+                      address: this.deviceform.address,
+                      desc: this.deviceform.desc
+                    },
+                    
+                    // location: {
+                    //   "__type": "GeoPoint",
+                    //   "latitude": this.center.lat ? this.center.lat : 0,
+                    //   "longitude": this.center.lng ? this.center.lng : 0
+                    // },
+                    product: {
+                      "__type": "Pointer",
+                      "className": "Product",
+                      "objectId": this.deviceform.productName
+                    },
+                  }
+                  params = Object.assign(initparams, editParams)
+                  
+                  this.$putDevice(this.deviceid,params).then(res=>{
+                      if(!res.error){
+                        this.initQuery('修改成功','success')
+                        this.devicedialogVisible = false;
+                        this.getDevices()
+                        this.deviceform = {}
+                      }
+                      else{
+                        this.initQuery('修改失败','error')
+                      }
+                  });
+                }
+                else{
+                  this.initQuery('设备已经存在','error')
+                }
+            })
+            
           } else {
-            const aclKey = 'role' + ':' + this.productroleslist[0]
-            const set_acl = {}
-            set_acl[aclKey] = {
-              read: true,
-              write: true
+            var params = {
+               where:{
+                 devaddr:this.deviceform.devaddr
+               }
             }
-            var createParams = {
-              ACL: set_acl,
-              detail: {
-                assetNum: this.deviceform.assetNum,
-                devModel: this.deviceform.devModel,
-                brand: this.deviceform.brand,
-                address: this.deviceform.address,
-                desc: this.deviceform.desc
-              },
-              isEnable: false,
-              status: false,
-              location: {
-                "__type": "GeoPoint",
-                "latitude": this.center.lat ? this.center.lat : 0,
-                "longitude": this.center.lng ? this.center.lng : 0
-              },
-              product: {
-                "__type": "Pointer",
-                "className": "Product",
-                "objectId": this.deviceform.productName
-              },
-            }
-            params = Object.assign(initparams, createParams)
-            this.$postDevice(params);
+            this.$queryDevice(params).then(respone => {
+                if(respone.results.length==0){
+                  const aclKey = 'role' + ':' + this.productroleslist[0]
+                  const set_acl = {}
+                  set_acl[aclKey] = {
+                    read: true,
+                    write: true
+                  }
+                  var createParams = {
+                    ACL: set_acl,
+                    detail: {
+                      assetNum: this.deviceform.assetNum,
+                      devModel: this.deviceform.devModel,
+                      brand: this.deviceform.brand,
+                      address: this.deviceform.address,
+                      desc: this.deviceform.desc
+                    },
+                    // isEnable: false,
+                    // status: false,
+                    // location: {
+                    //   "__type": "GeoPoint",
+                    //   "latitude": this.center.lat ? this.center.lat : 0,
+                    //   "longitude": this.center.lng ? this.center.lng : 0
+                    // },
+                    product: {
+                      "__type": "Pointer",
+                      "className": "Product",
+                      "objectId": this.deviceform.productName
+                    },
+                  }
+                  params = Object.assign(initparams, createParams)
+                  this.$postDevice(params).then(res=>{
+                      if(!res.error){
+                        this.initQuery('创建成功','success')
+                        this.devicedialogVisible = false;
+                        this.getDevices()
+                        this.deviceform = {}
+                      }
+                      else{
+                        this.initQuery('创建失败','error')
+                      }
+                  });
+                }
+                else{
+                  this.initQuery('设备已经存在','error')
+                }
+            })
+            
           }
         } else {
           this.$message("必填项未填");
         }
       });
     },
-    
-    async edit_Device(parsms) {
-      const { results } = await this.$create_object("Device", parsms)
-      console.log(results)
-    },
+   
     /* @pamars addbatch添加批次名称 */
     async addbatch(formName) {
       this.$refs[formName].validate(valid => {
@@ -1824,7 +1898,7 @@ export default {
               ACL: set_acl,
               type: "batch_number"
             };
-            this.$create_Dict(params).then(res => {
+            this.$postDict(params).then(res => {
               if (!res.error) {
                 this.$message({
                   message: '新增成功',
@@ -1856,7 +1930,7 @@ export default {
               type: "batch_number"
             };
             // 更新批次
-            this.$update_Dict(params).then(
+            this.$putDict(params).then(
               res => {
                   if(!res.error){
                     this.initQuery("修改成功",'success')
@@ -1902,7 +1976,7 @@ export default {
     },
     // 删除批次
     deletebatch(id) {
-      this.$delete_Dict(id).then(res => {
+      this.$deleteDict(id).then(res => {
         console.log(res)
         if (res.error==undefined) {
           this.$message({

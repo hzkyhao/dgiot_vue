@@ -11,8 +11,8 @@ export async function deleteDevice(ObjectId) {
   return del_object('Device', ObjectId)
 }
 
-export async function putDevice(ObjectId) {
-  return update_object('Device', ObjectId)
+export async function putDevice(ObjectId,params) {
+  return update_object('Device', ObjectId,params)
 }
 
 export async function postDevice(params) {
