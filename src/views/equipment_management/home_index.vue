@@ -1339,28 +1339,54 @@ export default {
       }
       scope._self.$refs[`popover-${scope.$index}`].doClose()
     },
-    // 增加批次
-    addDeviceBatch(isdialog) {
+    // // 增加批次
+    // addDeviceBatch(isdialog) {
+    //   if (isdialog == 0) {
+    //     this.pcdialogVisible = false
+    //   } else {
+    //     this.pcdialogVisible = true
+    //   }
+    //   var Dict = Parse.Object.extend('Dict')
+    //   var datas = new Parse.Query(Dict)
+    //   datas.equalTo('type', 'batch_number')
+    //   datas.ascending('-createdAt')
+    //   datas.find().then(
+    //     resultes => {
+    //       if (resultes) {
+    //         this.pctableData = resultes
+    //         pcdata = resultes
+    //       }
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
+        // 增加批次
+        async addDeviceBatch(isdialog) {
       if (isdialog == 0) {
-        this.pcdialogVisible = false
+        this.pcdialogVisible = false;
       } else {
-        this.pcdialogVisible = true
+        this.pcdialogVisible = true;
       }
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('type', 'batch_number')
-      datas.ascending('-createdAt')
-      datas.find().then(
-        resultes => {
-          if (resultes) {
-            this.pctableData = resultes
-            pcdata = resultes
-          }
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.equalTo('type', 'batch_number')
+      // datas.ascending('-createdAt')
+      // datas.find().then(
+      //   resultes => {
+      //     if (resultes) {
+      //       this.pctableData = resultes
+      //       pcdata = resultes
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
+      const { results } = await this.$getBatchNumer();
+      this.pctableData = results;
     },
     /* device添加表单提交*/
     async editorDevice(row) {
