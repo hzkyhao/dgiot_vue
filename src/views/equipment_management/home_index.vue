@@ -751,23 +751,38 @@ export default {
       // )
     },
     // 从产品处进来
-    selectProductid(val) {
-      this.productroleslist = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.get(val).then(
-        response => {
-          if (response) {
-            for (var key in response.attributes.ACL.permissionsById) {
-              this.productroleslist.push(key.substr(5))
-            }
-          }
-          this.productimg = response.attributes.icon
-        },
-        error => {
-          returnLogin(error)
+    // selectProductid(val) {
+    //   this.productroleslist = []
+    //   var Product = Parse.Object.extend('Product')
+    //   var product = new Parse.Query(Product)
+    //   product.get(val).then(
+    //     response => {
+    //       if (response) {
+    //         for (var key in response.attributes.ACL.permissionsById) {
+    //           this.productroleslist.push(key.substr(5))
+    //         }
+    //       }
+    //       this.productimg = response.attributes.icon
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
+    async selectProductid(val) {
+      this.productroleslist = [];
+      const parsms = {};
+      const { results } = await this.$query_object("Product", parsms);
+      const res = results.filter(i => {
+        return i.objectId == val;
+      });
+      console.log(val, results, res);
+      for (var key in res[0].ACL) {
+        if (key.includes("role")) {
+          this.productroleslist.push(key.substr(5));
+          console.log(key, this.productroleslist);
         }
-      )
+      }
     },
     addressSure() {
       var localSearch = new BMap.LocalSearch(this.map)
@@ -1362,8 +1377,8 @@ export default {
     //     }
     //   )
     // },
-        // 增加批次
-        async addDeviceBatch(isdialog) {
+    // 增加批次
+    async addDeviceBatch(isdialog) {
       if (isdialog == 0) {
         this.pcdialogVisible = false;
       } else {
