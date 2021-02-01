@@ -41,7 +41,6 @@ module.exports = {
 //   revert：回滚某个更早之前的提交
 //   chore：不属于以上类型的其他类型
 
-
 // 2.What is the scope of this change (e.g. component or file name)? 填写改动范围 (<scope>) // input 输入改动文件夹访问  非必选
 
 // 3.Write a short, imperative tense description of the change: 写一个精简的描述 (<subject>) // input 输入你的commit简要信息  必选
