@@ -18,3 +18,11 @@ export async function putChannel(ObjectId) {
 export async function postChannel(params) {
   return create_object('Channel', params)
 }
+
+export async function getChannelCountByProduct(params) {
+  return query_object('Channel', params)
+}
+
+export async function saveChanne(objectid, params) {
+  return update_object('Channel', objectid, params)
+}
