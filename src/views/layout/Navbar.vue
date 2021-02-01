@@ -95,9 +95,6 @@ export default {
     getTitle() {
       this.title = sessionStorage.getItem('product_title')
       this.imgsrc = sessionStorage.getItem('imgsrc')
-      if (Parse.User.current() && Parse.User.current().id) {
-        this.usernameid = Parse.User.current().id
-      }
     },
     getsccreen() {
       eventBus.$on('isshow', data => {
@@ -112,6 +109,7 @@ export default {
       Cookies.remove('dashboard_url')
       Cookies.remove('username')
       Cookies.remove('sessionToken')
+      Cookies.remove('userId')
       try {
         Parse.User.logOut(this.username).then(res => {
           this.$router.push('/login')
@@ -148,7 +146,7 @@ export default {
       this.$router.push({
         name: 'userinfo',
         params: {
-          userid: this.usernameid
+          userid: Cookies.get('userId')
         }
       })
     }

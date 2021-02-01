@@ -180,7 +180,6 @@ export default {
         this.$Cookies.set('appid', resultes.objectId)
         this.$Cookies.set('roletype', this.roleType)
         this.$Cookies.set('application', this.roleType)
-
         sessionStorage.setItem(
           'product_title',
           resultes.title ? resultes.title : ''
@@ -219,6 +218,7 @@ export default {
               getsession(user.sessionToken)
               this.$Cookies.set('sessionToken', user.sessionToken)
               this.$Cookies.set('username', user.username)
+              this.$Cookies.set('userId', user.objectId)
               this.$store.dispatch('setRoles', user.roles)
               sessionStorage.setItem('username', user.username)
               sessionStorage.setItem(
