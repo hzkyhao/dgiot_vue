@@ -366,13 +366,13 @@
                 v-model="deviceform.productName"
                 :placeholder="$t('equipment.entername')"
                 :disabled="!productenable||!changeproduct"
-                @change="rolesSelect"
+                @change="rolesSelect(deviceform.productName)"
               >
                 <el-option
                   v-for="(item,index) in proTableData1"
                   :label="item.name"
                   :key="index"
-                  :value="item.id"
+                  :value="item.objectId"
                 />
               </el-select>
             </el-form-item>
@@ -470,17 +470,17 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="updatebatch(scope.row,scope.row.id)"
+                  @click="updatebatch(scope.row,scope.row.objectId)"
                 >{{ $t('developer.edit') }}</el-button>
                 <el-button
                   type="danger"
                   size="mini"
-                  @click="deletebatch(scope.row.id)"
+                  @click="deletebatch(scope.row.objectId)"
                 >{{ $t('developer.delete') }}</el-button>
                 <el-button
                   type="success"
                   size="mini"
-                  @click="selectbatch(scope.row,scope.row.id)"
+                  @click="selectbatch(scope.row,scope.row.objectId)"
                 >选择</el-button>
               </template>
             </el-table-column>
@@ -694,9 +694,10 @@ export default {
     }
   },
   mounted() {
-    this.userId = Parse.User.current().id
+    //this.userId = Parse.User.current().objectId
     // this.getRole();
     this.searchProduct()
+    this.getDevices(0)
     this.addDeviceBatch(0)
     language = Cookies.get('language')
     this.$store.dispatch('getUserId', '111')
@@ -705,23 +706,29 @@ export default {
     }
   },
   methods: {
-    rolesSelect(val) {
+    async rolesSelect(val) {
       this.productroleslist = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.get(val).then(
-        response => {
-          if (response) {
-            for (var key in response.attributes.ACL.permissionsById) {
-              this.productroleslist.push(key.substr(5))
-            }
-          }
-          console.log(this.productroleslist)
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      //console.log(val)
+      const params = {
+        id : val
+      }
+      const { results } = await this.$get_object('Product', val)
+      //this.deviceform.productName = results[0].name
+      //var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.get(val).then(
+      //   response => {
+      //     if (response) {
+      //       for (var key in response.attributes.ACL.permissionsById) {
+      //         this.productroleslist.push(key.substr(5))
+      //       }
+      //     }
+      //     console.log(this.productroleslist)
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     goEdit(row) {
       console.log(row)
@@ -818,7 +825,7 @@ export default {
     },
     // 激活设备
     getActiveDevices() {
-      var Device = Parse.Object.extend('Device')
+      
       var devices = new Parse.Query(Device)
       devices.equalTo('status', 'ACTIVE')
       if (this.deviceinput != '') {
@@ -874,36 +881,41 @@ export default {
     },
 
     // 查询产品
-    searchProduct() {
+    async searchProduct() {
       this.proTableData = []
       this.proTableData1 = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.limit(10000)
-      product.find().then(
-        resultes => {
-          resultes.map(items => {
-            var obj = {}
-            obj.id = items.id
-            obj.name = items.attributes.name
-            this.proTableData.push(obj)
-            this.proTableData1.push(obj)
-          })
+      var Product = await this.$query_object('Product',{})
+      this.proTableData = Product.results
+      this.proTableData1 = Product.results
 
-          this.proTableData.unshift({
-            name: language == 'zh' ? '全部产品' : 'All Products',
-            id: '0'
-          })
-          if (this.$route.query.productid) {
-            this.equvalue = this.$route.query.productid
-            this.productenable = false
-          }
-          this.getDevices()
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      // this.proTableData1.unshift({
+      //     name: language == 'zh' ? '全部产品' : 'All Products',
+      //     id: '0'
+      // })
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.limit(10000)
+      // product.find().then(
+      //   resultes => {
+      //     resultes.map(items => {
+      //       var obj = {}
+      //       obj.id = items.id
+      //       obj.name = items.attributes.name
+      //       this.proTableData.push(obj)
+      //       this.proTableData1.push(obj)
+      //     })
+
+          
+      //     if (this.$route.query.productid) {
+      //       this.equvalue = this.$route.query.productid
+      //       this.productenable = false
+      //     }
+      //     this.getDevices()
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     async getDevices(start) {
       this.tableData = []
@@ -911,6 +923,7 @@ export default {
         limit: this.devicelength,
         skip: this.devicestart,
         order: '-updatedAt',
+        keys: 'count(*)',
         include: 'product',
         where: {}
       }
@@ -931,10 +944,16 @@ export default {
       if (start == 0) {
         this.devicestart = 0
       }
-      const { results } = await query_object('Device', params)
-      console.log(`search Device is ${results}`)
-    },
+      let res = await query_object('Device', params)
+     
+      //console.log(`search Device is ${results}`)
+      this.tableData = res.results
+      this.devicetotal = res.count
 
+      // 查询激活设备
+      //this.getActiveDevices()
+    },
+   
     // // 查询设备
     // getDevices(start) {
     //   var _this = this
@@ -1051,9 +1070,11 @@ export default {
     //     }
     //   )
     // },
+    
     // 状态设备编辑
-    handelUpdate(event, row, index) {
+    async handelUpdate(event, row, index) {
       var newData1 = {}
+      var that = this
       for (var key in row) {
         newData1[key] = row[key]
       }
@@ -1064,32 +1085,55 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       })
-        .then(() => {
-          var newData2 = {}
-          for (var key in row) {
-            newData2[key] = row[key]
+        .then(async () => {
+          // var newData2 = {}
+          // for (var key in row) {
+          //   newData2[key] = row[key]
+          // }
+          // newData2.isEnable = newData2.isEnable == true
+          // this.tableData[index] = newData2
+          var deviceData = await get_object("Device",row.objectId)
+          var isEnable = deviceData.isEnable
+          if(isEnable==undefined){
+            isEnable = false
+            
           }
-          newData2.isEnable = newData2.isEnable == true
-          //   this.tableData[index] = newData2
-          var Device = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Device)
-          devices.get(row.id).then(
-            object => {
-              object.set('isEnable', newData2.isEnable)
-              object.save().then(resultes => {
-                this.$message({
+          else{
+            isEnable = !isEnable
+          }
+          deviceData.isEnable = isEnable
+          let {createdAt, ...data} = deviceData;
+          let {updatedAt, ...data2} = data;
+          var result = await this.$update_object('Device', row.objectId, data2)
+          if(result!=undefined){
+               this.$message({
                   type: 'success',
                   message: '状态修改成功'
-                })
               })
               this.getDevices()
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
+          }
+          else{
+             console.log('Device error', error)
+             returnLogin(error)
+          }
+
+          //console.log(result)
+          // var Device = Parse.Object.extend('Device')
+          // var devices = new Parse.Query(Device)
+          // devices.get(row.id).then(
+          //   object => {
+          //     object.set('isEnable', newData2.isEnable)
+          //     object.save().then(resultes => {
+         
+          //     })
+          //     this.getDevices()
+          //   },
+          //   error => {
+          //     returnLogin(error)
+          //   }
+          // )
         })
-        .catch(() => {
+        .catch(async () => {
           this.$message({
             type: 'info',
             message: '已取消修改'
@@ -1155,93 +1199,89 @@ export default {
     /* 设备列表选中 */
     handleSelectionChange(val) {
       this.multipleTable = val
-      console.log(this.multipleTable)
     },
-    // 删除设备
-    deleteDevcie(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Device)
-          devices.get(item.id).then(resultes => {
-            resultes.destroy().then(resultes => {})
+    
+    //批量删除设备
+    async deleteDevcie(val) {
+        this.multipleTable.map(async item => {
+            let result = await this.$del_object('Device',item.objectId)
+            
+        })
+        this.$message({
+            message: '删除成功',
+            type: 'success'
+        })
+        this.getDevices()
+        
+    },
+    async editDevice(){
+        const res = await this.$update_object('Device', item.objectId, params)
+        if (res.updatedAt) {
+          this.initQuery('设备修改成功', 'success')
+        } else {
+          this.$message({
+            type: "error",
+            message: res.error
           })
-        })
-      ])
-        .then(data => {
-          if (data.length != 0) {
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '删除失败',
-              type: 'error'
-            })
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+        }
     },
     // 设备多个启用和禁用
-    unactiveDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Device()
-          devices.id = item.id
-          devices.set('isEnable', false)
-          devices.save().then(resultes => {})
+   async unactiveDevice(val) {
+      var fail = 0
+      this.multipleTable.map(async item => {
+            var params = {
+               'objectId' : item.objectId,
+               'isEnable' : false,
+            }
+            let result = await this.$update_object('Device', item.objectId, params)
+            if(result.code==101){
+               fail++;
+            }
+      })
+
+      
+      if (fail == 0) {
+        this.$message({
+          message: '禁用成功',
+          type: 'success'
         })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: '禁用成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '禁用失败',
-              type: 'error'
-            })
-          }
+        
+       this.getDevices()
+      } else {
+        this.$message({
+          message: '禁用失败',
+          type: 'error'
         })
-        .catch(error => {
-          console.log(error)
-        })
+      }
+
     },
     activeDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend('Device')
-          var devices = new Device()
-          devices.id = item.id
-          devices.set('isEnable', true)
-          devices.save().then(resultes => {})
+      var success = 0
+      this.multipleTable.map(async item => {
+            var params = {
+               'objectId' : item.objectId,
+               'isEnable' : true,
+            }
+            let result = await this.$update_object('Device', item.objectId, params)
+            if(result.code==101){
+               fail++;
+            }
+      })
+
+      
+      if (success == 0) {
+        this.$message({
+          message: '启动成功',
+          type: 'success'
         })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: '启用成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '启用失败',
-              type: 'error'
-            })
-          }
+        
+       this.getDevices()
+      } else {
+        this.$message({
+          message: '启动成功',
+          type: 'error'
         })
-        .catch(error => {
-          console.log(error)
-        })
+      }
     },
     /* @pamras 选中高亮*/
     rowClass({ row, rowIndex }) {
@@ -1262,6 +1302,8 @@ export default {
     },
     /* 关闭添加设备弹窗*/
     handleClose() {
+      this.deviceid = ''
+       this.deviceform = {}
       this.devicedialogVisible = false
       this.equipmentEditor = '添加'
     },
@@ -1289,27 +1331,24 @@ export default {
       }
     },
     /* el-popover点击关闭*/
-    makeSure(scope) {
+    async makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.get(scope.row.id).then(resultes => {
-        resultes.destroy().then(
-          response => {
-            if (response) {
-              this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.getDevices()
-            }
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
-      })
+      let res = await this.$del_object('Device',scope.row.objectId)
+      if(res.code==201){
+         this.$message({
+           type: 'success',
+            message: '删除成功'
+         })
+         this.getDevices()
+      }
+      else{
+        this.$message({
+           type: 'error',
+            message: '删除失败'
+         })
+      }
+      scope._self.$refs[`popover-${scope.$index}`].doClose()
+      
     },
     // 增加批次
     addDeviceBatch(isdialog) {
@@ -1335,33 +1374,43 @@ export default {
       )
     },
     /* device添加表单提交*/
-    editorDevice(row) {
-      console.log(row)
-      this.deviceid = row.id
+    async editorDevice(row) {
+      //这里再去查询tag
+      console.log(row.tag)
+      var tag = await  this.$get_object('Tag',row.tag.objectId)
+      console.log(tag)
+      this.deviceform = {}
+      this.deviceid = row.objectId
       this.devicedialogVisible = true
-      this.deviceform.devaddr = row.devaddr
-      this.deviceform.name = row.name
-      this.deviceform.assetNum = row.assetNum
-      this.deviceform.devModel = row.devModel
-      this.deviceform.desc = row.desc
-      this.deviceform.productid = row.productid
-      this.deviceform.brand = row.brand
-      this.deviceform.productName = row.productid
-      // this.deviceform.batchId = row.batchid
-      this.deviceform.status = row.status
-      this.deviceform.isEnable = row.isEnable
-      this.bmapform.address = row.address
-      // this.batchid = row.batchid
-      this.center.lat = row.latitude
-      this.center.lng = row.longitude
+      this.deviceform = {
+         devaddr:row.devaddr,
+         name:row.name,
+         assetNum:tag.assetNum,
+         devModel:tag.devModel,
+         desc:tag.desc,
+         productid:row.product.objectId,
+         brand: tag.brand,
+         productName:row.product.objectId,
+         status:row.status,
+         isEnable:row.isEnable,
+         address:tag.address
+      }
+      this.bmapform = {
+        address: tag.address
+      }
+
+      this.center = {
+        lat : row.latitude,
+        lng : row.longitude
+      }
+
+      
       this.addresspointer = row.latitude + ',' + row.longitude
-      this.deviceform.address = row.address
       this.tagsid = row.tagid
       this.equipmentEditor = '编辑'
       this.rolesSelect(row.productid)
       this.getBatch()
         .then(results => {
-          console.log(results)
           this.pctableData.map(item => {
             if (item.id == row.batchid) {
               console.log(item)
@@ -1382,191 +1431,257 @@ export default {
         }
       })
     },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          var Device = Parse.Object.extend('Device')
-          var devices1 = new Parse.Query(Device)
-          var Product = Parse.Object.extend('Product')
-          var product = new Product()
-          var Dict = Parse.Object.extend('Dict')
-          var datas = new Dict()
-          var acl = new Parse.ACL()
-          if (this.deviceid != '') {
-            var Promise1 = new Promise((resolve, reject) => {
-              var Tags = Parse.Object.extend('Tag')
-              var tags = new Tags()
-              tags.id = this.tagsid
+    initQuery(msg, type) {
+      this.$message({
+        type: type || "info",
+        message: msg
+      })
+      this.dialogFormVisible = false
+      this.resetProductForm()
+      this.$refs['ruleForm'].resetFields()
+      this.getDevices()
+    },
+    async updateDevice(params){
+      const res = await this.$update_object('Device',this.deviceid, params)
+      if (res.updatedAt) {
+        this.initQuery('设备更新成功', 'success')
+      } else {
+        this.$message({
+          type: "error",
+          message: res.error
+        })
+      }
 
+    },
+    async createDevice(params) {
+      const res = await this.$create_object('Device', params)
+      
+      if (res.objectId) {
+        this.initQuery('设备创建成功', 'success')
+      } else {
+        this.$message({
+          type: "error",
+          message: res.error
+        })
+      }
+    },
+    async submitForm(formName) {
+      this.$refs[formName].validate(async valid =>  {
+        if (valid) {
+          var product = await this.$get_object('Product',this.deviceform.productName)
+          const parsms = {
+            limit: 1000,
+            where: {
+              'data.key': 'category'
+            }
+          }
+          var datas = await this.$query_object('Dict', parsms)
+          
+          var acl = {
+
+          }
+
+          if (this.deviceid != '') {
               var location = new Parse.GeoPoint({
                 latitude: this.center.lat ? this.center.lat : 0,
                 longitude: this.center.lng ? this.center.lng : 0
               })
-              // datas.id = this.batchid
-              tags.set('assetNum', this.deviceform.assetNum)
-              tags.set('devModel', this.deviceform.devModel)
-              tags.set('brand', this.deviceform.brand)
-              tags.set('location', location)
-              tags.set('address', this.deviceform.address)
-              tags.set('desc', this.deviceform.desc)
-              // tags.set('batchId', datas)
+              var tags = {
+                  'assetNum' : this.deviceform.assetNum,
+                  'devModel' : this.deviceform.devModel,
+                  'brand' : this.deviceform.brand,
+                  'location' : location,
+                  'address' : this.deviceform.address,
+                  'desc' : this.deviceform.desc
+              }
+              var tags = await this.$create_object('Tag',tagsParms)
 
-              tags.save().then(
-                resultes => {
-                  resolve(resultes)
-                },
-                error => {
-                  reject(error)
-                }
-              )
-            })
-              .then(data => {
-                console.log('Tags updated')
 
-                var Tags1 = Parse.Object.extend('Tag')
-                var tags1 = new Tags1()
-                tags1.id = data.id
-                var devices = new Device()
-                devices.id = this.deviceid
-                devices.set('status', this.deviceform.status)
-                devices.set('isEnable', this.deviceform.isEnable)
-                product.id = this.deviceform.productName
-                devices.set('product', product)
-                devices.set('tag', tags1)
-                this.productroleslist.map(item => {
-                  acl.setRoleReadAccess(item, true)
-                  acl.setRoleWriteAccess(item, true)
-                })
-
-                devices.set('ACL', acl)
-                devices.set('devaddr', this.deviceform.devaddr)
-                devices.set('name', this.deviceform.name)
-                devices.save().then(
-                  resultes => {
-                    if (resultes) {
-                      this.$message({
-                        type: 'success',
-                        message: `${
-                          this.deviceid != '' ? '编辑成功' : '添加成功'
-                        }`
-                      })
-                      this.devicedialogVisible = false
-                      this.equipmentEditor = '添加'
-                      this.batchid = ''
-                      this.getDevices()
-                      this.deviceid = ''
-                      this.$refs['deviceform'].resetFields()
-                      this.deviceform.assetNum = ''
-                      this.deviceform.devModel = ''
-                      this.deviceform.address = ''
-                      this.deviceform.desc = ''
-                      this.deviceform.brand = ''
-                    }
+              var devicesParmas = {
+                  'status': 'OFFLINE',
+                  'isEnable': false,
+                  "ACL": {
+                      "*": {
+                        "read": true,
+                        "write": true
+                      }
                   },
-                  error => {
-                    console.log('Device error', error)
+                  'status': 'OFFLINE',
+                  'name' : this.deviceform.name,
+                  'devaddr' : this.deviceform.devaddr,
+                   "objectId": this.deviceform.devaddr,
+                   "lastOnlineTime": 0,
+                   'product': {
+                    '__type' : 'Pointer',
+                    'className' : 'Product',
+                     'objectId' : this.deviceform.productName
+                  },
+                  'tag' : {
+                      '__type' : 'Pointer',
+                    'className' : 'Tag',
+                     'objectId' : tags.objectId
+                   }
+                  
+              }
+            this.updateDevice(devicesParmas)
+            this.handleClose()
+            this.getDevices()
+            
+            // var Promise1 = new Promise((resolve, reject) => {
+            //   var Tags = Parse.Object.extend('Tag')
+            //   var tags = new Tags()
+            //   tags.id = this.tagsid
 
-                    returnLogin(error)
-                  }
-                )
-              })
-              .catch(error => {
-                console.log('p error ###'.error)
+            //   var location = new Parse.GeoPoint({
+            //     latitude: this.center.lat ? this.center.lat : 0,
+            //     longitude: this.center.lng ? this.center.lng : 0
+            //   })
+            //   // datas.id = this.batchid
+            //   tags.set('assetNum', this.deviceform.assetNum)
+            //   tags.set('devModel', this.deviceform.devModel)
+            //   tags.set('brand', this.deviceform.brand)
+            //   tags.set('location', location)
+            //   tags.set('address', this.deviceform.address)
+            //   tags.set('desc', this.deviceform.desc)
+            //   // tags.set('batchId', datas)
 
-                reject(error)
-              })
+            //   tags.save().then(
+            //     resultes => {
+            //       resolve(resultes)
+            //     },
+            //     error => {
+            //       reject(error)
+            //     }
+            //   )
+            // })
+            //   .then (data => {
+            //     console.log('Tags updated')
+
+            //     var Tags1 = Parse.Object.extend('Tag')
+            //     var tags1 = new Tags1()
+            //     tags1.id = data.id
+            //     var devices = new Device()
+            //     devices.id = this.deviceid
+            //     devices.set('status', this.deviceform.status)
+            //     devices.set('isEnable', this.deviceform.isEnable)
+            //     product.id = this.deviceform.productName
+            //     devices.set('product', product)
+            //     devices.set('tag', tags1)
+            //     this.productroleslist.map(item => {
+            //       acl.setRoleReadAccess(item, true)
+            //       acl.setRoleWriteAccess(item, true)
+            //     })
+
+            //     devices.set('ACL', acl)
+            //     devices.set('devaddr', this.deviceform.devaddr)
+            //     devices.set('name', this.deviceform.name)
+            //     devices.save().then(
+            //       resultes => {
+            //         if (resultes) {
+            //           this.$message({
+            //             type: 'success',
+            //             message: `${
+            //               this.deviceid != '' ? '编辑成功' : '添加成功'
+            //             }`
+            //           })
+            //           this.devicedialogVisible = false
+            //           this.equipmentEditor = '添加'
+            //           this.batchid = ''
+            //           this.getDevices()
+            //           this.deviceid = ''
+            //           this.$refs['deviceform'].resetFields()
+            //           this.deviceform.assetNum = ''
+            //           this.deviceform.devModel = ''
+            //           this.deviceform.address = ''
+            //           this.deviceform.desc = ''
+            //           this.deviceform.brand = ''
+            //         }
+            //       },
+            //       error => {
+            //         console.log('Device error', error)
+
+            //         returnLogin(error)
+            //       }
+            //     )
+            //   })
+            //   .catch(error => {
+            //     console.log('p error ###'.error)
+
+            //     reject(error)
+            //   })
           } else {
             console.log('### devaddrid kong')
+            let devices1 = {
+               'ACL':acl,
+               'devaddr': this.deviceform.devaddr,
+               'name': this.deviceform.name
+            }
+            var params =  {
+              keys: 'count(*)',
+              where:{
+                "name":{"$in":[devices1.name]},
+                "devaddr":{"$in":[devices1.devaddr]}
+              }
+            }
 
-            devices1.equalTo('devaddr', this.deviceform.devaddr)
-            devices1.equalTo('name', this.deviceform.name)
-            devices1.find().then(resultes => {
-              if (resultes.length > 0) {
+            var result = await this.$query_object('Device',params)
+            if(result.count>0){
                 this.$message('此设备已被创建')
                 return
-              } else {
-                var Promise2 = new Promise((reslove, reject) => {
-                  var Tags = Parse.Object.extend('Tag')
-                  var tags = new Tags()
-                  var location = new Parse.GeoPoint({
+            }
+            else {
+              // var Tags = Parse.Object.extend('Tag')
+              // console.log(Tags)
+              // TAG模块先注释掉 原代码是有新增Tag的
+              var location = new Parse.GeoPoint({
                     latitude: this.center.lat,
                     longitude: this.center.lng
-                  })
-                  // datas.id = this.batchid
-                  tags.set('assetNum', this.deviceform.assetNum)
-                  tags.set('devModel', this.deviceform.devModel)
-                  tags.set('brand', this.deviceform.brand)
-                  tags.set('location', location)
-                  tags.set('address', this.bmapform.address)
-                  tags.set('desc', this.deviceform.desc)
-                  tags.set('batchId', datas)
-                  tags.save().then(
-                    resultes => {
-                      reslove(resultes)
-                    },
-                    error => {
-                      console.log('Tag ##3', error)
-
-                      reject(error)
-                    }
-                  )
-                })
-                  .then(data => {
-                    console.log(data)
-                    var Tags1 = Parse.Object.extend('Tag')
-                    var tags1 = new Tags1()
-                    tags1.id = data.id
-                    var Device1 = Parse.Object.extend('Device')
-                    var devices = new Device1()
-                    product.id = this.deviceform.productName
-                    devices.set('product', product)
-                    devices.set('status', 'OFFLINE')
-                    devices.set('isEnable', false)
-                    this.productroleslist.map(item => {
-                      acl.setRoleReadAccess(item, true)
-                      acl.setRoleWriteAccess(item, true)
-                    })
-                    devices.set('ACL', acl)
-                    devices.set('devaddr', this.deviceform.devaddr)
-                    devices.set('name', this.deviceform.name)
-                    devices.set('tag', tags1)
-                    devices.save().then(
-                      resultes => {
-                        if (resultes) {
-                          this.$message({
-                            type: 'success',
-                            message: `${
-                              this.deviceid != '' ? '编辑成功' : '添加成功'
-                            }`
-                          })
-                          this.devicedialogVisible = false
-                          this.equipmentEditor = '添加'
-                          this.batchid = ''
-                          this.getDevices()
-                          this.deviceid = ''
-                          this.$refs['deviceform'].resetFields()
-                          this.deviceform.assetNum = ''
-                          this.deviceform.devModel = ''
-                          this.deviceform.address = ''
-                          this.deviceform.desc = ''
-                          this.deviceform.brand = ''
-                        }
-                      },
-                      error => {
-                        console.log('##4 error', error)
-
-                        returnLogin(error)
-                      }
-                    )
-                  })
-                  .catch(error => {
-                    console.log('##7 error', error)
-                    returnLogin(error)
-                  })
+              })
+    
+              var tagsParms = {
+                  'assetNum' : this.deviceform.assetNum,
+                  'devModel' : this.deviceform.devModel,
+                  'brand' : this.deviceform.brand,
+                  'location' : location,
+                  'address' : this.bmapform.address,
+                  'desc' : this.deviceform.desc,
+                  //'batchId': datas
               }
-            })
+              var tags = await this.$create_object('Tag',tagsParms)
+              var devicesParmas = {
+                  'product': {
+                    '__type' : 'Pointer',
+                    'className' : 'Product',
+                     'objectId' : this.deviceform.productName
+                  },
+                  'status': 'OFFLINE',
+                  'isEnable': false,
+                  "ACL": {
+                      "*": {
+                        "read": true,
+                        "write": true
+                      }
+                  },
+                  'status': 'OFFLINE',
+                  'name' : this.deviceform.name,
+                  'devaddr' : this.deviceform.devaddr,
+                   "objectId": this.deviceform.devaddr,
+                   "lastOnlineTime": 0,
+                   'tag' : {
+                      '__type' : 'Pointer',
+                    'className' : 'Tag',
+                     'objectId' : tags.objectId
+                   }
+              }
+              this.createDevice(devicesParmas)
+              this.deviceform = {}
+              this.handleClose()
+              this.getDevices()
+
+              
+            }
           }
-        } else {
+        }else {
           this.$message({
             type: 'error',
             message: '请按照要求填写参数'
@@ -1574,6 +1689,63 @@ export default {
           return false
         }
       })
+      //         .then(data => {
+      //           console.log(data)
+      //           var Tags1 = Parse.Object.extend('Tag')
+      //           var tags1 = new Tags1()
+      //           tags1.id = data.id
+      //           var Device1 = Parse.Object.extend('Device')
+      //           var devices = new Device1()
+      //           product.objectId = this.deviceform.productName
+      //           devices.set('product', product)
+      //           devices.set('status', 'OFFLINE')
+      //               devices.set('isEnable', false)
+      //               this.productroleslist.map(item => {
+      //                 acl.setRoleReadAccess(item, true)
+      //                 acl.setRoleWriteAccess(item, true)
+      //               })
+      //               devices.set('ACL', acl)
+      //               devices.set('devaddr', this.deviceform.devaddr)
+      //               devices.set('name', this.deviceform.name)
+      //               devices.set('tag', tags1)
+      //               devices.save().then(
+      //                 resultes => {
+      //                   if (resultes) {
+      //                     this.$message({
+      //                       type: 'success',
+      //                       message: `${
+      //                         this.deviceid != '' ? '编辑成功' : '添加成功'
+      //                       }`
+      //                     })
+      //                     this.devicedialogVisible = false
+      //                     this.equipmentEditor = '添加'
+      //                     this.batchid = ''
+      //                     this.getDevices()
+      //                     this.deviceid = ''
+      //                     this.$refs['deviceform'].resetFields()
+      //                     this.deviceform.assetNum = ''
+      //                     this.deviceform.devModel = ''
+      //                     this.deviceform.address = ''
+      //                     this.deviceform.desc = ''
+      //                     this.deviceform.brand = ''
+      //                   }
+      //                 },
+      //                 error => {
+      //                   console.log('##4 error', error)
+
+      //                   returnLogin(error)
+      //                 }
+      //               )
+      //             })
+      //             .catch(error => {
+      //               console.log('##7 error', error)
+      //               returnLogin(error)
+      //             })  
+      //       }
+            
+      //     }
+      
+       
     },
     /* @pamars addbatch添加批次名称 */
     addbatch(formName) {
@@ -1680,7 +1852,7 @@ export default {
       this.$router.push({
         path: '/roles/editdevices',
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
           ischildren: 'false'
         }
