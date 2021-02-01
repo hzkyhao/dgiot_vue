@@ -2,7 +2,7 @@
 
 ## 说明
 
-- 已封装部分方法至[shuwa_message](../../utils/shuwa_message.js)
+- 已封装部分方法至[shuwa_message](../src/utils/shuwa_message.js)
 - 以下方法可在 vue 中直接调用
 
 ### 数蛙全局通用消息提示 message
