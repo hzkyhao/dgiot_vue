@@ -21,12 +21,12 @@ module.exports = {
 
 // https://juejin.cn/post/6844903871832145927
 
-// 使用git commt -m 无法提交代码,是因为没有正确的按照规范提交
+// 使用git commt -m 无法提交代·码,是因为没有正确的按照规范提交
 // 正确的提交方式为
 // git add .
 // git cz
 
-// git cz后已进入interactive模式 此时需要对下列选进行选择或输入 
+// git cz后已进入interactive模式 此时需要对下列选进行选择或输入
 
 // 1.Select the type of change that you're committing 选择改动类型 (<type>) // select 上下方向键可选择  必选 （可选值如下）
 
