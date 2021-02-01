@@ -4,7 +4,7 @@ import { Message } from "element-ui";
 import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
-import { getBatchNumer, createBatchNumer } from "@/api/Dict"
+import { getBatchNumer, createBatchNumer,getIndustry } from "@/api/Dict"
 
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
@@ -157,6 +157,7 @@ function timestampToTime(timestamp, full) {
 }
 export default {
   install(Vue, options) {
+    Vue.prototype.$getIndustry = getIndustry
     Vue.prototype.$query_object_header = query_object_header
     Vue.prototype.$getBatchNumer = getBatchNumer
     Vue.prototype.$createBatchNumer = createBatchNumer
