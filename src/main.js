@@ -6,7 +6,7 @@ import router from "./router";
 import store from "./store";
 
 import globalConfig from "@/config";
-
+import shuwa_message from "@/utils/shuwa_message.js";
 import service from "@/utils/request.js";
 import utilwen from "./utils/utilwen.js";
 import i18n from "./common/language";
@@ -30,6 +30,7 @@ Vue.use(BaiduMap, {
 });
 
 Vue.use(utilwen);
+Vue.use(shuwa_message);
 
 if (process.env.NODE_ENV === "development") {
   Vue.config.devtools = true;

@@ -884,6 +884,7 @@ export default {
       this.proTableData = []
       this.proTableData1 = []
       var Product = await this.$query_object('Product', {})
+      console.log(JSON.stringify(await this.$query_object('Product', {})))
       this.proTableData = Product.results
       this.proTableData1 = Product.results
 
