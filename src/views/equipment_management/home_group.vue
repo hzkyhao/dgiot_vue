@@ -182,8 +182,8 @@
                   <el-option
                     v-for="(item,index) in allApps"
                     :key="index"
-                    :label="item.attributes.title"
-                    :value="item.attributes.title"
+                    :label="item.title"
+                    :value="item.title"
                   />
                 </el-select>
               </el-form-item>
