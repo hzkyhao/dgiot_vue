@@ -3,6 +3,9 @@ import qs from "qs";
 import { Message } from "element-ui";
 import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object } from "@/api/shuwa_parse"
+
+import { getBatchNumer, createBatchNumer } from "@/api/Dict"
+
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
   baseURL: process.env.BASE_API,
@@ -154,9 +157,8 @@ function timestampToTime(timestamp, full) {
 }
 export default {
   install(Vue, options) {
-    (Vue.prototype.getData = function() {
-      console.log("I am a method in plug-in");
-    }),
+    Vue.prototype.$getBatchNumer = getBatchNumer
+    Vue.prototype.$createBatchNumer = createBatchNumer
     Vue.prototype.$axiosWen = serviceWen
     Vue.prototype.$create_object = create_object;
     Vue.prototype.$update_object = update_object;

@@ -1464,13 +1464,7 @@ export default {
       //     returnLogin(error)
       //   }
       // )
-      var parsms = {
-        order: "-createdAt",
-        where: {
-          type: "batch_number"
-        }
-      };
-      const { results } = await this.$query_object("Dict", parsms);
+      const { results } = await this.$getBatchNumer();
       this.pctableData = results;
     },
     /* device添加表单提交*/
@@ -1933,13 +1927,7 @@ export default {
       }
     },
     async queryDict() {
-      var parsms = {
-        order: "-createdAt",
-        where: {
-          type: "batch_number"
-        }
-      };
-      const { results } = await this.$query_object("Dict", parsms);
+      const { results } = await this.$getBatchNumer();
       this.pctableData = results;
     },
     // 前往子设备
