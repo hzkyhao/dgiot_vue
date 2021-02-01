@@ -4,9 +4,8 @@ import "@/styles/index.scss"; // global css
 import App from "./App";
 import router from "./router";
 import store from "./store";
-
+import "@/utils/shuwa_message.js"
 import globalConfig from "@/config";
-
 import service from "@/utils/request.js";
 import utilwen from "./utils/utilwen.js";
 import i18n from "./common/language";

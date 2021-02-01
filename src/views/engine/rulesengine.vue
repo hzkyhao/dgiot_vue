@@ -74,6 +74,7 @@ export default {
         .then(response => {
           if (response) {
             this.engineData = response
+            this.total = this.engineData.length
           }
         })
         .catch(error => {

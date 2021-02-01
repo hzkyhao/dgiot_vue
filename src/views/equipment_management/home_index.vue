@@ -751,23 +751,38 @@ export default {
       // )
     },
     // 从产品处进来
-    selectProductid(val) {
-      this.productroleslist = []
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.get(val).then(
-        response => {
-          if (response) {
-            for (var key in response.attributes.ACL.permissionsById) {
-              this.productroleslist.push(key.substr(5))
-            }
-          }
-          this.productimg = response.attributes.icon
-        },
-        error => {
-          returnLogin(error)
+    // selectProductid(val) {
+    //   this.productroleslist = []
+    //   var Product = Parse.Object.extend('Product')
+    //   var product = new Parse.Query(Product)
+    //   product.get(val).then(
+    //     response => {
+    //       if (response) {
+    //         for (var key in response.attributes.ACL.permissionsById) {
+    //           this.productroleslist.push(key.substr(5))
+    //         }
+    //       }
+    //       this.productimg = response.attributes.icon
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
+    async selectProductid(val) {
+      this.productroleslist = [];
+      const parsms = {};
+      const { results } = await this.$query_object("Product", parsms);
+      const res = results.filter(i => {
+        return i.objectId == val;
+      });
+      console.log(val, results, res);
+      for (var key in res[0].ACL) {
+        if (key.includes("role")) {
+          this.productroleslist.push(key.substr(5));
+          console.log(key, this.productroleslist);
         }
-      )
+      }
     },
     addressSure() {
       var localSearch = new BMap.LocalSearch(this.map)
@@ -884,6 +899,7 @@ export default {
       this.proTableData = []
       this.proTableData1 = []
       var Product = await this.$query_object('Product', {})
+      console.log(JSON.stringify(await this.$query_object('Product', {})))
       this.proTableData = Product.results
       this.proTableData1 = Product.results
 
@@ -1338,28 +1354,54 @@ export default {
       }
       scope._self.$refs[`popover-${scope.$index}`].doClose()
     },
+    // // 增加批次
+    // addDeviceBatch(isdialog) {
+    //   if (isdialog == 0) {
+    //     this.pcdialogVisible = false
+    //   } else {
+    //     this.pcdialogVisible = true
+    //   }
+    //   var Dict = Parse.Object.extend('Dict')
+    //   var datas = new Parse.Query(Dict)
+    //   datas.equalTo('type', 'batch_number')
+    //   datas.ascending('-createdAt')
+    //   datas.find().then(
+    //     resultes => {
+    //       if (resultes) {
+    //         this.pctableData = resultes
+    //         pcdata = resultes
+    //       }
+    //     },
+    //     error => {
+    //       returnLogin(error)
+    //     }
+    //   )
+    // },
     // 增加批次
-    addDeviceBatch(isdialog) {
+    async addDeviceBatch(isdialog) {
       if (isdialog == 0) {
-        this.pcdialogVisible = false
+        this.pcdialogVisible = false;
       } else {
-        this.pcdialogVisible = true
+        this.pcdialogVisible = true;
       }
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('type', 'batch_number')
-      datas.ascending('-createdAt')
-      datas.find().then(
-        resultes => {
-          if (resultes) {
-            this.pctableData = resultes
-            pcdata = resultes
-          }
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.equalTo('type', 'batch_number')
+      // datas.ascending('-createdAt')
+      // datas.find().then(
+      //   resultes => {
+      //     if (resultes) {
+      //       this.pctableData = resultes
+      //       pcdata = resultes
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
+      const { results } = await this.$getBatchNumer();
+      this.pctableData = results;
     },
     /* device添加表单提交*/
     async editorDevice(row) {

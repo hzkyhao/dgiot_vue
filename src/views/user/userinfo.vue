@@ -37,18 +37,8 @@ export default {
         roles: ""
       },
       roles: []
-      // graphql:''
     };
   },
-  //    apollo:{
-  //     query:{
-  //       query() {
-  //         return gql`query Health {
-  //                 health
-  //                }`
-  //       },
-  //     }
-  //   },
   mounted() {
     this.userid = this.$route.params.userid;
     this.userinfo.name = Parse.User.current().attributes.username;

@@ -18,3 +18,12 @@ export async function createBatchNumer(params) {
   return create_object('Dict', params)
 }
 
+export async function getIndustry(key, limit) {
+  const params = {
+    limit: limit || 100,
+    where: {
+      "data.key": key || 'category'
+    }
+  }
+  return query_object('Dict', params)
+}
