@@ -1053,10 +1053,10 @@ export default {
         obj.name = items.name ? items.name : "";
         obj.originstatus = this.$objGet(items, "status");
         obj.nodeType = this.$objGet(items, "product.nodeType");
-        obj.desc = this.$objGet(
-          items,
-          'tag.desc'
-        ) || items.detail.desc
+        // obj.desc = this.$objGet(
+        //   items,
+        //   'tag.desc'
+        // ) || items.tag.desc
         obj.productName = this.$objGet(
           items,
           'product.name'
