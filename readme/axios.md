@@ -2,7 +2,7 @@
 
 ## 说明
 
-已封装部分接口至[shuwa_parse](../shuwa_parse/index.js)
+已封装部分接口至[shuwa_parse](../src/api/shuwa_parse/index.js)
 
 ### query_object
 
