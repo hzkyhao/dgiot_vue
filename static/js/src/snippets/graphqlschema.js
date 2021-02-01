@@ -44,4 +44,3 @@ exports.scope = "graphqlschema";
                         }
                     });
                 })();
-            

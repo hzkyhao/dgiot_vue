@@ -155,7 +155,7 @@ var isallchannel = false;
 import { Compile, subupadte } from "@/api/systemmanage/system";
 import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
-import gql from "graphql-tag";
+// import gql from "graphql-tag";
 import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
@@ -209,7 +209,7 @@ export default {
         ProductKey: "",
         ProductAll: 0
       },
-      swaggerPath:'',
+      swaggerPath: '',
       decoderstart: 0,
       decodertotal: 0,
       decoderlength: 10,
@@ -240,18 +240,18 @@ export default {
     };
   },
   computed: {
-      tableFilterData() {
+    tableFilterData() {
       return null;
     }
   },
   mounted() {
-    const hostIncludes = ["192.168.2.69","192.168.2.58","127.0.0.1","localhost"]
-    const {hostname} = location
+    const hostIncludes = ["192.168.2.69", "192.168.2.58", "127.0.0.1", "localhost"]
+    const { hostname } = location
 
-    if(!hostIncludes.includes(hostname)){
-    this.swaggerPath =    hostname+''+':5080/swagger/#/'
-    }else {
-    this.swaggerPath ='http://pump.iotn2n.com:5080/swagger/#/'
+    if (!hostIncludes.includes(hostname)) {
+      this.swaggerPath = hostname + '' + ':5080/swagger/#/'
+    } else {
+      this.swaggerPath = 'http://pump.iotn2n.com:5080/swagger/#/'
     }
     console.log(` this.swaggerPath is ${this.swaggerPath}`)
 

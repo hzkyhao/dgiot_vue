@@ -66,15 +66,15 @@
         </el-table-column>
         <el-table-column label="服务器IP" align="center" width="150">
           <template slot-scope="scope">
-            <p v-if="scope.row.private_ip">{{ scope.row.private_ip+ '(私)'}}</p>
-            <p v-if="scope.row.public_ip">{{ scope.row.public_ip+ '(公)'}}</p>
+            <p v-if="scope.row.private_ip">{{ scope.row.private_ip+ '(私)' }}</p>
+            <p v-if="scope.row.public_ip">{{ scope.row.public_ip+ '(公)' }}</p>
           </template>
         </el-table-column>
         <el-table-column label="服务器配置" align="center" width="150">
-          <template slot-scope="scope" v-if="scope.row.private_ip">
+          <template v-if="scope.row.private_ip" slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>IP地址: {{ scope.row.private_ip}}</p>
-              <p>MAC地址: {{ scope.row.mac}}</p>
+              <p>IP地址: {{ scope.row.private_ip }}</p>
+              <p>MAC地址: {{ scope.row.mac }}</p>
               <div slot="reference" class="name-wrapper">
                 <el-tag effect="dark">
                   <span>{{ scope.row.core+'核'+scope.row.memory+' '+scope.row.disk+'内存' }}</span>
@@ -315,8 +315,8 @@
   </div>
 </template>
 <script>import Parse from 'parse'
-import {returnLogin} from '@/utils/return'
-import {uploadServer, uploadLicense, offlineServer} from '@/api/applicationManagement'
+import { returnLogin } from '@/utils/return'
+import { uploadServer, uploadLicense, offlineServer } from '@/api/applicationManagement'
 
 var product = {}
 export default {
@@ -359,7 +359,7 @@ export default {
       },
       onlineformrule: {
         name: [
-          {required: true, message: '请输入要更新的版本号', trigger: 'blur'}
+          { required: true, message: '请输入要更新的版本号', trigger: 'blur' }
         ]
       },
       licensedetail: {},
@@ -402,26 +402,26 @@ export default {
       applist: [],
       rules: {
         name: [
-          {required: true, message: '请输入预计设计规模'},
-          {type: 'number', message: '预计设计规模 必须为数字值'}
+          { required: true, message: '请输入预计设计规模' },
+          { type: 'number', message: '预计设计规模 必须为数字值' }
         ],
         region: [
-          {required: true, message: '请选择应用类型', trigger: 'change'}
+          { required: true, message: '请选择应用类型', trigger: 'change' }
         ],
         appname: [
-          {required: true, message: '请选择需要应用', trigger: 'change'}
+          { required: true, message: '请选择需要应用', trigger: 'change' }
         ],
         version: [
-          {required: true, message: '请选择应用版本', trigger: 'change'}
+          { required: true, message: '请选择应用版本', trigger: 'change' }
         ],
         licensekey: [
-          {required: true, message: 'license必填', trigger: 'blur'}
+          { required: true, message: 'license必填', trigger: 'blur' }
         ],
         username: [
-          {required: true, message: '客户名称必填', trigger: 'blur'}
+          { required: true, message: '客户名称必填', trigger: 'blur' }
         ],
         version: [
-          {required: true, message: '应用版本必填', trigger: 'blur'}
+          { required: true, message: '应用版本必填', trigger: 'blur' }
         ],
         date1: [
           {
@@ -441,24 +441,24 @@ export default {
         ]
       },
       serverrules: {
-        app: [{required: true, message: '请选择客户名称', trigger: 'change'}],
+        app: [{ required: true, message: '请选择客户名称', trigger: 'change' }],
         serverip: [
-          {required: true, message: '请输入服务器私网IP', trigger: 'blur'},
+          { required: true, message: '请输入服务器私网IP', trigger: 'blur' },
           {
             validator: validUrl
           }
         ],
         publicip: [
-          {required: true, message: '请输入服务器公网IP', trigger: 'blur'},
+          { required: true, message: '请输入服务器公网IP', trigger: 'blur' },
           {
             validator: validUrl
           }
         ],
         mac: [
-          {required: true, message: '请输入服务器MAC地址', trigger: 'blur'}
+          { required: true, message: '请输入服务器MAC地址', trigger: 'blur' }
         ],
         serverhe: [
-          {required: true, message: '请输入服务器配置'},
+          { required: true, message: '请输入服务器配置' },
           {
             validator: valiNumberPass1,
             type: 'number',
@@ -466,22 +466,22 @@ export default {
           }
         ],
         serverg: [
-          {required: true, message: '请输入服务器配置'},
-          {type: 'number', message: '服务器配置必须为数字值'}
+          { required: true, message: '请输入服务器配置' },
+          { type: 'number', message: '服务器配置必须为数字值' }
         ],
         serverkey: [
-          {required: true, message: '请输入机器码', trigger: 'blur'},
-          {validator: validKey}
+          { required: true, message: '请输入机器码', trigger: 'blur' },
+          { validator: validKey }
         ],
         customer_name: [
-          {required: true, message: '请输入用户名称', trigger: 'blur'}
+          { required: true, message: '请输入用户名称', trigger: 'blur' }
         ],
         disk: [
-          {required: true, message: '请输入服务器内存'},
-          {type: 'number', message: '服务器内存必须为数字值'}
+          { required: true, message: '请输入服务器内存' },
+          { type: 'number', message: '服务器内存必须为数字值' }
         ],
         stauts: [
-          {required: true, message: '请选择服务器状态', trigger: 'change'}
+          { required: true, message: '请选择服务器状态', trigger: 'change' }
         ]
       },
       pickerOptionsStart: {
@@ -543,18 +543,18 @@ export default {
     addServer() {
       // initFrom
       this.serverForm = {
-          app: '',
-          serverip: '127.7.0.1',
-          serverhe: 4,
-          serverg: 8,
-          serverkey: 'EtXWoGpE74FnpANsLGDvj9uwkat8c7AU',
-          license: '127.7.0.1',
-          online: false,
-          customer_name: 'addServe',
-          disk: Number('50G'.replace(/G/g, '')),
-          status: 'unauthorized',
-          publicip: '127.7.0.1',
-          mac: '127.7.0.1'
+        app: '',
+        serverip: '127.7.0.1',
+        serverhe: 4,
+        serverg: 8,
+        serverkey: 'EtXWoGpE74FnpANsLGDvj9uwkat8c7AU',
+        license: '127.7.0.1',
+        online: false,
+        customer_name: 'addServe',
+        disk: Number('50G'.replace(/G/g, '')),
+        status: 'unauthorized',
+        publicip: '127.7.0.1',
+        mac: '127.7.0.1'
       },
       this.serverdialogVisible = true
     },
@@ -565,9 +565,9 @@ export default {
           const setAcl = {}
           setAcl[aclKey1] = {
             read: true,
-            write: true,
+            write: true
           }
-          var params = {ACL: setAcl}
+          var params = { ACL: setAcl }
           params.appname = this.serverForm.customer_name
           params.detail = {}
           params.product = {}
@@ -586,16 +586,16 @@ export default {
             "className": "App",
             "objectId": this.serverForm.app
           },
-            this.$axiosWen.post('classes/License', params, {headers: {'authorization': 'Basic YWRtaW46c3dTV2lvdG4ybi5jb20='}}).then(res => {
-              if (res) {
-                this.$message('添加成功')
-                this.$refs[formName].resetFields()
-                this.getOrigin(0)
-                this.serverdialogVisible = false
-              }
-            }).catch(e => {
-              console.log(e);
-            });
+          this.$axiosWen.post('classes/License', params, { headers: { 'authorization': 'Basic YWRtaW46c3dTV2lvdG4ybi5jb20=' }}).then(res => {
+            if (res) {
+              this.$message('添加成功')
+              this.$refs[formName].resetFields()
+              this.getOrigin(0)
+              this.serverdialogVisible = false
+            }
+          }).catch(e => {
+            console.log(e);
+          });
           // license.save().then(
           //   resultes => {
           //     if (resultes) {
@@ -635,8 +635,8 @@ export default {
         .then(res => {
           this.applist = res.results
         }).catch(e => {
-        console.log(e);
-      });
+          console.log(e);
+        });
     },
     // 初始化数
     getOrigin(isstart) {
@@ -664,7 +664,7 @@ export default {
         params.type = this.formInline.version
       }
       // console.log('search license is', params)
-      this.$axios.get('iotapi/classes/License', {params: params}).then(res => {
+      this.$axios.get('iotapi/classes/License', { params: params }).then(res => {
         // console.log(res)
         this.total = res.count
         this.tableData = res.results

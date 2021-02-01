@@ -8,7 +8,6 @@ export function Addapp(expries, desc, secret, param) {
       config: {
         expires: expries,
         file: param.file,
-        graphql: param.graphql,
         rest: param.rest,
         topo: param.topo
       },

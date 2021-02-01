@@ -9,7 +9,7 @@ export function resourceTypes() {
 }
 export function addRule(actions, ctx, description, rawsql) {
   return request({
-    url: '/rules',
+    url: 'iotapi/rules',
     method: 'post',
     data: {
       actions: actions,
@@ -21,28 +21,28 @@ export function addRule(actions, ctx, description, rawsql) {
 }
 export function getRule() {
   return request({
-    url: '/rules',
+    url: 'iotapi/rules',
     method: 'get',
     params: {}
   })
 }
 export function getRuleDetail(id) {
   return request({
-    url: '/rule/' + id,
+    url: 'iotapi/rule/' + id,
     method: 'get',
     params: {}
   })
 }
 export function ruleDelete(id) {
   return request({
-    url: '/rule/' + id,
+    url: 'iotapi/rule/' + id,
     method: 'delete',
     params: {}
   })
 }
 export function getActions() {
   return request({
-    url: '/rule_actions',
+    url: 'iotapi/rule_actions',
     method: 'get',
     params: {
 
@@ -51,7 +51,7 @@ export function getActions() {
 }
 export function getResource() {
   return request({
-    url: '/rule_resource',
+    url: 'iotapi/rule_resource',
     method: 'get',
     params: {
 
@@ -60,7 +60,7 @@ export function getResource() {
 }
 export function postResource(config, description, name, type) {
   return request({
-    url: '/rule_resource',
+    url: 'iotapi/rule_resource',
     method: 'post',
     data: {
       config: config,
@@ -72,7 +72,7 @@ export function postResource(config, description, name, type) {
 }
 export function ruleTest(actions, ctx, description, forname, name, rawsql) {
   return request({
-    url: '/rule_test',
+    url: 'iotapi/rule_test',
     method: 'post',
     data: {
       actions: actions,

@@ -26,6 +26,30 @@ export async function query_object(tabclass, params) {
 }
 
 /**
+ * 数蛙全局通用接口方法 查询
+ * @param {*} headers  请求头信息
+ * @param {*} tabclass  表名 必传 不可为空
+ * @param {*} params    对应参数 必传  可为{}
+ */
+
+export async function query_object_header(tabclass, params,headers) {
+  if (tabclass && params) {
+    return request({
+      url: `iotapi/classes/${tabclass}`,
+      method: "get",
+      headers,
+      params
+    });
+  } else {
+    return Message({
+      message: "tabclass 和 params 字段为必传",
+      type: "error",
+      duration: 1 * 1000
+    });
+  }
+}
+
+/**
  * 数蛙全局通用接口方法 查询单条数据
  * @param {*} tabclass  表名 必传 不可为空
  * @param {*} ObjectId   对应查询id 必传
@@ -85,10 +109,6 @@ export async function update_object(tabclass, ObjectId, data) {
     return request({
       url: `iotapi/classes/${tabclass}/${ObjectId}`,
       method: "PUT",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json"
-      },
       data
     });
   } else {
@@ -107,8 +127,6 @@ export async function update_object(tabclass, ObjectId, data) {
  */
 
 export async function create_object(tabclass, data) {
-
-
   if (tabclass && data) {
     return request({
       url: `iotapi/classes/${tabclass}`,
@@ -126,6 +144,4 @@ export async function create_object(tabclass, data) {
       duration: 1 * 1000
     });
   }
-
-
 }

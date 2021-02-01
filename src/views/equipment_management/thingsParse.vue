@@ -49,12 +49,12 @@
                 @click="subAce('thingsParseModel', true)"
               >
                 {{ $t("product.preservation") }}</el-button
-              >
+                >
               <el-button
                 type="primary"
                 size="small"
                 @click="subAce1('thingsParseModel')"
-                >设为公共</el-button
+              >设为公共</el-button
               >
               <el-button type="primary" size="small" @click="chaxun">{{
                 $t("product.publicagreementlibrary")
@@ -62,8 +62,11 @@
               <el-button type="primary" size="small" @click="protol">{{
                 $t("product.compile")
               }}</el-button>
-              <el-button type="success" size="small" @click="updatesubdialog"
-                >热加载</el-button
+              <el-button
+                type="success"
+                size="small"
+                @click="updatesubdialog"
+              >热加载</el-button
               >
 
             </el-form-item>
@@ -158,13 +161,13 @@
                   type="primary"
                   size="mini"
                   @click="editordata(scope.row)"
-                  >{{ $t("product.clone") }}
+                >{{ $t("product.clone") }}
                 </el-button>
                 <el-button
                   type="danger"
                   size="mini"
                   @click="deletedata(scope.row.id)"
-                  >{{ $t("developer.delete") }}
+                >{{ $t("developer.delete") }}
                 </el-button>
               </template>
             </el-table-column>
@@ -229,7 +232,6 @@ var isallchannel = false;
 import { Compile, subupadte } from "@/api/systemmanage/system";
 import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
-import gql from "graphql-tag";
 import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
@@ -326,7 +328,7 @@ export default {
       this.$axiosWen
         .get("iotapi/classes/Product", {
           params: {
-            where: { category: { $nin: ["Evidence"] } },
+            where: { category: { $nin: ["Evidence"] }},
             order: "updatedAt" // -updatedAt  updatedAt
           }
         })

@@ -1,12 +1,4 @@
-import request from '@/utils/request'
+import { query_object } from '@/api/shuwa_parse'
 export async function queryRole(params) {
-  return request({
-    url: 'iotapi/classes/_Role',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+  return query_object('_Role', params)
 }
