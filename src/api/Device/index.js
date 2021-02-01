@@ -1,49 +1,20 @@
-import request from '@/utils/request'
-
+import { query_object, get_object, del_object, update_object, create_object } from '@/api/shuwa_parse'
 export async function queryDevice(params) {
-  return request({
-    url: 'iotapi/classes/Device',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+  return query_object('Device', params)
 }
 
-export async function delete_Device(params) {
-  return request({
-    url: 'iotapi/classes/Channel',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+export async function getDevice(ObjectId) {
+  return get_object('Device', ObjectId)
 }
 
-export async function put_Device(params) {
-  return request({
-    url: 'iotapi/classes/Channel',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+export async function deleteDevice(ObjectId) {
+  return del_object('Device', ObjectId)
 }
 
-export async function queryChannel(params) {
-  return request({
-    url: 'iotapi/classes/Channel',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+export async function putDevice(ObjectId) {
+  return update_object('Device', ObjectId)
+}
+
+export async function postDevice(params) {
+  return create_object('Device', params)
 }
