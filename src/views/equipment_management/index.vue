@@ -762,7 +762,9 @@ export default {
     }
   },
   mounted() {
-    this.userId = this.$route.query.productid;
+    // Todo 这里拿到的还是空的
+    //this.userId = this.$route.query.__ob__.dep.id; 我注释的
+    //console.log(this.$route)
     // this.getRole();
     this.searchProduct();
     this.addDeviceBatch(0);
@@ -900,6 +902,7 @@ export default {
     },
     // 激活设备
     getActiveDevices() {
+      this
       var Device = Parse.Object.extend("Device");
       var devices = new Parse.Query(Device);
       devices.equalTo("status", "ACTIVE");
@@ -997,7 +1000,8 @@ export default {
         limit: 10,
         where: {}
       };
-      const { results } = await this.$query_object("Product", parsms);
+      const { results } = await this.$queryProducts(parsms);
+      console.log(results)
       results.map(items => {
         var obj = {};
         obj.id = items.objectId;
@@ -1014,7 +1018,7 @@ export default {
         this.productenable = false;
       }
       this.getDevices();
-      console.log("results", results);
+      
     },
     // 查询设备
     async getDevices(start) {
@@ -1044,8 +1048,9 @@ export default {
         parsms.where["product"] = this.equvalue;
       }
 
-      const { results } = await this.$query_object("Device", parsms);
+      const { results } = await this.$queryDevices(parsms);
       this.devicetotal = results.length;
+      console.log(results)
       var obj = {};
       results.map(items => {
         obj.status = this.$objGet(items, 'status')
@@ -1056,7 +1061,7 @@ export default {
         obj.desc = this.$objGet(
           items,
           'tag.desc'
-        ) || items.detail.desc
+        ) || (items.detail==undefined?"":items.detail.desc)
         obj.productName = this.$objGet(
           items,
           'product.name'
@@ -1088,9 +1093,31 @@ export default {
         )
         obj.createdAt = items.createdAt ? items.createdAt : ''
         obj.productid = this.$objGet(items, 'product.id')
+        if (items.tag) {
+            obj.tagid = _this.$objGet(items, 'tag.id')
+            if (items.tag.location) {
+              obj.latitude = items.tag.location._latitude
+              obj.longitude = items.tag.location._longitude
+            } else {
+              obj.latitude = ''
+              obj.longitude = ''
+            }
+            if (items.tag.batchId) {
+              obj.batchid = items.tag.batchId.id
+            } else {
+              obj.batchid = ''
+            }
+        } else {
+              obj.latitude = ''
+              obj.longitude = ''
+              obj.batchid = ''
+        }
+        this.tableData.push(obj),
+        console.log(obj);
       });
-      this.tableData.push(obj)
-      console.log(obj);
+
+     
+
       //2021年1月29日 还需要处理数据
       // devices.doesNotExist('basedata')
       // devices.count().then(
