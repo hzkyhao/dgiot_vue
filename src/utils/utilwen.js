@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
 import { getBatchNumer, createBatchNumer,getIndustry } from "@/api/Dict"
-
+import { queryDevices} from "@/api/Device"
+import { queryProducts} from "@/api/Product"
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
   baseURL: process.env.BASE_API,
@@ -172,5 +173,8 @@ export default {
     Vue.prototype.$dateFormat = dateFormat;
     Vue.prototype.$getFirstKey = getFirstKey;
     Vue.prototype.$timestampToTime = timestampToTime;
+    Vue.prototype.$queryDevices = queryDevices
+
+    Vue.prototype.$queryProducts = queryProducts
   }
 };
