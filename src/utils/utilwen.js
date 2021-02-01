@@ -4,8 +4,8 @@ import { Message } from "element-ui";
 import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
-import { getBatchNumer, create_Dict,getIndustry, delete_Dict, update_Dict} from "@/api/Dict"
-import { queryDevice, create_Device} from "@/api/Device"
+import { getBatchNumer, postDict,getIndustry, deleteDict, putDict} from "@/api/Dict"
+import { queryDevice, postDevice, putDevice, deleteDevice, getDevice} from "@/api/Device"
 import { queryProduct} from "@/api/Product"
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
@@ -161,12 +161,12 @@ export default {
     Vue.prototype.$getIndustry = getIndustry
     Vue.prototype.$query_object_header = query_object_header
     Vue.prototype.$getBatchNumer = getBatchNumer
-    Vue.prototype.$create_Dict = create_Dict
-    Vue.prototype.$delete_Dict = delete_Dict
+    Vue.prototype.$postDict = postDict
+    Vue.prototype.$deleteDict = deleteDict
     Vue.prototype.$axiosWen = serviceWen
     Vue.prototype.$create_object = create_object;
     Vue.prototype.$update_object = update_object;
-    Vue.prototype.$update_Dict = update_Dict;
+    Vue.prototype.$putDict = putDict;
     Vue.prototype.$del_object = del_object;
     Vue.prototype.$get_object = get_object;
     Vue.prototype.$query_object = query_object;
@@ -176,7 +176,10 @@ export default {
     Vue.prototype.$getFirstKey = getFirstKey;
     Vue.prototype.$timestampToTime = timestampToTime;
     Vue.prototype.$queryDevice = queryDevice
-    Vue.prototype.$create_Device = create_Device
+    Vue.prototype.$postDevice = postDevice
+    Vue.prototype.$putDevice = putDevice
+    Vue.prototype.$getDevice = getDevice
+    Vue.prototype.$deleteDevice = deleteDevice
     Vue.prototype.$queryProduct = queryProduct
   }
 };

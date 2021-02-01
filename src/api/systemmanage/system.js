@@ -67,7 +67,7 @@ export function Compile(code) {
 }
 export function getDev(addr, productId) {
   return request({
-    url: `/device/${addr}?order=createdAt&limit=10&skip=0&keys=last_row(*)`,
+    url: `iotapi/device/${addr}?order=createdAt&limit=10&skip=0&keys=last_row(*)`,
     method: 'get',
     params: {
 
@@ -76,7 +76,7 @@ export function getDev(addr, productId) {
 }
 export function subupadte(channelId, action) {
   return request({
-    url: `/control/channel`,
+    url: `iotpai/control/channel`,
     method: 'post',
     params: {
       id: channelId,
