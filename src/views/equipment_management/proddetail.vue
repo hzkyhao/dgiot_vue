@@ -4062,30 +4062,44 @@ export default {
         );
       });
     },
-    Industry() {
-      this.option = [];
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      datas.equalTo("data.key", "category");
-      datas.limit(1000);
-      datas.find().then(
-        response => {
-          if (response) {
-            response.map(items => {
-              var obj = {};
-              obj.value = items.attributes.type;
-              obj.label = items.attributes.data.CategoryName;
-              obj.id = items.attributes.data.Id;
-              obj.parentid = items.attributes.data.SuperId;
-              this.option.push(obj);
-            });
-            this.getProDetail();
-          }
-        },
-        error => {
-          this.$message(error.message);
-        }
-      );
+    // Industry() {
+    //   this.option = [];
+    //   var Dict = Parse.Object.extend("Dict");
+    //   var datas = new Parse.Query(Dict);
+    //   datas.equalTo("data.key", "category");
+    //   datas.limit(1000);
+    //   datas.find().then(
+    //     response => {
+    //       if (response) {
+    //         response.map(items => {
+    //           var obj = {};
+    //           obj.value = items.attributes.type;
+    //           obj.label = items.attributes.data.CategoryName;
+    //           obj.id = items.attributes.data.Id;
+    //           obj.parentid = items.attributes.data.SuperId;
+    //           this.option.push(obj);
+    //         });
+    //         this.getProDetail();
+    //       }
+    //     },
+    //     error => {
+    //       this.$message(error.message);
+    //     }
+    //   );
+    // },
+    async Industry() {
+      this.option = []
+      const { results } = await this.$getIndustry('category', 100)
+
+      results.map(items => {
+        var obj = {};
+        obj.value = items.type;
+        obj.label = items.data.CategoryName;
+        obj.id = items.data.Id;
+        obj.parentid = items.data.SuperId;
+        this.option.push(obj);
+      })
+      this.getProDetail();
     },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒
@@ -4317,67 +4331,76 @@ export default {
       //   enableLiveAutocompletion: true // 设置自动提示
       // });
 
+      // this.productId = this.$route.query.id;
+      // var Product = Parse.Object.extend("Product");
+      // var product = new Parse.Query(Product);
+      // product.get(this.productId).then(
+      //   response => {
+      //     if (response) {
+      //       this.productName = response.attributes.name;
+      //       for (var key in response.attributes) {
+      //         this.productdetail[key] = response.attributes[key];
+      //       }
+      //       this.option.map(items => {
+      //         if (this.productdetail.category == items.value) {
+      //           this.productdetail.category = items.label;
+      //         }
+      //       });
+      //       this.productdetail.createdAt = this.utc2beijing(response.createdAt);
+      //       this.productdetail.id = response.id;
+      //       this.dynamicReg = response.attributes.dynamicReg;
+      //       this.productdetail.isshow = 0;
+      //       this.form.Productname = response.attributes.name;
+      //       this.ProductSecret = response.attributes.productSecret;
+      //       this.form.Productkey = this.productId;
+      //       // window.location.origin
+      //       this.productimg = response.attributes.icon;
+      //       if (response.attributes.decoder) {
+      //         setdata = response.attributes.decoder.code;
+      //         this.formInline.name = response.attributes.decoder.name;
+      //         this.formInline.version = response.attributes.decoder.version;
+      //         this.formInline.desc = response.attributes.decoder.desc;
+      //       } else {
+      //         setdata =
+      //           "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
+      //       }
+      //       if (!this.productdetail.thing) {
+      //         this.productdetail.thing = {
+      //           properties: []
+      //         };
+      //       }
+      //       console.log('=====', this.wmxData)
+      //       this.wmxData = [];
+      //       this.wmxData = this.productdetail.thing.properties.filter(item => {
+      //         return item.name && item.dataType;
+      //       });
+      //       console.log('----------', this.wmxData)
+      //       editor.setValue(Base64.decode(setdata));
+      //       editor.gotoLine(editor.session.getLength());
+      //       // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+      //       var Device = Parse.Object.extend("Device");
+      //       var devices = new Parse.Query(Device);
+      //
+      //       devices.equalTo("product", this.productId);
+      //       devices.skip(0);
+      //       devices.count().then(count => {
+      //         this.form.ProductAll = count;
+      //       });
+      //     }
+      //   },
+      //   error => {
+      //     returnLogin(error);
+      //   }
+      // );
+      //  todo
+      // 需要找到 this.productId 并传入
       this.productId = this.$route.query.id;
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      product.get(this.productId).then(
-        response => {
-          if (response) {
-            this.productName = response.attributes.name;
-            for (var key in response.attributes) {
-              this.productdetail[key] = response.attributes[key];
-            }
-            this.option.map(items => {
-              if (this.productdetail.category == items.value) {
-                this.productdetail.category = items.label;
-              }
-            });
-            this.productdetail.createdAt = this.utc2beijing(response.createdAt);
-            this.productdetail.id = response.id;
-            this.dynamicReg = response.attributes.dynamicReg;
-            this.productdetail.isshow = 0;
-            this.form.Productname = response.attributes.name;
-            this.ProductSecret = response.attributes.productSecret;
-            this.form.Productkey = this.productId;
-            // window.location.origin
-            this.productimg = response.attributes.icon;
-            if (response.attributes.decoder) {
-              setdata = response.attributes.decoder.code;
-              this.formInline.name = response.attributes.decoder.name;
-              this.formInline.version = response.attributes.decoder.version;
-              this.formInline.desc = response.attributes.decoder.desc;
-            } else {
-              setdata =
-                "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
-            }
-            if (!this.productdetail.thing) {
-              this.productdetail.thing = {
-                properties: []
-              };
-            }
-            console.log('=====', this.wmxData)
-            this.wmxData = [];
-            this.wmxData = this.productdetail.thing.properties.filter(item => {
-              return item.name && item.dataType;
-            });
-            console.log('----------', this.wmxData)
-            editor.setValue(Base64.decode(setdata));
-            editor.gotoLine(editor.session.getLength());
-            // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-            var Device = Parse.Object.extend("Device");
-            var devices = new Parse.Query(Device);
-
-            devices.equalTo("product", this.productId);
-            devices.skip(0);
-            devices.count().then(count => {
-              this.form.ProductAll = count;
-            });
-          }
-        },
-        error => {
-          returnLogin(error);
-        }
-      );
+      console.log('4396',this.productId)
+      this.$get_object("Product", this.productId).then(res => {
+        console.log(res, '$get_object')
+      }).catch(err => {
+        this.$$baseMessage('请求出错', err.error, 3000)
+      })
     },
     // 产品修改
     handelUpdate(event, row) {
@@ -5037,7 +5060,6 @@ export default {
     testgraphql() {
 
       // 删除 graphql 可能需要整合
-
 
       // this.$apollo
       //   .query({
