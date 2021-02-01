@@ -1,14 +1,5 @@
-import request from '@/utils/request'
-
+import { query_object } from '@/api/shuwa_parse'
 export async function queryProduct(params) {
-  return request({
-    url: 'iotapi/classes/Product',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
+  return query_object('Product', params)
 }
 
