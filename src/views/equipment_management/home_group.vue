@@ -958,7 +958,7 @@ export default {
       this.$router.push({
         path: '/roles/detailproduct',
         query: {
-          id: row.id
+          id: row.objectId
         }
       })
     },
