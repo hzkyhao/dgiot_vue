@@ -958,15 +958,17 @@ export default {
       this.$router.push({
         path: '/roles/detailproduct',
         query: {
-          id: row.id
+          id: row.objectId
         }
       })
     },
     GoTodevices(row) {
+      console.log("lsx group ", row)
+      console.log("lsx group ", row.objectId)
       this.$router.push({
         path: '/roles/thing',
         query: {
-          productid: row.id
+          productid: row.objectId
         }
       })
     },

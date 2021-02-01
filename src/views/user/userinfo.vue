@@ -7,14 +7,14 @@
           用户姓名:<span>{{ userinfo.name }}</span>
         </li>
         <li>
-          用户ID:<span>{{ userinfo.id }}</span>
+          用户ID:<span>{{ userinfo.objectId }}</span>
         </li>
         <li>
           用户描述:<span>{{ userinfo.nick }}</span>
         </li>
-        <li>
+        <!-- <li>
           操作权限:<span>{{ roles.join(",") }}</span>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -33,41 +33,25 @@ export default {
       userinfo: {
         name: "",
         nick: "",
-        id: "",
+        objectId: "",
         roles: ""
       },
       roles: []
     };
   },
   mounted() {
-    this.userid = this.$route.params.userid;
-    this.userinfo.name = Parse.User.current().attributes.username;
-    this.userinfo.nick = Parse.User.current().attributes.nick;
-    this.userinfo.id = Parse.User.current().id;
-    this.userinfo.roles = Parse.User.current().attributes.roles;
-    this.userinfo.roles.map(items => {
-      this.roles.push(items.alias);
-    });
-    //  editor = ace.edit('editor')
-    // editor.session.setMode('ace/mode/graphqlschema') // 设置语言
-    // editor.setTheme('ace/theme/monokai')// 设置主题
-    // // enable autocompletion and snippets
-    // editor.setOptions({
-    //    enableBasicAutocompletion: true,
-    //    enableSnippets: true,
-    //    enableLiveAutocompletion: true// 设置自动提示
-    // })
+    this.queryUserInfo()
   },
   methods: {
-    // testgraphql(){
-    //    this.$apollo.query({
-    //       query:gql`${editor.getValue()}`
-    //    }).then(resultes=>{
-    //       console.log(resultes)
-    //    }).catch(error=>{
-    //       console.log(error)
-    //    })
-    // }
+    async queryUserInfo() {
+      const { username, nick, objectId, ACL } = await this.$get_object('_User', this.$route.params.userid)
+      this.userinfo = {
+        name: username,
+        nick: nick,
+        objectId: objectId,
+        roles: ""
+      }
+    }
   }
 };
 </script>
