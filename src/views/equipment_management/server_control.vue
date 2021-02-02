@@ -592,8 +592,8 @@ export default {
         .then(res => {
           this.applist = res.results
         }).catch(e => {
-        console.log(e);
-      });
+          console.log(e);
+        });
     },
     // 初始化数
     getOrigin(isstart) {

@@ -21,7 +21,7 @@ export async function postRole(params) {
   return create_object('_Role', params)
 }
 
-// 鑾峰彇瑙掕壊鍒楄〃
+// 获取角色列表
 export function roletree() {
   return request({
     url: 'iotapi/roletree',
