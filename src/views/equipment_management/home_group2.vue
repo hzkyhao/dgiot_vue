@@ -265,23 +265,15 @@
 const Base64 = require('js-base64').Base64
 import Parse from 'parse'
 import {
-  setTimeout
-} from 'timers'
-import {
   returnLogin
 } from '@/utils/return'
 import {
   export_txt_to_zip
 } from '@/utils/Export2Zip.js'
-import IconSelect from '@/components/IconSelect'
 import Cookies from 'js-cookie'
-import $ from 'jquery'
 import {
   getServer
 } from '@/api/Role/index'
-import {
-  resolve
-} from 'url'
 export default {
   data() {
     return {
