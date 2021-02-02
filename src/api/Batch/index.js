@@ -1,7 +1,7 @@
 /*
  * @Author: h7ml
  * @Date: 2021-02-01 16:45:26
- * @LastEditTime: 2021-02-02 17:53:01
+ * @LastEditTime: 2021-02-02 17:56:46
  * @Description: this.Batchdelete('Dict', ['id1','id2'])
  * @FilePath: \platform\src\api\batch\index.js
  */
@@ -48,6 +48,11 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
     });
   }
 }
+/**
+ *
+ * @param {*}
+ * @description  调用方法参考  src\views\equipment_management\platform_overview.vue
+ */
 export async function batch(data) {
   console.log(data, 'axios from batch')
   return request({
