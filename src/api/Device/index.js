@@ -21,6 +21,10 @@ export async function deleteDevice(ObjectId) {
   return del_object('Device', ObjectId)
 }
 
+export async function batchDeleteDevice(ObjectIdArr) {
+  return this.$postBatch('Device',ObjectIdArr)
+}
+
 export async function putDevice(ObjectId,params) {
   return update_object('Device', ObjectId,params)
 }
