@@ -5,14 +5,6 @@
       class="appcontent"
       style="position:relative;display:flex;flex-direction:column;align-items:center"
     >
-      <!-- <div class="isbutton">
-        <el-button
-          icon="el-icon-circle-plus-outline"
-          round
-          @click="dialogVisible = true"
-        >添加新应用</el-button
-        >
-      </div> -->
       <el-card
         v-for="(item, index) in appdata"
         :key="index"
@@ -84,13 +76,6 @@
                 >修改应用</el-link
                 >
               </p>
-              <!-- <p class="editor">
-                <el-link
-                  type="primary"
-                  @click="deleteapp(item.id)"
-                >删除应用</el-link
-                >
-              </p> -->
               <p class="editor">
                 <el-link
                   type="primary"
@@ -316,8 +301,7 @@
 </template>
 <script>
 const Base64 = require("js-base64").Base64;
-import { Addapp, createRole } from "@/api/appcontrol";
-import Parse from "parse";
+import { queryRole, putRole, delRole } from "@/api/Role";
 export default {
   inject: ["reload"],
   data() {
@@ -436,41 +420,17 @@ export default {
         topo: this.form.topo,
         home: this.form.home
       };
-
-      Addapp(Number(this.form.time), this.form.desc, session, formParam)
-        .then(resultes => {
-          if (resultes) {
-            //   createRole(resultes.objectId,session,this.form.desc).then(response=>{
-            this.$message({
-              type: "success",
-              message: "应用创建成功"
-            });
-            this.loading = false;
-            this.dialogVisible = false;
-            this.getAppdetail(this.pagesize, this.start);
-            //  })
-          }
-        })
-        .catch(error => {
-          this.$message({
-            type: "error",
-            message: error.error
-          });
-          this.loading = false;
-          this.dialogVisible = false;
-        });
     },
-    getAppdetail(pagesize, start) {
+
+    async getAppdetail(pagesize, start) {
       console.log(pagesize, start);
-      this.$axiosWen
-        .get("iotapi/classes/_Role", {
-          params: {
-            skip: start,
-            limit: pagesize,
-            keys: "tag,name,desc,count(*)",
-            order: "updatedAt" // -updatedAt  updatedAt
-          }
-        })
+      const params = {
+        skip: start,
+        limit: pagesize,
+        keys: "tag,name,desc,count(*)",
+        order: "updatedAt" // -updatedAt  updatedAt
+      }
+      queryRole(params)
         .then(res => {
           this.appdata = res.results;
           this.appdata.map(item => {
@@ -485,27 +445,6 @@ export default {
         .catch(e => {
           console.log(e);
         });
-      // var App = Parse.Object.extend("_Role");
-      // var app = new Parse.Query(App);
-      // app.limit(pagesize);
-      // app.skip(start);
-      // app.ascending("-updatedAt");
-      // app.count().then(count => {
-      //   this.total = count;
-      //   app.find().then(resultes => {
-      //     this.appdata = resultes.concat([]);
-      //     this.appdata.map(item => {
-      //       // item.desc = object.attributes.desc
-      //       item.isshow = false;
-      //       // this.selectapp.map(object=>{
-      //       //    if(item.attributes.product.id==object.id){
-
-      //       //    }
-      //       // })
-      //     });
-      //     console.log(this.appdata, "appdata");
-      //   });
-      // });
     },
     handleClickRefresh() {
       this.randomSecret();
@@ -551,38 +490,7 @@ export default {
         }
       });
     },
-    updateObj(objectId) {
-      // var App = Parse.Object.extend("App");
-      // var app = new Parse.Query(App);
-      // // 修改
-      // app.get(this.objectid).then(object => {
-      //   const formParam = {
-      //     expires: this.form1.time,
-      //     file: this.form1.file,
-      //     graphql: this.form1.graphql,
-      //     rest: this.form1.rest,
-      //     topo: this.form1.topo,
-      //     home: this.form1.home
-      //   };
-      //   object.set("config", formParam);
-      //   object.set("secret", this.form1.secret);
-      //   object.set("desc", this.form1.desc);
-      //   object.set("name", this.form1.desc);
-      //   object.save().then(
-      //     resultes => {
-      //       this.$message({
-      //         type: "success",
-      //         message: "应用修改成功"
-      //       });
-      //       this.update = false;
-      //       this.getAppdetail(this.pagesize, this.start);
-      //       // this.reload()
-      //     },
-      //     error => {
-      //       console.log(error);
-      //     }
-      //   );
-      // });
+    async updateObj(objectId) {
       const formParam = {
         expires: this.form1.time,
         file: this.form1.file,
@@ -599,51 +507,20 @@ export default {
       };
       tag.appconfig = formParam;
       console.log(tag.appconfig);
-      this.$axiosWen
-        .put("classes/_Role/" + objectId, {
-          tag
-        })
-        .then(res => {
-          this.$message({
-            type: "success",
-            message: "应用修改成功"
-          });
-          this.getAppdetail(10, 0)
-          this.update = false;
-        })
+      await putRole(objectId, tag).then(res => {
+        this.$message({
+          type: "success",
+          message: "应用修改成功"
+        });
+        this.getAppdetail(10, 0)
+        this.update = false;
+      })
         .catch(e => {
           this.$message({
             type: "error",
             message: "应用修改失败" + e.error
           });
           console.log(e);
-        });
-    },
-    deleteapp(id) {
-      this.$confirm("此操作将永久删除该应用, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          var App = Parse.Object.extend("App");
-          var app = new Parse.Query(App);
-          app.get(id).then(object => {
-            object.destroy().then(response => {
-              this.$message({
-                type: "success",
-                message: "删除成功!"
-              });
-              this.getAppdetail(this.pagesize, this.start);
-              // this.reload()
-            });
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
         });
     },
     // 跳转新增

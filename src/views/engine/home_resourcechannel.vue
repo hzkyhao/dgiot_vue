@@ -267,7 +267,7 @@
 <script>
 import { queryChannel, delChannel, postChannel } from '@/api/Channel/index'
 import { queryRole } from '@/api/Role/index'
-import { subupadte } from '@/api/systemmanage/system'
+import { subupadte } from '@/api/System/index'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'
 var subdialog

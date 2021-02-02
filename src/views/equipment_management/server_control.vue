@@ -316,7 +316,7 @@
 </template>
 <script>import Parse from 'parse'
 import { returnLogin } from '@/utils/return'
-import { uploadServer, uploadLicense, offlineServer } from '@/api/applicationManagement'
+import { uploadServer, uploadLicense, offlineServer } from '@/api/License'
 
 var product = {}
 export default {

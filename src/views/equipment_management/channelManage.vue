@@ -335,9 +335,8 @@
 <script>
 /* {params}/由于一些表单的验证用v-if所以规则要写在里面*/
 import Parse from 'parse'
-import { prototype } from 'stream'
 import { channelConnect } from '@/api/Channel/index.js'
-import { subupadte } from '@/api/systemmanage/system'
+import { subupadte } from '@/api/System/index'
 var subdialog
 import {
   Websocket,

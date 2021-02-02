@@ -120,7 +120,8 @@
 </template>
 
 <script>
-import { getProject, handleZero, uploadLicense, setUpLictool } from '@/api/applicationManagement'
+import { handleZero, uploadLicense, setUpLictool } from '@/api/License/index'
+import { getProject } from '@/api/applicationManagement'
 import { utc2beijing } from '@/utils'
 import Parse from 'parse'
 export default {
@@ -375,16 +376,6 @@ export default {
       }).catch(error => {
         this.$message(error)
       })
-      // this is /roles/projectManagement
-      // console.log('row.name',row.name);
-
-      // this.$router.push({
-      //     path:'/roles/applicationManagement', //@/views/equipment_management/appOperate/application
-      //     query:{
-      //       projectName:row.name,
-      //       projectId:row.objectId
-      //     }
-      // })
     }
   }
 }

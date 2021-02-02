@@ -270,8 +270,7 @@
 </template>
 <script>
 import Parse from 'parse'
-import { setInterval } from 'timers'
-import { subupadte } from '@/api/systemmanage/system'
+import { subupadte } from '@/api/System/index'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'
 var subdialog

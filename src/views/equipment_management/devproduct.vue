@@ -303,15 +303,10 @@
 <script>
 import { queryDict } from '@/api/Dict/index'
 const Base64 = require('js-base64').Base64
-import { getIndustry } from '@/api/applicationManagement'
-import { setTimeout } from 'timers'
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
-import IconSelect from '@/components/IconSelect'
 import Cookies from 'js-cookie'
-import $ from 'jquery'
-import { getServer } from '@/api/appcontrol'
-import { resolve } from 'url'
+import { getServer } from '@/api/Role'
 export default {
   data() {
     return {

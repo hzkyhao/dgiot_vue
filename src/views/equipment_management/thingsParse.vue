@@ -229,21 +229,8 @@ var editorsubtable;
 var channelrow = {};
 var setdata = "";
 var isallchannel = false;
-import { Compile, subupadte } from "@/api/systemmanage/system";
-import { getIndustry } from "@/api/applicationManagement";
-import { setTimeout } from "timers";
-import { postFile } from "@/api/appcontrol";
-import {
-  Websocket,
-  sendInfo,
-  TOPIC_EMPTY,
-  MSG_EMPTY,
-  DISCONNECT_MSG
-} from "@/utils/wxscoket.js";
-// import TaskCollection1 from "./task_collection1";
+import { Compile, subupadte } from "@/api/System/index.js";
 import { returnLogin } from "@/utils/return";
-import { error } from "util";
-import $ from "jquery";
 export default {
   name: "ThingsParse",
   props: {},

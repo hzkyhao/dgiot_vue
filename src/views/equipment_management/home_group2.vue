@@ -263,9 +263,6 @@
 </template>
 <script>
 const Base64 = require('js-base64').Base64
-import {
-  getIndustry
-} from '@/api/applicationManagement'
 import Parse from 'parse'
 import {
   setTimeout
@@ -281,7 +278,7 @@ import Cookies from 'js-cookie'
 import $ from 'jquery'
 import {
   getServer
-} from '@/api/appcontrol'
+} from '@/api/Role/index'
 import {
   resolve
 } from 'url'
