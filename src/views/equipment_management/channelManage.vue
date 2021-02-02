@@ -334,7 +334,6 @@
 </template>
 <script>
 /* {params}/由于一些表单的验证用v-if所以规则要写在里面*/
-import Parse from 'parse'
 import { channelConnect } from '@/api/Channel/index.js'
 import { subupadte } from '@/api/System/index'
 var subdialog
@@ -530,28 +529,29 @@ export default {
       if (start == 0) {
         this.start = 0
       }
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Parse.Query(Channel)
-      if (this.channelformsearch.name != '') {
-        channel.equalTo('name', this.channelformsearch.name)
-      }
-      channel.equalTo('type', '1')
-      channel.ascending('-createdAt')
-      channel.skip(this.start)
-      channel.limit(this.length)
-      channel.count().then(
-        count => {
-          this.total = count
-          channel.find().then(resultes => {
-            if (resultes) {
-              this.tableData = resultes
-            }
-          })
-        },
-        error => {
-          this.$message(error.message)
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Parse.Query(Channel)
+      // if (this.channelformsearch.name != '') {
+      //   channel.equalTo('name', this.channelformsearch.name)
+      // }
+      // channel.equalTo('type', '1')
+      // channel.ascending('-createdAt')
+      // channel.skip(this.start)
+      // channel.limit(this.length)
+      // channel.count().then(
+      //   count => {
+      //     this.total = count
+      //     channel.find().then(resultes => {
+      //       if (resultes) {
+      //         this.tableData = resultes
+      //       }
+      //     })
+      //   },
+      //   error => {
+      //     this.$message(error.message)
+      //   }
+      // )
     },
     // 分页
     channelSizeChange(val) {
@@ -567,118 +567,119 @@ export default {
     addchannelForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var userid = Parse.User.current().id
-          this.channelregion.map(item => {
-            if (item.name == this.addchannel.region) {
-              this.addchannel.channeltype = item.channelvalue
-            }
-          })
-          var Channel = Parse.Object.extend('Channel')
-          var searchchannel = new Parse.Query(Channel)
-          searchchannel.equalTo('config.port', this.addchannel.port)
-          searchchannel.find().then(resultes => {
-            var channel = new Channel()
-            var acl = new Parse.ACL()
-            acl.setReadAccess(userid, true)
-            acl.setWriteAccess(userid, true)
-            if (this.channelId != '') {
-              channel.id = this.channelId
-            } else {
-              if (resultes.length == 0) {
-              } else {
-                this.$message({
-                  type: 'warning',
-                  message: '此端口已存在'
-                })
-              }
-            }
-            channel.set('ACL', acl)
-            channel.set('name', this.addchannel.name)
-            channel.set('cType', this.addchannel.region)
-            channel.set('type', '1')
-            channel.set('desc', this.addchannel.desc)
-            channel.set('isEnable', this.addchannel.isEnable)
-            if (this.addchannel.region == 'UDP') {
-              channel.set('config', {
-                port: this.addchannel.port
-              })
-            } else if (this.addchannel.region == 'TCP' || this.addchannel.region == 'TCPMRTU') {
-              channel.set('config', {
-                port: this.addchannel.port,
-                buff_size: this.addchannel.buff_size
-              })
-            } else if (this.addchannel.region == 'MQTT') {
-              channel.set('config', {
-                topic: this.addchannel.topic,
-                client: this.addchannel.client
-              })
-            } else if (this.addchannel.region == 'HTTP') {
-              channel.set('config', {
-                path: this.addchannel.path,
-                port: this.addchannel.port
-              })
-            } else if (this.addchannel.region == 'Tdengine') {
-              channel.set('config', {
-                auto_save: this.addchannel.auto_save,
-                max_size: this.addchannel.max_size,
-                max_memory: this.addchannel.max_memory,
-                server: 'http://' + this.addchannel.server,
-                username: this.addchannel.username,
-                password: this.addchannel.password
-              })
-            } else if (this.addchannel.region == 'MQTTCLI') {
-              channel.set('config', {
-                address: this.addchannel.address,
-                port: this.addchannel.port,
-                username: this.addchannel.username,
-                password: this.addchannel.password,
-                clean_start: this.addchannel.clean_start,
-                ssl: this.addchannel.ssl,
-                keepalive: this.addchannel.keepalive
-              })
-            }
-            channel.save().then(
-              resultes => {
-                if (resultes) {
-                  this.$message({
-                    type: 'success',
-                    message: '成功'
-                  })
-                  this.addchannel = {
-                    name: '',
-                    region: 'HTTP',
-                    topic: '',
-                    port: '',
-                    channeltype: '',
-                    auto_save: '',
-                    max_size: '',
-                    max_memory: '',
-                    server: '',
-                    username: '',
-                    password: '',
-                    desc: '',
-                    buff_size: '',
-                    path: '',
-                    isEnable: false,
-                    ip: '0.0.0.0',
-                    address: '',
-                    clean_start: false,
-                    ssl: false,
-                    keepalive: ''
-                  }
-                  this.channelForm = false
-                  this.channelId = ''
-                  this.getChannel()
-                }
-              },
-              error => {
-                this.$message({
-                  type: 'error',
-                  message: error.message
-                })
-              }
-            )
-          })
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var userid = Parse.User.current().id
+          // this.channelregion.map(item => {
+          //   if (item.name == this.addchannel.region) {
+          //     this.addchannel.channeltype = item.channelvalue
+          //   }
+          // })
+          // var Channel = Parse.Object.extend('Channel')
+          // var searchchannel = new Parse.Query(Channel)
+          // searchchannel.equalTo('config.port', this.addchannel.port)
+          // searchchannel.find().then(resultes => {
+          //   var channel = new Channel()
+          //   var acl = new Parse.ACL()
+          //   acl.setReadAccess(userid, true)
+          //   acl.setWriteAccess(userid, true)
+          //   if (this.channelId != '') {
+          //     channel.id = this.channelId
+          //   } else {
+          //     if (resultes.length == 0) {
+          //     } else {
+          //       this.$message({
+          //         type: 'warning',
+          //         message: '此端口已存在'
+          //       })
+          //     }
+          //   }
+          //   channel.set('ACL', acl)
+          //   channel.set('name', this.addchannel.name)
+          //   channel.set('cType', this.addchannel.region)
+          //   channel.set('type', '1')
+          //   channel.set('desc', this.addchannel.desc)
+          //   channel.set('isEnable', this.addchannel.isEnable)
+          //   if (this.addchannel.region == 'UDP') {
+          //     channel.set('config', {
+          //       port: this.addchannel.port
+          //     })
+          //   } else if (this.addchannel.region == 'TCP' || this.addchannel.region == 'TCPMRTU') {
+          //     channel.set('config', {
+          //       port: this.addchannel.port,
+          //       buff_size: this.addchannel.buff_size
+          //     })
+          //   } else if (this.addchannel.region == 'MQTT') {
+          //     channel.set('config', {
+          //       topic: this.addchannel.topic,
+          //       client: this.addchannel.client
+          //     })
+          //   } else if (this.addchannel.region == 'HTTP') {
+          //     channel.set('config', {
+          //       path: this.addchannel.path,
+          //       port: this.addchannel.port
+          //     })
+          //   } else if (this.addchannel.region == 'Tdengine') {
+          //     channel.set('config', {
+          //       auto_save: this.addchannel.auto_save,
+          //       max_size: this.addchannel.max_size,
+          //       max_memory: this.addchannel.max_memory,
+          //       server: 'http://' + this.addchannel.server,
+          //       username: this.addchannel.username,
+          //       password: this.addchannel.password
+          //     })
+          //   } else if (this.addchannel.region == 'MQTTCLI') {
+          //     channel.set('config', {
+          //       address: this.addchannel.address,
+          //       port: this.addchannel.port,
+          //       username: this.addchannel.username,
+          //       password: this.addchannel.password,
+          //       clean_start: this.addchannel.clean_start,
+          //       ssl: this.addchannel.ssl,
+          //       keepalive: this.addchannel.keepalive
+          //     })
+          //   }
+          //   channel.save().then(
+          //     resultes => {
+          //       if (resultes) {
+          //         this.$message({
+          //           type: 'success',
+          //           message: '成功'
+          //         })
+          //         this.addchannel = {
+          //           name: '',
+          //           region: 'HTTP',
+          //           topic: '',
+          //           port: '',
+          //           channeltype: '',
+          //           auto_save: '',
+          //           max_size: '',
+          //           max_memory: '',
+          //           server: '',
+          //           username: '',
+          //           password: '',
+          //           desc: '',
+          //           buff_size: '',
+          //           path: '',
+          //           isEnable: false,
+          //           ip: '0.0.0.0',
+          //           address: '',
+          //           clean_start: false,
+          //           ssl: false,
+          //           keepalive: ''
+          //         }
+          //         this.channelForm = false
+          //         this.channelId = ''
+          //         this.getChannel()
+          //       }
+          //     },
+          //     error => {
+          //       this.$message({
+          //         type: 'error',
+          //         message: error.message
+          //       })
+          //     }
+          //   )
+          // })
         } else {
           console.log('error submit!!')
           return false
@@ -793,25 +794,26 @@ export default {
     },
     // 删除
     deleteChannel(scope) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = scope.row.id
-      channel.destroy().then(
-        resultes => {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          scope._self.$refs[`popover-${scope.$index}`].doClose()
-          this.getChannel()
-        },
-        error => {
-          this.$message({
-            type: 'error',
-            message: error.message
-          })
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Channel()
+      // channel.id = scope.row.id
+      // channel.destroy().then(
+      //   resultes => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '删除成功'
+      //     })
+      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //     this.getChannel()
+      //   },
+      //   error => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: error.message
+      //     })
+      //   }
+      // )
     },
     nowtime() {
       var timestamp3 = Date.parse(new Date())
