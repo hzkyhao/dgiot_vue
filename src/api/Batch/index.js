@@ -1,7 +1,7 @@
 /*
  * @Author: h7ml
  * @Date: 2021-02-01 16:45:26
- * @LastEditTime: 2021-02-02 15:21:33
+ * @LastEditTime: 2021-02-02 17:53:01
  * @Description: this.Batchdelete('Dict', ['id1','id2'])
  * @FilePath: \platform\src\api\batch\index.js
  */
@@ -48,5 +48,18 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
     });
   }
 }
+export async function batch(data) {
+  console.log(data, 'axios from batch')
+  return request({
+    url: 'iotapi/batch',
+    method: "post",
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    data: { requests: data }
+  });
+}
+Vue.prototype.$batch = batch
 Vue.prototype.$postBatch = Batchdelete
 

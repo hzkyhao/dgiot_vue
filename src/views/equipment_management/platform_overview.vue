@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-02-02 17:52:06
+ * @LastEditTime: 2021-02-02 17:53:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \platform\src\views\equipment_management\platform_overview.vue
+-->
 <template>
   <div class="platform">
     <el-tabs v-model="activeName">
@@ -133,7 +141,6 @@
   </div>
 </template>
 <script>
-import { batch } from "@/api/Batch/data";
 export default {
   components: {
   },
@@ -234,7 +241,7 @@ export default {
           }
         ]
 
-      await batch(requests).then(res => {
+      await this.$batch(requests).then(res => {
         this.project_count = res[0].success ? res[0].success.count : "-";
         this.product_count = res[1].success ? res[1].success.count : "-";
         this.app_count = res[2].success ? res[2].success.count : "-";

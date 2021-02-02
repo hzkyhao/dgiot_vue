@@ -627,7 +627,6 @@ import Parse from "parse";
 import { Promise } from "q";
 import Cookies from "js-cookie";
 import elDragDialog from "@/directive/el-dragDialog"; // base on element-ui
-import { Batchdelete } from "@/api/batch/index"
 import { BmlMarkerClusterer } from "vue-baidu-map";
 import { utc2beijing } from "@/utils";
 import { returnLogin } from "@/utils/return";
@@ -764,8 +763,8 @@ export default {
   },
   mounted() {
     // Todo 这里拿到的还是空的
-    //this.userId = this.$route.query.__ob__.dep.id; 我注释的
-    //console.log(this.$route)
+    // this.userId = this.$route.query.__ob__.dep.id; 我注释的
+    // console.log(this.$route)
     // this.getRole();
     this.searchProduct();
     this.addDeviceBatch(0);
@@ -783,11 +782,10 @@ export default {
           if (response) {
             console.log(`res=`)
             console.log(response.results)
-            
+
             for (var key in response.results[0].ACL) {
               if (key.includes("role")) {
                 this.productroleslist.push(key.substr(5));
-               
               }
             }
           }
@@ -908,8 +906,8 @@ export default {
     // 激活设备
     async getActiveDevices() {
       var params = {
-        where : {
-            "status": "ONLINE"
+        where: {
+          "status": "ONLINE"
         }
       }
       if (this.deviceinput != "") {
@@ -917,7 +915,7 @@ export default {
           this.selectdevice == "设备名称" ||
           this.selectdevice == "Device Name"
         ) {
-          params.where['name'] = this.deviceinput     
+          params.where['name'] = this.deviceinput
         } else {
           params.where['devaddr'] = this.deviceinput
         }
@@ -929,17 +927,16 @@ export default {
         params.where['product'] = this.equvalue
       }
       const { res } = await this.$queryDevice(params)
-      if(res==undefined){
+      if (res == undefined) {
         this.activeall = 0
-      }
-      else{
+      } else {
         this.activeall = res.results.length
       }
     },
     async getOnlineDevices() {
       var params = {
-        where : {
-            "status": "ACTIVE"
+        where: {
+          "status": "ACTIVE"
         }
       }
       if (this.deviceinput != "") {
@@ -956,14 +953,11 @@ export default {
         params.where['product'] = this.equvalue
       }
       const { res } = await this.$queryDevice(params)
-      if(res==undefined){
+      if (res == undefined) {
         this.onlineall = 0
-      }
-      else{
+      } else {
         this.onlineall = res.results.length
       }
-      
-      
     },
 
     // // 查询产品
@@ -1025,7 +1019,6 @@ export default {
         this.productenable = false;
       }
       this.getDevices();
-      
     },
     // 查询设备
     async getDevices(start) {
@@ -1057,7 +1050,7 @@ export default {
 
       const { results } = await this.$queryDevice(parsms);
       this.devicetotal = results.length;
-     
+
       results.map(items => {
         var obj = {}
         obj.status = this.$objGet(items, 'status')
@@ -1068,7 +1061,7 @@ export default {
         obj.desc = this.$objGet(
           items,
           'tag.desc'
-        ) || (items.detail==undefined?"":items.detail.desc)
+        ) || (items.detail == undefined ? "" : items.detail.desc)
         obj.productName = this.$objGet(
           items,
           'product.name'
@@ -1101,23 +1094,23 @@ export default {
         obj.createdAt = items.createdAt ? items.createdAt : ''
         obj.productid = this.$objGet(items, 'product.id')
         if (items.tag) {
-            obj.tagid = _this.$objGet(items, 'tag.id')
-            if (items.tag.location) {
-              obj.latitude = items.tag.location._latitude
-              obj.longitude = items.tag.location._longitude
-            } else {
-              obj.latitude = ''
-              obj.longitude = ''
-            }
-            if (items.tag.batchId) {
-              obj.batchid = items.tag.batchId.id
-            } else {
-              obj.batchid = ''
-            }
+          obj.tagid = _this.$objGet(items, 'tag.id')
+          if (items.tag.location) {
+            obj.latitude = items.tag.location._latitude
+            obj.longitude = items.tag.location._longitude
+          } else {
+            obj.latitude = ''
+            obj.longitude = ''
+          }
+          if (items.tag.batchId) {
+            obj.batchid = items.tag.batchId.id
+          } else {
+            obj.batchid = ''
+          }
         } else {
-              obj.latitude = ''
-              obj.longitude = ''
-              obj.batchid = ''
+          obj.latitude = ''
+          obj.longitude = ''
+          obj.batchid = ''
         }
         this.tableData.push(obj)
       });
@@ -1232,24 +1225,20 @@ export default {
           newData2.isEnable = newData2.isEnable == true;
           //   this.tableData[index] = newData2
           var params = {
-            "isEnable" : newData2.isEnable
+            "isEnable": newData2.isEnable
           };
           console.log(row.id)
-          this.$putDevice(row.id,params).then(respone=>{
-              if(!respone.error){
-                this.initQuery("状态修改成功",'success')
-                this.getDevices();
-              }
-              else{
-                this.initQuery("状态修改失败",'error')
-              }
-             
-              
+          this.$putDevice(row.id, params).then(respone => {
+            if (!respone.error) {
+              this.initQuery("状态修改成功", 'success')
+              this.getDevices();
+            } else {
+              this.initQuery("状态修改失败", 'error')
+            }
           }),
           error => {
             returnLogin(error);
           }
-          
         })
         .catch(() => {
           this.$message({
@@ -1327,16 +1316,15 @@ export default {
         idarr.push(item.id)
       })
 
-      await Batchdelete(
+      await this.$Batchdelete(
         '_Device', idarr, {}).then(res => {
-            if(!res.error){
-              this.initQuery(`设备${idarr}删除成功`,'success')
-            }
-            else{
-              this.initQuery(`设备${idarr}删除失败`,'error')
-            }
-        })
-      
+        if (!res.error) {
+          this.initQuery(`设备${idarr}删除成功`, 'success')
+        } else {
+          this.initQuery(`设备${idarr}删除失败`, 'error')
+        }
+      })
+
       // Promise.all([
       //   this.multipleTable.map(item => {
       //     var Device = Parse.Object.extend("Device");
@@ -1375,24 +1363,20 @@ export default {
       }
       await Batchdelete(
         '_Device', idarr, body).then(res => {
-            if(!res.error){
-                if(isEnable){
-                  this.initQuery(`设备${idarr}启动成功`,'success')
-                }
-                else{
-                  this.initQuery(`设备${idarr}禁用成功`,'success')
-                }
-            }
-            else{
-              if(isEnable){
-                  this.initQuery(`设备${idarr}启动失败`,'error')
-                }
-                else{
-                  this.initQuery(`设备${idarr}禁用失败`,'error')
-                }
-            }
-        })
-     
+        if (!res.error) {
+          if (isEnable) {
+            this.initQuery(`设备${idarr}启动成功`, 'success')
+          } else {
+            this.initQuery(`设备${idarr}禁用成功`, 'success')
+          }
+        } else {
+          if (isEnable) {
+            this.initQuery(`设备${idarr}启动失败`, 'error')
+          } else {
+            this.initQuery(`设备${idarr}禁用失败`, 'error')
+          }
+        }
+      })
     },
     // activeDevice(val) {
     //   this.$changeDeviceStatus(this.multipleTable,true)
@@ -1451,7 +1435,6 @@ export default {
           this.deviceform.productName = "";
         }
       }
-      
     },
     /* 关闭批次弹窗*/
     handleClose1() {
@@ -1466,18 +1449,15 @@ export default {
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
       this.$deleteDevice(scope.row.id).then(response => {
-          if(!response.error){
-            this.initQuery('删除成功','success')
-            scope._self.$refs[`popover-${scope.$index}`].doClose();
-            this.getDevices();
-          }
-          else{
-            scope._self.$refs[`popover-${scope.$index}`].doClose();
-            this.initQuery('删除失败','error')
-          }
-
+        if (!response.error) {
+          this.initQuery('删除成功', 'success')
+          scope._self.$refs[`popover-${scope.$index}`].doClose();
+          this.getDevices();
+        } else {
+          scope._self.$refs[`popover-${scope.$index}`].doClose();
+          this.initQuery('删除失败', 'error')
+        }
       })
-      
     },
     // 增加批次
     async addDeviceBatch(isdialog) {
@@ -1510,17 +1490,17 @@ export default {
       this.deviceid = row.id;
       this.devicedialogVisible = true;
       this.deviceform = {
-          devaddr : row.devaddr,
-          name : row.name,
-          assetNum : row.assetNum,
-          devModel : row.devModel,
-          desc : row.desc,
-          productid : row.productid,
-          brand : row.brand,
-          batchId : row.batchid,
-          status : row.status,
-          isEnable : row.isEnable,
-          address : row.address
+        devaddr: row.devaddr,
+        name: row.name,
+        assetNum: row.assetNum,
+        devModel: row.devModel,
+        desc: row.desc,
+        productid: row.productid,
+        brand: row.brand,
+        batchId: row.batchid,
+        status: row.status,
+        isEnable: row.isEnable,
+        address: row.address
       }
       console.log(this.$route)
       if (this.$route.query.productid) {
@@ -1538,7 +1518,7 @@ export default {
       this.center.lat = row.latitude;
       this.center.lng = row.longitude;
       this.addresspointer = row.latitude + "," + row.longitude;
-      
+
       this.tagsid = row.tagid;
       this.equipmentEditor = "编辑";
       this.rolesSelect(row.productid);
@@ -1768,119 +1748,113 @@ export default {
         if (valid) {
           if (this.deviceid != "") {
             var params = {
-               where:{
-                 devaddr:this.deviceform.devaddr
-               }
+              where: {
+                devaddr: this.deviceform.devaddr
+              }
             }
             this.$queryDevice(params).then(respone => {
-                if(respone.results.length==0){
-                  const aclKey = 'role' + ':' + this.productroleslist[0]
-                  const set_acl = {}
-                  set_acl[aclKey] = {
-                    read: true,
-                    write: true
-                  }
-                  var editParams = {
-                    ACL: set_acl,
-                    detail: {
-                      assetNum: this.deviceform.assetNum,
-                      devModel: this.deviceform.devModel,
-                      brand: this.deviceform.brand,
-                      address: this.deviceform.address,
-                      desc: this.deviceform.desc
-                    },
-                    
-                    // location: {
-                    //   "__type": "GeoPoint",
-                    //   "latitude": this.center.lat ? this.center.lat : 0,
-                    //   "longitude": this.center.lng ? this.center.lng : 0
-                    // },
-                    product: {
-                      "__type": "Pointer",
-                      "className": "Product",
-                      "objectId": this.deviceform.productName
-                    },
-                  }
-                  params = Object.assign(initparams, editParams)
-                  
-                  this.$putDevice(this.deviceid,params).then(res=>{
-                      if(!res.error){
-                        this.initQuery('修改成功','success')
-                        this.devicedialogVisible = false;
-                        this.getDevices()
-                        this.deviceform = {}
-                      }
-                      else{
-                        this.initQuery('修改失败','error')
-                      }
-                  });
+              if (respone.results.length == 0) {
+                const aclKey = 'role' + ':' + this.productroleslist[0]
+                const set_acl = {}
+                set_acl[aclKey] = {
+                  read: true,
+                  write: true
                 }
-                else{
-                  this.initQuery('设备已经存在','error')
+                var editParams = {
+                  ACL: set_acl,
+                  detail: {
+                    assetNum: this.deviceform.assetNum,
+                    devModel: this.deviceform.devModel,
+                    brand: this.deviceform.brand,
+                    address: this.deviceform.address,
+                    desc: this.deviceform.desc
+                  },
+
+                  // location: {
+                  //   "__type": "GeoPoint",
+                  //   "latitude": this.center.lat ? this.center.lat : 0,
+                  //   "longitude": this.center.lng ? this.center.lng : 0
+                  // },
+                  product: {
+                    "__type": "Pointer",
+                    "className": "Product",
+                    "objectId": this.deviceform.productName
+                  }
                 }
+                params = Object.assign(initparams, editParams)
+
+                this.$putDevice(this.deviceid, params).then(res => {
+                  if (!res.error) {
+                    this.initQuery('修改成功', 'success')
+                    this.devicedialogVisible = false;
+                    this.getDevices()
+                    this.deviceform = {}
+                  } else {
+                    this.initQuery('修改失败', 'error')
+                  }
+                });
+              } else {
+                this.initQuery('设备已经存在', 'error')
+              }
             })
-            
           } else {
             var params = {
-               where:{
-                 devaddr:this.deviceform.devaddr
-               }
+              where: {
+                devaddr: this.deviceform.devaddr
+              }
             }
             this.$queryDevice(params).then(respone => {
-                if(respone.results.length==0){
-                  const aclKey = 'role' + ':' + this.productroleslist[0]
-                  const set_acl = {}
-                  set_acl[aclKey] = {
-                    read: true,
-                    write: true
-                  }
-                  var createParams = {
-                    ACL: set_acl,
-                    detail: {
-                      assetNum: this.deviceform.assetNum,
-                      devModel: this.deviceform.devModel,
-                      brand: this.deviceform.brand,
-                      address: this.deviceform.address,
-                      desc: this.deviceform.desc
-                    },
-                    // isEnable: false,
-                    // status: false,
-                    // location: {
-                    //   "__type": "GeoPoint",
-                    //   "latitude": this.center.lat ? this.center.lat : 0,
-                    //   "longitude": this.center.lng ? this.center.lng : 0
-                    // },
-                    product: {
-                      "__type": "Pointer",
-                      "className": "Product",
-                      "objectId": this.deviceform.productName
-                    },
-                  }
-                  params = Object.assign(initparams, createParams)
-                  this.$postDevice(params).then(res=>{
-                      if(!res.error){
-                        this.initQuery('创建成功','success')
-                        this.devicedialogVisible = false;
-                        this.getDevices()
-                        this.deviceform = {}
-                      }
-                      else{
-                        this.initQuery('创建失败','error')
-                      }
-                  });
+              if (respone.results.length == 0) {
+                const aclKey = 'role' + ':' + this.productroleslist[0]
+                const set_acl = {}
+                set_acl[aclKey] = {
+                  read: true,
+                  write: true
                 }
-                else{
-                  this.initQuery('设备已经存在','error')
+                var createParams = {
+                  ACL: set_acl,
+                  detail: {
+                    assetNum: this.deviceform.assetNum,
+                    devModel: this.deviceform.devModel,
+                    brand: this.deviceform.brand,
+                    address: this.deviceform.address,
+                    desc: this.deviceform.desc
+                  },
+                  // isEnable: false,
+                  // status: false,
+                  // location: {
+                  //   "__type": "GeoPoint",
+                  //   "latitude": this.center.lat ? this.center.lat : 0,
+                  //   "longitude": this.center.lng ? this.center.lng : 0
+                  // },
+                  product: {
+                    "__type": "Pointer",
+                    "className": "Product",
+                    "objectId": this.deviceform.productName
+                  }
                 }
+                params = Object.assign(initparams, createParams)
+                this.$postDevice(params).then(res => {
+                  if (!res.error) {
+                    this.initQuery('创建成功', 'success')
+                    this.devicedialogVisible = false;
+                    this.getDevices()
+                    this.deviceform = {}
+                  } else {
+                    this.initQuery('创建失败', 'error')
+                  }
+                });
+              } else {
+                this.initQuery('设备已经存在', 'error')
+              }
             })
-            
           }
         } else {
           this.$message("必填项未填");
         }
       });
     },
-   
+
     /* @pamars addbatch添加批次名称 */
     async addbatch(formName) {
       this.$refs[formName].validate(valid => {
@@ -1911,8 +1885,8 @@ export default {
                 this.addDeviceBatch()
               } else {
                 this.$message({
-                    message: `新增失败${res.error}`,
-                    type: 'error'
+                  message: `新增失败${res.error}`,
+                  type: 'error'
                 })
               }
             })
@@ -1934,22 +1908,20 @@ export default {
             };
             // 更新批次
             console.log(params)
-            this.$putDict(params.objectId,params).then(
+            this.$putDict(params.objectId, params).then(
               res => {
-                  if(!res.error){
-                    this.initQuery("修改成功",'success')
-                    this.batchid = ''
-                    this.pcformInline = {
-                      pcname: '',
-                      createdtime: ''
-                    }
-                    this.$refs[formName].resetFields()
-                    this.addDeviceBatch()
+                if (!res.error) {
+                  this.initQuery("修改成功", 'success')
+                  this.batchid = ''
+                  this.pcformInline = {
+                    pcname: '',
+                    createdtime: ''
                   }
-                  else{
-                     this.initQuery("修改失败",'error')
-                  }
-              
+                  this.$refs[formName].resetFields()
+                  this.addDeviceBatch()
+                } else {
+                  this.initQuery("修改失败", 'error')
+                }
               },
               error => {
 
@@ -1958,7 +1930,7 @@ export default {
             // datas.save().then(
             //   resultes => {
             //     if (resultes) {
-            
+
             //     }
             //   },
             //   error => {
@@ -1982,7 +1954,7 @@ export default {
     deletebatch(id) {
       this.$deleteDict(id).then(res => {
         console.log(res)
-        if (res.error==undefined) {
+        if (res.error == undefined) {
           this.$message({
             message: '删除成功',
             type: 'success'

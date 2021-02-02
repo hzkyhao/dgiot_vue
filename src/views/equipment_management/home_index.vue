@@ -555,7 +555,6 @@
 </template>
 <script>
 import { query_object, get_object, del_object, update_object } from "@/api/shuwa_parse"
-import { Batchdelete } from "@/api/batch/index"
 import Parse from 'parse'
 import { Promise } from 'q'
 import Cookies from 'js-cookie'
@@ -778,11 +777,11 @@ export default {
       const res = results.filter(i => {
         return i.objectId == val;
       });
-      
+
       for (var key in res[0].ACL) {
         if (key.includes("role")) {
           this.productroleslist.push(key.substr(5));
-          
+
           console.log(key, this.productroleslist);
         }
       }
@@ -916,7 +915,7 @@ export default {
       //       this.proTableData.push(obj)
       //       this.proTableData1.push(obj)
       //     })
-     
+
       if (this.$route.query.productid) {
         this.equvalue = this.$route.query.productid
         this.productenable = false
@@ -1271,7 +1270,7 @@ export default {
       const body = {
         "isEnable": isEnable
       }
-      const res = await Batchdelete('PUT',
+      const res = await this.$Batchdelete('PUT',
         'Device', idarr, body)
       console.log(res)
       if (res) {
