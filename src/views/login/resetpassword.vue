@@ -108,8 +108,6 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
-import Cookies from "js-cookie";
 const Base64 = require("js-base64").Base64;
 import { passwordreset, Phonelogin } from "@/api/User/index";
 export default {

@@ -49,9 +49,7 @@
 </template>
 <script>
 import treeTable from '@/components/TreeTable'
-import { getcontrol } from '@/api/Role/index'
-import { QueryPermission, getPermission, putPermission } from '@/api/Permission/index.js'
-import Parse from 'parse'
+import { getPermission } from '@/api/Permission/index.js'
 import { utc2beijing } from '@/utils'
 export default {
   components: { treeTable },
