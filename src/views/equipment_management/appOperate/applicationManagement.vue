@@ -86,7 +86,6 @@
 
 <script>
 import { setUpLictool } from '@/api/License/index'
-import Parse from 'parse'
 export default {
   data() {
     return {

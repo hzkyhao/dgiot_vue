@@ -297,7 +297,6 @@
 <script>
 const Base64 = require('js-base64').Base64
 import { handleZero } from '@/utils/index'
-import Parse from 'parse'
 import { returnLogin } from '@/utils/return'
 export default {
   data() {

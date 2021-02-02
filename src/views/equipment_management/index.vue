@@ -623,7 +623,6 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
 import { Promise } from "q";
 import Cookies from "js-cookie";
 import elDragDialog from "@/directive/el-dragDialog"; // base on element-ui

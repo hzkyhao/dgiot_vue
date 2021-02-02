@@ -263,7 +263,6 @@
 </template>
 <script>
 const Base64 = require('js-base64').Base64
-import Parse from 'parse'
 import {
   returnLogin
 } from '@/utils/return'
@@ -516,15 +515,16 @@ export default {
       }
     },
     getRoles() {
-      return new Promise((resolve, reject) => {
-        var App = Parse.Object.extend('App')
-        var query = new Parse.Query(App)
-        query.find().then(res => {
-          resolve(res)
-        }, error => {
-          reject(error)
-        })
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // return new Promise((resolve, reject) => {
+      //   var App = Parse.Object.extend('App')
+      //   var query = new Parse.Query(App)
+      //   query.find().then(res => {
+      //     resolve(res)
+      //   }, error => {
+      //     reject(error)
+      //   })
+      // })
     },
     selectApp(val) {
       if (!val) {
@@ -1172,41 +1172,42 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
-      // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.equalTo('product', scope.row.id)
-      devices.find().then(resultes => {
-        if (resultes.length > 0) {
-          this.$message('请先删除该产品下设备')
-          return
-        } else {
-          product.get(scope.row.id).then(
-            resultes => {
-              resultes.destroy().then(
-                response => {
-                  if (response) {
-                    this.$message({
-                      type: 'success',
-                      message: '删除成功'
-                    })
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    this.searchProduct()
-                  }
-                },
-                error => {
-                  returnLogin(error)
-                }
-              )
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
-        }
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // // 可以在这里执行删除数据的回调操作.......删除操作 .....
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // var Device = Parse.Object.extend('Device')
+      // var devices = new Parse.Query(Device)
+      // devices.equalTo('product', scope.row.id)
+      // devices.find().then(resultes => {
+      //   if (resultes.length > 0) {
+      //     this.$message('请先删除该产品下设备')
+      //     return
+      //   } else {
+      //     product.get(scope.row.id).then(
+      //       resultes => {
+      //         resultes.destroy().then(
+      //           response => {
+      //             if (response) {
+      //               this.$message({
+      //                 type: 'success',
+      //                 message: '删除成功'
+      //               })
+      //               scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //               this.searchProduct()
+      //             }
+      //           },
+      //           error => {
+      //             returnLogin(error)
+      //           }
+      //         )
+      //       },
+      //       error => {
+      //         returnLogin(error)
+      //       }
+      //     )
+      //   }
+      // })
     },
     productSizeChange(val) {
       this.length = val
