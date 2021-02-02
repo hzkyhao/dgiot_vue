@@ -77,7 +77,6 @@
 </template>
 <script>
 import { Parse } from 'parse'
-import { eventBus } from '@/api/eventBus'
 export default {
   data() {
     return {
@@ -256,10 +255,7 @@ export default {
             message: '新增成功',
             type: 'success'
           })
-          // this.$router.push({
-          //   path: "/roles/roles"
-          // });
-          eventBus.$emit('dialogHide')
+          this.$baseEventBus.$emit('dialogHide')
         })
         .catch(error => {
           console.log(error)

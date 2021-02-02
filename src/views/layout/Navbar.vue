@@ -41,8 +41,6 @@ import LangSelect from '@/components/LangSelect'
 import Screenfull from '@/components/Screenfull'
 import Parse from 'parse'
 // import SizeSelect from '@/components/SizeSelect'
-import { eventBus } from '@/api/eventBus'
-import { Websocket } from '@/utils/wxscoket.js'
 export default {
   name: 'Navbar',
   components: {
@@ -96,8 +94,9 @@ export default {
       this.imgsrc = sessionStorage.getItem('imgsrc')
     },
     getsccreen() {
-      eventBus.$on('isshow', data => {
+      this.$baseEventBus.$on('isshow', data => {
         this.isscreenfull = data
+        console.info('eventBus is success')
       })
     },
     toggleSideBar() {

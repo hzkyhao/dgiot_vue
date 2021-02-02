@@ -42,11 +42,8 @@
 </template>
 
 <script>
-import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
 import '@/styles/iconfont/iconfont.css'
-import { parseTime } from '@/utils'
-import { eventBus } from '@/api/eventBus'
 export default {
   name: 'PagingQuery',
   // 设置绑定参数
@@ -132,7 +129,7 @@ export default {
     }
   },
   created() {
-    eventBus.$on('drive', data => {
+    this.$baseEventBus.$on('drive', data => {
       this.json = data.json
       this.obj = data.obj
       if (this.json != [] && this.obj != []) {
