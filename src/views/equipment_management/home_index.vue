@@ -555,7 +555,6 @@
 </template>
 <script>
 import { query_object, get_object, del_object, update_object } from "@/api/shuwa_parse"
-import Parse from 'parse'
 import { Promise } from 'q'
 import Cookies from 'js-cookie'
 import elDragDialog from '@/directive/el-dragDialog' // base on element-ui

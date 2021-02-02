@@ -212,7 +212,6 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
 const Base64 = require("js-base64").Base64;
 var isupdatetrue = "";
 var editor;

@@ -258,7 +258,6 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
 import echarts from 'echarts'
 import { clearInterval } from 'timers'
 import { returnLogin } from '@/utils/return'
@@ -528,54 +527,56 @@ export default {
         this.$message('请输入功能')
         return
       }
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.get(this.devices.productid).then(response => {
-        if (response) {
-          var obj = {}
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.get(this.devices.productid).then(response => {
+      //   if (response) {
+      //     var obj = {}
 
-          obj = { ...obj, ...JSON.parse(messageEditor.getValue()) }
-          var commond = {
-          }
-          var datasobj = {}
-          datasobj.name = this.messageform.name
-          datasobj.type = response.attributes.devType
-          datasobj.productid = response.id
-          datasobj.commond = obj
-          var Dict = Parse.Object.extend('Dict')
-          var datas = new Dict()
-          var acl = new Parse.ACL()
-          var userid = Parse.User.current().id
-          acl.setReadAccess(userid, true)
-          acl.setWriteAccess(userid, true)
-          datas.set('ACL', acl)
-          datas.set('data', datasobj)
-          datas.set('type', 'CMD')
-          datas.save().then(resultes => {
-            if (resultes) {
-              this.$message('创建成功')
-              this.messageDialogVisible = false
-              this.getDict()
-            }
-          }, error => {
-            returnLogin(error)
-          })
-        }
-      })
+      //     obj = { ...obj, ...JSON.parse(messageEditor.getValue()) }
+      //     var commond = {
+      //     }
+      //     var datasobj = {}
+      //     datasobj.name = this.messageform.name
+      //     datasobj.type = response.attributes.devType
+      //     datasobj.productid = response.id
+      //     datasobj.commond = obj
+      //     var Dict = Parse.Object.extend('Dict')
+      //     var datas = new Dict()
+      //     var acl = new Parse.ACL()
+      //     var userid = Parse.User.current().id
+      //     acl.setReadAccess(userid, true)
+      //     acl.setWriteAccess(userid, true)
+      //     datas.set('ACL', acl)
+      //     datas.set('data', datasobj)
+      //     datas.set('type', 'CMD')
+      //     datas.save().then(resultes => {
+      //       if (resultes) {
+      //         this.$message('创建成功')
+      //         this.messageDialogVisible = false
+      //         this.getDict()
+      //       }
+      //     }, error => {
+      //       returnLogin(error)
+      //     })
+      //   }
+      // })
     },
     // dataslist初始化数据
     getDict() {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('type', 'CMD')
-      datas.equalTo('data.productid', this.devices.productid)
-      datas.find().then(resultes => {
-        if (resultes) {
-          this.dataslist = resultes
-        }
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.equalTo('type', 'CMD')
+      // datas.equalTo('data.productid', this.devices.productid)
+      // datas.find().then(resultes => {
+      //   if (resultes) {
+      //     this.dataslist = resultes
+      //   }
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     isInterval(val) {
       var text0 = ''
@@ -627,78 +628,83 @@ export default {
     },
     // 删除datas
     deleteMessage() {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Dict()
-      datas.id = this.editor1.function
-      datas.destroy().then(deleteresponse => {
-        if (deleteresponse) {
-          this.$message('删除成功')
-          this.getDict()
-          this.editor1.function = ''
-          editor1.setValue('')
-        }
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Dict()
+      // datas.id = this.editor1.function
+      // datas.destroy().then(deleteresponse => {
+      //   if (deleteresponse) {
+      //     this.$message('删除成功')
+      //     this.getDict()
+      //     this.editor1.function = ''
+      //     editor1.setValue('')
+      //   }
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     editorMessage() {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Dict()
-      datas.id = this.editor1.function
-      this.detaildatas.commond = JSON.parse(editor1.getValue())
-      datas.save().then(resultes => {
-        if (resultes) {
-          this.$message('编辑成功')
-          this.getDict()
-        }
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Dict()
+      // datas.id = this.editor1.function
+      // this.detaildatas.commond = JSON.parse(editor1.getValue())
+      // datas.save().then(resultes => {
+      //   if (resultes) {
+      //     this.$message('编辑成功')
+      //     this.getDict()
+      //   }
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     getProduct() {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.limit(1000)
-      product.find().then(productresultes => {
-        this.productlist = productresultes
-        this.devices.productid = this.$route.query.productid
-        this.getDevices(this.productid, true)
-        this.getChannel(this.devices.productid)
-        this.getDict()
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.limit(1000)
+      // product.find().then(productresultes => {
+      //   this.productlist = productresultes
+      //   this.devices.productid = this.$route.query.productid
+      //   this.getDevices(this.productid, true)
+      //   this.getChannel(this.devices.productid)
+      //   this.getDict()
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     getChannel(objectid) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Parse.Query(Channel)
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      product.id = objectid
-      channel.equalTo('product', product)
-      channel.equalTo('type', '1')
-      channel.find().then(resultes => {
-        this.channellist = resultes
-        this.devices.subtopic = resultes[0].id
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Parse.Query(Channel)
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Product()
+      // product.id = objectid
+      // channel.equalTo('product', product)
+      // channel.equalTo('type', '1')
+      // channel.find().then(resultes => {
+      //   this.channellist = resultes
+      //   this.devices.subtopic = resultes[0].id
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     // 设备
     getDevices(productid, isfirst) {
-      var Devices = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Devices)
-      devices.equalTo('product', productid)
-      devices.skip((this.formData.pageIndex - 1) * this.formData.pageSize)
-      devices.limit(this.formData.pageSize)
-      devices.find().then(deviceresultes => {
-        this.devicelist = [...this.devicelist, ...deviceresultes]
-        if (isfirst) {
-          this.devices.devicedevaddr = this.$route.query.deviceid
-        }
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Devices = Parse.Object.extend('Device')
+      // var devices = new Parse.Query(Devices)
+      // devices.equalTo('product', productid)
+      // devices.skip((this.formData.pageIndex - 1) * this.formData.pageSize)
+      // devices.limit(this.formData.pageSize)
+      // devices.find().then(deviceresultes => {
+      //   this.devicelist = [...this.devicelist, ...deviceresultes]
+      //   if (isfirst) {
+      //     this.devices.devicedevaddr = this.$route.query.deviceid
+      //   }
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     // 选择产品
     selsectProduct(value) {
