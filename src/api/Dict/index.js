@@ -51,3 +51,7 @@ export async function putDict(ObjectId, params) {
 export async function postDict(params) {
   return create_object('Dict', params)
 }
+
+export async function getDictCount(params) {
+  return query_object('Dict', params)
+}
