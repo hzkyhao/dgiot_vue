@@ -1780,61 +1780,62 @@ export default {
     addbatch(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          if (this.batchid == '') {
-            var Dict = Parse.Object.extend('Dict')
-            var datas = new Dict()
-            var acl = new Parse.ACL()
-            datas.set('data', {
-              batch_name: this.pcformInline.pcname,
-              createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-            })
-            datas.set('type', 'batch_number')
-            acl.setReadAccess(this.userId, true)
-            acl.setWriteAccess(this.userId, true)
-            datas.set('ACL', acl)
-            datas.save().then(
-              resultes => {
-                this.$message({
-                  message: '新增成功',
-                  type: 'success'
-                })
-                this.$refs[formName].resetFields()
-                this.addDeviceBatch()
-              },
-              error => {
-                returnLogin(error)
-              }
-            )
-          } else {
-            var Dict = Parse.Object.extend('Dict')
-            var datas = new Dict()
-            datas.id = this.batchid
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // if (this.batchid == '') {
+          //   var Dict = Parse.Object.extend('Dict')
+          //   var datas = new Dict()
+          //   var acl = new Parse.ACL()
+          //   datas.set('data', {
+          //     batch_name: this.pcformInline.pcname,
+          //     createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+          //   })
+          //   datas.set('type', 'batch_number')
+          //   acl.setReadAccess(this.userId, true)
+          //   acl.setWriteAccess(this.userId, true)
+          //   datas.set('ACL', acl)
+          //   datas.save().then(
+          //     resultes => {
+          //       this.$message({
+          //         message: '新增成功',
+          //         type: 'success'
+          //       })
+          //       this.$refs[formName].resetFields()
+          //       this.addDeviceBatch()
+          //     },
+          //     error => {
+          //       returnLogin(error)
+          //     }
+          //   )
+          // } else {
+          //   var Dict = Parse.Object.extend('Dict')
+          //   var datas = new Dict()
+          //   datas.id = this.batchid
 
-            datas.set('data', {
-              batch_name: this.pcformInline.pcname,
-              createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-            })
-            datas.save().then(
-              resultes => {
-                if (resultes) {
-                  this.$message({
-                    message: '修改成功',
-                    type: 'success'
-                  })
-                  this.batchid = ''
-                  this.pcformInline = {
-                    pcname: '',
-                    createdtime: ''
-                  }
-                  this.$refs[formName].resetFields()
-                  this.addDeviceBatch()
-                }
-              },
-              error => {
-                returnLogin(error)
-              }
-            )
-          }
+          //   datas.set('data', {
+          //     batch_name: this.pcformInline.pcname,
+          //     createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
+          //   })
+          //   datas.save().then(
+          //     resultes => {
+          //       if (resultes) {
+          //         this.$message({
+          //           message: '修改成功',
+          //           type: 'success'
+          //         })
+          //         this.batchid = ''
+          //         this.pcformInline = {
+          //           pcname: '',
+          //           createdtime: ''
+          //         }
+          //         this.$refs[formName].resetFields()
+          //         this.addDeviceBatch()
+          //       }
+          //     },
+          //     error => {
+          //       returnLogin(error)
+          //     }
+          //   )
+          // }
         } else {
           console.log('error submit!!')
           return false
@@ -1850,24 +1851,25 @@ export default {
     },
     // 删除批次
     deletebatch(id) {
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.get(id).then(resultes => {
-        resultes.destroy().then(
-          res => {
-            if (res) {
-              this.$message({
-                type: 'success',
-                message: '删除成功'
-              })
-              this.addDeviceBatch()
-            }
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.get(id).then(resultes => {
+      //   resultes.destroy().then(
+      //     res => {
+      //       if (res) {
+      //         this.$message({
+      //           type: 'success',
+      //           message: '删除成功'
+      //         })
+      //         this.addDeviceBatch()
+      //       }
+      //     },
+      //     error => {
+      //       returnLogin(error)
+      //     }
+      //   )
+      // })
     },
     // 选择批次
     selectbatch(row, id) {

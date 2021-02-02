@@ -279,7 +279,6 @@
   </div>
 </template>
 <script>
-import { Parse } from 'parse'
 import addroles from '@/views/roles/rolelist/addroles'
 export default {
   name: 'Role',
@@ -421,29 +420,29 @@ export default {
     },
     //给role添加acl权限
     addacl() {
-      var Role = Parse.Object.extend('_Role')
-      var role = new Parse.Query(Role)
-      role.get(this.objectId).then(object => {
-        let acl = new Parse.ACL()
-        this.multipleSelection.map(item => {
-          acl.setRoleReadAccess(item.attributes.name, true)
-          acl.setRoleWriteAccess(item.attributes.name, true)
-          object.set('ACL', acl)
-        })
-        object.save().then(
-          res => {
-            this.$message({
-              type: 'success',
-              message: '添加成功!'
-            })
-            this.centerDialogVisible = false
-            this.getRolesList()
-          },
-          error => {
-            console.log(error)
-          }
-        )
-      })
+      // var Role = Parse.Object.extend('_Role')
+      // var role = new Parse.Query(Role)
+      // role.get(this.objectId).then(object => {
+      //   let acl = new Parse.ACL()
+      //   this.multipleSelection.map(item => {
+      //     acl.setRoleReadAccess(item.attributes.name, true)
+      //     acl.setRoleWriteAccess(item.attributes.name, true)
+      //     object.set('ACL', acl)
+      //   })
+      //   object.save().then(
+      //     res => {
+      //       this.$message({
+      //         type: 'success',
+      //         message: '添加成功!'
+      //       })
+      //       this.centerDialogVisible = false
+      //       this.getRolesList()
+      //     },
+      //     error => {
+      //       console.log(error)
+      //     }
+      //   )
+      // })
     },
     //关闭菜单弹窗
     handleClose() {
@@ -604,18 +603,18 @@ export default {
     },
     searchvalue() {
       this.roleList = []
-      var roles = Parse.Object.extend('_Role')
-      var query = new Parse.Query(roles)
-      query.equalTo('name', this.search)
-      query.limit(this.pagesize)
-      query.count().then(count => {
-        if (count) {
-          this.total = count
-          query.find().then(results => {
-            this.roleList = results
-          })
-        }
-      })
+      // var roles = Parse.Object.extend('_Role')
+      // var query = new Parse.Query(roles)
+      // query.equalTo('name', this.search)
+      // query.limit(this.pagesize)
+      // query.count().then(count => {
+      //   if (count) {
+      //     this.total = count
+      //     query.find().then(results => {
+      //       this.roleList = results
+      //     })
+      //   }
+      // })
     },
     // 获取权限
     getRoleschema() {
@@ -715,30 +714,32 @@ export default {
     //编辑权限
     handleEditrole(row) {
       this.editroleid = row.id
-      var roles = Parse.Object.extend('_Role')
-      var query = new Parse.Query(roles)
-      query.get(row.id).then(resultes => {
-        this.roleEdit = true
-        this.form.name = resultes.attributes.name
-        this.form.desc = resultes.attributes.desc
-        this.form.alias = resultes.attributes.alias
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var roles = Parse.Object.extend('_Role')
+      // var query = new Parse.Query(roles)
+      // query.get(row.id).then(resultes => {
+      //   this.roleEdit = true
+      //   this.form.name = resultes.attributes.name
+      //   this.form.desc = resultes.attributes.desc
+      //   this.form.alias = resultes.attributes.alias
+      // })
     },
     updaterole() {
-      var roles = Parse.Object.extend('_Role')
-      var query = new Parse.Query(roles)
-      query.get(this.editroleid).then(resultes => {
-        resultes.set('alias', this.form.alias)
-        resultes.set('desc', this.form.desc)
-        resultes.save().then(res => {
-          this.$message({
-            type: 'success',
-            message: '更新成功'
-          })
-        })
-        this.roleEdit = false
-        this.getRolesList()
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var roles = Parse.Object.extend('_Role')
+      // var query = new Parse.Query(roles)
+      // query.get(this.editroleid).then(resultes => {
+      //   resultes.set('alias', this.form.alias)
+      //   resultes.set('desc', this.form.desc)
+      //   resultes.save().then(res => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '更新成功'
+      //     })
+      //   })
+      //   this.roleEdit = false
+      //   this.getRolesList()
+      // })
     },
     handleNodeClick(data) {
       this.getRolesList(0, data)

@@ -76,7 +76,6 @@
   </div>
 </template>
 <script>
-import { Parse } from 'parse'
 export default {
   data() {
     return {
@@ -262,23 +261,24 @@ export default {
         })
     },
     nodetree() {
-      this.userid = Parse.User.current().id
-      var User = Parse.Object.extend('_User')
-      var user = new Parse.Query(User)
-      user.find(this.userid).then(resultes => {
-        var Role = Parse.Object.extend('_Role')
-        var query = new Parse.Query(Role)
-        var user = new User()
-        query.addAscending('createdAt')
-        query.find().then(resultes => {
-          user.set('objectId', this.userid)
-          query.equalTo('users', user)
-          query.find().then(result => {
-            console.log(result)
-            this.parentrole = result
-          })
-        })
-      })
+      // this.userid = Parse.User.current().id
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var User = Parse.Object.extend('_User')
+      // var user = new Parse.Query(User)
+      // user.find(this.userid).then(resultes => {
+      //   var Role = Parse.Object.extend('_Role')
+      //   var query = new Parse.Query(Role)
+      //   var user = new User()
+      //   query.addAscending('createdAt')
+      //   query.find().then(resultes => {
+      //     user.set('objectId', this.userid)
+      //     query.equalTo('users', user)
+      //     query.find().then(result => {
+      //       console.log(result)
+      //       this.parentrole = result
+      //     })
+      //   })
+      // })
     },
     getdetail() {
       this.insert = this.$route.query.insert

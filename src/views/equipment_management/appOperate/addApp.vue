@@ -390,13 +390,14 @@ export default {
     },
     onApplicationchange(val) {},
     getProductList(relAppid) {
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      product.find().then(response => {
-        if (response) {
-          this.productlist = response
-        }
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // product.find().then(response => {
+      //   if (response) {
+      //     this.productlist = response
+      //   }
+      // })
     },
     // 产生随机secrets
     randomSecret() {
@@ -549,47 +550,48 @@ export default {
       if (!this.isSubmit()) {
         return
       }
-      var Project = Parse.Object.extend('Project')
-      var project = new Project()
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      var acl = new Parse.ACL()
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Project = Parse.Object.extend('Project')
+      // var project = new Project()
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Product()
+      // var acl = new Parse.ACL()
 
-      acl.setRoleReadAccess(this.form.relationApp, true)
-      acl.setRoleWriteAccess(this.form.relationApp, true)
+      // acl.setRoleReadAccess(this.form.relationApp, true)
+      // acl.setRoleWriteAccess(this.form.relationApp, true)
 
-      project.set('ACL', acl)
-      // var relation = project.relation("product");
-      // this.form.product.map(item => {
-      //   product.set("objectId", item);
-      //   relation.add(product);
-      // });
-      project.set('title', this.form.name)
-      project.set('category', this.form.category.join('/'))
-      project.set('scale', this.form.scale)
-      project.set('productIdentifier', this.form.productIdentifier)
-      project.set('copyright', this.form.copyright)
-      project.set('desc', this.form.desc)
-      project.set('logo', this.form.img)
-      project.set('background', this.form.img1)
-      project.set('userUnit', this.form.department)
-      if (this.form.dashboard != '') {
-        project.set('dashboard', 'http://' + this.form.dashboard)
-      } else {
-        project.set('dashboard', '')
-      }
-      project.save().then(resultes => {
-        if (resultes) {
-          var sourceId = this.relationAppObjectId
-          var destId = resultes.id
+      // project.set('ACL', acl)
+      // // var relation = project.relation("product");
+      // // this.form.product.map(item => {
+      // //   product.set("objectId", item);
+      // //   relation.add(product);
+      // // });
+      // project.set('title', this.form.name)
+      // project.set('category', this.form.category.join('/'))
+      // project.set('scale', this.form.scale)
+      // project.set('productIdentifier', this.form.productIdentifier)
+      // project.set('copyright', this.form.copyright)
+      // project.set('desc', this.form.desc)
+      // project.set('logo', this.form.img)
+      // project.set('background', this.form.img1)
+      // project.set('userUnit', this.form.department)
+      // if (this.form.dashboard != '') {
+      //   project.set('dashboard', 'http://' + this.form.dashboard)
+      // } else {
+      //   project.set('dashboard', '')
+      // }
+      // project.save().then(resultes => {
+      //   if (resultes) {
+      //     var sourceId = this.relationAppObjectId
+      //     var destId = resultes.id
 
-          // 添加关联
-          this.addRelation(destId, sourceId)
-        }
-      }).catch(error => {
-        // Maybe it's title重复
-        this.$message(JSON.stringify(error))
-      })
+      //     // 添加关联
+      //     this.addRelation(destId, sourceId)
+      //   }
+      // }).catch(error => {
+      //   // Maybe it's title重复
+      //   this.$message(JSON.stringify(error))
+      // })
     },
     addRelation(destObjectId, sourceObjectId) {
       /*       this.$axiosWen
@@ -676,48 +678,49 @@ export default {
       if (!this.isSubmit()) {
         return
       }
-      var Project = Parse.Object.extend('Project')
-      var project = new Project()
-      project.id = this.argu.objectId
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Project = Parse.Object.extend('Project')
+      // var project = new Project()
+      // project.id = this.argu.objectId
 
-      var Product = Parse.Object.extend('Product')
-      var product = new Product()
-      var acl = new Parse.ACL()
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Product()
+      // var acl = new Parse.ACL()
 
-      acl.setRoleReadAccess(this.form.relationApp, true)
-      acl.setRoleWriteAccess(this.form.relationApp, true)
+      // acl.setRoleReadAccess(this.form.relationApp, true)
+      // acl.setRoleWriteAccess(this.form.relationApp, true)
 
-      project.set('ACL', acl)
-      // var relation = project.relation("product");
-      // this.form.product.map(item => {
-      //   product.set("objectId", item);
-      //   relation.add(product);
-      // });
-      project.set('title', this.form.name)
-      project.set('category', this.form.category.join('/'))
-      project.set('scale', this.form.scale)
-      project.set('productIdentifier', this.form.productIdentifier)
-      project.set('copyright', this.form.copyright)
-      project.set('desc', this.form.desc)
-      project.set('logo', this.form.img)
+      // project.set('ACL', acl)
+      // // var relation = project.relation("product");
+      // // this.form.product.map(item => {
+      // //   product.set("objectId", item);
+      // //   relation.add(product);
+      // // });
+      // project.set('title', this.form.name)
+      // project.set('category', this.form.category.join('/'))
+      // project.set('scale', this.form.scale)
+      // project.set('productIdentifier', this.form.productIdentifier)
+      // project.set('copyright', this.form.copyright)
+      // project.set('desc', this.form.desc)
+      // project.set('logo', this.form.img)
 
-      project.set('background', this.form.img1)
-      project.set('userUnit', this.form.department)
-      // project.set('user',user)
-      if (this.form.dashboard != '') {
-        project.set('dashboard', 'http://' + this.form.dashboard)
-      } else {
-        project.set('dashboard', '')
-      }
-      project.save().then(resultes => {
-        if (resultes) {
-          this.$message({
-            message: '修改成功！',
-            type: 'success'
-          })
-          this.$router.push({ path: '/roles/projectManagement' })
-        }
-      })
+      // project.set('background', this.form.img1)
+      // project.set('userUnit', this.form.department)
+      // // project.set('user',user)
+      // if (this.form.dashboard != '') {
+      //   project.set('dashboard', 'http://' + this.form.dashboard)
+      // } else {
+      //   project.set('dashboard', '')
+      // }
+      // project.save().then(resultes => {
+      //   if (resultes) {
+      //     this.$message({
+      //       message: '修改成功！',
+      //       type: 'success'
+      //     })
+      //     this.$router.push({ path: '/roles/projectManagement' })
+      //   }
+      // })
     },
     handleNodeClick(data) {
       this.showTree = !this.showTree
@@ -732,46 +735,48 @@ export default {
         console.log(e)
       }),
       this.form.options = []
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
-      datas.equalTo('data.key', 'category')
-      datas.limit(1000)
-      datas.find().then(
-        response => {
-          if (response) {
-            response.map(items => {
-              var obj = {}
-              obj.value = items.attributes.data.CategoryName
-              obj.label = items.attributes.data.CategoryName
-              obj.id = items.attributes.data.Id
-              obj.parentid = items.attributes.data.SuperId
-              this.form.options.push(obj)
-            })
-          }
-        },
-        error => {
-          this.$message(error.message)
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.equalTo('data.key', 'category')
+      // datas.limit(1000)
+      // datas.find().then(
+      //   response => {
+      //     if (response) {
+      //       response.map(items => {
+      //         var obj = {}
+      //         obj.value = items.attributes.data.CategoryName
+      //         obj.label = items.attributes.data.CategoryName
+      //         obj.id = items.attributes.data.Id
+      //         obj.parentid = items.attributes.data.SuperId
+      //         this.form.options.push(obj)
+      //       })
+      //     }
+      //   },
+      //   error => {
+      //     this.$message(error.message)
+      //   }
+      // )
     },
     // 获取应用列表
     getApplication() {
-      return new Promise((resolve, reject) => {
-        var App = Parse.Object.extend('App')
-        var query = new Parse.Query(App)
-        var _this = this
-        query.limit(100)
-        query.find().then(
-          response => {
-            if (response) {
-              resolve(response)
-            }
-          },
-          error => {
-            reject(error)
-          }
-        )
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // return new Promise((resolve, reject) => {
+      //   var App = Parse.Object.extend('App')
+      //   var query = new Parse.Query(App)
+      //   var _this = this
+      //   query.limit(100)
+      //   query.find().then(
+      //     response => {
+      //       if (response) {
+      //         resolve(response)
+      //       }
+      //     },
+      //     error => {
+      //       reject(error)
+      //     }
+      //   )
+      // })
     },
     open12() {
       this.Notification = this.$notify({
