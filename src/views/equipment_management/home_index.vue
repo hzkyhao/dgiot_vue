@@ -895,7 +895,6 @@ export default {
       this.proTableData = []
       this.proTableData1 = []
       var Product = await this.$query_object('Product', {})
-      console.log(JSON.stringify(await this.$query_object('Product', {})))
       this.proTableData = Product.results
       this.proTableData1 = Product.results
 
@@ -916,10 +915,10 @@ export default {
       //       this.proTableData1.push(obj)
       //     })
 
-      //     if (this.$route.query.productid) {
-      //       this.equvalue = this.$route.query.productid
-      //       this.productenable = false
-      //     }
+      if (this.$route.query.productid) {
+        this.equvalue = this.$route.query.productid
+        this.productenable = false
+      }
       this.getDevices()
       //   },
       //   error => {
@@ -1263,43 +1262,40 @@ export default {
     // 设备多个启用和禁用
     async unactiveDevice(isEnable) {
       const idarr = []
+      const requests = []
       this.multipleTable.map(item => {
         idarr.push(item.objectId)
       })
       const body = {
-        isEnable: isEnable
+        "isEnable": isEnable
       }
-      const res = await Batchdelete(
-        '_Device', idarr, body)
+      const res = await Batchdelete('PUT',
+        'Device', idarr, body)
       console.log(res)
+      if (res) {
+        // 处理不规则的返回参数
+        res.forEach((li, index) => {
+          li.objectId = idarr[index]
+          li.sortIndex = index + 1
+          if (Object.keys(res[index])[0] == 'success') {
+            li.msg = `edit success`
+            li.dangerouslyUseHTMLString = false
+          } else {
+            li.msg = `<ol>
+              edit error <br>
+              message: ${li.error.error} <br>
+              code: ${li.error.code} <ol>`
+            li.dangerouslyUseHTMLString = true
+          }
+          requests.push({ type: Object.keys(res[index])[0], message: li.msg, dangerouslyUseHTMLString: li.dangerouslyUseHTMLString })
+        })
+        console.log(requests)
+        requests.forEach((i, index) => {
+          this.$baseNotify(i.message, `${idarr[index]}`, i.type, "top-right", 5000 * i.sortIndex, i.dangerouslyUseHTMLString)
+        })
+        this.getDevices()
+      }
     },
-    // activeDevice(val) {
-    //   var success = 0
-    //   this.multipleTable.map(async item => {
-    //     var params = {
-    //       'objectId': item.objectId,
-    //       'isEnable': true
-    //     }
-    //     const result = await this.$update_object('Device', item.objectId, params)
-    //     if (result.code == 101) {
-    //       fail++;
-    //     }
-    //   })
-
-    //   if (success == 0) {
-    //     this.$message({
-    //       message: '启动成功',
-    //       type: 'success'
-    //     })
-
-    //     this.getDevices()
-    //   } else {
-    //     this.$message({
-    //       message: '启动成功',
-    //       type: 'error'
-    //     })
-    //   }
-    // },
     /* @pamras 选中高亮*/
     rowClass({ row, rowIndex }) {
       if (this.selectRow.includes(rowIndex)) {

@@ -91,13 +91,13 @@ Vue.prototype.$baseColorfullLoading = (index, text) => {
 };
 
 /* 全局Message */
-Vue.prototype.$baseMessage = (message, type, dangerouslyUseHTMLString) => {
+Vue.prototype.$baseMessage = (message, type, dangerouslyUseHTMLString, duration) => {
   Message({
     showClose: true,
     message: message,
     type: type,
     dangerouslyUseHTMLString,
-    duration: messageDuration
+    duration: duration || messageDuration
   });
 };
 
@@ -111,7 +111,7 @@ Vue.prototype.$baseAlert = (content, title, callback) => {
         callback();
       }
     }
-  }).then(() => {});
+  }).then(() => { });
 };
 
 /* 全局Confirm */
@@ -135,13 +135,14 @@ Vue.prototype.$baseConfirm = (content, title, callback1, callback2) => {
 };
 
 /* 全局Notification */
-Vue.prototype.$baseNotify = (message, title, type, position) => {
+Vue.prototype.$baseNotify = (message, title, type, position, duration, dangerouslyUseHTMLString) => {
   Notification({
     title: title,
     message: message,
     position: position || "top-right",
     type: type || "success",
-    duration: messageDuration
+    duration: duration || messageDuration,
+    dangerouslyUseHTMLString: dangerouslyUseHTMLString || false
   });
 };
 
