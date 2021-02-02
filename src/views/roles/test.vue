@@ -198,7 +198,6 @@
 <script>
 import treeTable from "@/components/TreeTable";
 import data from "./data";
-import { Parse } from "parse";
 import { utc2beijing } from "@/utils";
 export default {
   name: "TreeTableDemo",
@@ -341,17 +340,18 @@ export default {
   },
   methods: {
     getRole() {
-      var roles = Parse.Object.extend("_Role");
-      var query = new Parse.Query(roles);
-      query.find().then(resultes => {
-        resultes.map(item => {
-          var obj = {};
-          obj.objectId = item.id;
-          obj.alias = item.attributes.alias;
-          obj.name = item.attributes.name;
-          this.options.push(obj);
-        });
-      });
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var roles = Parse.Object.extend("_Role");
+      // var query = new Parse.Query(roles);
+      // query.find().then(resultes => {
+      //   resultes.map(item => {
+      //     var obj = {};
+      //     obj.objectId = item.id;
+      //     obj.alias = item.attributes.alias;
+      //     obj.name = item.attributes.name;
+      //     this.options.push(obj);
+      //   });
+      // });
     },
     SelectTopmenu(val) {
       console.log(val);
@@ -426,62 +426,65 @@ export default {
       }
     },
     updatemenu() {
-      var Menu = Parse.Object.extend("Menu");
-      var menu = new Parse.Query(Menu);
-      var parent = new Menu();
-      menu.get(this.menuid).then(resultes => {
-        resultes.set("name", this.MenuForm.name);
-        resultes.set("orderBy", Number(this.MenuForm.number));
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Menu = Parse.Object.extend("Menu");
+      // var menu = new Parse.Query(Menu);
+      // var parent = new Menu();
+      // menu.get(this.menuid).then(resultes => {
+      //   resultes.set("name", this.MenuForm.name);
+      //   resultes.set("orderBy", Number(this.MenuForm.number));
 
-        // MenuForm.fathername数组最后一个元素
-        parent.id = this.MenuForm.fathername[
-          this.MenuForm.fathername.length - 1
-        ];
+      //   // MenuForm.fathername数组最后一个元素
+      //   parent.id = this.MenuForm.fathername[
+      //     this.MenuForm.fathername.length - 1
+      //   ];
 
-        const pid = resultes.attributes.parent.id
+      //   const pid = resultes.attributes.parent.id
 
-        if (pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id) {
-          resultes.set("parent", parent);
-        }
-        resultes.save().then(res => {
-          Promise.all([
-            this.MenuForm.roles.map(items => this.getuseracl(resultes, items))
-          ]).then(data => {
-            this.$message({
-              message: "修改成功",
-              type: "success"
-            });
-            this.MenuEdit = false;
-            this.menuid = "";
-            this.getMenu();
-          });
-        });
-      });
+      //   if (pid.replace(/(^\s*)|(\s*$)/g, "") != parent.id) {
+      //     resultes.set("parent", parent);
+      //   }
+      //   resultes.save().then(res => {
+      //     Promise.all([
+      //       this.MenuForm.roles.map(items => this.getuseracl(resultes, items))
+      //     ]).then(data => {
+      //       this.$message({
+      //         message: "修改成功",
+      //         type: "success"
+      //       });
+      //       this.MenuEdit = false;
+      //       this.menuid = "";
+      //       this.getMenu();
+      //     });
+      //   });
+      // });
     },
     getuseracl(resultes, objectId) {
-      var Roles = Parse.Object.extend("_Role");
-      var roles = new Parse.Query(Roles);
-      roles.get(objectId).then(res => {
-        var relation = res.relation("menus");
-        resultes.set("objectId", this.objectId);
-        relation.add(resultes);
-        res.save().then(result => {});
-      });
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Roles = Parse.Object.extend("_Role");
+      // var roles = new Parse.Query(Roles);
+      // roles.get(objectId).then(res => {
+      //   var relation = res.relation("menus");
+      //   resultes.set("objectId", this.objectId);
+      //   relation.add(resultes);
+      //   res.save().then(result => {});
+      // });
     },
     // 新增菜单
     removerole(val) {
-      var Roles = Parse.Object.extend("_Role");
-      var roles = new Parse.Query(Roles);
-      var Menu = Parse.Object.extend("Menu");
-      var menu = new Parse.Query(Menu);
-      roles.get(val).then(res => {
-        menu.get(this.menuid).then(resultes => {
-          var relation = res.relation("menus");
-          resultes.set("objectId", this.menuid);
-          relation.remove(resultes);
-          res.save().then(response => {});
-        });
-      });
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Roles = Parse.Object.extend("_Role");
+      // var roles = new Parse.Query(Roles);
+      // var Menu = Parse.Object.extend("Menu");
+      // var menu = new Parse.Query(Menu);
+      // roles.get(val).then(res => {
+      //   menu.get(this.menuid).then(resultes => {
+      //     var relation = res.relation("menus");
+      //     resultes.set("objectId", this.menuid);
+      //     relation.remove(resultes);
+      //     res.save().then(response => {});
+      //   });
+      // });
     },
     standardName() {
       this.isaddmenu = true;
@@ -497,70 +500,71 @@ export default {
       });
 
       if (this.menuid == "" && this.isaddmenu) {
-        var Object = Parse.Object.extend("Menu");
-        var object = new Object();
-        var acl = new Parse.ACL();
-        object.set("name", this.form.name);
-        var parent = new Object();
-        parent.id = "0";
-        object.set("parent", parent);
-        object.set("url", this.form.menuroad);
-        object.set("icon", this.form.iconfont);
-        object.set("orderBy", Number(this.form.number));
-        this.options.map(items => {
-          acl.setRoleReadAccess(items.name, true);
-          acl.setRoleWriteAccess(items.name, true);
-        });
-        acl.setRoleReadAccess("root", true);
-        acl.setRoleWriteAccess("root", true);
-        acl.setRoleReadAccess("admin", true);
-        acl.setRoleWriteAccess("admin", true);
-        object.set("ACL", acl);
-        object.save().then(object => {
-          this.$message({
-            message: "新增成功",
-            type: "success"
-          });
+        this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      //   var Object = Parse.Object.extend("Menu");
+      //   var object = new Object();
+      //   var acl = new Parse.ACL();
+      //   object.set("name", this.form.name);
+      //   var parent = new Object();
+      //   parent.id = "0";
+      //   object.set("parent", parent);
+      //   object.set("url", this.form.menuroad);
+      //   object.set("icon", this.form.iconfont);
+      //   object.set("orderBy", Number(this.form.number));
+      //   this.options.map(items => {
+      //     acl.setRoleReadAccess(items.name, true);
+      //     acl.setRoleWriteAccess(items.name, true);
+      //   });
+      //   acl.setRoleReadAccess("root", true);
+      //   acl.setRoleWriteAccess("root", true);
+      //   acl.setRoleReadAccess("admin", true);
+      //   acl.setRoleWriteAccess("admin", true);
+      //   object.set("ACL", acl);
+      //   object.save().then(object => {
+      //     this.$message({
+      //       message: "新增成功",
+      //       type: "success"
+      //     });
 
-          this.dialogVisible = false;
-          this.menuid = "";
-          this.getMenu();
-        }),
-        error => {
-          console.log("error");
-        };
-      } else if (this.menuid != "" && this.isaddmenu) {
-        var Object = Parse.Object.extend("Menu");
-        var object = new Object();
-        var acl = new Parse.ACL();
-        object.set("name", this.form.name);
-        var parent = new Object();
-        parent.id = this.menuid;
-        object.set("parent", parent);
-        object.set("url", this.form.menuroad);
-        object.set("icon", this.form.iconfont);
-        object.set("orderBy", Number(this.form.number));
-        this.options.map(items => {
-          acl.setRoleReadAccess(items.name, true);
-          acl.setRoleWriteAccess(items.name, true);
-        });
-        acl.setRoleReadAccess("root", true);
-        acl.setRoleWriteAccess("root", true);
-        acl.setRoleReadAccess("admin", true);
-        acl.setRoleWriteAccess("admin", true);
-        object.set("ACL", acl);
-        object.save().then(object => {
-          this.$message({
-            message: "新增成功",
-            type: "success"
-          });
+      //     this.dialogVisible = false;
+      //     this.menuid = "";
+      //     this.getMenu();
+      //   }),
+      //   error => {
+      //     console.log("error");
+      //   };
+      // } else if (this.menuid != "" && this.isaddmenu) {
+      //   var Object = Parse.Object.extend("Menu");
+      //   var object = new Object();
+      //   var acl = new Parse.ACL();
+      //   object.set("name", this.form.name);
+      //   var parent = new Object();
+      //   parent.id = this.menuid;
+      //   object.set("parent", parent);
+      //   object.set("url", this.form.menuroad);
+      //   object.set("icon", this.form.iconfont);
+      //   object.set("orderBy", Number(this.form.number));
+      //   this.options.map(items => {
+      //     acl.setRoleReadAccess(items.name, true);
+      //     acl.setRoleWriteAccess(items.name, true);
+      //   });
+      //   acl.setRoleReadAccess("root", true);
+      //   acl.setRoleWriteAccess("root", true);
+      //   acl.setRoleReadAccess("admin", true);
+      //   acl.setRoleWriteAccess("admin", true);
+      //   object.set("ACL", acl);
+      //   object.save().then(object => {
+      //     this.$message({
+      //       message: "新增成功",
+      //       type: "success"
+      //     });
 
-          this.dialogVisible = false;
-          this.getMenu();
-        }),
-        error => {
-          console.log("error");
-        };
+      //     this.dialogVisible = false;
+      //     this.getMenu();
+      //   }),
+      //   error => {
+      //     console.log("error");
+      //   };
       }
 
       // this.parentid=obj.id;
@@ -603,33 +607,35 @@ export default {
       var arr1 = [];
       this.menuid = row.objectId;
       this.objectId = row.objectId;
-      var Menu = Parse.Object.extend("Menu");
-      var menu = new Parse.Query(Menu);
-      menu.get(row.objectId).then(resultes => {
-        this.MenuEdit = true;
-        this.MenuForm.name = resultes.attributes.name;
-        this.MenuForm.url = resultes.attributes.url;
-        this.MenuForm.number = resultes.attributes.orderBy;
-        this.MenuForm.fathername = this.getParent(this.data, row.parent, arr1);
-        this.MenuForm.roles = row.showobjectId;
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Menu = Parse.Object.extend("Menu");
+      // var menu = new Parse.Query(Menu);
+      // menu.get(row.objectId).then(resultes => {
+      //   this.MenuEdit = true;
+      //   this.MenuForm.name = resultes.attributes.name;
+      //   this.MenuForm.url = resultes.attributes.url;
+      //   this.MenuForm.number = resultes.attributes.orderBy;
+      //   this.MenuForm.fathername = this.getParent(this.data, row.parent, arr1);
+      //   this.MenuForm.roles = row.showobjectId;
 
-        console.log(this.MenuForm.roles);
-      });
+      //   console.log(this.MenuForm.roles);
+      // });
     },
     // 删除菜单
     handleDelete(row) {
       if (!row.children) {
-        var Menu = Parse.Object.extend("Menu");
-        var menu = new Parse.Query(Menu);
-        menu.get(row.objectId).then(resultes => {
-          resultes.destroy().then(res => {
-            this.$message({
-              type: "success",
-              message: "删除成功!"
-            });
-            this.getMenu();
-          });
-        });
+        this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+        // var Menu = Parse.Object.extend("Menu");
+        // var menu = new Parse.Query(Menu);
+        // menu.get(row.objectId).then(resultes => {
+        //   resultes.destroy().then(res => {
+        //     this.$message({
+        //       type: "success",
+        //       message: "删除成功!"
+        //     });
+        //     this.getMenu();
+        //   });
+        // });
       } else {
         this.$message({
           type: "warning",
@@ -654,52 +660,53 @@ export default {
         }
       ];
       //  this.data=[]
-      var Menu = Parse.Object.extend("Menu");
-      var menu = new Parse.Query(Menu);
-      menu.ascending("orderBy");
-      menu.find().then(
-        resultes => {
-          resultes.map(items => {
-            var obj = {};
-            obj.name = items.attributes.name;
-            obj.objectId = items.id;
-            obj.icon = items.attributes.icon;
-            obj.parent = items.attributes.parent.id;
-            obj.createtime = utc2beijing(items.attributes.createdAt);
-            obj.number = items.attributes.orderBy;
-            obj.url = items.attributes.url;
-            obj.isshowtop = [];
-            obj.showobjectId = [];
-            obj.showtopmenu = "";
-            // console.log(items.attributes.navShow)
-            if (items.attributes.navShow) {
-              items.attributes.navShow.map(navshow => {
-                var roleobj = {};
-                roleobj.name = navshow.alias;
-                roleobj.value = navshow.roleId;
-                obj.isshowtop.push(navshow.alias);
-                obj.showobjectId.push(navshow.roleId);
-              });
-              obj.showtopmenu = obj.isshowtop.join(",");
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Menu = Parse.Object.extend("Menu");
+      // var menu = new Parse.Query(Menu);
+      // menu.ascending("orderBy");
+      // menu.find().then(
+      //   resultes => {
+      //     resultes.map(items => {
+      //       var obj = {};
+      //       obj.name = items.attributes.name;
+      //       obj.objectId = items.id;
+      //       obj.icon = items.attributes.icon;
+      //       obj.parent = items.attributes.parent.id;
+      //       obj.createtime = utc2beijing(items.attributes.createdAt);
+      //       obj.number = items.attributes.orderBy;
+      //       obj.url = items.attributes.url;
+      //       obj.isshowtop = [];
+      //       obj.showobjectId = [];
+      //       obj.showtopmenu = "";
+      //       // console.log(items.attributes.navShow)
+      //       if (items.attributes.navShow) {
+      //         items.attributes.navShow.map(navshow => {
+      //           var roleobj = {};
+      //           roleobj.name = navshow.alias;
+      //           roleobj.value = navshow.roleId;
+      //           obj.isshowtop.push(navshow.alias);
+      //           obj.showobjectId.push(navshow.roleId);
+      //         });
+      //         obj.showtopmenu = obj.isshowtop.join(",");
 
-              this.data.push(obj);
-            } else {
-              this.data.push(obj);
-            }
-          });
-        },
-        error => {
-          if (error.code == "209") {
-            this.$message({
-              type: "warning",
-              message: "登陆权限过期，请重新登录"
-            });
-            this.$router.push({
-              path: "/login"
-            });
-          }
-        }
-      );
+      //         this.data.push(obj);
+      //       } else {
+      //         this.data.push(obj);
+      //       }
+      //     });
+      // },
+      // error => {
+      //   if (error.code == "209") {
+      //     this.$message({
+      //       type: "warning",
+      //       message: "登陆权限过期，请重新登录"
+      //     });
+      //     this.$router.push({
+      //       path: "/login"
+      //     });
+      //   }
+      // }
+      // );
     }
   }
 };

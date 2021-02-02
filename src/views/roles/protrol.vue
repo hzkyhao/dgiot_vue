@@ -169,45 +169,47 @@ export default {
               enable: this.formInline.resource,
               desc: this.formInline.desc
             }
-            var Datas = Parse.Object.extend('Datas')
-            var datas = new Datas()
-            var acl = new Parse.ACL()
-            //  acl.setPublicReadAccess(true)
-            acl.setRoleReadAccess('root', true)
-            acl.setRoleWriteAccess('root', true)
-            acl.setRoleReadAccess('admin', true)
-            acl.setRoleWriteAccess('admin', true)
-            acl.setReadAccess(userid, true)
-            acl.setWriteAccess(userid, true)
-            datas.set('data', obj)
-            datas.set('type', 'decoder')
-            datas.set('ACL', acl)
-            datas.save().then(res => {
-              this.$message({
-                type: 'success',
-                message: '保存成功'
-              })
-            })
-          } else {
-            var obj = {
-              name: this.formInline.name,
-              version: this.formInline.version,
-              code: Base64.encode(editor.getValue()),
-              enable: this.formInline.resource,
-              desc: this.formInline.desc
-            }
-            var Datas = Parse.Object.extend('Datas')
-            var datas = new Parse.Query(Datas)
-            datas.get(this.objectId).then(object => {
-              object.set('data', obj)
-              object.save().then(resultes => {
-                this.$message({
-                  type: 'success',
-                  message: '修改成功'
-                })
-                this.objectId = ''
-              })
-            })
+
+            this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          //   var Datas = Parse.Object.extend('Datas')
+          //   var datas = new Datas()
+          //   var acl = new Parse.ACL()
+          //   //  acl.setPublicReadAccess(true)
+          //   acl.setRoleReadAccess('root', true)
+          //   acl.setRoleWriteAccess('root', true)
+          //   acl.setRoleReadAccess('admin', true)
+          //   acl.setRoleWriteAccess('admin', true)
+          //   acl.setReadAccess(userid, true)
+          //   acl.setWriteAccess(userid, true)
+          //   datas.set('data', obj)
+          //   datas.set('type', 'decoder')
+          //   datas.set('ACL', acl)
+          //   datas.save().then(res => {
+          //     this.$message({
+          //       type: 'success',
+          //       message: '保存成功'
+          //     })
+          //   })
+          // } else {
+          //   var obj = {
+          //     name: this.formInline.name,
+          //     version: this.formInline.version,
+          //     code: Base64.encode(editor.getValue()),
+          //     enable: this.formInline.resource,
+          //     desc: this.formInline.desc
+          //   }
+          //   var Datas = Parse.Object.extend('Datas')
+          //   var datas = new Parse.Query(Datas)
+          //   datas.get(this.objectId).then(object => {
+          //     object.set('data', obj)
+          //     object.save().then(resultes => {
+          //       this.$message({
+          //         type: 'success',
+          //         message: '修改成功'
+          //       })
+          //       this.objectId = ''
+          //     })
+          //   })
           }
         } else {
           this.$message({
@@ -218,16 +220,18 @@ export default {
       })
     },
     chaxun() {
-      var Datas = Parse.Object.extend('Datas')
-      var datas = new Parse.Query(Datas)
-      datas.equalTo('type', 'decoder')
-      datas.ascending('-createdAt')
-      datas.find().then(resultes => {
-        if (resultes) {
-          this.dialogTableVisible = true
-          this.gridData = resultes
-        }
-      })
+
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Datas = Parse.Object.extend('Datas')
+      // var datas = new Parse.Query(Datas)
+      // datas.equalTo('type', 'decoder')
+      // datas.ascending('-createdAt')
+      // datas.find().then(resultes => {
+      //   if (resultes) {
+      //     this.dialogTableVisible = true
+      //     this.gridData = resultes
+      //   }
+      // })
     },
     jiesendable(row) {
       this.objectId = row.id
@@ -238,26 +242,27 @@ export default {
         desc: row.attributes.data.desc,
         enable: false
       }
-      var Datas = Parse.Object.extend('Datas')
-      var datas = new Parse.Query(Datas)
-      datas.get(this.objectId).then(object => {
-        object.set('data', obj)
-        object.save().then(resultes => {
-          this.$message({
-            type: 'success',
-            message: '禁用成功'
-          })
-          var Datas1 = Parse.Object.extend('Datas')
-          var datas1 = new Parse.Query(Datas1)
-          datas1.equalTo('type', 'decoder')
-          datas1.ascending('-createdAt')
-          datas1.find().then(resultes => {
-            if (resultes) {
-              this.gridData = resultes
-            }
-          })
-        })
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Datas = Parse.Object.extend('Datas')
+      // var datas = new Parse.Query(Datas)
+      // datas.get(this.objectId).then(object => {
+      //   object.set('data', obj)
+      //   object.save().then(resultes => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '禁用成功'
+      //     })
+      //     var Datas1 = Parse.Object.extend('Datas')
+      //     var datas1 = new Parse.Query(Datas1)
+      //     datas1.equalTo('type', 'decoder')
+      //     datas1.ascending('-createdAt')
+      //     datas1.find().then(resultes => {
+      //       if (resultes) {
+      //         this.gridData = resultes
+      //       }
+      //     })
+      //   })
+      // })
     },
     kaisendable(row) {
       this.objectId = row.id

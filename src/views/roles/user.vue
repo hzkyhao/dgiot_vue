@@ -69,7 +69,6 @@
   </div>
 </template>
 <script>
-import { Parse } from 'parse'
 export default {
   data() {
     return {
@@ -91,37 +90,38 @@ export default {
   methods: {
     getUserlist(pagesize, start) {
       this.tableData = []
-      var roles = Parse.Object.extend('_User')
-      var query = new Parse.Query(roles)
-      query.limit(pagesize)
-      query.skip(start)
-      query.count().then(count => {
-        if (count) {
-          this.total = count
-          query.find().then(results => {
-            results.map(item => {
-              var object = {
-                id: item.id
-              }
-              Object.keys(item.attributes).forEach(function(key) {
-                object[key] = item.attributes[key]
-              })
-              this.tableData.push(object)
-            })
-          },
-          error => {
-            console.log(error)
-            if (error.code == '209') {
-              this.$message({
-                type: 'warning',
-                message: '登陆权限过期，请重新登录'
-              })
-              this.$router.push({
-                path: '/login'
-              })
-            }
-          })
-        }
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var roles = Parse.Object.extend('_User')
+      // var query = new Parse.Query(roles)
+      // query.limit(pagesize)
+      // query.skip(start)
+      // query.count().then(count => {
+      //   if (count) {
+      //     this.total = count
+      //     query.find().then(results => {
+      //       results.map(item => {
+      //         var object = {
+      //           id: item.id
+      //         }
+      //         Object.keys(item.attributes).forEach(function(key) {
+      //           object[key] = item.attributes[key]
+      //         })
+      //         this.tableData.push(object)
+      //       })
+      //     },
+      //     error => {
+      //       console.log(error)
+      //       if (error.code == '209') {
+      //         this.$message({
+      //           type: 'warning',
+      //           message: '登陆权限过期，请重新登录'
+      //         })
+      //         this.$router.push({
+      //           path: '/login'
+      //         })
+      //       }
+      //     })
+        // }
       })
     },
 
@@ -135,51 +135,53 @@ export default {
       this.userrolelist = []
       this.objectId = id
       this.roleacl = true
-      var User = Parse.Object.extend('_User')
-      var user = new Parse.Query(User)
-      user.find(this.objectId).then(resultes => {
-        var Role = Parse.Object.extend('_Role')
-        var query = new Parse.Query(Role)
-        var user = new User()
-        query.addAscending('createdAt')
-        query.find().then(resultes => {
-          this.rolelist = resultes
-          user.set('objectId', this.objectId)
-          query.equalTo('users', user)
-          query.find().then(result => {
-            console.log(result)
-            result.map(item => {
-              resultes.map((roleitem, index) => {
-                if (item.id == roleitem.id) {
-                  this.$refs.multipleTable.toggleRowSelection(this.rolelist[index], true)
-                }
-              })
-            })
-          })
-        })
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var User = Parse.Object.extend('_User')
+      // var user = new Parse.Query(User)
+      // user.find(this.objectId).then(resultes => {
+      //   var Role = Parse.Object.extend('_Role')
+      //   var query = new Parse.Query(Role)
+      //   var user = new User()
+      //   query.addAscending('createdAt')
+      //   query.find().then(resultes => {
+      //     this.rolelist = resultes
+      //     user.set('objectId', this.objectId)
+      //     query.equalTo('users', user)
+      //     query.find().then(result => {
+      //       console.log(result)
+      //       result.map(item => {
+      //         resultes.map((roleitem, index) => {
+      //           if (item.id == roleitem.id) {
+      //             this.$refs.multipleTable.toggleRowSelection(this.rolelist[index], true)
+      //           }
+      //         })
+      //       })
+      //     })
+      //   })
+      // })
     },
     adduseracl() {
-      var roles = Parse.Object.extend('_Role')
-      var query = new Parse.Query(roles)
-      var User = Parse.Object.extend('_User')
-      var user = new Parse.Query(User)
-      user.get(this.objectId).then(object => {
-        this.multipleSelection.map(item => {
-          query.get(item).then(resultes => {
-            var relation = resultes.relation('users')
-            object.set('objectId', this.objectId)
-            relation.add(object)
-            resultes.save().then(resulte => {
-              this.$message({
-                type: 'success',
-                message: '添加成功!'
-              })
-              this.roleacl = false
-            })
-          })
-        })
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var roles = Parse.Object.extend('_Role')
+      // var query = new Parse.Query(roles)
+      // var User = Parse.Object.extend('_User')
+      // var user = new Parse.Query(User)
+      // user.get(this.objectId).then(object => {
+      //   this.multipleSelection.map(item => {
+      //     query.get(item).then(resultes => {
+      //       var relation = resultes.relation('users')
+      //       object.set('objectId', this.objectId)
+      //       relation.add(object)
+      //       resultes.save().then(resulte => {
+      //         this.$message({
+      //           type: 'success',
+      //           message: '添加成功!'
+      //         })
+      //         this.roleacl = false
+      //       })
+      //     })
+      //   })
+      // })
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
@@ -191,22 +193,23 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          var User = Parse.Object.extend('_User')
-          var user = new Parse.Query(User)
-          user.get(id).then(object => {
-            object.destroy().then(
-              response => {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
-                })
-                this.getUserlist()
-              },
-              error => {
-                console.log(error)
-              }
-            )
-          })
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var User = Parse.Object.extend('_User')
+          // var user = new Parse.Query(User)
+          // user.get(id).then(object => {
+          //   object.destroy().then(
+          //     response => {
+          //       this.$message({
+          //         type: 'success',
+          //         message: '删除成功!'
+          //       })
+          //       this.getUserlist()
+          //     },
+          //     error => {
+          //       console.log(error)
+          //     }
+          //   )
+          // })
         })
         .catch(() => {
           this.$message({

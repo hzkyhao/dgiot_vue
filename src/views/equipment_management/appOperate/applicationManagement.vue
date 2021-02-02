@@ -211,38 +211,39 @@ export default {
     },
     // 删除应用
     makeSure(scope) {
-      // 可以在这里执行删除数据的回调操作.......删除操作.....
-      var Project = Parse.Object.extend('Project')
-      var project = new Project()
-      project.id = scope.row.objectId
-      var relation = project.relation('product')
-      var query = relation.query()
-      query.find().then(response => {
-        if (response.length > 0) {
-          this.$message('请先将应用下的产品删除')
-          scope._self.$refs[`popover-${scope.$index}`].doClose()
-        } else {
-          project.destroy().then(
-            response => {
-              if (response) {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功'
-                })
-                scope._self.$refs[`popover-${scope.$index}`].doClose()
-                this.getAppMange()
-              }
-            },
-            error => {
-              this.$message({
-                type: 'error',
-                message: error.message
-              })
-              //   })
-            }
-          )
-        }
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // // 可以在这里执行删除数据的回调操作.......删除操作.....
+      // var Project = Parse.Object.extend('Project')
+      // var project = new Project()
+      // project.id = scope.row.objectId
+      // var relation = project.relation('product')
+      // var query = relation.query()
+      // query.find().then(response => {
+      //   if (response.length > 0) {
+      //     this.$message('请先将应用下的产品删除')
+      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //   } else {
+      //     project.destroy().then(
+      //       response => {
+      //         if (response) {
+      //           this.$message({
+      //             type: 'success',
+      //             message: '删除成功'
+      //           })
+      //           scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //           this.getAppMange()
+      //         }
+      //       },
+      //       error => {
+      //         this.$message({
+      //           type: 'error',
+      //           message: error.message
+      //         })
+      //         //   })
+      //       }
+      //     )
+      //   }
+      // })
     },
     Gotoproduct(scope) {
       var projectRoles = []
