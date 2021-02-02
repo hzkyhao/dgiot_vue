@@ -39,7 +39,6 @@ import Cookies from 'js-cookie'
 import { Sidebar } from './components'
 import LangSelect from '@/components/LangSelect'
 import Screenfull from '@/components/Screenfull'
-import Parse from 'parse'
 // import SizeSelect from '@/components/SizeSelect'
 export default {
   name: 'Navbar',
@@ -70,17 +69,6 @@ export default {
   },
   created() {
     this.getTitle()
-  //  var _self = this
-    // this.$nextTick(function () {
-    //   document.addEventListener('keyup', function (e) {
-    //   //此处填写你的业务逻辑即可
-    //    if (e.keyCode == 27) {
-
-    //         _self.isscreenfull = '全屏'
-    //         console.log(_self.isscreenfull)
-    //       }
-    //     })
-    //   })
   },
   mounted() {
     this.username = sessionStorage.getItem('username')
@@ -108,37 +96,7 @@ export default {
       Cookies.remove('username')
       Cookies.remove('sessionToken')
       Cookies.remove('userId')
-      try {
-        Parse.User.logOut(this.username).then(res => {
-          this.$router.push('/login')
-          sessionStorage.removeItem('username')
-          sessionStorage.removeItem('token')
-          localStorage.removeItem('list')
-
-          this.$store.dispatch('delAllViews')
-        }
-          /*      (error=>{
-          this.$router.push('/login')
-          sessionStorage.removeItem('username')
-          sessionStorage.removeItem('token')
-          Cookies.set('username',''-1)
-          Cookies.set('sessionToken',''-1)
-          localStorage.removeItem('list')
-          this.$store.dispatch('delAllViews')
-        }) */
-
-        )
-      } catch (error) {
-        console.log('logout err', error)
-
-        this.$router.push('/login')
-        sessionStorage.removeItem('username')
-        sessionStorage.removeItem('token')
-        Cookies.set('username', '' - 1)
-        Cookies.set('sessionToken', '' - 1)
-        localStorage.removeItem('list')
-        this.$store.dispatch('delAllViews')
-      }
+      this.$router.push('/login')
     },
     userDetail() {
       this.$router.push({
