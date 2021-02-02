@@ -21,14 +21,22 @@ export async function postChannel(params) {
   return create_object('Channel', params)
 }
 
-export async function getChannelCountByProduct(params) {
+export async function getChannelCountByProduct(channellength, channelstart, productid, type) {
+  const params = {
+    keys: 'count(*)',
+    limit: channellength,
+    skip: channelstart,
+    where: {
+      "product": { __type: "Pointer", className: "Product", objectId: productid },
+      type: type
+    }
+  }
   return query_object('Channel', params)
 }
 
 export async function saveChanne(objectid, params) {
   return update_object('Channel', objectid, params)
 }
-
 
 export function channelConnect(type, host, port, username, password, database, name, sql_length, connect, ssl) {
   return request({

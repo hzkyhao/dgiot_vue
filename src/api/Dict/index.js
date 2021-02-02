@@ -26,6 +26,16 @@ export async function getIndustry(key, limit) {
   return query_object('Dict', params)
 }
 
+export async function getAllunit(key, limit) {
+  const params = {
+    limit: limit || 100,
+    where: {
+      "type": key || 'unit'
+    }
+  }
+  return query_object('Dict', params)
+}
+
 export async function getDict(ObjectId) {
   return get_object('Dict', ObjectId)
 }

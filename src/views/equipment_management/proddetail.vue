@@ -1769,7 +1769,7 @@
             >
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.id }}</span>
+                  <span>{{ scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
@@ -1779,7 +1779,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.id }}</span>
+                  <span>{{ "channel/" + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
@@ -1875,7 +1875,7 @@
             >
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.id }}</span>
+                  <span>{{ scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
@@ -1885,7 +1885,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.id }}</span>
+                  <span>{{ "channel/" + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
@@ -2065,7 +2065,7 @@
           </el-table-column>
           <el-table-column :label="$t('developer.channeladdr')">
             <template slot-scope="scope">
-              <span>{{ "channel/" + scope.row.id }}</span>
+              <span>{{ "channel/" + scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channeltype')">
@@ -2268,6 +2268,7 @@
 </template>
 <script>
 import { getDeviceCountByProduct } from "@/api/Device/index";
+import { getAllunit } from "@/api/Dict/index";
 import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
 import Parse from "parse";
 import { getRule, ruleDelete } from "@/api/rules";
@@ -2290,7 +2291,6 @@ var setdata = "";
 var isallchannel = false;
 var isupdatetrue = "";
 import { Compile, subupadte } from "@/api/systemmanage/system";
-import { getIndustry } from "@/api/applicationManagement";
 import { setTimeout } from "timers";
 // import gql from "graphql-tag";
 import { postFile } from "@/api/appcontrol";
@@ -2857,6 +2857,7 @@ export default {
 
     this.Industry();
     this.getAllunit();
+
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName;
     }
@@ -2966,25 +2967,14 @@ export default {
     },
     async getAllunit() {
       this.allunit = [];
-      const params = {
-        limit: 100,
-        where: {
-          "type": 'unit'
+      const { results } = await getAllunit('unit', 100)
+      this.allunit = results.concat([]);
+      this.allunit.unshift({
+        data: {
+          Name: "无",
+          Symbol: ""
         }
-      }
-      this.$query_object('Dict', params).then(response => {
-        this.allunit = response.concat([]);
-        this.allunit.unshift({
-          attributes: {
-            data: {
-              Name: "无",
-              Symbol: ""
-            }
-          }
-        });
-      }).catch(err => {
-        this.$baseMessage('请求出错', err.error, 3000)
-      })
+      });
     },
     getTopic() {
       // var Product = Parse.Object.extend("Product");
@@ -3133,46 +3123,31 @@ export default {
           });
       }
     },
+
+    // 物接入
     getProductChannel() {
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = this.productId;
-      const params = {
-        keys: 'count(*)',
-        limit: this.channellength,
-        skip: this.channelstart,
-        where: {
-          "product": product
+      const type = { '$in': ["1", "3"] }
+      getChannelCountByProduct(this.channellength, this.channelstart, this.productId, type).then(res => {
+        this.channeltotal = res.count;
+        this.channelData = res.results;
+        if (res.results.length == 0) {
+          isallchannel = true;
+        } else {
+          isallchannel = false;
         }
-      }
-      getChannelCountByProduct(params).then(res => {
-        console.log('res', res)
+      }).catch(e => {
+        console.log(e)
       })
     },
-    getResourceChannel() {
-      var Channel = Parse.Object.extend("Channel");
-      var query = new Parse.Query(Channel);
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = this.productId;
-      query.equalTo("product", product);
-      query.equalTo("type", "2");
-      query.skip(this.channelstart);
-      query.limit(this.channellength);
-      query.ascending("-updatedAt");
 
-      const params = {
-        keys: 'count(*)',
-        skip: this.channelstart,
-        limit: this.channellength,
-        where: {
-          type: { '$in': ["2"] },
-          product: product
-        }
-      }
-      getChannelCountByProduct(params).then(res => {
+    // 物存储
+    getResourceChannel() {
+      const type = { '$in': ["2"] }
+      getChannelCountByProduct(this.channellength, this.channelstart, this.productId, type).then(res => {
         this.resourcetotal = res.count;
         this.resourcechannelData = res.results;
+      }).catch(e => {
+        console.log(e)
       })
     },
     // 添加关联
@@ -3198,32 +3173,28 @@ export default {
     },
     // 解除关联
     deleteRelation(row) {
-      var Channel = Parse.Object.extend("Channel");
-      var channel = new Channel();
-      channel.id = row.id;
-      var relation = channel.relation("product");
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.set("objectId", this.productId);
-      relation.remove(product);
-      channel.save().then(
-        res => {
-          if (res) {
-            this.$message({
-              type: "success",
-              message: "删除成功"
-            });
-            if (this.channeltype == 1) {
-              this.getProductChannel();
-            } else {
-              this.getResourceChannel();
+      const params = {
+        "product": {
+          "__op": "RemoveRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "Product",
+              "objectId": this.productId
             }
-          }
-        },
-        error => {
-          returnLogin(error);
+          ]
         }
-      );
+      }
+      saveChanne(row.objectId, params).then(res => {
+        if (res) {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          });
+        }
+        this.getProductChannel();
+        this.getResourceChannel();
+      })
     },
     // 关联服务通道分页
     channelSizeChange(val) {
