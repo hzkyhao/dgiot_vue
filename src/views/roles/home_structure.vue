@@ -243,7 +243,6 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
 import { Promise } from "q";
 import { setTimeout } from "timers";
 import $ from "jquery";

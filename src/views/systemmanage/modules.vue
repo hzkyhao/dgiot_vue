@@ -156,7 +156,6 @@
 </template>
 
 <script>
-import Parse from 'parse'
 export default {
 
   name: 'Modules',
