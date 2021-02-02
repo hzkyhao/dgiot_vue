@@ -81,7 +81,6 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
 const Base64 = require('js-base64').Base64
 import { Phonelogin, Verify } from '@/api/User/index'
 import Cookies from 'js-cookie'
@@ -243,10 +242,6 @@ export default {
         if (valid && MobileRegex.test(_this.ruleForm2.phone)) {
           Verify(_this.actions, _this.ruleForm2.phone, _this.code)
             .then(result => {
-              // Parse.User.become(result.sessionToken)
-              this.postToken(result.sessionToken)
-
-              // The token could not be validated.
             }).catch(error => {
               _this.$message(error)
             })
@@ -292,35 +287,6 @@ export default {
         })
       }
     },
-    postToken(sessionToken) {
-      var _this = this
-      Parse.User.become(sessionToken).then(
-        function(user) {
-          var Menu = Parse.Object.extend('Navigation')
-          var menu = new Parse.Query(Menu)
-          menu.find().then(menu => {
-            var menu1 = menu
-            menu1.map(items => {
-              if (items.attributes.parent) {
-                _this.routes.push(items)
-              }
-            })
-            _this.$message({
-              message: '成功登录',
-              type: 'success'
-            })
-            sessionStorage.setItem('username', user.attributes.username)
-            localStorage.setItem('list', JSON.stringify(_this.routes))
-            sessionStorage.setItem('token', sessionToken)
-            Cookies.set('sessionToken', sessionToken)
-            Cookies.set('username', user.attributes.username)
-            _this.$router.push({ path: _this.redirect || '/dashboard' })
-          })
-        }) // The current user is now set to user.
-    },
-    skip() {
-      this.postToken(this.phonetoken)
-    }
   }
 }
 </script>
