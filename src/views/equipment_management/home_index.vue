@@ -112,14 +112,14 @@
           size="small"
           type="primary"
           class="selectdetail"
-          @click="unactiveDevice"
+          @click="unactiveDevice(false)"
         >{{ $t('developer.prohibit') }}</el-button>
         <el-button
           :disabled="multipleTable.length==0"
           size="small"
           type="primary"
           class="selectdetail"
-          @click="activeDevice"
+          @click="unactiveDevice(true)"
         >{{ $t('developer.enable') }}</el-button>
         <el-button size="small">{{ $t('equipment.batchaddition') }}</el-button>
         <el-button
@@ -555,6 +555,7 @@
 </template>
 <script>
 import { query_object, get_object, del_object, update_object } from "@/api/shuwa_parse"
+import { Batchdelete } from "@/api/batch/index"
 import Parse from 'parse'
 import { Promise } from 'q'
 import Cookies from 'js-cookie'
@@ -841,9 +842,9 @@ export default {
     // 激活设备
     async getActiveDevices() {
       var params = {
-        'where':{
-          'status':'ACTIVE'
-         }
+        'where': {
+          'status': 'ACTIVE'
+        }
       }
       if (this.deviceinput != '') {
         if (
@@ -861,18 +862,17 @@ export default {
       if (this.equvalue != 0) {
         params.where.product = this.equvalue
       }
-      var devices = await this.$queryDevice(params) 
+      var devices = await this.$queryDevice(params)
       this.activeall = devices.results.length
-      
     },
     async getOnlineDevices() {
       var params = {
-        'where':{
+        'where': {
           'status': 'ONLINE'
         }
-         
+
       }
-     
+
       if (this.deviceinput != '') {
         if (this.selectdevice == '设备名称') {
           params.where.name = this.deviceinput
@@ -886,9 +886,8 @@ export default {
       if (this.equvalue != 0) {
         params.where.product = this.equvalue
       }
-      var devices = await this.$queryDevice(params) 
+      var devices = await this.$queryDevice(params)
       this.onlineall = devices.results.length
-    
     },
 
     // 查询产品
@@ -901,8 +900,8 @@ export default {
       this.proTableData1 = Product.results
 
       this.proTableData1.unshift({
-          name: language == 'zh' ? '全部产品' : 'All Products',
-          id: '0'
+        name: language == 'zh' ? '全部产品' : 'All Products',
+        id: '0'
       })
       // var Product = Parse.Object.extend('Product')
       // var product = new Parse.Query(Product)
@@ -957,7 +956,7 @@ export default {
       }
       const res = await this.$queryDevice(params)
       this.tableData = res.results
-      
+
       this.devicetotal = res.count
 
       // 查询激活设备
@@ -1234,60 +1233,73 @@ export default {
       }
     },
     // 设备多个启用和禁用
-    async unactiveDevice(val) {
-      var fail = 0
-      this.multipleTable.map(async item => {
-        var params = {
-          'objectId': item.objectId,
-          'isEnable': false
-        }
-        const result = await this.$update_object('Device', item.objectId, params)
-        if (result.code == 101) {
-          fail++;
-        }
+    // async unactiveDevice(val) {
+    //   var fail = 0
+    //   this.multipleTable.map(async item => {
+    //     var params = {
+    //       'objectId': item.objectId,
+    //       'isEnable': false
+    //     }
+    //     const result = await this.$update_object('Device', item.objectId, params)
+    //     if (result.code == 101) {
+    //       fail++;
+    //     }
+    //   })
+
+    //   if (fail == 0) {
+    //     this.$message({
+    //       message: '禁用成功',
+    //       type: 'success'
+    //     })
+
+    //     this.getDevices()
+    //   } else {
+    //     this.$message({
+    //       message: '禁用失败',
+    //       type: 'error'
+    //     })
+    //   }
+    // },
+    // 设备多个启用和禁用
+    async unactiveDevice(isEnable) {
+      const idarr = []
+      this.multipleTable.map(item => {
+        idarr.push(item.objectId)
       })
-
-      if (fail == 0) {
-        this.$message({
-          message: '禁用成功',
-          type: 'success'
-        })
-
-        this.getDevices()
-      } else {
-        this.$message({
-          message: '禁用失败',
-          type: 'error'
-        })
+      const body = {
+        isEnable: isEnable
       }
+      const res = await Batchdelete(
+        '_Device', idarr, body)
+      console.log(res)
     },
-    activeDevice(val) {
-      var success = 0
-      this.multipleTable.map(async item => {
-        var params = {
-          'objectId': item.objectId,
-          'isEnable': true
-        }
-        const result = await this.$update_object('Device', item.objectId, params)
-        if (result.code == 101) {
-          fail++;
-        }
-      })
+    // activeDevice(val) {
+    //   var success = 0
+    //   this.multipleTable.map(async item => {
+    //     var params = {
+    //       'objectId': item.objectId,
+    //       'isEnable': true
+    //     }
+    //     const result = await this.$update_object('Device', item.objectId, params)
+    //     if (result.code == 101) {
+    //       fail++;
+    //     }
+    //   })
 
-      if (success == 0) {
-        this.$message({
-          message: '启动成功',
-          type: 'success'
-        })
+    //   if (success == 0) {
+    //     this.$message({
+    //       message: '启动成功',
+    //       type: 'success'
+    //     })
 
-        this.getDevices()
-      } else {
-        this.$message({
-          message: '启动成功',
-          type: 'error'
-        })
-      }
-    },
+    //     this.getDevices()
+    //   } else {
+    //     this.$message({
+    //       message: '启动成功',
+    //       type: 'error'
+    //     })
+    //   }
+    // },
     /* @pamras 选中高亮*/
     rowClass({ row, rowIndex }) {
       if (this.selectRow.includes(rowIndex)) {
