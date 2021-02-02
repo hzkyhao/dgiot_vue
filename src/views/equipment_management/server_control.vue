@@ -315,7 +315,7 @@
   </div>
 </template>
 <script>
-import { uploadServer, uploadLicense, offlineServer,putLicense } from '@/api/License'
+import { uploadServer, uploadLicense, offlineServer, putLicense } from '@/api/License'
 
 var product = {}
 export default {
@@ -712,105 +712,105 @@ export default {
       })
     }
   },
-    // 详情查看
-    handleDetail(index, row) {
-      this.dialogVisible = true
-      this.licensedetail = JSON.stringify(row.attributes.product, null, 10)
-    },
-    startDate() {
-      if (
-        this.ruleForm.date2 <= this.ruleForm.date1 &&
-        this.ruleForm.date2 != '' &&
-        this.ruleForm.date2 != null
-      ) {
-        this.$message('采集结束时间要小于开始时间')
-        this.ruleForm.date1 = ''
-      }
-      if (this.ruleForm.date1 < Date.now() - 2000) {
-        this.$message('采集开始时间要大于当前时间')
-        this.ruleForm.date1 = ''
-      }
-    },
-    endDate() {
-      if (this.ruleForm.date2 <= this.ruleForm.date1) {
-        this.$message('采集结束时间要小于开始时间')
-        this.ruleForm.date2 = ''
-      }
-      if (this.ruleForm.date2 < Date.now() - 2000) {
-        this.$message('采集结束时间要大于当前时间')
-        this.ruleForm.date2 = ''
-      }
-    },
-    // 下载服务器配置
-    uploadLicense1(row) {
-      uploadServer(row.attributes.license).then(resultes => {
-        window.open(
-          window.location.origin +
-          '/iotapi/licsetup?license=' +
-          row.attributes.license,
-          '_blank'
-        )
-      })
-    },
-    // 在线升级
-    onlineLictool(row) {
-      this.licenseObj.id = row.id
-      for (var key in row.attributes.product) {
-        this.licenseObj[key] = row.attributes.product[key]
-      }
-      this.dialogOnline = true
-    },
-    updateLictool(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          const data = {
-            status: 'start_update',
-            software: this.onlineform.name
-          }
-          putLicense(this.licenseid, data).then(
-            results => {
-              if (results) {
-                this.dialogOnline = false
-                this.$message('正在升级中')
-              }
+  // 详情查看
+  handleDetail(index, row) {
+    this.dialogVisible = true
+    this.licensedetail = JSON.stringify(row.attributes.product, null, 10)
+  },
+  startDate() {
+    if (
+      this.ruleForm.date2 <= this.ruleForm.date1 &&
+      this.ruleForm.date2 != '' &&
+      this.ruleForm.date2 != null
+    ) {
+      this.$message('采集结束时间要小于开始时间')
+      this.ruleForm.date1 = ''
+    }
+    if (this.ruleForm.date1 < Date.now() - 2000) {
+      this.$message('采集开始时间要大于当前时间')
+      this.ruleForm.date1 = ''
+    }
+  },
+  endDate() {
+    if (this.ruleForm.date2 <= this.ruleForm.date1) {
+      this.$message('采集结束时间要小于开始时间')
+      this.ruleForm.date2 = ''
+    }
+    if (this.ruleForm.date2 < Date.now() - 2000) {
+      this.$message('采集结束时间要大于当前时间')
+      this.ruleForm.date2 = ''
+    }
+  },
+  // 下载服务器配置
+  uploadLicense1(row) {
+    uploadServer(row.attributes.license).then(resultes => {
+      window.open(
+        window.location.origin +
+        '/iotapi/licsetup?license=' +
+        row.attributes.license,
+        '_blank'
+      )
+    })
+  },
+  // 在线升级
+  onlineLictool(row) {
+    this.licenseObj.id = row.id
+    for (var key in row.attributes.product) {
+      this.licenseObj[key] = row.attributes.product[key]
+    }
+    this.dialogOnline = true
+  },
+  updateLictool(formName) {
+    this.$refs[formName].validate(valid => {
+      if (valid) {
+        const data = {
+          status: 'start_update',
+          software: this.onlineform.name
+        }
+        putLicense(this.licenseid, data).then(
+          results => {
+            if (results) {
+              this.dialogOnline = false
+              this.$message('正在升级中')
             }
-          ).catch(e => {
-            console.log('updatedLicense faild ' + e.error)
-            return false
-          })
+          }
+        ).catch(e => {
+          console.log('updatedLicense faild ' + e.error)
+          return false
+        })
+      }
+    })
+  },
+// 离线升级
+  offlineLictool(row) {
+    offlineServer(row.attributes.license).then(resultes => {
+      window.open(
+        window.location.origin +
+        '/iotapi/licsetup?license=' +
+        row.attributes.license,
+        '_blank'
+      )
+    })
+  }
+  ,
+// 通用配置下载
+  lictool() {
+    uploadLicense(this.appid, this.appsecret)
+      .then(resultes => {
+        if (resultes) {
+          window.open(
+            window.location.origin +
+            '/iotapi/lictool?appid=' +
+            this.appid +
+            '&appsecret=' +
+            this.appsecret,
+            '_blank'
+          )
         }
       })
-    },
-    // 离线升级
-    offlineLictool(row) {
-      offlineServer(row.attributes.license).then(resultes => {
-        window.open(
-          window.location.origin +
-          '/iotapi/licsetup?license=' +
-          row.attributes.license,
-          '_blank'
-        )
+      .catch(error => {
+        this.$message(error.error)
       })
-    },
-    // 通用配置下载
-    lictool() {
-      uploadLicense(this.appid, this.appsecret)
-        .then(resultes => {
-          if (resultes) {
-            window.open(
-              window.location.origin +
-              '/iotapi/lictool?appid=' +
-              this.appid +
-              '&appsecret=' +
-              this.appsecret,
-              '_blank'
-            )
-          }
-        })
-        .catch(error => {
-          this.$message(error.error)
-        })
-    }
   }
 }
 </script>
