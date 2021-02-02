@@ -12,11 +12,6 @@
               @click="getAppMange(0)"
             >{{ $t('application.search') }}</el-button>
           </div>
-          <!-- <el-button
-            type="primary"
-            @click="handleClickAdd"
-            size="small"
-          >{{$t('application.newapplication')}}</el-button> -->
         </div>
         <el-table :data="tableData" style="width:100%;">
           <!-- 应用标识 -->
@@ -61,40 +56,10 @@
                 icon="el-icon-edit"
                 @click="handleClickUpdate(scope)"
               >{{ $t('developer.edit') }}</el-button>
-              <!-- <el-button
-                @click="handleClickLook(scope)"
-                type="text"
-                size="small"
-                icon="el-icon-key"
-              >{{$t('application.secretkey')}}</el-button>
-              <el-button type="text" size="small" @click="handleClickVisit(scope)">
-                {{$t('application.visit')}}
-                <i class="el-icon-arrow-right"></i>
-              </el-button>
-               -->
               <el-button type="text" size="small" @click="Gotoproduct(scope)">
                 <i class="el-icon-s-management"/>
                 管理
               </el-button>
-              <!-- <el-popover
-                placement="top"
-                width="300"
-                :ref="`popover-${scope.$index}`"
-                trigger="hover"
-              >
-                <p>部署工具本地运行</p>
-                <<a   :href="'/lictool?appid='+scope.row.objectId+'&appsecret='+scope.row.secret" slot="reference"
-                >下载<i class="el-icon-download"></i></a>
-                <el-link
-                  type="primary"
-                  :underline="false"
-                  slot="reference"
-                  @click="lictool(scope.row)"
-                >
-                  下载
-                  <i class="el-icon-download"></i>
-                </el-link>
-              </el-popover> -->
               <el-link
                 :underline="false"
                 type="primary"
@@ -120,9 +85,7 @@
 </template>
 
 <script>
-import { handleZero, uploadLicense, setUpLictool } from '@/api/License/index'
-import { getProject } from '@/api/applicationManagement'
-import { utc2beijing } from '@/utils'
+import { setUpLictool } from '@/api/License/index'
 import Parse from 'parse'
 export default {
   data() {
@@ -173,38 +136,6 @@ export default {
       if (this.name) {
         where.title = this.name
       }
-      getProject({
-        limit: this.page.pageSize,
-        skip: this.page.currentPage,
-        keys: 'count(*)',
-        where
-      }).then(res => {
-        const r = res.results
-        this.label = `我的应用(${res.count})`
-        this.description = `获取${r.length}条数据`
-        this.page.total = res.count
-        for (let i = 0; i < r.length; i++) {
-          const obj = {}
-          obj.name = r[i].title
-          obj.objectId = r[i].objectId
-          obj.productIdentifier = r[i].productIdentifier
-          obj.scale = handleZero(r[i].scale)
-          obj.creation_time = utc2beijing(r[i].createdAt)
-          obj.end_time = utc2beijing(r[i].updatedAt)
-          obj.category = r[i].category
-          obj.secret = r[i].secret
-          obj.logo = r[i].logo
-          obj.title = r[i].title
-          obj.userUnit = r[i].userUnit
-          obj.dashboard = r[i].dashboard
-          obj.background = r[i].background
-          obj.acl = r[i].ACL
-          obj.desc = r[i].desc
-          obj.copyright = r[i].copyright
-
-          this.tableData.push(obj)
-        }
-      })
     },
     handleSizeChange(val) {
       this.page.pageSize = val
@@ -251,13 +182,6 @@ export default {
         dangerouslyUseHTMLString: true
       })
     },
-    // 跳转新增
-    handleClickAdd() {
-      this.$router.push({
-        path: '/applicationManagement/addApp',
-        query: { page: 'add', title: '新增应用' }
-      })
-    },
     // 跳转修改
     handleClickUpdate(scope) {
       const row = scope.row
@@ -285,24 +209,6 @@ export default {
           copyright: row.copyright
         }
       })
-    },
-    // 查询
-    handleClickQuery() {
-      const where = {}
-      if (this.name) {
-        where.title = this.name
-      }
-      getProject({ limit: 100, where })
-        .then(res => {
-          // // 查询结束清空
-          this.tableData = res.results
-          this.handleClickReset()
-        })
-        .catch(res => {
-          if (res.code == 1) {
-            this.$message('字段不存在')
-          }
-        })
     },
     // 删除应用
     makeSure(scope) {

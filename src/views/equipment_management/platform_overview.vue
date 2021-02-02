@@ -133,8 +133,7 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
-import { batch, getProduct, getApp, getProject, getDevice } from "@/api/data";
+import {getProduct, getApp, getProject, getDevice } from "@/api/data";
 export default {
   components: {
   },
@@ -285,20 +284,6 @@ export default {
       })
       this.projectList = Project.results
       console.log(Project, 'Project')
-
-    //   var Project = Parse.Object.extend("Project");
-    //   var project = new Parse.Query(Project);
-    //   project.limit = 30;
-    //   project.find().then(
-    //     response => {
-    //       if (response) {
-    //         this.projectList = response;
-    //       }
-    //     },
-    //     error => {
-    //       console.log(error);
-    //     }
-    //   );
     }
   }
 }

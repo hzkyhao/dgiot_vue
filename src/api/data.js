@@ -20,18 +20,6 @@ export function batch(url, data) {
   });
 }
 
-export async function getProject(params) {
-  return request({
-    url: 'iotapi/classes/Project',
-    method: "get",
-    headers: {
-      'accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    params
-  });
-}
-
 export async function getApp(params) {
   return request({
     url: 'iotapi/classes/App',
