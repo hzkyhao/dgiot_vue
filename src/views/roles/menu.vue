@@ -74,9 +74,7 @@
   </div>
 </template>
 <script>
-import { Parse } from 'parse'
 import PagingQuery from '@/components/Pagination'
-import { eventBus } from '@/api/eventBus'
 import {
   timestampToTime,
   gettables,
@@ -153,11 +151,7 @@ export default {
           res.data.map(item => {
             item.vctime = timestampToTime(item.vctime)
           })
-          // console.log(res);
-          // this.tableData3 = res.data;
-          // this.pager.count = res.recordsTotal;
-          // console.log(obj);
-          eventBus.$emit('drive', { json: res.data, obj: this.obj })
+          this.$baseEventBus.$emit('drive', { json: res.data, obj: this.obj })
         })
         .catch(error => {
           console.log(error)
@@ -184,7 +178,7 @@ export default {
           this.tableData3 = res.data
           this.pager.count = res.recordsTotal
           console.log(this.tableData3, this.pager.count)
-          eventBus.$emit('drive', { json: this.tableData3, obj: this.obj })
+          this.$baseEventBus .$emit('drive', { json: this.tableData3, obj: this.obj })
         })
         .catch(error => {
           console.log(error)

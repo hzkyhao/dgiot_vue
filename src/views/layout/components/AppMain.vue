@@ -22,8 +22,6 @@ import {
   MSG_EMPTY,
   DISCONNECT_MSG
 } from '@/utils/wxscoket.js'
-import Parse from 'parse'
-import { eventBus } from '@/api/eventBus'
 export default {
   name: 'AppMain',
   data() {
@@ -63,19 +61,9 @@ export default {
       Websocket.add_hook(/web\/.+/, function(Msg) {
         this.datasource = JSON.parse(Msg)
         if (this.datasource) {
-          eventBus.$emit(this.datasource.type, this.datasource)
+          this.$baseEventBus .$emit(this.datasource.type, this.datasource)
         }
       })
-      // Websocket.recive = function(Msg){
-      //   this.datasource = JSON.parse(Msg)
-      //   console.log(Msg)
-      //    if(this.datasource.type){
-      //     eventBus.$emit(this.datasource.type, this.datasource);
-      //    }else{
-
-      //    }
-
-      // }
     }
 
     this.getCopyright()

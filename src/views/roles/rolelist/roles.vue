@@ -281,7 +281,6 @@
 <script>
 import { Parse } from 'parse'
 import addroles from '@/views/roles/rolelist/addroles'
-import { eventBus } from '@/api/eventBus'
 export default {
   name: 'Role',
   data() {
@@ -355,8 +354,7 @@ export default {
     this.getRolesList()
     this.getMenu()
     this.getRoleschema()
-
-    eventBus.$on('dialogHide', () => {
+    this.$baseEventBus.$on('dialogHide', () => {
       this.centerDialogRole = false
     })
   },

@@ -52,7 +52,6 @@
 
 <script>
 import screenfull from 'screenfull'
-import { eventBus } from '@/api/eventBus'
 export default {
   name: 'Screenfull',
   props: {
@@ -75,31 +74,17 @@ export default {
       isscreen: true
     }
   },
-  // beforeUpdate(){
-  //   var _self = this
-  //   this.$nextTick(function () {
-  //     document.addEventListener('keyup', function (e) {
-  //     //此处填写你的业务逻辑即可
-  //      if (e.keyCode == 27) {
-  //        if(screenfull.isFullscreen == false){
-  //           eventBus.$emit("isshow", "全屏");
-  //           alert("执行退出全屏操作...");
-  //           }
-  //         }
-  //       })
-  //     })
-  // },
   mounted() {
-    eventBus.$emit('isshow', '全屏')
+    this.$baseEventBus.$emit('isshow', '全屏')
   },
   methods: {
     click() {
       if (screenfull.isFullscreen == true) {
         this.isscreen = true
-        eventBus.$emit('isshow', '全屏')
+        this.$baseEventBus.$emit('isshow', '全屏')
       } else {
         this.isscreen = false
-        eventBus.$emit('isshow', '退出全屏')
+        this.$baseEventBus.$emit('isshow', '退出全屏')
       }
       if (!screenfull.enabled) {
         this.$message({
