@@ -582,7 +582,7 @@ export default {
       this.showAllChannel()
     },
     showAllChannel() {
-      this.$message('Parse')
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       // var Channel = Parse.Object.extend('Channel')
       // var channel = new Parse.Query(Channel)
       // channel.skip(this.allChannelstart)

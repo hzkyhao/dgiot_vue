@@ -269,7 +269,6 @@
   </div>
 </template>
 <script>
-import Parse from 'parse'
 import { subupadte } from '@/api/System/index'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'
@@ -359,68 +358,70 @@ export default {
       if (start == 0) {
         this.start = 0
       }
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Parse.Query(Channel)
-      channel.skip(this.start)
-      channel.limit(this.length)
-      channel.ascending('-createdAt')
-      if (this.channelformsearch.name != '') {
-        channel.contains('name', this.channelformsearch.name)
-      }
-      channel.count().then(count => {
-        this.total = count
-        channel.find().then(
-          resultes => {
-            if (resultes) {
-              this.tableData = resultes
-            }
-          },
-          error => {
-            if (error.code == '209') {
-              this.$message({
-                type: 'warning',
-                message: '登陆权限过期，请重新登录'
-              })
-              this.$router.push({
-                path: '/login'
-              })
-            } else if (error.code == 119) {
-              this.$message({
-                type: 'error',
-                message: '没有操作权限'
-              })
-            }
-          }, error => {
-            returnLogin(error)
-          }
-        )
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Parse.Query(Channel)
+      // channel.skip(this.start)
+      // channel.limit(this.length)
+      // channel.ascending('-createdAt')
+      // if (this.channelformsearch.name != '') {
+      //   channel.contains('name', this.channelformsearch.name)
+      // }
+      // channel.count().then(count => {
+      //   this.total = count
+      //   channel.find().then(
+      //     resultes => {
+      //       if (resultes) {
+      //         this.tableData = resultes
+      //       }
+      //     },
+      //     error => {
+      //       if (error.code == '209') {
+      //         this.$message({
+      //           type: 'warning',
+      //           message: '登陆权限过期，请重新登录'
+      //         })
+      //         this.$router.push({
+      //           path: '/login'
+      //         })
+      //       } else if (error.code == 119) {
+      //         this.$message({
+      //           type: 'error',
+      //           message: '没有操作权限'
+      //         })
+      //       }
+      //     }, error => {
+      //       returnLogin(error)
+      //     }
+      //   )
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     // 获取应用列表
     getApplication() {
-      var App = Parse.Object.extend('App')
-      var query = new Parse.Query(App)
-      var _this = this
-      query.limit(100)
-      query.find().then(
-        response => {
-          console.log('### response', response)
-          // this.$objGet
-          if (response) {
-            response.map(item => {
-              var obj = {}
-              obj.id = item.id
-              obj.name = item.attributes.desc
-              _this.applicationList.push(obj)
-            })
-          }
-        },
-        error => {
-          this.$message(error.message)
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var App = Parse.Object.extend('App')
+      // var query = new Parse.Query(App)
+      // var _this = this
+      // query.limit(100)
+      // query.find().then(
+      //   response => {
+      //     console.log('### response', response)
+      //     // this.$objGet
+      //     if (response) {
+      //       response.map(item => {
+      //         var obj = {}
+      //         obj.id = item.id
+      //         obj.name = item.attributes.desc
+      //         _this.applicationList.push(obj)
+      //       })
+      //     }
+      //   },
+      //   error => {
+      //     this.$message(error.message)
+      //   }
+      // )
     },
     handleNodeClick(data) {
       this.showTree = !this.showTree
@@ -475,41 +476,42 @@ export default {
           delete obj.type
           delete obj.isEnable
           delete obj.name
-          var Channel = Parse.Object.extend('Channel')
-          var channel = new Channel()
-          // var userid = Parse.User.current().id;
-          var acl = new Parse.ACL()
-          // 设置权限控制列表
-          acl.setRoleReadAccess(this.addchannel.applicationtText, true)
-          acl.setRoleWriteAccess(this.addchannel.applicationtText, true)
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var Channel = Parse.Object.extend('Channel')
+          // var channel = new Channel()
+          // // var userid = Parse.User.current().id;
+          // var acl = new Parse.ACL()
+          // // 设置权限控制列表
+          // acl.setRoleReadAccess(this.addchannel.applicationtText, true)
+          // acl.setRoleWriteAccess(this.addchannel.applicationtText, true)
 
-          if (this.resourceid != '') {
-            channel.id = this.resourceid
-          }
-          channel.set('config', obj)
-          channel.set('ACL', acl)
-          channel.set('name', this.addchannel.name)
-          channel.set('cType', this.addchannel.region)
-          channel.set('desc', this.addchannel.desc)
-          if (this.addchannel.type) {
-            channel.set('type', this.addchannel.type.toString())
-          }
-          channel.set('isEnable', this.addchannel.isEnable)
-          channel.save().then(resultes => {
-            if (resultes) {
-              this.$message({
-                type: 'success',
-                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
-              })
-              this.$refs['addchannel'].resetFields()
-              this.addchannel = {}
-              // this.reload()
-              this.channelForm = false
+          // if (this.resourceid != '') {
+          //   channel.id = this.resourceid
+          // }
+          // channel.set('config', obj)
+          // channel.set('ACL', acl)
+          // channel.set('name', this.addchannel.name)
+          // channel.set('cType', this.addchannel.region)
+          // channel.set('desc', this.addchannel.desc)
+          // if (this.addchannel.type) {
+          //   channel.set('type', this.addchannel.type.toString())
+          // }
+          // channel.set('isEnable', this.addchannel.isEnable)
+          // channel.save().then(resultes => {
+          //   if (resultes) {
+          //     this.$message({
+          //       type: 'success',
+          //       message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
+          //     })
+          //     this.$refs['addchannel'].resetFields()
+          //     this.addchannel = {}
+          //     // this.reload()
+          //     this.channelForm = false
 
-              this.resourceid = ''
-              this.Get_Re_Channel(0)
-            }
-          })
+          //     this.resourceid = ''
+          //     this.Get_Re_Channel(0)
+          //   }
+          // })
         }
       }, error => {
         returnLogin(error)
@@ -517,25 +519,26 @@ export default {
     },
     // 删除通道
     deleteChannel(scope) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = scope.row.id
-      channel.destroy().then(
-        resultes => {
-          this.$message({
-            type: 'success',
-            message: '删除成功'
-          })
-          scope._self.$refs[`popover-${scope.$index}`].doClose()
-          this.Get_Re_Channel(0)
-        },
-        error => {
-          this.$message({
-            type: 'error',
-            message: error.message
-          })
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Channel()
+      // channel.id = scope.row.id
+      // channel.destroy().then(
+      //   resultes => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '删除成功'
+      //     })
+      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //     this.Get_Re_Channel(0)
+      //   },
+      //   error => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: error.message
+      //     })
+      //   }
+      // )
     },
     addchanneltype() {
       this.channelForm = true
