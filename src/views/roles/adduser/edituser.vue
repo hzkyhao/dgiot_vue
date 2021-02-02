@@ -57,7 +57,7 @@
   </div>
 </template>
 <script>
-import { Parse } from 'parse'
+import { putUser } from "@/api/User/index"
 export default {
   data() {
     return {
@@ -73,27 +73,54 @@ export default {
         password: '',
         email: '',
         checkPass: '',
-        departmentid: [],
-        password: ''
+        departmentid: []
+
       },
-      id: '',
-      treeprops: {
-        value: 'objectId',
-        label: 'name'
-      }
+      id: ''
+
     }
   },
   computed: {},
   mounted() {
     this.editUser()
   },
+
   methods: {
+    async editoruser(formName) {
+      console.log(formName)
+      // 更新用户详情
+      const params = {
+        username: this.ruleForm2.account,
+        nick: this.ruleForm2.username,
+        phone: this.ruleForm2.phone,
+        email: this.ruleForm2.email,
+        departmentid: this.ruleForm2.departmentid
+      }
+      const res = await putUser(this.$route.query.id, params)
+      if (res) {
+        this.$message({
+          message: '更改成功',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          type: 'error',
+          message: '修改用户失败'
+        })
+      }
+      // this.$router.push({
+      //   path: "/roles/structure"
+      // });
+    },
+
     editUser() {
-      var userid = this.$route.query.id
       // 获取用户详情
       this.$axiosWen
-        .get('iotapi/classes/_User/' + userid)
-        .then(res => {
+        .get(`iotapi/classes/_User/`, { params: {
+          limit: 1, skip: 0, where: { objectId: this.$route.query.id }
+        }})
+        .then(r => {
+          const res = r.results[0]
           this.ruleForm2.username = res.nick
           this.ruleForm2.phone = res.phone
           this.ruleForm2.account = res.username
@@ -107,45 +134,6 @@ export default {
           })
           console.log(err)
         })
-    },
-    editoruser(formName) {
-      var User = new Parse.User()
-      var user = new Parse.Query(User)
-      user.get(this.$route.query.id).then(res => {
-        // if (this.ruleForm2.departmentid.length) {
-        //   var Department = Parse.Object.extend("Department");
-        //   var department = new Department();
-        //   department.set(
-        //     "objectId",
-        //     this.ruleForm2.departmentid[this.ruleForm2.departmentid.length - 1]
-        //   );
-        //   res.set("department", department);
-        // }
-        res.set('username', this.ruleForm2.account)
-        res.set('nick', this.ruleForm2.username)
-        res.set('phone', this.ruleForm2.phone)
-        res.set('email', this.ruleForm2.email)
-        // if(this.ruleForm2.password!=''){
-        //    res.set("password", this.ruleForm2.password);
-        // }
-        res
-          .save()
-          .then(resultes => {
-            this.$message({
-              message: '更改成功',
-              type: 'success'
-            })
-            // this.$router.push({
-            //   path: "/roles/structure"
-            // });
-          })
-          .catch(error => {
-            this.$message({
-              type: 'error',
-              message: error.message
-            })
-          })
-      })
     },
     getDepartment() {
       this.$axiosWen
@@ -167,30 +155,30 @@ export default {
 }
 </script>
 <style scoped>
-.edituser {
-  width: 100%;
-  min-height: 875px;
-  padding: 20px;
-  box-sizing: border-box;
-  background: #ffffff;
-}
-.admin {
-  font-size: 24px;
-  margin: 20px 0 10px 20px;
-}
-.admin .des {
-  padding-left: 5px;
-  font-size: 15px;
-  color: #777;
-}
-.goodslist {
-  margin-left: 20px;
-  margin-bottom: 10px;
-}
-.el-input {
-  width: 600px;
-}
-.el-form {
-  margin-left: 20px;
-}
+  .edituser {
+    width: 100%;
+    min-height: 875px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+  }
+  .admin {
+    font-size: 24px;
+    margin: 20px 0 10px 20px;
+  }
+  .admin .des {
+    padding-left: 5px;
+    font-size: 15px;
+    color: #777;
+  }
+  .goodslist {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+  .el-input {
+    width: 600px;
+  }
+  .el-form {
+    margin-left: 20px;
+  }
 </style>
