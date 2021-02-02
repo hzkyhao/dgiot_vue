@@ -1321,32 +1321,38 @@ export default {
     },
     // 删除设备
     deleteDevcie(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend("Device");
-          var devices = new Parse.Query(Device);
-          devices.get(item.id).then(resultes => {
-            resultes.destroy().then(resultes => {});
-          });
-        })
-      ])
-        .then(data => {
-          if (data.length != 0) {
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getDevices();
-          } else {
-            this.$message({
-              message: "删除失败",
-              type: "error"
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      var tableData = []
+      this.multipleTable.map(item => {
+          tableData.push(item.id)
+          console.log(item)
+      })
+      this.$batchDeleteDevice(tableData)
+      // Promise.all([
+      //   this.multipleTable.map(item => {
+      //     var Device = Parse.Object.extend("Device");
+      //     var devices = new Parse.Query(Device);
+      //     devices.get(item.id).then(resultes => {
+      //       resultes.destroy().then(resultes => {});
+      //     });
+      //   })
+      // ])
+      //   .then(data => {
+      //     if (data.length != 0) {
+      //       this.$message({
+      //         message: "删除成功",
+      //         type: "success"
+      //       });
+      //       this.getDevices();
+      //     } else {
+      //       this.$message({
+      //         message: "删除失败",
+      //         type: "error"
+      //       });
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
     },
     // 设备多个启用和禁用
     unactiveDevice(val) {
@@ -1519,7 +1525,7 @@ export default {
           isEnable : row.isEnable,
           address : row.address
       }
-      
+      console.log(this.$route)
       if (this.$route.query.productid) {
         this.deviceform['productName'] = this.$route.query.productid;
       } else {
@@ -1921,7 +1927,7 @@ export default {
               write: true
             }
             const params = {
-              id: this.batchid,
+              objectId: this.batchid,
               data: {
                 batch_name: this.pcformInline.pcname,
                 createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
@@ -1930,7 +1936,8 @@ export default {
               type: "batch_number"
             };
             // 更新批次
-            this.$putDict(params).then(
+            console.log(params)
+            this.$putDict(params.objectId,params).then(
               res => {
                   if(!res.error){
                     this.initQuery("修改成功",'success')
