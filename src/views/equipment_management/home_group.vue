@@ -774,130 +774,131 @@ export default {
     },
 
     submitForm(formName) {
-      var objectId = Parse.User.current().id
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          var ranNum = Math.ceil(Math.random() * 25)
-          var productSecret = Base64.encode(
-            String.fromCharCode(65 + ranNum) +
-              Math.ceil(Math.random() * 10000000) +
-              Number(new Date())
-          )
-          var Product = Parse.Object.extend('Product')
-          var product = new Product()
-          var acl = new Parse.ACL()
-          if (this.productid == '') {
-            // 新增产品
-            var Product1 = Parse.Object.extend('Product')
-            var product1 = new Parse.Query(Product1)
-            product1.equalTo('name', this.form.name)
-            product1.count().then(count => {
-              if (count != 0) {
-                this.$message('产品名称已存在')
-                return false
-              } else {
-                product.set('productSecret', productSecret)
-                this.$store.state.project.projectRole.map(item => {
-                  acl.setRoleReadAccess(item, true)
-                  acl.setRoleWriteAccess(item, true)
-                })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var objectId = Parse.User.current().id
+      // this.$refs[formName].validate(valid => {
+      //   if (valid) {
+      //     var ranNum = Math.ceil(Math.random() * 25)
+      //     var productSecret = Base64.encode(
+      //       String.fromCharCode(65 + ranNum) +
+      //         Math.ceil(Math.random() * 10000000) +
+      //         Number(new Date())
+      //     )
+      //     var Product = Parse.Object.extend('Product')
+      //     var product = new Product()
+      //     var acl = new Parse.ACL()
+      //     if (this.productid == '') {
+      //       // 新增产品
+      //       var Product1 = Parse.Object.extend('Product')
+      //       var product1 = new Parse.Query(Product1)
+      //       product1.equalTo('name', this.form.name)
+      //       product1.count().then(count => {
+      //         if (count != 0) {
+      //           this.$message('产品名称已存在')
+      //           return false
+      //         } else {
+      //           product.set('productSecret', productSecret)
+      //           this.$store.state.project.projectRole.map(item => {
+      //             acl.setRoleReadAccess(item, true)
+      //             acl.setRoleWriteAccess(item, true)
+      //           })
 
-                product.set('ACL', acl)
-                product.set('nodeType', this.form.nodeType)
-                product.set('netType', this.form.netType)
-                product.set('dynamicReg', false)
-                product.set(
-                  'category',
-                  this.form.category[this.form.category.length - 1]
-                ),
-                product.set('icon', this.imageUrl)
-                product.set('name', this.form.name)
-                product.set('devType', this.form.devType)
-                product.set('desc', this.form.desc)
-                product.set('topics', [])
-                product.save().then(
-                  res => {
-                    if (res) {
-                      this.projectid = this.$route.query.project
-                      var Project = Parse.Object.extend('Project')
-                      var project = new Parse.Query(Project)
-                      var Product2 = Parse.Object.extend('Product')
-                      var product2 = new Product2()
-                      project.get(this.projectid).then(response => {
-                        var relation = response.relation('product')
-                        product2.set('objectId', res.id)
-                        relation.add(product2)
-                        response.save().then(resultes => {
-                          if (resultes) {
-                            this.$message({
-                              type: 'success',
-                              message: `创建成功,请完成产品配置`
-                            })
-                            this.dialogFormVisible = false
-                            this.$refs['ruleForm'].resetFields()
+      //           product.set('ACL', acl)
+      //           product.set('nodeType', this.form.nodeType)
+      //           product.set('netType', this.form.netType)
+      //           product.set('dynamicReg', false)
+      //           product.set(
+      //             'category',
+      //             this.form.category[this.form.category.length - 1]
+      //           ),
+      //           product.set('icon', this.imageUrl)
+      //           product.set('name', this.form.name)
+      //           product.set('devType', this.form.devType)
+      //           product.set('desc', this.form.desc)
+      //           product.set('topics', [])
+      //           product.save().then(
+      //             res => {
+      //               if (res) {
+      //                 this.projectid = this.$route.query.project
+      //                 var Project = Parse.Object.extend('Project')
+      //                 var project = new Parse.Query(Project)
+      //                 var Product2 = Parse.Object.extend('Product')
+      //                 var product2 = new Product2()
+      //                 project.get(this.projectid).then(response => {
+      //                   var relation = response.relation('product')
+      //                   product2.set('objectId', res.id)
+      //                   relation.add(product2)
+      //                   response.save().then(resultes => {
+      //                     if (resultes) {
+      //                       this.$message({
+      //                         type: 'success',
+      //                         message: `创建成功,请完成产品配置`
+      //                       })
+      //                       this.dialogFormVisible = false
+      //                       this.$refs['ruleForm'].resetFields()
 
-                            this.resetProductForm()
-                            this.searchProduct()
-                          }
-                        })
-                      })
-                    }
-                  },
-                  error => {
-                    returnLogin(error)
-                  }
-                )
-              }
-            })
-          } else {
-            product.id = this.productid
-            product.set('productSecret', this.form.productSecret)
-            /*    this.form.roles.map(item => {
-              acl.setRoleReadAccess(item, true);
-              acl.setRoleWriteAccess(item, true);
-            });
+      //                       this.resetProductForm()
+      //                       this.searchProduct()
+      //                     }
+      //                   })
+      //                 })
+      //               }
+      //             },
+      //             error => {
+      //               returnLogin(error)
+      //             }
+      //           )
+      //         }
+      //       })
+      //     } else {
+      //       product.id = this.productid
+      //       product.set('productSecret', this.form.productSecret)
+      //       /*    this.form.roles.map(item => {
+      //         acl.setRoleReadAccess(item, true);
+      //         acl.setRoleWriteAccess(item, true);
+      //       });
 
-           this.$store.state.project.projectRole.map(item=>{
-                   acl.setRoleReadAccess(item, true);
-                   acl.setRoleWriteAccess(item, true);
-                })
-            product.set("ACL", acl);
-            */
-            product.set('nodeType', this.form.nodeType)
-            product.set('netType', this.form.netType)
-            product.set('dynamicReg', false)
-            product.set(
-              'category',
-              this.form.category[this.form.category.length - 1]
-            ),
-            product.set('icon', this.imageUrl)
-            product.set('name', this.form.name)
-            product.set('devType', this.form.devType)
-            product.set('desc', this.form.desc)
-            product.set('topics', [])
-            product.save().then(
-              res => {
-                if (res) {
-                  this.$message({
-                    type: 'success',
-                    message: `编辑成功`
-                  })
-                  this.dialogFormVisible = false
-                  this.$refs['ruleForm'].resetFields()
-                  this.searchProduct()
-                  this.productid = ''
-                }
-              },
-              error => {
-                returnLogin(error)
-              }
-            )
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      //      this.$store.state.project.projectRole.map(item=>{
+      //              acl.setRoleReadAccess(item, true);
+      //              acl.setRoleWriteAccess(item, true);
+      //           })
+      //       product.set("ACL", acl);
+      //       */
+      //       product.set('nodeType', this.form.nodeType)
+      //       product.set('netType', this.form.netType)
+      //       product.set('dynamicReg', false)
+      //       product.set(
+      //         'category',
+      //         this.form.category[this.form.category.length - 1]
+      //       ),
+      //       product.set('icon', this.imageUrl)
+      //       product.set('name', this.form.name)
+      //       product.set('devType', this.form.devType)
+      //       product.set('desc', this.form.desc)
+      //       product.set('topics', [])
+      //       product.save().then(
+      //         res => {
+      //           if (res) {
+      //             this.$message({
+      //               type: 'success',
+      //               message: `编辑成功`
+      //             })
+      //             this.dialogFormVisible = false
+      //             this.$refs['ruleForm'].resetFields()
+      //             this.searchProduct()
+      //             this.productid = ''
+      //           }
+      //         },
+      //         error => {
+      //           returnLogin(error)
+      //         }
+      //       )
+      //     }
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     },
     resetProductForm() {
       this.form = {
@@ -931,41 +932,43 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+
       // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      var Product = Parse.Object.extend('Product')
-      var product = new Parse.Query(Product)
-      var Device = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Device)
-      devices.equalTo('product', scope.row.id)
-      devices.find().then(resultes => {
-        if (resultes.length > 0) {
-          this.$message('请先删除该产品下设备')
-          return
-        } else {
-          product.get(scope.row.id).then(
-            resultes => {
-              resultes.destroy().then(
-                response => {
-                  if (response) {
-                    this.$message({
-                      type: 'success',
-                      message: '删除成功'
-                    })
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    this.searchProduct()
-                  }
-                },
-                error => {
-                  returnLogin(error)
-                }
-              )
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
-        }
-      })
+      // var Product = Parse.Object.extend('Product')
+      // var product = new Parse.Query(Product)
+      // var Device = Parse.Object.extend('Device')
+      // var devices = new Parse.Query(Device)
+      // devices.equalTo('product', scope.row.id)
+      // devices.find().then(resultes => {
+      //   if (resultes.length > 0) {
+      //     this.$message('请先删除该产品下设备')
+      //     return
+      //   } else {
+      //     product.get(scope.row.id).then(
+      //       resultes => {
+      //         resultes.destroy().then(
+      //           response => {
+      //             if (response) {
+      //               this.$message({
+      //                 type: 'success',
+      //                 message: '删除成功'
+      //               })
+      //               scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //               this.searchProduct()
+      //             }
+      //           },
+      //           error => {
+      //             returnLogin(error)
+      //           }
+      //         )
+      //       },
+      //       error => {
+      //         returnLogin(error)
+      //       }
+      //     )
+      //   }
+      // })
     },
     productSizeChange(val) {
       this.length = val
