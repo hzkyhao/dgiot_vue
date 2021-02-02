@@ -133,7 +133,7 @@
   </div>
 </template>
 <script>
-import {getProduct, getApp, getProject, getDevice } from "@/api/data";
+import { batch } from "@/api/Batch/data";
 export default {
   components: {
   },
@@ -176,114 +176,72 @@ export default {
       });
     },
     async query() {
-      const queryProduct = await getProduct({
-        limit: 0,
-        count: 1
-      })
+      const requests =
+        [
+          {
+            method: "GET",
+            path: "/classes/Project",
+            body: {
+              limit: 0,
+              count: 1
+            }
+          },
+          {
+            method: "GET",
+            path: "/classes/Product",
+            body: {
+              limit: 0,
+              count: 1
+            }
+          },
+          {
+            method: "GET",
+            path: "/classes/App",
+            body: {
+              limit: 0,
+              count: 1
+            }
+          },
+          {
+            method: "GET",
+            path: "/classes/Device",
+            body: {
+              limit: 0,
+              count: 1
+            }
+          },
+          {
+            method: "GET",
+            path: "/classes/Device",
+            body: {
+              limit: 0,
+              count: 1,
+              where: {
+                status: "ACTIVE"
+              }
+            }
+          },
+          {
+            method: "GET",
+            path: "/classes/Device",
+            body: {
+              limit: 0,
+              count: 1,
+              where: {
+                status: "ONLINE"
+              }
+            }
+          }
+        ]
 
-      const queryProject = await getProject({
-        limit: 0,
-        count: 1
-      })
-
-      const queryApp = await getApp({
-        limit: 0,
-        count: 1
-      })
-
-      const queryACTIVEDevice = await getDevice({
-        limit: 0,
-        count: 1,
-        where: {
-          status: "ACTIVE"
-        }
-      })
-
-      const queryONLINEDevice = await getDevice({
-        limit: 0,
-        count: 1,
-        where: {
-          status: "ONLINE"
-        }
-      })
-      console.log(queryProject)
-      this.project_count = queryProject.count || "-";
-      this.product_count = queryProduct.count || "-";
-      this.app_count = queryApp.count || "-";
-      this.dev_count = queryProject.count || "-";
-      this.dev_active_count = queryACTIVEDevice.count || "-";
-      this.dev_online_count = queryONLINEDevice.count || "-";
-      // batch("/batch", {
-      //   requests: [
-      //     {
-      //       method: "GET",
-      //       path: "/classes/Project",
-      //       body: {
-      //         limit: 0,
-      //         count: 1
-      //       }
-      //     },
-      //     {
-      //       method: "GET",
-      //       path: "/classes/Product",
-      //       body: {
-      //         limit: 0,
-      //         count: 1
-      //       }
-      //     },
-      //     {
-      //       method: "GET",
-      //       path: "/classes/App",
-      //       body: {
-      //         limit: 0,
-      //         count: 1
-      //       }
-      //     },
-      //     {
-      //       method: "GET",
-      //       path: "/classes/Device",
-      //       body: {
-      //         limit: 0,
-      //         count: 1
-      //       }
-      //     },
-      //     {
-      //       method: "GET",
-      //       path: "/classes/Device",
-      //       body: {
-      //         limit: 0,
-      //         count: 1,
-      //         where: {
-      //           status: "ACTIVE"
-      //         }
-      //       }
-      //     },
-      //     {
-      //       method: "GET",
-      //       path: "/classes/Device",
-      //       body: {
-      //         limit: 0,
-      //         count: 1,
-      //         where: {
-      //           status: "ONLINE"
-      //         }
-      //       }
-      //     }
-      //   ]
-      // }).then(res => {
-      //   this.project_count = res[0].success ? res[0].success.count : "-";
-      //   this.product_count = res[1].success ? res[1].success.count : "-";
-      //   this.app_count = res[2].success ? res[2].success.count : "-";
-      //   this.dev_count = res[3].success ? res[3].success.count : "-";
-      //   this.dev_active_count = res[4].success ? res[4].success.count : "-";
-      //   this.dev_online_count = res[5].success ? res[5].success.count : "-";
-      // });
-
-      const Project = await getProject({
-        limit: 30
-      })
-      this.projectList = Project.results
-      console.log(Project, 'Project')
+      await batch(requests).then(res => {
+        this.project_count = res[0].success ? res[0].success.count : "-";
+        this.product_count = res[1].success ? res[1].success.count : "-";
+        this.app_count = res[2].success ? res[2].success.count : "-";
+        this.dev_count = res[3].success ? res[3].success.count : "-";
+        this.dev_active_count = res[4].success ? res[4].success.count : "-";
+        this.dev_online_count = res[5].success ? res[5].success.count : "-";
+      });
     }
   }
 }

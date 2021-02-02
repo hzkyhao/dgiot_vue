@@ -346,7 +346,7 @@ import Parse from 'parse'
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
 import Cookies from 'js-cookie'
-import { getServer } from '@/api/Role/index'
+import { getRole } from '@/api/Role/index'
 import { addGroup } from '@/api/Group/index'
 export default {
   data() {
@@ -513,7 +513,7 @@ export default {
       if (!val) {
         return
       }
-      getServer(val).then(resultes => {
+      getRole(val).then(resultes => {
         if (resultes) {
           this.fileServer = resultes.file
           this.access_token = resultes.access_token
@@ -753,42 +753,6 @@ export default {
       this.selectApp(this.form.relationApp)
     },
     handleChange() {},
-    // 查询样品
-    // Industry() {
-    //   this.categoryList = []
-    //   var Dict = Parse.Object.extend('Dict')
-    //   var datas = new Parse.Query(Dict)
-    //   datas.equalTo('data.key', 'category')
-    //   datas.limit(1000)
-    //   datas.find().then(
-    //     response => {
-    //       if (response) {
-    //         response.map(items => {
-    // var obj = {}
-    // obj.value = items.attributes.type
-    // obj.label = items.attributes.data.CategoryName
-    // obj.id = items.attributes.data.Id
-    // obj.parentid = items.attributes.data.SuperId
-    // this.categoryList.push(obj)
-    //         })
-    //         // this.searchProduct();
-    //         this.categoryListOptions = this.treeData(this.categoryList)
-    //       }
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
-    // distinct(a, b) {
-    //     let arr = a.concat(b);
-
-    //     return arr.filter((item, index)=> {
-    //         return arr.indexOf(item.id) === index
-    //          console.log(arr)
-    //     })
-
-    // },
 
     async Industry() {
       this.categoryList = []

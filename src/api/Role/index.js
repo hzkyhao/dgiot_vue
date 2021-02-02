@@ -29,4 +29,12 @@ export function roletree() {
   })
 }
 
-
+export function getServer(pro) {
+  return request({
+    url: 'iotapi/apihub',
+    method: 'get',
+    params: {
+      appname: pro
+    }
+  })
+}
