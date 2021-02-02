@@ -243,12 +243,8 @@
   </div>
 </template>
 <script>
-import Parse from "parse";
 import { Promise } from "q";
-import { setTimeout } from "timers";
-import $ from "jquery";
 var arr = [];
-var arr1 = [];
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
@@ -436,41 +432,42 @@ export default {
       });
     },
     editorrole(id) {
-      this.rolelist = [];
-      this.userrolelist = [];
-      this.objectId = id;
-      this.roleacl = true;
-      var User = Parse.Object.extend("_User");
-      var user = new Parse.Query(User);
-      user
-        .get(this.objectId)
-        .then(resultes => {
-          var Role = Parse.Object.extend("_Role");
-          var query = new Parse.Query(Role);
-          var user = new User();
-          query.addAscending("createdAt");
-          query.find().then(resultes => {
-            this.rolelist = resultes;
-            user.set("objectId", this.objectId);
-            query.equalTo("users", user);
-            query.find().then(result => {
-              result.map(item => {
-                resultes.map((roleitem, index) => {
-                  if (item.id == roleitem.id) {
-                    this.$refs.multipleTable.toggleRowSelection(
-                      this.rolelist[index],
-                      true
-                    );
-                    this.userrolelist.push(roleitem.id);
-                  }
-                });
-              });
-            });
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      this.$message(id)
+      // this.rolelist = [];
+      // this.userrolelist = [];
+      // this.objectId = id;
+      // this.roleacl = true;
+      // var User = Parse.Object.extend("_User");
+      // var user = new Parse.Query(User);
+      // user
+      //   .get(this.objectId)
+      //   .then(resultes => {
+      //     var Role = Parse.Object.extend("_Role");
+      //     var query = new Parse.Query(Role);
+      //     var user = new User();
+      //     query.addAscending("createdAt");
+      //     query.find().then(resultes => {
+      //       this.rolelist = resultes;
+      //       user.set("objectId", this.objectId);
+      //       query.equalTo("users", user);
+      //       query.find().then(result => {
+      //         result.map(item => {
+      //           resultes.map((roleitem, index) => {
+      //             if (item.id == roleitem.id) {
+      //               this.$refs.multipleTable.toggleRowSelection(
+      //                 this.rolelist[index],
+      //                 true
+      //               );
+      //               this.userrolelist.push(roleitem.id);
+      //             }
+      //           });
+      //         });
+      //       });
+      //     });
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
     },
     seleItem(arr1, arr2, arr3) {
       arr1.map(items => {
@@ -502,24 +499,24 @@ export default {
       });
     },
     testroles(id) {
-      console.log(id);
-      var Roles = Parse.Object.extend("_Role");
-      var roles = new Roles();
-      var User = Parse.Object.extend("_User");
-      var userrelation = new User();
-
-      roles.id = id;
-      if (this.multipleSelection.includes(id)) {
-        var relation = roles.relation("users");
-        userrelation.set("objectId", this.objectId);
-        relation.add(userrelation);
-        roles.save().then(resultes => {});
-      } else {
-        var relation = roles.relation("users");
-        userrelation.set("objectId", this.objectId);
-        relation.remove(userrelation);
-        roles.save().then(resultes => {});
-      }
+      // console.log(id);
+      // var Roles = Parse.Object.extend("_Role");
+      // var roles = new Roles();
+      // var User = Parse.Object.extend("_User");
+      // var userrelation = new User();
+      //
+      // roles.id = id;
+      // if (this.multipleSelection.includes(id)) {
+      //   var relation = roles.relation("users");
+      //   userrelation.set("objectId", this.objectId);
+      //   relation.add(userrelation);
+      //   roles.save().then(resultes => {});
+      // } else {
+      //   var relation = roles.relation("users");
+      //   userrelation.set("objectId", this.objectId);
+      //   relation.remove(userrelation);
+      //   roles.save().then(resultes => {});
+      // }
     },
     adduseracl() {
       this.seleItem(this.userrolelist, this.multipleSelection, []);
@@ -697,31 +694,31 @@ export default {
         type: emailtype
       })
         .then(() => {
-          var User = Parse.Object.extend("_User");
-          var user = new Parse.Query(User);
-          user.get(row.id).then(resultes => {
-            resultes.set("emailVerified", isemail);
-            resultes.save().then(
-              res => {
-                if (res) {
-                  this.$message({
-                    type: "success",
-                    message: "已" + emailrole + ""
-                  });
-                }
-                this.getDepartment();
-              },
-              error => {
-                console.log(error);
-                if (error.code == 119) {
-                  this.$message({
-                    type: "error",
-                    message: error.message
-                  });
-                }
-              }
-            );
-          });
+          // var User = Parse.Object.extend("_User");
+          // var user = new Parse.Query(User);
+          // user.get(row.id).then(resultes => {
+          //   resultes.set("emailVerified", isemail);
+          //   resultes.save().then(
+          //     res => {
+          //       if (res) {
+          //         this.$message({
+          //           type: "success",
+          //           message: "已" + emailrole + ""
+          //         });
+          //       }
+          //       this.getDepartment();
+          //     },
+          //     error => {
+          //       console.log(error);
+          //       if (error.code == 119) {
+          //         this.$message({
+          //           type: "error",
+          //           message: error.message
+          //         });
+          //       }
+          //     }
+          //   );
+          // });
         })
         .catch(() => {
           this.$message({
