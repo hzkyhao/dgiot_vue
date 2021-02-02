@@ -88,29 +88,3 @@ export function setUpLictool(appname) {
     }
   })
 }
-
-// 万亿零转换
-export function handleZero(value) {
-  // console.log(value);
-  // console.log(typeof(value));
-  if (typeof (value) === 'number') {
-    value = String(value)
-    const Y = /0{8}$/
-    const W = /0{4}$/
-    if (Y.test(value)) {
-      return value.replace(Y, '亿')
-    } else if (W.test(value)) {
-      return value.replace(W, '万')
-    }
-    return value
-  } else if (typeof (value) === 'string') {
-    const W = /万+$/
-    const Y = /亿+$/
-    if (Y.test(value)) {
-      return value.replace(Y, '00000000')
-    } else if (W.test(value)) {
-      return value.replace(W, '0000')
-    }
-    return value
-  }
-}

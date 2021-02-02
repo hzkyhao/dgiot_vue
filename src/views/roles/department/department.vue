@@ -194,9 +194,6 @@
 </template>
 <script>
 const Base64 = require('js-base64').Base64;
-import { page, UpdatedMenu, UpdatedRole } from "@/api/login";
-import { Parse } from "parse";
-import { eventBus } from "@/api/eventBus";
 export default {
   name: "Department",
   components: {},

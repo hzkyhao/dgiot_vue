@@ -522,10 +522,8 @@
 <script>
 import { getTdDevice } from "@/api/Device/index.js"
 import Parse from 'parse'
-import { utc2beijing } from '@/utils/index'
-import { timestampToTime } from '@/api/login'
+import { utc2beijing,timestampToTime } from '@/utils/index'
 import LineChart from '../dashboard/admin/components/LineChart'
-import $ from 'jquery'
 import { returnLogin } from '@/utils/return'
 var dataobj = {}
 export default {
