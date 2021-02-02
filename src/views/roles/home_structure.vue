@@ -435,37 +435,38 @@ export default {
       this.userrolelist = [];
       this.objectId = id;
       this.roleacl = true;
-      var User = Parse.Object.extend("_User");
-      var user = new Parse.Query(User);
-      user
-        .get(this.objectId)
-        .then(resultes => {
-          var Role = Parse.Object.extend("_Role");
-          var query = new Parse.Query(Role);
-          var user = new User();
-          query.addAscending("createdAt");
-          query.find().then(resultes => {
-            this.rolelist = resultes;
-            user.set("objectId", this.objectId);
-            query.equalTo("users", user);
-            query.find().then(result => {
-              result.map(item => {
-                resultes.map((roleitem, index) => {
-                  if (item.id == roleitem.id) {
-                    this.$refs.multipleTable.toggleRowSelection(
-                      this.rolelist[index],
-                      true
-                    );
-                    this.userrolelist.push(roleitem.id);
-                  }
-                });
-              });
-            });
-          });
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var User = Parse.Object.extend("_User");
+      // var user = new Parse.Query(User);
+      // user
+      //   .get(this.objectId)
+      //   .then(resultes => {
+      //     var Role = Parse.Object.extend("_Role");
+      //     var query = new Parse.Query(Role);
+      //     var user = new User();
+      //     query.addAscending("createdAt");
+      //     query.find().then(resultes => {
+      //       this.rolelist = resultes;
+      //       user.set("objectId", this.objectId);
+      //       query.equalTo("users", user);
+      //       query.find().then(result => {
+      //         result.map(item => {
+      //           resultes.map((roleitem, index) => {
+      //             if (item.id == roleitem.id) {
+      //               this.$refs.multipleTable.toggleRowSelection(
+      //                 this.rolelist[index],
+      //                 true
+      //               );
+      //               this.userrolelist.push(roleitem.id);
+      //             }
+      //           });
+      //         });
+      //       });
+      //     });
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
     },
     seleItem(arr1, arr2, arr3) {
       arr1.map(items => {
@@ -498,23 +499,24 @@ export default {
     },
     testroles(id) {
       console.log(id);
-      var Roles = Parse.Object.extend("_Role");
-      var roles = new Roles();
-      var User = Parse.Object.extend("_User");
-      var userrelation = new User();
+      // var Roles = Parse.Object.extend("_Role");
+      // var roles = new Roles();
+      // var User = Parse.Object.extend("_User");
+      // var userrelation = new User();
 
-      roles.id = id;
-      if (this.multipleSelection.includes(id)) {
-        var relation = roles.relation("users");
-        userrelation.set("objectId", this.objectId);
-        relation.add(userrelation);
-        roles.save().then(resultes => {});
-      } else {
-        var relation = roles.relation("users");
-        userrelation.set("objectId", this.objectId);
-        relation.remove(userrelation);
-        roles.save().then(resultes => {});
-      }
+      // roles.id = id;
+      // if (this.multipleSelection.includes(id)) {
+      //   var relation = roles.relation("users");
+      //   userrelation.set("objectId", this.objectId);
+      //   relation.add(userrelation);
+      //   roles.save().then(resultes => {});
+      // } else {
+      //   var relation = roles.relation("users");
+      //   userrelation.set("objectId", this.objectId);
+      //   relation.remove(userrelation);
+      //   roles.save().then(resultes => {});
+      // }
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
     },
     adduseracl() {
       this.seleItem(this.userrolelist, this.multipleSelection, []);
@@ -692,31 +694,32 @@ export default {
         type: emailtype
       })
         .then(() => {
-          var User = Parse.Object.extend("_User");
-          var user = new Parse.Query(User);
-          user.get(row.id).then(resultes => {
-            resultes.set("emailVerified", isemail);
-            resultes.save().then(
-              res => {
-                if (res) {
-                  this.$message({
-                    type: "success",
-                    message: "已" + emailrole + ""
-                  });
-                }
-                this.getDepartment();
-              },
-              error => {
-                console.log(error);
-                if (error.code == 119) {
-                  this.$message({
-                    type: "error",
-                    message: error.message
-                  });
-                }
-              }
-            );
-          });
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var User = Parse.Object.extend("_User");
+          // var user = new Parse.Query(User);
+          // user.get(row.id).then(resultes => {
+          //   resultes.set("emailVerified", isemail);
+          //   resultes.save().then(
+          //     res => {
+          //       if (res) {
+          //         this.$message({
+          //           type: "success",
+          //           message: "已" + emailrole + ""
+          //         });
+          //       }
+          //       this.getDepartment();
+          //     },
+          //     error => {
+          //       console.log(error);
+          //       if (error.code == 119) {
+          //         this.$message({
+          //           type: "error",
+          //           message: error.message
+          //         });
+          //       }
+          //     }
+          //   );
+          // });
         })
         .catch(() => {
           this.$message({
