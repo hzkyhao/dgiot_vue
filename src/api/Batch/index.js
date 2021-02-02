@@ -1,8 +1,8 @@
 /*
  * @Author: h7ml
  * @Date: 2021-02-01 16:45:26
- * @LastEditTime: 2021-02-02 12:12:06
- * @Description: this.Batchdelete('_Dict', ['id1','id2'])
+ * @LastEditTime: 2021-02-02 15:21:33
+ * @Description: this.Batchdelete('Dict', ['id1','id2'])
  * @FilePath: \platform\src\api\batch\index.js
  */
 // https://docs.parseplatform.org/rest/guide/#batch-operations
@@ -15,7 +15,7 @@ const Vue = require("vue");
  * @param {*} tableClass
  * @param {*} ObjectIdArr
  */
-export async function Batchdelete(tableClass, ObjectIdArr, body) {
+export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
   if (!tableClass && !ObjectIdArr) {
     return Message({
       message: "tableClass 和 ObjectIdArr 字段为必传",
@@ -24,7 +24,7 @@ export async function Batchdelete(tableClass, ObjectIdArr, body) {
     });
   } else if (Array.isArray(ObjectIdArr) !== true) {
     return Message({
-      message: "或传入的ObjectIdArr不是一个数组",
+      message: "传入的ObjectIdArr不是一个数组",
       type: "error",
       duration: 1 * 1000
     });
@@ -33,7 +33,7 @@ export async function Batchdelete(tableClass, ObjectIdArr, body) {
     let requests = []
     for (const key in ObjectIdArr) {
       requests.push({
-        method: 'DELETE', path: `/parse/classes/${tableClass}/${ObjectIdArr[key]}`, body: body
+        method: method, path: `classes/${tableClass}/${ObjectIdArr[key]}`, body: body
       })
     }
     const params = {
@@ -43,10 +43,6 @@ export async function Batchdelete(tableClass, ObjectIdArr, body) {
     return request({
       url: `iotapi/batch`,
       method: "post",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json"
-      },
       data: params
     });
   }
