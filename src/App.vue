@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-01-11 11:38:52
+ * @LastEditTime: 2021-02-02 20:55:09
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \platform\src\App.vue
+-->
 <template>
   <div id="app">
     <router-view v-if="isRouterAlive" />
@@ -5,7 +13,6 @@
 </template>
 
 <script>
-import { Parse } from 'parse'
 export default {
   name: 'App',
   provide() {
@@ -21,8 +28,6 @@ export default {
     }
   },
   mounted() {
-    Parse.initialize('shuwa', 'webapi', 'HZlora2017')
-    Parse.serverURL = this.$globalConfig.serverURL
 
     if (this.$Cookies.get('roles')) {
       this.$store.dispatch('setRoles', this.$Cookies.get('roles'))
