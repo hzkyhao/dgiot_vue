@@ -66,13 +66,13 @@
           :disabled="!productenable"
           class="selectdetail"
           size="small"
-          @change="selectProductid"
+          @change="selectProductid(equvalue)"
         >
           <el-option
             v-for="(item,index) in proTableData"
             :label="item.name"
             :key="index"
-            :value="item.id"
+            :value="item.objectId"
           />
         </el-select>
         <el-select v-model="selectdevice" class="selectdetail" size="small">
@@ -771,16 +771,18 @@ export default {
     //   )
     // },
     async selectProductid(val) {
+      console.log(this.equvalue)
       this.productroleslist = [];
       const parsms = {};
       const { results } = await this.$query_object("Product", parsms);
       const res = results.filter(i => {
         return i.objectId == val;
       });
-      console.log(val, results, res);
+      
       for (var key in res[0].ACL) {
         if (key.includes("role")) {
           this.productroleslist.push(key.substr(5));
+          
           console.log(key, this.productroleslist);
         }
       }
@@ -900,7 +902,7 @@ export default {
 
       this.proTableData1.unshift({
         name: language == 'zh' ? '全部产品' : 'All Products',
-        id: '0'
+        objectId: '0'
       })
       // var Product = Parse.Object.extend('Product')
       // var product = new Parse.Query(Product)
@@ -914,7 +916,7 @@ export default {
       //       this.proTableData.push(obj)
       //       this.proTableData1.push(obj)
       //     })
-
+     
       if (this.$route.query.productid) {
         this.equvalue = this.$route.query.productid
         this.productenable = false
