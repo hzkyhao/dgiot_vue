@@ -482,6 +482,7 @@ export default {
       var Dict = Parse.Object.extend("Dict");
       var datas = new Parse.Query(Dict);
       datas.equalTo("data.key", "category");
+
       datas.limit(1000);
       datas.find().then(
         response => {

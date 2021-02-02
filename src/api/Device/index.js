@@ -39,7 +39,6 @@ export async function postDevice(params) {
 //       putDevice(item.id,params)
 //     })
 //   ])
-    
 // }
 export async function getDeviceCountByProduct(productId) {
   const params = {
