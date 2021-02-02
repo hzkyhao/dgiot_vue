@@ -10,6 +10,7 @@
 import request from "@/utils/request";
 import { Message } from "element-ui";
 const Vue = require("vue");
+
 /**
  *
  * @param {*} tableClass
@@ -48,3 +49,4 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
   }
 }
 Vue.prototype.$postBatch = Batchdelete
+
