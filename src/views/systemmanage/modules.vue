@@ -151,12 +151,12 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-    </footer>
+    </footer>Parse
   </div>
 </template>
 
 <script>
-import Parse from 'parse'
+import {  getIndustry} from "@/api/Dict/index"
 export default {
 
   name: 'Modules',
@@ -243,30 +243,24 @@ export default {
     // 查询样品
     Industry() {
       this.categoryList = []
-      var Dict = Parse.Object.extend('Dict')
-      var datas = new Parse.Query(Dict)
       this.getProduct()
-      datas.equalTo('data.key', 'category')
-      datas.limit(1000)
-      datas.find().then(
+      getIndustry('category',100).then(
         response => {
           if (response) {
             response.map(items => {
               var obj = {}
-              obj.value = items.attributes.type
-              obj.label = items.attributes.data.CategoryName
-              obj.id = items.attributes.data.Id
-              obj.parentid = items.attributes.data.SuperId
+              obj.value = items.type
+              obj.label = items.data.CategoryName
+              obj.id = items.data.Id
+              obj.parentid = items.data.SuperId
               this.categoryList.push(obj)
             })
-            // this.searchProduct();
             this.categoryListOptions = this.treeData(this.categoryList)
           }
-        },
-        error => {
-          console.log(error, "error")
         }
-      )
+      ).catch(e => {
+        console.log("getIndustry", e.error)
+      })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

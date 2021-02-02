@@ -135,7 +135,6 @@
 </template>
 <script>
 import jsonEdit from "./jsonEdit/index";
-import Parse from "parse";
 const Base64 = require("js-base64").Base64;
 var isupdatetrue = "";
 var editor;
