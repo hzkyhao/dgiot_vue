@@ -8,7 +8,7 @@ export async function getUser(ObjectId) {
   return get_object('_User', ObjectId)
 }
 
-export async function deleteUser(ObjectId) {
+export async function delUser(ObjectId) {
   return del_object('_User', ObjectId)
 }
 

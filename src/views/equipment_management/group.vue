@@ -99,7 +99,8 @@
 </template>
 
 <script>
-import { roletree, addGroup, putRole, delRole } from "@/api/home";
+import { roletree, putRole, delRole } from "@/api/Role/index.js";
+import { addGroup } from "@/api/Group/index.js";
 import addroles from "@/views/roles/rolelist/addroles";
 import { eventBus } from "@/api/eventBus";
 export default {

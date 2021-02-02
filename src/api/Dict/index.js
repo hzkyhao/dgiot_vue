@@ -30,7 +30,7 @@ export async function getDict(ObjectId) {
   return get_object('Dict', ObjectId)
 }
 
-export async function deleteDict(ObjectId) {
+export async function delDict(ObjectId) {
   return del_object('Dict', ObjectId)
 }
 

@@ -97,7 +97,7 @@
   </div>
 </template>
 <script>
-import { getLog, joinLog } from '@/api/installation'
+import { getNode, joinNode } from '@/api/System/index.js'
 export default {
   data() {
     return {
@@ -160,7 +160,7 @@ export default {
   },
   methods: {
     Getinformation() {
-      getLog(this.start, this.lengt).then(response => {
+      getNode(this.start, this.lengt).then(response => {
         if (response) {
           this.tableData5 = response.nodes
           this.total = response.nodes.length
@@ -187,7 +187,7 @@ export default {
     //     }
     //   },
     join() {
-      joinLog('join', this.form.nodename).then(resultes => {
+      joinNode('join', this.form.nodename).then(resultes => {
         if (resultes) {
           this.$message({
             type: 'success',
@@ -201,7 +201,7 @@ export default {
       })
     },
     removeNode(row) {
-      joinLog('leave', row.node).then(resultes => {
+      joinNode('leave', row.node).then(resultes => {
         if (resultes) {
           this.$message({
             type: 'success',

@@ -265,15 +265,9 @@
   </div>
 </template>
 <script>
-import { queryChannel } from '@/api/Channel/index'
+import {channelConnect, updateConnect, deleteConnect, queryChannel } from '@/api/Channel/index'
 import { queryRole } from '@/api/Role/index'
 import Parse from 'parse'
-import { setInterval } from 'timers'
-import {
-  channelConnect,
-  updateConnect,
-  deleteConnect
-} from '@/api/testchannel'
 import { subupadte } from '@/api/systemmanage/system'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'

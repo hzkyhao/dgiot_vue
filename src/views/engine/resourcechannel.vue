@@ -271,22 +271,12 @@
 <script>
 import Parse from 'parse'
 import { setInterval } from 'timers'
-import {
-  channelConnect,
-  updateConnect,
-  deleteConnect
-} from '@/api/testchannel'
+import { channelConnect, updateConnect, deleteConnect } from '@/api/Channel/index.js'
 import { subupadte } from '@/api/systemmanage/system'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'
 var subdialog
-import {
-  Websocket,
-  sendInfo,
-  TOPIC_EMPTY,
-  MSG_EMPTY,
-  DISCONNECT_MSG
-} from '@/utils/wxscoket.js'
+import { Websocket, sendInfo, TOPIC_EMPTY, MSG_EMPTY, DISCONNECT_MSG } from '@/utils/wxscoket.js'
 export default {
   inject: ['reload'],
   data() {
