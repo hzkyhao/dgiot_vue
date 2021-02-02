@@ -135,13 +135,14 @@ Vue.prototype.$baseConfirm = (content, title, callback1, callback2) => {
 };
 
 /* 全局Notification */
-Vue.prototype.$baseNotify = (message, title, type, position, duration) => {
+Vue.prototype.$baseNotify = (message, title, type, position, duration, dangerouslyUseHTMLString) => {
   Notification({
     title: title,
     message: message,
     position: position || "top-right",
     type: type || "success",
-    duration: duration || messageDuration
+    duration: duration || messageDuration,
+    dangerouslyUseHTMLString: dangerouslyUseHTMLString || false
   });
 };
 

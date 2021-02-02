@@ -1278,15 +1278,20 @@ export default {
           li.objectId = idarr[index]
           li.sortIndex = index + 1
           if (Object.keys(res[index])[0] == 'success') {
-            li.msg = `${idarr[index]} edit success`
+            li.msg = `edit success`
+            li.dangerouslyUseHTMLString = false
           } else {
-            li.msg = `${idarr[index]} edit error `
+            li.msg = `<ol>
+              edit error <br>
+              message: ${li.error.error} <br>
+              code: ${li.error.code} <ol>`
+            li.dangerouslyUseHTMLString = true
           }
-          requests.push({ type: Object.keys(res[index])[0], message: li.msg })
+          requests.push({ type: Object.keys(res[index])[0], message: li.msg, dangerouslyUseHTMLString: li.dangerouslyUseHTMLString })
         })
         console.log(requests)
         requests.forEach((i, index) => {
-          this.$baseNotify(i.message, `${idarr[index]}`, i.type, "top-right", 5000 * i.sortIndex)
+          this.$baseNotify(i.message, `${idarr[index]}`, i.type, "top-right", 5000 * i.sortIndex, i.dangerouslyUseHTMLString)
         })
         this.getDevices()
       }
