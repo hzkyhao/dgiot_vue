@@ -265,9 +265,8 @@
   </div>
 </template>
 <script>
-import {channelConnect, updateConnect, deleteConnect, queryChannel } from '@/api/Channel/index'
+import { queryChannel, delChannel, postChannel } from '@/api/Channel/index'
 import { queryRole } from '@/api/Role/index'
-import Parse from 'parse'
 import { subupadte } from '@/api/systemmanage/system'
 import { resourceTypes } from '@/api/rules'
 import { returnLogin } from '@/utils/return'
@@ -438,53 +437,50 @@ export default {
           delete obj.type
           delete obj.isEnable
           delete obj.name
-          var Channel = Parse.Object.extend('Channel')
-          var channel = new Channel()
-          // var userid = Parse.User.current().id;
-          var acl = new Parse.ACL()
-          // 设置权限控制列表
-          acl.setRoleReadAccess(this.addchannel.applicationtText, true)
-          acl.setRoleWriteAccess(this.addchannel.applicationtText, true)
-
-          if (this.resourceid != '') {
-            channel.id = this.resourceid
+          console.log("addchannelForm", this.addchannel)
+          const aclKey = 'role' + ':' + this.addchannel.applicationtText
+          const aclObj = {}
+          aclObj[aclKey] = { read: true, write: true }
+          const data = {
+            'ACL': aclObj,
+            config: obj,
+            name: this.addchannel.name,
+            cType: this.addchannel.region,
+            desc: this.addchannel.desc,
+            type: this.addchannel.type,
+            isEnable: this.addchannel.isEnable
           }
-          channel.set('config', obj)
-          channel.set('ACL', acl)
-          channel.set('name', this.addchannel.name)
-          channel.set('cType', this.addchannel.region)
-          channel.set('desc', this.addchannel.desc)
-          if (this.addchannel.type) {
-            channel.set('type', this.addchannel.type.toString())
-          }
-          channel.set('isEnable', this.addchannel.isEnable)
-          channel.save().then(resultes => {
-            if (resultes) {
-              this.$message({
-                type: 'success',
-                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
-              })
-              this.$refs['addchannel'].resetFields()
-              this.addchannel = {}
-              // this.reload()
-              this.channelForm = false
-
-              this.resourceid = ''
-              this.Get_Re_Channel(0)
-            }
-          })
+          this.addchannelaxios(data)
         }
       }, error => {
         returnLogin(error)
       })
     },
+    async addchannelaxios(data) {
+      await postChannel(data).then(
+        results => {
+          if (results) {
+            this.$message({
+              type: 'success',
+              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
+            })
+            this.$refs['addchannel'].resetFields()
+            this.addchannel = {}
+            // this.reload()
+            this.channelForm = false
+            this.resourceid = ''
+            this.Get_Re_Channel(0)
+          }
+        }
+      )
+    },
     // 删除通道
     deleteChannel(scope) {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Channel()
-      channel.id = scope.row.id
-      channel.destroy().then(
-        resultes => {
+      this.delchannelaxios(scope)
+    },
+    delchannelaxios(scope) {
+      delChannel(scope.row.objectId).then(
+        results => {
           this.$message({
             type: 'success',
             message: '删除成功'
@@ -492,13 +488,9 @@ export default {
           scope._self.$refs[`popover-${scope.$index}`].doClose()
           this.Get_Re_Channel(0)
         },
-        error => {
-          this.$message({
-            type: 'error',
-            message: error.message
-          })
-        }
-      )
+      ).catch(e => {
+        console.log(e.error)
+      })
     },
     addchanneltype() {
       this.channelForm = true
