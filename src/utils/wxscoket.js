@@ -1,13 +1,6 @@
 var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
-// eslint-disable-next-line no-unused-vars
-// import Parse from 'parse'
-// Parse.initialize("shuwa", "webapi","HZlora2017");
-// Parse.serverURL = "http://ci.iotn2n.com:5080/iotapi";
-// console.log(parse)
-// var Clentsession = Parse.User.current().attributes.sessionToken
-// console.log(Clentsession)
 var clientssession = sessionStorage.getItem('token')
 var info = {
   topic: 'web/' + clientssession,
