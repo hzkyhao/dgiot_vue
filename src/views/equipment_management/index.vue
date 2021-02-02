@@ -126,7 +126,7 @@
               size="small"
               type="primary"
               class="selectdetail"
-              @click="unactiveDevice"
+              @click="unactiveDevice(false)"
             >{{ $t("developer.prohibit") }}</el-button
             >
             <el-button
@@ -134,7 +134,7 @@
               size="small"
               type="primary"
               class="selectdetail"
-              @click="activeDevice"
+              @click="unactiveDevice(true)"
             >{{ $t("developer.enable") }}</el-button
             >
           </div>
@@ -627,6 +627,7 @@ import Parse from "parse";
 import { Promise } from "q";
 import Cookies from "js-cookie";
 import elDragDialog from "@/directive/el-dragDialog"; // base on element-ui
+import { Batchdelete } from "@/api/batch/index"
 import { BmlMarkerClusterer } from "vue-baidu-map";
 import { utc2beijing } from "@/utils";
 import { returnLogin } from "@/utils/return";
@@ -1319,14 +1320,23 @@ export default {
       this.multipleTable = val;
       console.log(this.multipleTable);
     },
-    // 删除设备
-    deleteDevcie(val) {
-      var tableData = []
+    // 批量删除设备
+    async deleteDevcie(val) {
+      const idarr = []
       this.multipleTable.map(item => {
-          tableData.push(item.id)
-          console.log(item)
+        idarr.push(item.id)
       })
-      this.$batchDeleteDevice(tableData)
+
+      await Batchdelete(
+        '_Device', idarr, {}).then(res => {
+            if(!res.error){
+              this.initQuery(`设备${idarr}删除成功`,'success')
+            }
+            else{
+              this.initQuery(`设备${idarr}删除失败`,'error')
+            }
+        })
+      
       // Promise.all([
       //   this.multipleTable.map(item => {
       //     var Device = Parse.Object.extend("Device");
@@ -1355,62 +1365,49 @@ export default {
       //   });
     },
     // 设备多个启用和禁用
-    unactiveDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend("Device");
-          var devices = new Device();
-          devices.id = item.id;
-          devices.set("isEnable", false);
-          devices.save().then(resultes => {});
+    async unactiveDevice(isEnable) {
+      const idarr = []
+      this.multipleTable.map(item => {
+        idarr.push(item.id)
+      })
+      const body = {
+        isEnable: isEnable
+      }
+      await Batchdelete(
+        '_Device', idarr, body).then(res => {
+            if(!res.error){
+                if(isEnable){
+                  this.initQuery(`设备${idarr}启动成功`,'success')
+                }
+                else{
+                  this.initQuery(`设备${idarr}禁用成功`,'success')
+                }
+            }
+            else{
+              if(isEnable){
+                  this.initQuery(`设备${idarr}启动失败`,'error')
+                }
+                else{
+                  this.initQuery(`设备${idarr}禁用失败`,'error')
+                }
+            }
         })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: "禁用成功",
-              type: "success"
-            });
-            this.getDevices();
-          } else {
-            this.$message({
-              message: "禁用失败",
-              type: "error"
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+     
     },
-    activeDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Device = Parse.Object.extend("Device");
-          var devices = new Device();
-          devices.id = item.id;
-          devices.set("isEnable", true);
-          devices.save().then(resultes => {});
-        })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: "启用成功",
-              type: "success"
-            });
-            this.getDevices();
-          } else {
-            this.$message({
-              message: "启用失败",
-              type: "error"
-            });
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
+    // activeDevice(val) {
+    //   this.$changeDeviceStatus(this.multipleTable,true)
+    //     .then(data => {
+    //       if (data && data.length != 0) {
+    //         this.initQuery('启动成功','success')
+    //         this.getDevices();
+    //       } else {
+    //         this.initQuery('启动失败','error')
+    //       }
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
     /* @pamras 选中高亮*/
     rowClass({ row, rowIndex }) {
       if (this.selectRow.includes(rowIndex)) {
