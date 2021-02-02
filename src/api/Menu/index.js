@@ -58,3 +58,8 @@ export function edit(data) {
     data
   })
 }
+
+export function getNavigation() {
+  return query_object('Navigation', {})
+}
+

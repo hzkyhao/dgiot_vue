@@ -21,10 +21,6 @@
 </template>
 <script>
 var editor;
-import Parse from "parse";
-import ScrollPane from "@/components/ScrollPane";
-// import gql from "graphql-tag";
-// import {GameScores} from'@/api/search.graphql'
 export default {
   name: "Userinfo",
   data() {
