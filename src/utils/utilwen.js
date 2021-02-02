@@ -4,9 +4,9 @@ import { Message } from "element-ui";
 import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
-import { getBatchNumer, postDict, getIndustry, delDict, putDict, createBatchNumer} from "@/api/Dict"
-import { queryDevice, postDevice, putDevice, delDevice, getDevice} from "@/api/Device"
-import { queryProduct} from "@/api/Product"
+import { getBatchNumer, postDict, getIndustry, delDict, putDict, createBatchNumer} from "@/api/Dict/index"
+import { queryDevice, postDevice, putDevice, delDevice, getDevice} from "@/api/Device/index"
+import { queryProduct} from "@/api/Product/index"
 
 
 axios.defaults.withCredentials = true;

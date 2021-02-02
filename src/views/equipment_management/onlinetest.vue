@@ -258,9 +258,6 @@
   </div>
 </template>
 <script>
-import echarts from 'echarts'
-import { clearInterval } from 'timers'
-import { returnLogin } from '@/utils/return'
 import {
   Websocket,
   sendInfo,
