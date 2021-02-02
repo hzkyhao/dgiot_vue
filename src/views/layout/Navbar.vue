@@ -35,7 +35,6 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import { logoutBtn } from '@/api/login'
 import Cookies from 'js-cookie'
 import { Sidebar } from './components'
 import LangSelect from '@/components/LangSelect'

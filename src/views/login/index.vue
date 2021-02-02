@@ -86,7 +86,7 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import { getsession } from '@/utils/wxscoket.js'
-import { Sitepro } from '@/api/login'
+import { Sitepro } from '@/api/User'
 import { license } from '@/api/License'
 export default {
   name: 'Login',

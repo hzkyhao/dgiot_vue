@@ -83,7 +83,7 @@
 <script>
 import Parse from 'parse'
 const Base64 = require('js-base64').Base64
-import { Phonelogin, Verify } from '@/api/login'
+import { Phonelogin, Verify } from '@/api/User/index'
 import Cookies from 'js-cookie'
 export default {
   data() {

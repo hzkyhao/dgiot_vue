@@ -118,9 +118,78 @@ export function debounce(func, wait, immediate) {
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
-// parse库utc时间戳转成正常年月日时分秒显示
+
+export function timestampToTime(timestamp) {
+  var date = new Date(timestamp * 1000)
+  var Y = date.getFullYear() + '-'
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var D = (date.getDate() + 1 <= 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var h = (date.getHours() + 1 <= 10 ? '0' + (date.getHours()) : date.getHours()) + ':'
+  var m = (date.getMinutes() + 1 <= 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':'
+  var s = (date.getSeconds() + 1 <= 10 ? '0' + (date.getSeconds()) : date.getSeconds())
+  return Y + M + D + h + m + s
+}
+
+export function unixtime() {
+  var date = new Date()
+  var Y = date.getFullYear() + '-'
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var D = (date.getDate() + 1 < 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var h = date.getHours() + ':'
+  var m = date.getMinutes() + ':'
+  var s = date.getSeconds()
+  if (s > 9) {
+    s = date.getSeconds()
+  } else {
+    s = '0' + date.getSeconds()
+  }
+  return Y + M + D + h + m + s
+}
+
+export function timetounix(val){
+  var nowTime = val
+  var date = new Date(nowTime)
+  var time = date.getTime()
+  time = time / 1000
+  return time
+}
+
+
 export function utc2beijing(utc_datetime) {
   // 转为正常的时间格式 年-月-日 时:分:秒
-  var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-  return date // 2017-03-31 16:02:06
+  var date = new Date(utc_datetime)
+  var Y = date.getFullYear() + '-'
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var D = (date.getDate() + 1 <= 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var h = (date.getHours() + 1 <= 10 ? '0' + (date.getHours()) : date.getHours()) + ':'
+  var m = (date.getMinutes() + 1 <= 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':'
+  var s = (date.getSeconds() + 1 <= 10 ? '0' + (date.getSeconds()) : date.getSeconds())
+  return Y + M + D + h + m + s
+}
+
+
+// 万亿零转换
+export function handleZero(value) {
+  // console.log(value);
+  // console.log(typeof(value));
+  if (typeof (value) === 'number') {
+    value = String(value)
+    const Y = /0{8}$/
+    const W = /0{4}$/
+    if (Y.test(value)) {
+      return value.replace(Y, '亿')
+    } else if (W.test(value)) {
+      return value.replace(W, '万')
+    }
+    return value
+  } else if (typeof (value) === 'string') {
+    const W = /万+$/
+    const Y = /亿+$/
+    if (Y.test(value)) {
+      return value.replace(Y, '00000000')
+    } else if (W.test(value)) {
+      return value.replace(W, '0000')
+    }
+    return value
+  }
 }

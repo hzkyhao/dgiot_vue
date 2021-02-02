@@ -111,7 +111,7 @@
 import Parse from "parse";
 import Cookies from "js-cookie";
 const Base64 = require("js-base64").Base64;
-import { passwordreset, Phonelogin } from "@/api/login";
+import { passwordreset, Phonelogin } from "@/api/User/index";
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
