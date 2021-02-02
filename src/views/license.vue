@@ -151,9 +151,8 @@
   </div>
 </template>
 <script>
-import { hardInfo, iotHub, iotApp } from '@/api/license'
+import { hardInfo, iotHub, iotApp } from '@/api/License/index'
 import Cookies from 'js-cookie'
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -269,26 +268,7 @@ export default {
         }
       })
     },
-    uploadDb() {
-      // this.$axios.get('http://192.168.2.9:5080/iotapi/iotapp?license='+this.configdata.authorizenumber,{timeout:120000}).then(resultes=>{
-      //   console.log(resultes)
-      // })
-      iotApp(this.configdata.authorizenumber).then(response => {
-        if (response.result == true) {
-          this.$message('数据库部署完成')
-          this.active = 3
-          this.$router.push('/login')
-        } else {
-          this.$message('部署失败')
-        }
-      }).catch(error => {
-        this.$messge.error(error)
-      })
-    },
-    update() {
-      // console.log(window.location)
-      window.open(`${window.location.origin}`)
-    }
+    uploadDb() {}
   }
 }
 </script>

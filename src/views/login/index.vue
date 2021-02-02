@@ -87,7 +87,7 @@
 import { isvalidUsername } from '@/utils/validate'
 import { getsession } from '@/utils/wxscoket.js'
 import { Sitepro } from '@/api/login'
-import { license } from '@/api/license'
+import { license } from '@/api/License'
 export default {
   name: 'Login',
   beforeRouteEnter(to, from, next) {

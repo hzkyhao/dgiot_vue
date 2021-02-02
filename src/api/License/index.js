@@ -49,14 +49,68 @@ export function iotHub(type, license, addr) {
     }
   })
 }
-export function iotApp(license) {
+
+export function uploadLicense(appid, appsecret, shuwa_iot_software) {
   return request({
-    url: '/iotapp',
-    timeout: 60000,
+    url: `iotapi/lictool`,
+    method: 'get',
+    params: {
+      appid: appid,
+      appsecret: appsecret,
+      shuwa_iot_software: shuwa_iot_software
+    }
+  })
+}
+export function uploadServer(license) {
+  return request({
+    url: `iotapi/licsetup`,
     method: 'get',
     params: {
       license: license
     }
   })
 }
+export function offlineServer(license) {
+  return request({
+    url: `iotapi/licupdate`,
+    method: 'get',
+    params: {
+      license: license
+    }
+  })
+}
+export function setUpLictool(appname) {
+  return request({
+    url: 'iotapi/iotapp',
+    method: 'post',
+    data: {
+      appname: appname
+    }
+  })
+}
 
+// 万亿零转换
+export function handleZero(value) {
+  // console.log(value);
+  // console.log(typeof(value));
+  if (typeof (value) === 'number') {
+    value = String(value)
+    const Y = /0{8}$/
+    const W = /0{4}$/
+    if (Y.test(value)) {
+      return value.replace(Y, '亿')
+    } else if (W.test(value)) {
+      return value.replace(W, '万')
+    }
+    return value
+  } else if (typeof (value) === 'string') {
+    const W = /万+$/
+    const Y = /亿+$/
+    if (Y.test(value)) {
+      return value.replace(Y, '00000000')
+    } else if (W.test(value)) {
+      return value.replace(W, '0000')
+    }
+    return value
+  }
+}

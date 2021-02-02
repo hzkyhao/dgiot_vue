@@ -296,13 +296,7 @@
 
 <script>
 const Base64 = require('js-base64').Base64
-import {
-  getIndustry,
-  Upload,
-  addApp,
-  handleZero,
-  updateApp
-} from '@/api/applicationManagement'
+import { handleZero } from '@/api/License/index'
 import Parse from 'parse'
 import { resolve } from 'url'
 import { returnLogin } from '@/utils/return'

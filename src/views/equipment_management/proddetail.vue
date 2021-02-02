@@ -2280,10 +2280,8 @@ const Base64 = require("js-base64").Base64;
 var setdata = "";
 var isallchannel = false;
 var isupdatetrue = "";
-import { Compile, subupadte } from "@/api/systemmanage/system";
+import { Compile, subupadte } from "@/api/System/index";
 import { setTimeout } from "timers";
-// import gql from "graphql-tag";
-import { postFile } from "@/api/appcontrol";
 import {
   Websocket,
   sendInfo,

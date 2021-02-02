@@ -21,7 +21,6 @@ export async function postRole(params) {
   return create_object('_Role', params)
 }
 
-
 // 获取角色列表
 export function roletree() {
   return request({
@@ -29,3 +28,14 @@ export function roletree() {
     method: 'get'
   })
 }
+
+export function getServer(pro) {
+  return request({
+    url: 'iotapi/apihub',
+    method: 'get',
+    params: {
+      appname: pro
+    }
+  })
+}
+

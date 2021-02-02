@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-import { Getapp, Getmodule, Getmodule1, Getstart, Getstop, GetReload } from '@/api/systemmanage/system'
+import { Getapp, Getmodule, Getstart, Getstop, GetReload } from '@/api/System/index'
 import Cookies from 'js-cookie'
 var table = []
 var table1 = []
@@ -178,7 +178,7 @@ export default {
       this.tableData1 = []
       this.total1 = 0
       this.app = ''
-      Getmodule1('changed').then(res => {
+      Getmodule('changed').then(res => {
         if (res) {
           res.map(item => {
             if (item.is_changed == false) {
