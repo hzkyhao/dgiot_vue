@@ -230,38 +230,39 @@
                     @click="updatetopic(scope.row, scope.$index)"
                   >{{ $t("developer.edit") }}</el-button
                   >
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
+                  <!--                  <el-popover-->
+                  <!--                    :ref="`popover-${scope.$index}`"-->
+                  <!--                    placement="top"-->
+                  <!--                    width="300"-->
+                  <!--                  >-->
+                  <!--                    <p>确定删除Topic【{{ scope.row.topic }}】吗？</p>-->
+                  <!--                  <div style="text-align: right; margin: 0">-->
+                  <!--                    <el-button-->
+                  <!--                      size="mini"-->
+                  <!--                      @click="-->
+                  <!--                        scope._self.$refs[`popover-${scope.$index}`].doClose()-->
+                  <!--                      "-->
+                  <!--                    >-->
+                  <!--                      {{ $t("developer.cancel") }}</el-button-->
+                  <!--                      >-->
+                  <!--                    <el-button-->
+                  <!--                      type="primary"-->
+                  <!--                      size="mini"-->
+                  <!--                      @click="deletetopic(scope, scope.$index)"-->
+                  <!--                    >-->
+                  <!--                      {{ $t("developer.determine") }}</el-button-->
+                  <!--                      >-->
+                  <!--                  </div>-->
+                  <el-button
+                    v-if="!scope.row.isdef"
+                    slot="reference"
+                    type="danger"
+                    size="mini"
+                    @click="deletetopic(scope, scope.$index)"
                   >
-                    <p>确定删除这个{{ scope.row.topic }}Topic类吗？</p>
-                    <div style="text-align: right; margin: 0">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $t("product.cancel") }}</el-button
-                        >
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="deletetopic(scope, scope.$index)"
-                      >
-                        {{ $t("developer.determine") }}</el-button
-                        >
-                    </div>
-                    <el-button
-                      v-if="!scope.row.isdef"
-                      slot="reference"
-                      type="danger"
-                      size="mini"
+                    {{ $t("developer.delete") }}</el-button
                     >
-                      {{ $t("developer.delete") }}</el-button
-                      >
-                  </el-popover>
+                    <!--                  </el-popover>-->
                 </template>
               </el-table-column>
             </el-table>
@@ -335,11 +336,11 @@
         <!--功能定义-->
         <el-tab-pane :label="$t('product.physicalmodel')" name="third">
           <div style="text-align:right">
-            <!--            <el-button-->
-            <!--              type="primary"-->
-            <!--              size="small"-->
-            <!--              @click="checkAddTest"-->
-            <!--            >李宏杰新增按钮</el-button>-->
+            <el-button
+              type="primary"
+              size="small"
+              @click="checkAddTest"
+            >物模型采集公式</el-button>
             <el-button type="primary" size="small" @click="checkschema">{{
               $t("product.viewobjectmodel")
             }}</el-button>
@@ -2195,7 +2196,7 @@
       </div>
     </el-dialog>
 
-    <!--李宏杰新增采集公式按钮-->
+    <!--物模型采集公式按钮-->
     <el-dialog
       :fullscreen="true"
       :before-close="handleCloseCollecttion"
@@ -2205,25 +2206,27 @@
       width="100%"
     >
       <el-row>
-        <el-col :span="5">
+        <el-col :span="6">
           <div class="diaCollLeftCls">
             <el-menu
               :default-active="activeIndex"
               class="el-menu-vertical-demo"
             >
+
               <template v-for="(item, index) in wmxData">
                 <el-menu-item
                   :key="index + ''"
                   :index="item.identifier"
                   @click="menuTabClick(item , index)"
                 >
-                  {{ item.identifier +'&nbsp; &nbsp; &nbsp; &nbsp; '+ item.name+"&nbsp; &nbsp; &nbsp; &nbsp; 取值范围"+item.dataType.specs.min+"~"+item.dataType.specs.max }}</el-menu-item
-                  >
+                  <ol v-if = "item.dataType.specs "> {{ item.identifier +'&nbsp; &nbsp; &nbsp; &nbsp; '+ item.name+"&nbsp; &nbsp; &nbsp; &nbsp; 取值范围"+item.dataType.specs.min+"~"+item.dataType.specs.max }}  </ol>
+                  <ol v-else> {{ item.identifier +'&nbsp; &nbsp; &nbsp; &nbsp; '+ item.name }} </ol>
+                </el-menu-item>
               </template>
             </el-menu>
           </div>
         </el-col>
-        <el-col :span="19">
+        <el-col :span="18">
           <el-tabs
             v-model="editableTabsValue"
             type="card"
@@ -2258,7 +2261,8 @@
 </template>
 <script>
 import { getDeviceCountByProduct } from "@/api/Device/index";
-import { getAllunit } from "@/api/Dict/index";
+import { getProduct } from "@/api/Product/index";
+import { getAllunit, getDictCount } from "@/api/Dict/index";
 import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
 import Parse from "parse";
 import { getRule, ruleDelete } from "@/api/rules";
@@ -2307,7 +2311,7 @@ export default {
       }
     };
     var validminnumber = (rule, value, callback) => {
-      console.log(value);
+      // console.log(value);
       if (value === "") {
         callback(new Error("最小值不能为空"));
       } else {
@@ -2805,6 +2809,7 @@ export default {
     },
     treeData() {
       const cloneData = JSON.parse(JSON.stringify(this.option)); // 对源数据深度克隆
+      // console.log("cloneData", cloneData)
       return cloneData.filter(father => {
         const branchArr = cloneData.filter(
           child => father.id == child.parentid
@@ -2858,7 +2863,7 @@ export default {
   },
   methods: {
     selectStruct(v) {
-      console.log(v);
+      // console.log(v);
     },
     toggleList() {
       this.showList = !this.showList;
@@ -2965,18 +2970,6 @@ export default {
       });
     },
     getTopic() {
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(this.productId).then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.topicData = resultes.topics.concat(this.topic);
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
       this.$get_object("Product", this.productId).then(resultes => {
         if (resultes) {
           this.topicData = resultes.topics.concat(this.topic);
@@ -3005,13 +2998,6 @@ export default {
       _this.$axios
         .get(url)
         .then(function(response) {
-          /*      let content = response;
-                      _this.exportNameDownload = _this.productName + '.json';
-                      var blob = new Blob([content]);
-                      _this.exportUrl = URL.createObjectURL(blob);
-                      _this.exportDialogShow = true;
-                      */
-
           if (response) {
             window.open(
               window.location.origin +
@@ -3029,25 +3015,6 @@ export default {
             type: "error"
           });
         });
-
-      // $.ajax({
-      //   type: 'GET',
-      //   contentType:'application/json',
-      //   dataType:'json',
-      //   headers:{
-      //     "sessionToken":Cookies.get('access_token')
-      //   },
-      //   data:{},
-      //   url: Cookies.get('apiserver') + '/product?name=' + _this.productName,
-      //   success:(response)=>{
-      //     if(response){
-
-      //    this.exportDialogShow = true;
-      //   _this.exportUrl = ''
-      //   _this.exportName = ''
-      //     }
-      //   }
-      // })
     },
     // 热加载弹窗
     async updatesubdialog() {
@@ -3112,10 +3079,32 @@ export default {
       }
     },
 
+    // 物接入选择通道
+    showAllChannel() {
+      this.allChanneltotal = 0;
+      this.allchannelData = [];
+      this.channeltype = 1;
+      this.innerVisible = true;
+      const type = { '$in': ["1", "3"] }
+      const product = {
+        "$ne": {
+          "__type": "Pointer",
+          "className": "Product",
+          "objectId": this.productId
+        }
+      }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
+        this.allChanneltotal = res.count;
+        this.allchannelData = res.results;
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     // 物接入
     getProductChannel() {
       const type = { '$in': ["1", "3"] }
-      getChannelCountByProduct(this.channellength, this.channelstart, this.productId, type).then(res => {
+      const product = { __type: "Pointer", className: "Product", objectId: this.productId }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
         this.channeltotal = res.count;
         this.channelData = res.results;
         if (res.results.length == 0) {
@@ -3128,16 +3117,40 @@ export default {
       })
     },
 
+    // 物存储选择通道
+    resourceShowAllChannel() {
+      this.allChanneltotal = 0;
+      this.allchannelData = [];
+      this.channeltype = 0;
+      this.innerVisible = true;
+      const type = { '$in': ["2"] }
+      const product = {
+        "$ne": {
+          "__type": "Pointer",
+          "className": "Product",
+          "objectId": this.productId
+        }
+      }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
+        this.allChanneltotal = res.count;
+        this.allchannelData = res.results;
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+
     // 物存储
     getResourceChannel() {
       const type = { '$in': ["2"] }
-      getChannelCountByProduct(this.channellength, this.channelstart, this.productId, type).then(res => {
+      const product = { __type: "Pointer", className: "Product", objectId: this.productId }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
         this.resourcetotal = res.count;
         this.resourcechannelData = res.results;
       }).catch(e => {
         console.log(e)
       })
     },
+
     // 添加关联
     async addProductChannel(id) {
       const params = {
@@ -3159,7 +3172,7 @@ export default {
         }
       }
     },
-    // 解除关联
+    // 移除通道
     deleteRelation(row) {
       const params = {
         "product": {
@@ -3177,7 +3190,7 @@ export default {
         if (res) {
           this.$message({
             type: "success",
-            message: "删除成功"
+            message: "移除成功"
           });
         }
         this.getProductChannel();
@@ -3202,31 +3215,7 @@ export default {
       this.resourcestart = (val - 1) * this.resourcelength;
       this.getResourceChannel();
     },
-    // 展示全部服务通道
-    showAllChannel() {
-      this.channeltype = 1;
-      this.innerVisible = true;
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = this.productId;
 
-      const params = {
-        keys: 'count(*)',
-        skip: this.allChannelstart,
-        limit: this.allChannellength,
-        where: {
-          type: { '$in': ["1", "3"] }
-        }
-      }
-      if (isallchannel) {
-        params.where.product = product
-      }
-      getChannelCountByProduct(params).then(res => {
-        console.log('res', res)
-        this.allChanneltotal = res.count;
-        this.allchannelData = res.results;
-      })
-    },
     allChannelSizeChange(val) {
       this.allChannellength = val;
       this.showAllChannel();
@@ -3235,29 +3224,7 @@ export default {
       this.allChannelstart = (val - 1) * this.allChannellength;
       this.showAllChannel();
     },
-    // 得到全部未关联资源通道
-    resourceShowAllChannel() {
-      this.channeltype = 2;
-      this.innerVisible = true;
-      var Product = Parse.Object.extend("Product");
-      var product = new Product();
-      product.id = this.productId;
-      const params = {
-        keys: 'count(*)',
-        skip: this.resourcestart,
-        limit: this.resourcelength,
-        where: {
-          type: { '$in': ["2"] }
-        }
-      }
-      if (isallchannel) {
-        params.where.product = product
-      }
-      getChannelCountByProduct(params).then(res => {
-        this.allChanneltotal = res.count;
-        this.allchannelData = res.results;
-      })
-    },
+
     // 自定义模型弹窗
     customize(row) {
       this.resourcedialogFormVisible = true;
@@ -3509,162 +3476,158 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           var obj = {};
-          var Product = Parse.Object.extend("Product");
-          var product = new Parse.Query(Product);
-          product.get(this.productId).then(response => {
-            // 提交之前需要先判断类型
-            if (
-              this.sizeForm.type == "float" ||
+
+          // 提交之前需要先判断类型
+          if (
+            this.sizeForm.type == "float" ||
               this.sizeForm.type == "double" ||
               this.sizeForm.type == "int"
-            ) {
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase(),
-                  specs: {
-                    max: this.sizeForm.endnumber,
-                    min: this.sizeForm.startnumber,
-                    step: this.sizeForm.step,
-                    unit: this.sizeForm.unit == "" ? "" : this.sizeForm.unit
-                  }
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                  rate: this.sizeForm.rate,
-                  offset: this.sizeForm.offset,
-                  byteorder: this.sizeForm.byteorder,
-                  protocol: this.sizeForm.protocol,
-                  operatetype: this.sizeForm.operatetype,
-                  originaltype: this.sizeForm.originaltype,
-                  slaveid: this.sizeForm.slaveid,
-                  collection: this.sizeForm.collection,
-                  control: this.sizeForm.control,
-                  strategy: this.sizeForm.strategy
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-              // 去除多余的属性
-              if (!this.showNewItem) {
-                delete obj.dataForm.operatetype;
-                delete obj.dataForm.originaltype;
-                delete obj.dataForm.slaveid;
-              }
-            } else if (this.sizeForm.type == "bool") {
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase(),
-                  specs: {
-                    "0": this.sizeForm.false,
-                    "1": this.sizeForm.true
-                  }
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
-                },
-                required: false,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-            } else if (this.sizeForm.type == "enum") {
-              var specs = {};
-              this.sizeForm.specs.map(items => {
-                var newkey = items["attribute"];
-                specs[newkey] = items["attributevalue"];
-              });
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase(),
-                  specs: specs
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-            } else if (this.sizeForm.type == "struct") {
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase(),
-                  specs: this.sizeForm.struct
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-            } else if (this.sizeForm.type == "string") {
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase(),
-                  size: this.sizeForm.string
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-            } else if (this.sizeForm.type == "date") {
-              obj = {
-                name: this.sizeForm.name,
-                dataType: {
-                  type: this.sizeForm.type.toLowerCase()
-                },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier
-              };
-            }
-
-            // 检测到
-            if (this.wmxSituation == "新增") {
-              console.log("新增");
-              this.productdetail.thing.properties.unshift(obj);
-            } else if (this.wmxSituation == "编辑") {
-              console.log("编辑" + obj);
-              this.productdetail.thing.properties[this.modifyIndex] = obj;
-            }
-
-            response.set("thing", this.productdetail.thing);
-            response.save().then(
-              resultes => {
-                if (resultes) {
-                  this.$message({
-                    type: "success",
-                    message: "添加成功"
-                  });
-                  this.getProDetail();
-                  this.$refs[formName].resetFields();
-
-                  this.wmxdialogVisible = false;
+          ) {
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase(),
+                specs: {
+                  max: this.sizeForm.endnumber,
+                  min: this.sizeForm.startnumber,
+                  step: this.sizeForm.step,
+                  unit: this.sizeForm.unit == "" ? "" : this.sizeForm.unit
                 }
               },
-              error => {
-                returnLogin(error);
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber,
+                rate: this.sizeForm.rate,
+                offset: this.sizeForm.offset,
+                byteorder: this.sizeForm.byteorder,
+                protocol: this.sizeForm.protocol,
+                operatetype: this.sizeForm.operatetype,
+                originaltype: this.sizeForm.originaltype,
+                slaveid: this.sizeForm.slaveid,
+                collection: this.sizeForm.collection,
+                control: this.sizeForm.control,
+                strategy: this.sizeForm.strategy
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+            // 去除多余的属性
+            if (!this.showNewItem) {
+              delete obj.dataForm.operatetype;
+              delete obj.dataForm.originaltype;
+              delete obj.dataForm.slaveid;
+            }
+          } else if (this.sizeForm.type == "bool") {
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase(),
+                specs: {
+                  "0": this.sizeForm.false,
+                  "1": this.sizeForm.true
+                }
+              },
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber
+              },
+              required: false,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+          } else if (this.sizeForm.type == "enum") {
+            var specs = {};
+            this.sizeForm.specs.map(items => {
+              var newkey = items["attribute"];
+              specs[newkey] = items["attributevalue"];
+            });
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase(),
+                specs: specs
+              },
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+          } else if (this.sizeForm.type == "struct") {
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase(),
+                specs: this.sizeForm.struct
+              },
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+          } else if (this.sizeForm.type == "string") {
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase(),
+                size: this.sizeForm.string
+              },
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+          } else if (this.sizeForm.type == "date") {
+            obj = {
+              name: this.sizeForm.name,
+              dataType: {
+                type: this.sizeForm.type.toLowerCase()
+              },
+              dataForm: {
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier
+            };
+          }
+
+          // 检测到
+          if (this.wmxSituation == "新增") {
+            console.log("新增");
+            this.productdetail.thing.properties.unshift(obj);
+          } else if (this.wmxSituation == "编辑") {
+            console.log("编辑" + obj);
+            this.productdetail.thing.properties[this.modifyIndex] = obj;
+          }
+
+          const params = {
+            thing: this.productdetail.thing
+          };
+          this.$update_object('Product', this.productId, params).then(
+            resultes => {
+              if (resultes) {
+                this.$message({
+                  type: "success",
+                  message: "添加成功"
+                });
+                this.getProDetail();
+                this.$refs[formName].resetFields();
+                this.wmxdialogVisible = false;
               }
-            );
-          });
+            }).catch(e => {
+            console.log(e)
+          })
         } else {
           console.log(valid);
           console.log("error submit!!");
@@ -3681,16 +3644,10 @@ export default {
     // 物模型修改
     wmxDataFill(rowData, index) {
       this.modifyIndex = (this.wmxstart - 1) * this.wmxPageSize + index;
-      console.log("this.modifyIndex ", this.modifyIndex);
-      console.log("rowData ", rowData);
-
+      // console.log("rowData ", rowData);
       this.wmxdialogVisible = true;
       this.wmxSituation = "编辑";
-
       var obj = {};
-
-      // rowData.dataType.type
-
       // 提交之前需要先判断类型
       if (["float", "double", "int"].indexOf(rowData.dataType.type) != -1) {
         obj = {
@@ -3712,13 +3669,18 @@ export default {
           operatetype: this.$objGet(rowData, "dataForm.operatetype"),
           originaltype: this.$objGet(rowData, "dataForm.originaltype"),
           slaveid: this.$objGet(rowData, "dataForm.slaveid"),
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy,
+          collection: "",
+          control: "",
+          strategy: "",
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier
         };
+        if (rowData.dataForm) {
+          obj.collection = rowData.dataForm.collection
+          obj.control = rowData.dataForm.control
+          obj.strategy = rowData.dataForm.strategy
+        }
       } else if (rowData.dataType.type == "bool") {
         obj = {
           name: rowData.name,
@@ -3736,13 +3698,6 @@ export default {
           strategy: rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "enum") {
-        /*      var specs = {};
-              this.sizeForm.specs.map(items => {
-                var newkey = items["attribute"];
-                specs[newkey] = items["attributevalue"];
-              }); */
-
-        // rowData.dataType.specs.map
         var specsArray = [];
 
         for (const key in rowData.dataType.specs) {
@@ -3810,7 +3765,7 @@ export default {
 
       this.sizeForm = obj;
 
-      console.log("this.sizeForm ", this.sizeForm);
+      // console.log("this.sizeForm ", this.sizeForm);
     },
     // 物模型结构体
     submitStruct(formName) {
@@ -4002,35 +3957,9 @@ export default {
         );
       });
     },
-    // Industry() {
-    //   this.option = [];
-    //   var Dict = Parse.Object.extend("Dict");
-    //   var datas = new Parse.Query(Dict);
-    //   datas.equalTo("data.key", "category");
-    //   datas.limit(1000);
-    //   datas.find().then(
-    //     response => {
-    //       if (response) {
-    //         response.map(items => {
-    //           var obj = {};
-    //           obj.value = items.type;
-    //           obj.label = items.data.CategoryName;
-    //           obj.id = items.data.Id;
-    //           obj.parentid = items.data.SuperId;
-    //           this.option.push(obj);
-    //         });
-    //         this.getProDetail();
-    //       }
-    //     },
-    //     error => {
-    //       this.$message(error.message);
-    //     }
-    //   );
-    // },
     async Industry() {
       this.option = []
       const { results } = await this.$getIndustry('category', 100)
-
       results.map(items => {
         var obj = {};
         obj.value = items.type;
@@ -4054,25 +3983,23 @@ export default {
         this.productstart = 0;
       }
       this.CategoryKey = this.$route.query.CategoryKey;
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      datas.limit(this.productlength);
-      datas.skip(this.productstart);
-      if (this.category.length != 0) {
-        datas.equalTo("type", this.category[this.category.length - 1]);
+      const params = {
+        keys: 'count(*)',
+        limit: this.productlength,
+        skip: this.productstart,
+        where: {
+          "data.key": "category"
+        }
       }
-      datas.equalTo("data.key", "category"),
-      datas.count().then(count => {
-        this.producttotal = count;
-        datas.find().then(
-          res => {
-            this.PropData = res;
-          },
-          error => {
-            returnLogin(error);
-          }
-        );
-      });
+      if (this.category.length != 0) {
+        params.where.type = this.category[this.category.length - 1];
+      }
+      getDictCount(params).then(res => {
+        this.producttotal = res.count;
+        this.PropData = res.results;
+      }).catch(e => {
+        console.log(e)
+      })
     },
     productSizeChange(val) {
       this.productlength = val;
@@ -4124,10 +4051,11 @@ export default {
     //
     handleRightTopTabClick(tab, event) {
       this.activeIndex = tab.label
-      console.log(tab.label);
+      // console.log(tab.label);
     },
     // 左边切换,先判断是否添加过
     menuTabClick(item, itemPos) {
+      // console.log(item)
       // 先判断是否添加过
       this.activeIndex = item.identifier;
       const tabs = this.editableTabs;
@@ -4135,7 +4063,7 @@ export default {
       let mIndex = 0;
       tabs.forEach((tab, index) => {
         if (tab.name === item.identifier) {
-          console.log("tab.name   " + tab.name, "   item.identifier   " + item.identifier, "   index  " + index);
+          // console.log("tab.name   " + tab.name, "   item.identifier   " + item.identifier, "   index  " + index);
           isAdd = true;
           mIndex = index;
         }
@@ -4145,7 +4073,7 @@ export default {
           title: item.identifier,
           name: item.identifier,
           leftItemPos: itemPos,
-          content: item.dataForm.collection
+          content: item.dataForm == undefined ? "" : item.dataForm.collection
         })
         setTimeout(() => {
           this.editorList.push(ace.edit(item.identifier));
@@ -4158,15 +4086,15 @@ export default {
             enableSnippets: true,
             enableLiveAutocompletion: true // 设置自动提示
           });
-          this.editorList[this.editorList.length - 1].setValue(item.dataForm.collection);
+          this.editorList[this.editorList.length - 1].setValue(item.dataForm == undefined ? "" : item.dataForm.collection);
         }, 1);
 
         this.editableTabsValue = item.identifier;
-        this.rightCollection = item.dataForm.collection;
+        this.rightCollection = item.dataForm == undefined ? "" : item.dataForm.collection
       } else {
         this.editableTabsValue = item.identifier;
-        console.log("this.editorList ==  " + this.editorList.length)
-        this.editorList[mIndex].setValue(item.dataForm.collection);
+        // console.log("this.editorList ==  " + this.editorList.length)
+        this.editorList[mIndex].setValue(item.dataForm == undefined ? "" : item.dataForm.collection);
       }
     },
     // 关闭上面的单个tab
@@ -4196,7 +4124,7 @@ export default {
       var product = new Parse.Query(Product);
       product.get(this.productId).then(response => {
         this.productdetail.thing.properties[leftPos].dataForm.collection = this.editorList[index].getValue();
-        console.log("-------" + this.productdetail.thing.properties[leftPos].dataForm.collection);
+        // console.log("-------" + this.productdetail.thing.properties[leftPos].dataForm.collection);
         response.set("thing", this.productdetail.thing);
         response.save().then(
           resultes => {
@@ -4228,7 +4156,7 @@ export default {
     // 还原
     onReductionTap(index) {
       const leftPos = this.editableTabs[index].leftItemPos;
-      console.log(this.wmxData[leftPos].dataForm.collection)
+      // console.log(this.wmxData[leftPos].dataForm.collection)
 
       this.editorList[index].setValue(this.wmxData[leftPos].dataForm.collection);
     },
@@ -4298,12 +4226,12 @@ export default {
               properties: []
             };
           }
-          console.log('=====', this.wmxData)
+          // console.log('=====', this.wmxData)
           this.wmxData = [];
           this.wmxData = this.productdetail.thing.properties.filter(item => {
             return item.name && item.dataType;
           });
-          console.log('----------', this.wmxData)
+          // console.log('----------', this.wmxData)
           editor.setValue(Base64.decode(setdata));
           editor.gotoLine(editor.session.getLength());
           // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
@@ -4422,31 +4350,25 @@ export default {
             code: Base64.encode(editor.getValue()),
             desc: this.formInline.desc
           };
-          var Product = Parse.Object.extend("Product");
-          var product = new Product();
-          product.id = this.productId;
-          // product.get(this.productId).then(object => {
-          product.set("decoder", obj);
-          product.save().then(
-            res => {
-              if (this.issub == false) {
-                this.$message({
-                  type: "success",
-                  message: "保存成功"
-                });
-                if (istrue == true) {
-                  isupdatetrue += "保存成功" + "\r\n";
-                  editor2.setValue(isupdatetrue);
-                }
-              } else {
+          const params = {
+            decoder: obj
+          };
+          this.$update_object('Product', this.productId, params).then(res => {
+            if (this.issub == false) {
+              this.$message({
+                type: "success",
+                message: "保存成功"
+              });
+              if (istrue == true) {
+                isupdatetrue += "保存成功";
+                editor2.setValue(isupdatetrue);
               }
-              this.issub = true;
-            },
-            error => {
-              returnLogin(error);
+            } else {
             }
-          );
-          // });
+            this.issub = true;
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message({
             type: "warning",
@@ -4465,44 +4387,39 @@ export default {
             code: Base64.encode(editor.getValue()),
             desc: this.formInline.desc
           };
-
-          var Dict = Parse.Object.extend("Dict");
-          var datas1 = new Parse.Query(Dict);
-          datas1.equalTo("data.name", obj.name);
-          datas1.equalTo("data.version", obj.version);
-
-          datas1.find().then(
-            response => {
-              if (response) {
-                if (response.length >= 1) {
-                  this.$messages("此协议版本已存在");
-                  return;
-                } else {
-                  var datas = new Dict();
-                  var acl = new Parse.ACL();
-                  acl.setReadAccess(userid, true);
-                  acl.setWriteAccess(userid, true);
-                  acl.setPublicReadAccess(true);
-                  datas.set("type", "decoder");
-                  datas.set("data", obj);
-                  datas.set("ACL", acl);
-                  datas.save().then(
-                    resultes => {
-                      if (resultes) {
-                        this.$message("保存到公共协议库成功");
-                      }
-                    },
-                    error => {
-                      this.$message(error.message);
-                    }
-                  );
-                }
-              }
-            },
-            error => {
-              returnLogin(error);
+          const params = {
+            where: {
+              "data.name": obj.name,
+              "data.version": obj.version
             }
-          );
+          };
+          this.$query_object('Dict', this.productId, params).then(response => {
+            if (response) {
+              if (response.length >= 1) {
+                this.$messages("此协议版本已存在");
+                return;
+              } else {
+                var acl = new Parse.ACL();
+                acl.setReadAccess(userid, true);
+                acl.setWriteAccess(userid, true);
+                acl.setPublicReadAccess(true);
+                const params = {
+                  where: {
+                    type: "decoder",
+                    "data": obj,
+                    "ACL": acl
+                  }
+                };
+                this.$create_object('Dict', params).then(resultes => {
+                  if (resultes) {
+                    this.$message("保存到公共协议库成功");
+                  }
+                })
+              }
+            }
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message({
             type: "warning",
@@ -4567,11 +4484,10 @@ export default {
       this.getPropData();
     },
     handleChange(value, direction, movedKeys) {
-      console.log(value, direction, movedKeys);
+      // console.log(value, direction, movedKeys);
     },
     // 用于处理定义好的物模型模板
     TypeInstall(origin, arr) {
-      console.log(arr);
       arr.map((items, index) => {
         if (items.DataType == "enum" || items.DataType == "bool") {
           var obj = {
@@ -4686,44 +4602,37 @@ export default {
     },
     // 添加物模型模板
     addProCategory(row) {
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      var Dict = Parse.Object.extend("Dict");
-      var datas = new Parse.Query(Dict);
-      datas.equalTo("type", row.type);
-      datas.equalTo("data.key", "detail");
-      datas.find().then(
-        res => {
-          if (res.length) {
-            if (res[0].data.Ability) {
-              this.TypeInstall(
-                this.productdetail.thing.properties,
-                res[0].data.Ability
-              );
-              product.get(this.productId).then(resultes => {
-                resultes.set("thing", this.productdetail.thing);
-                resultes.save().then(
-                  resultes => {
-                    this.$message({
-                      type: "success",
-                      message: "添加成功"
-                    });
-                    this.getProDetail();
-                  },
-                  error => {
-                    returnLogin(error);
-                  }
-                );
-              });
-            } else {
-              console.log("此选项没有属性功能");
-            }
-          }
-        },
-        error => {
-          returnLogin(error);
+      const params = {
+        where: {
+          type: row.type,
+          "data.key": "detail"
         }
-      );
+      };
+      this.$query_object('Dict', params).then(res => {
+        const results = res.results
+        if (results && results[0].data.Ability) {
+          this.TypeInstall(
+            this.productdetail.thing.properties,
+            results[0].data.Ability
+          );
+          const params = {
+            thing: this.productdetail.thing
+          };
+          this.$update_object('Product', this.productId, params).then(resultes => {
+            if (resultes) {
+              this.$message({
+                type: "success",
+                message: "添加成功"
+              });
+              this.getProDetail();
+            }
+          }).catch(e => {
+            console.log(e)
+          })
+        } else {
+          console.log("此选项没有属性功能");
+        }
+      })
     },
     /* 删除物模型*/
     deletewmx(index) {
@@ -4731,35 +4640,30 @@ export default {
         (this.wmxstart - 1) * this.wmxPageSize + index,
         1
       );
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      product.get(this.productId).then(resultes => {
-        resultes.set("thing", this.productdetail.thing);
-        resultes.save().then(
-          resultes => {
-            if (resultes) {
-              this.$message({
-                type: "success",
-                message: "删除成功"
-              });
-              this.wmxData = this.productdetail.thing.properties.concat([]);
-            }
-          },
-          error => {
-            returnLogin(error);
-          }
-        );
-      });
+      const params = {
+        thing: this.productdetail.thing
+      };
+      this.$update_object('Product', this.productId, params).then(resultes => {
+        if (resultes) {
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          });
+          this.wmxData = this.productdetail.thing.properties.concat([]);
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     wmxSizeChange(val) {
       this.wmxstart = 1;
       this.wmxPageSize = val;
-      console.log(
-        this.wmxData.slice(
-          (this.wmxstart - 1) * this.wmxPageSize,
-          this.wmxstart * this.wmxPageSize
-        )
-      );
+      // console.log(
+      //   this.wmxData.slice(
+      //     (this.wmxstart - 1) * this.wmxPageSize,
+      //     this.wmxstart * this.wmxPageSize
+      //   )
+      // );
     },
     wmxCurrentChange(val) {
       this.wmxstart = val;
@@ -4830,8 +4734,8 @@ export default {
       });
       Websocket.subscribe(info, function(res) {
         if (res.result) {
-          console.log(info);
-          console.log("订阅成功");
+          // console.log(info);
+          // console.log("订阅成功");
           var sendInfo = {
             topic: "channel/" + row.id + "/" + _this.productId,
             text: text0,
@@ -4888,48 +4792,45 @@ export default {
         if (valid) {
           var Topic =
             "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
-          var Product = Parse.Object.extend("Product");
-          var product = new Parse.Query(Product);
-        //   product.get(this.productId).then(resultes => {
-        //     var addTopic = {
-        //       topic: Topic,
-        //       type: this.topicform.type,
-        //       desc: this.topicform.desc
-        //     };
-        //     var arr = [];
-        //     arr.push(addTopic);
-        //     if (isupdated == -1) {
-        //       arr = arr.concat(resultes.topics);
-        //       resultes.set("topics", arr);
-        //     } else {
-        //       var topicupdated = resultes.topics.concat([]);
-        //       topicupdated[isupdated] = addTopic;
-        //       resultes.set("topics", topicupdated);
-        //     }
-        //     resultes.save().then(
-        //       response => {
-        //         if (response) {
-        //           this.$message({
-        //             type: "success",
-        //             message: "成功"
-        //           });
-        //           this.topicdialogVisible = false;
-        //           this.$refs[formName].resetFields();
-        //           (this.topicform.isupdated = -1), (this.topicform.topic = "");
-        //           this.topicform.desc = "";
-        //           this.handleClick({
-        //             name: "second"
-        //           });
-        //         }
-        //       },
-        //       error => {
-        //         returnLogin(error);
-        //       }
-        //     );
-        //   });
-        // } else {
-        //   console.log("error submit!!");
-        //   return false;
+
+          this.$get_object('Product', this.productId).then(resultes => {
+            var addTopic = {
+              topic: Topic,
+              type: this.topicform.type,
+              desc: this.topicform.desc
+            };
+            var arr = [];
+            arr.push(addTopic);
+            const params = {};
+            if (isupdated == -1) {
+              arr = arr.concat(resultes.topics);
+              params.topics = arr
+            } else {
+              var topicupdated = resultes.topics.concat([]);
+              topicupdated[isupdated] = addTopic;
+              params.topics = topicupdated
+            }
+            this.$update_object('Product', this.productId, params).then(response => {
+              if (response) {
+                this.$message({
+                  type: "success",
+                  message: "成功"
+                });
+                this.topicdialogVisible = false;
+                this.$refs[formName].resetFields();
+                (this.topicform.isupdated = -1), (this.topicform.topic = "");
+                this.topicform.desc = "";
+                this.handleClick({
+                  name: "second"
+                });
+              }
+            }).catch(e => {
+              console.log(e)
+            })
+          })
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
     },
@@ -4947,49 +4848,23 @@ export default {
       this.topicdialogVisible = true;
       this.topicform.isupdated = index;
     },
-    deletetopic(scope, index) {
-      var Product = Parse.Object.extend("Product");
-      var product = new Parse.Query(Product);
-      product.get(this.productId).then(resultes => {
-        var topic = resultes.topics.concat([]);
+    async deletetopic(scope, index) {
+      const { topics } = await this.$get_object('Product', this.productId)
+      if (topics) {
+        // scope._self.$refs[`popover-${scope.$index}`].doClose();
+        var topic = topics.concat([]);
         topic.splice(index, 1);
-        resultes.set("topics", topic);
-        resultes.save().then(
-          response => {
-            if (response) {
-              this.$message({
-                type: "success",
-                message: "删除成功"
-              });
-              scope._self.$refs[`popover-${scope.$index}`].doClose();
-              this.handleClick({
-                name: "second"
-              });
-            }
-          },
-          error => {
-            returnLogin(error);
-          }
-        );
-      });
-    },
-    testgraphql() {
-
-      // 删除 graphql 可能需要整合
-
-      // this.$apollo
-      //   .query({
-      //     query: gql`
-      //       ${editorgraphql.getValue()}
-      //     `
-      //   })
-      //   .then(resultes => {
-      //     editor5.setValue(JSON.stringify(resultes, null, 4));
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //     this.$message(error);
-      //   });
+        const params = {
+          topics: topic
+        };
+        const $update_object = this.$update_object('Product', this.productId, params)
+        // console.log($update_object)
+        this.$message({
+          type: "success",
+          message: "删除成功"
+        });
+      }
+      this.getTopic()
     },
     // 规则tab显示
     orginRule() {
