@@ -66,8 +66,8 @@
         </el-table-column>
         <el-table-column label="服务器IP" align="center" width="150">
           <template slot-scope="scope">
-            <p v-if="scope.row.private_ip">{{ scope.row.private_ip+ '(私)' }}</p>
-            <p v-if="scope.row.public_ip">{{ scope.row.public_ip+ '(公)' }}</p>
+            <p v-if="scope.row.private_ip">{{ scope.row.private_ip + '(私)' }}</p>
+            <p v-if="scope.row.public_ip">{{ scope.row.public_ip + '(公)' }}</p>
           </template>
         </el-table-column>
         <el-table-column label="服务器配置" align="center" width="150">
@@ -77,7 +77,7 @@
               <p>MAC地址: {{ scope.row.mac }}</p>
               <div slot="reference" class="name-wrapper">
                 <el-tag effect="dark">
-                  <span>{{ scope.row.core+'核'+scope.row.memory+' '+scope.row.disk+'内存' }}</span>
+                  <span>{{ scope.row.core + '核' + scope.row.memory + ' ' + scope.row.disk + '内存' }}</span>
                 </el-tag>
               </div>
             </el-popover>
@@ -314,9 +314,8 @@
     </el-dialog>
   </div>
 </template>
-<script>import Parse from 'parse'
-import { returnLogin } from '@/utils/return'
-import { uploadServer, uploadLicense, offlineServer } from '@/api/License'
+<script>
+import { uploadServer, uploadLicense, offlineServer,putLicense } from '@/api/License'
 
 var product = {}
 export default {
@@ -516,20 +515,6 @@ export default {
     }
   },
   mounted() {
-    // var iParse = Parse;
-    // iParse.initialize("asdhwu648vx");
-    // iParse.serverURL = 'http://139.155.115.215:1337/parse';
-    // let query = new iParse.Query('Lic');
-    // let subscription = query.subscribe();
-    // query.equalTo('lic','hhhhdd')
-    // subscription.on('create', (object) => {
-    // console.log('object created');
-    // console.log(object);
-    // });
-    // subscription.on('update', (object) => {
-    // console.log('object updated');
-    // console.log(object);
-    // });
     this.getApp()
     if (this.$route.query.appid) {
       this.formInline.app = this.$route.query.appid
@@ -556,7 +541,7 @@ export default {
         publicip: '127.7.0.1',
         mac: '127.7.0.1'
       },
-      this.serverdialogVisible = true
+        this.serverdialogVisible = true
     },
     serverOption(formName) {
       this.$refs[formName].validate(valid => {
@@ -586,57 +571,29 @@ export default {
             "className": "App",
             "objectId": this.serverForm.app
           },
-          this.$axiosWen.post('classes/License', params, { headers: { 'authorization': 'Basic YWRtaW46c3dTV2lvdG4ybi5jb20=' }}).then(res => {
-            if (res) {
-              this.$message('添加成功')
-              this.$refs[formName].resetFields()
-              this.getOrigin(0)
-              this.serverdialogVisible = false
-            }
-          }).catch(e => {
-            console.log(e);
-          });
-          // license.save().then(
-          //   resultes => {
-          //     if (resultes) {
-          //       this.$message('添加成功')
-          //       this.$refs[formName].resetFields()
-          //       this.getOrigin(0)
-          //       this.serverdialogVisible = false
-          //     }
-          //   },
-          //   error => {
-          //     returnLogin(error)
-          //   }
-          // )
+            this.$axiosWen.post('classes/License', params, { headers: { 'authorization': 'Basic YWRtaW46c3dTV2lvdG4ybi5jb20=' } }).then(res => {
+              if (res) {
+                this.$message('添加成功')
+                this.$refs[formName].resetFields()
+                this.getOrigin(0)
+                this.serverdialogVisible = false
+              }
+            }).catch(e => {
+              console.log(e);
+            });
         } else {
           console.log('error.submit')
         }
       })
     },
-    // // 初始化应用data  parse query
-    // getApp() {
-    //   var APP = Parse.Object.extend('App')
-    //   var app = new Parse.Query(APP)
-    //   app.find().then(
-    //     response => {
-    //       if (response) {
-    //         this.applist = response
-    //       }
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
     // 初始化应用data  axios query
     getApp() {
       this.$axios.get('/iotapi/classes/App')
         .then(res => {
           this.applist = res.results
         }).catch(e => {
-          console.log(e);
-        });
+        console.log(e);
+      });
     },
     // 初始化数
     getOrigin(isstart) {
@@ -723,14 +680,6 @@ export default {
               message: '已取消重新部署'
             })
           })
-        // }
-        // else if(){
-        //   this.$notify({
-        //     title: '正在部署中',
-        //     dangerouslyUseHTMLString: true,
-        //     message: '正在部署中，请稍后<i class="el-icon-loading" style="color:green"></i>',
-        //     type: 'success'
-        //   });
       } else {
         this.dialogFormVisible = true
       }
@@ -739,32 +688,30 @@ export default {
     updatedLicense(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var License = Parse.Object.extend('License')
-          var license = new License()
-          license.id = this.licenseid
-          license.set('type', this.ruleForm.region)
-          license.set('license', this.ruleForm.licensekey)
-          license.set('status', 'start_install')
-          license.set('customer_name', this.ruleForm.username)
-          license.set('software', this.ruleForm.version)
-          license.save().then(
+          const data = {
+            type: this.ruleForm.region,
+            license: this.ruleForm.licensekey,
+            status: 'start_install',
+            customer_name: this.ruleForm.username,
+            software: this.ruleForm.version
+          }
+          putLicense(this.licenseid, data).then(
             resultes => {
               if (resultes) {
                 this.$message('正在部署中')
                 this.dialogFormVisible = false
                 this.getOrigin(1)
               }
-            },
-            error => {
-              returnLogin(error)
             }
-          )
-        } else {
-          console.log('error submit!!')
-          return false
+          ).catch(e => {
+            console.log('updatedLicense faild ' + e.error)
+            return false
+          })
+          return true
         }
       })
-    },
+    }
+  },
     // 详情查看
     handleDetail(index, row) {
       this.dialogVisible = true
@@ -816,19 +763,20 @@ export default {
     updateLictool(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          //  this.licenseObj.shuwa_iot_software=this.onlineform.name
-          var License = Parse.Object.extend('License')
-          var license = new License()
-          license.id = this.licenseObj.id
-          license.set('status', 'start_update')
-          license.set('software', this.onlineform.name)
-          license.save().then(resultes => {
-            if (resultes) {
-              this.dialogOnline = false
-              this.$message('正在升级中')
+          const data = {
+            status: 'start_update',
+            software: this.onlineform.name
+          }
+          putLicense(this.licenseid, data).then(
+            results => {
+              if (results) {
+                this.dialogOnline = false
+                this.$message('正在升级中')
+              }
             }
-          }, error => {
-            returnLogin(error)
+          ).catch(e => {
+            console.log('updatedLicense faild ' + e.error)
+            return false
           })
         }
       })
@@ -867,61 +815,61 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .serverlist {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background: #fff;
+.serverlist {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #fff;
 
-    .servercontent {
-      .el-form {
-        text-align: right;
+  .servercontent {
+    .el-form {
+      text-align: right;
+    }
+  }
+
+  .serverpagina {
+    margin-top: 20px;
+  }
+
+  /deep/ .el-dialog__body {
+    .el-form {
+      display: flex;
+      flex-wrap: wrap;
+
+      .el-form-item {
+        width: 50%;
+
+        /deep/ .el-select {
+          width: 100%;
+        }
+      }
+
+      /deep/ .notall {
+        width: 100%;
+        text-align: center;
+      }
+
+      /deep/ .el-col-11 {
+        .el-form-item {
+          width: 100%;
+        }
+      }
+
+      /deep/ .el-col-2 {
+        text-align: center;
       }
     }
+  }
 
-    .serverpagina {
-      margin-top: 20px;
-    }
-
+  @media screen and (max-width: 1350px) {
     /deep/ .el-dialog__body {
       .el-form {
-        display: flex;
-        flex-wrap: wrap;
-
         .el-form-item {
-          width: 50%;
-
-          /deep/ .el-select {
-            width: 100%;
-          }
-        }
-
-        /deep/ .notall {
           width: 100%;
-          text-align: center;
-        }
-
-        /deep/ .el-col-11 {
-          .el-form-item {
-            width: 100%;
-          }
-        }
-
-        /deep/ .el-col-2 {
-          text-align: center;
-        }
-      }
-    }
-
-    @media screen and (max-width: 1350px) {
-      /deep/ .el-dialog__body {
-        .el-form {
-          .el-form-item {
-            width: 100%;
-          }
         }
       }
     }
   }
+}
 </style>

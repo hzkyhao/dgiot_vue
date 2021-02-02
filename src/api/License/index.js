@@ -13,7 +13,7 @@ export async function delLicense(ObjectId) {
   return del_object('License', ObjectId)
 }
 
-export async function putLicense(ObjectId,params) {
+export function putLicense(ObjectId,params) {
   return update_object('License', ObjectId,params)
 }
 
