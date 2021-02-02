@@ -49,8 +49,8 @@
 </template>
 <script>
 import treeTable from '@/components/TreeTable'
-import { getcontrol } from '@/api/getrole'
-import { QueryPermission, getPermission, putPermission } from '@/api/Permission'
+import { getcontrol } from '@/api/Role/index'
+import { QueryPermission, getPermission, putPermission } from '@/api/Permission/index.js'
 import Parse from 'parse'
 import { utc2beijing } from '@/utils'
 export default {
@@ -126,7 +126,7 @@ export default {
     },
     async  getcontrolrole() {
       this.data = []
-      const res = await QueryPermission({ limit: 1000 })
+      const res = await queryPermission({ limit: 1000 })
       if (res.results) {
         const results = res.results
         results.map(items => {

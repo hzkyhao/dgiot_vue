@@ -4,8 +4,8 @@ import { Message } from "element-ui";
 import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
-import { getBatchNumer, postDict,getIndustry, deleteDict, putDict} from "@/api/Dict"
-import { queryDevice, postDevice, putDevice, deleteDevice, getDevice, batchDeleteDevice} from "@/api/Device"
+import { getBatchNumer, postDict, getIndustry, delDict, putDict} from "@/api/Dict"
+import { queryDevice, postDevice, putDevice, delDevice, getDevice, batchDeleteDevice} from "@/api/Device"
 import { queryProduct} from "@/api/Product"
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
@@ -162,7 +162,7 @@ export default {
     Vue.prototype.$query_object_header = query_object_header
     Vue.prototype.$getBatchNumer = getBatchNumer
     Vue.prototype.$postDict = postDict
-    Vue.prototype.$deleteDict = deleteDict
+    Vue.prototype.$deleteDict = delDict
     Vue.prototype.$axiosWen = serviceWen
     Vue.prototype.$create_object = create_object;
     Vue.prototype.$update_object = update_object;
@@ -179,7 +179,7 @@ export default {
     Vue.prototype.$postDevice = postDevice
     Vue.prototype.$putDevice = putDevice
     Vue.prototype.$getDevice = getDevice
-    Vue.prototype.$deleteDevice = deleteDevice
+    Vue.prototype.$deleteDevice = delDevice
     Vue.prototype.$batchDeleteDevice = batchDeleteDevice
     Vue.prototype.$queryProduct = queryProduct
   }

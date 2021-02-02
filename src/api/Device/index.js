@@ -17,7 +17,7 @@ export async function getDevice(ObjectId) {
   return get_object('Device', ObjectId)
 }
 
-export async function deleteDevice(ObjectId) {
+export async function delDevice(ObjectId) {
   return del_object('Device', ObjectId)
 }
 

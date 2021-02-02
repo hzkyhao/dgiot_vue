@@ -9,7 +9,7 @@ export async function getLicense(ObjectId) {
   return get_object('License', ObjectId)
 }
 
-export async function deleteLicense(ObjectId) {
+export async function delLicense(ObjectId) {
   return del_object('License', ObjectId)
 }
 

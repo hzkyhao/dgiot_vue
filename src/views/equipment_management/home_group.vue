@@ -352,7 +352,7 @@ import Cookies from 'js-cookie'
 import $ from 'jquery'
 import { getServer } from '@/api/appcontrol'
 import { resolve } from 'url'
-import { addGroup } from '@/api/home'
+import { addGroup } from '@/api/Group/index'
 export default {
   data() {
     return {
@@ -461,6 +461,7 @@ export default {
           addGroup(this.addGroup.name).then(res => {
             this.$message({
               message: '新建设备分组成功',
+
               type: 'success'
             })
             this.searchProduct()

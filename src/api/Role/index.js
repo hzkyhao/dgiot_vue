@@ -1,4 +1,5 @@
 import { query_object, get_object, del_object, update_object, create_object } from '@/api/shuwa_parse'
+import request from '@/utils/request'
 
 export async function queryRole(params) {
   return query_object('_Role', params)
@@ -8,7 +9,7 @@ export async function getRole(ObjectId) {
   return get_object('_Role', ObjectId)
 }
 
-export async function deleteRole(ObjectId) {
+export async function delRole(ObjectId) {
   return del_object('_Role', ObjectId)
 }
 
@@ -18,4 +19,13 @@ export async function putRole(ObjectId, params) {
 
 export async function postRole(params) {
   return create_object('_Role', params)
+}
+
+
+// 获取角色列表
+export function roletree() {
+  return request({
+    url: 'iotapi/roletree',
+    method: 'get'
+  })
 }
