@@ -521,7 +521,6 @@
 </template>
 <script>
 import { getTdDevice } from "@/api/Device/index.js"
-import Parse from 'parse'
 import { utc2beijing,timestampToTime } from '@/utils/index'
 import LineChart from '../dashboard/admin/components/LineChart'
 import { returnLogin } from '@/utils/return'
@@ -697,46 +696,47 @@ export default {
         this.childrenDeviceStart = 0
       }
       this.devicesTableData = []
-      var Devices = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Devices)
-      devices.limit(this.childrenDeviceLength)
-      devices.skip(this.childrenDeviceStart)
-      devices.ascending('-updatedAt')
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Devices = Parse.Object.extend('Device')
+      // var devices = new Parse.Query(Devices)
+      // devices.limit(this.childrenDeviceLength)
+      // devices.skip(this.childrenDeviceStart)
+      // devices.ascending('-updatedAt')
 
-      if (this.childrendevices.devicesname != '') {
-        devices.equalTo('devaddr', this.childrendevices.devicesname)
-      }
-      devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
+      // if (this.childrendevices.devicesname != '') {
+      //   devices.equalTo('devaddr', this.childrendevices.devicesname)
+      // }
+      // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
 
-      devices.count().then(
-        count => {
-          this.childrenDeviceTotal = count
-          devices.find().then(resultes => {
-            if (resultes) {
-              resultes.map(items => {
-                var obj = {}
-                obj.id = items.id
-                obj.name = items.attributes.name
-                obj.lastOnlineTime = this.$dateFormat(
-                  this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
-                )
-                obj.status = items.attributes.status
-                obj.originstatus = items.attributes.status
-                obj.nodeType = items.attributes.product.attributes.nodeType
-                obj.desc = items.attributes.tag.attributes.desc
-                obj.productName = items.attributes.product.attributes.name
-                obj.devaddr = items.attributes.devaddr
-                obj.isEnable = items.attributes.isEnable
-                obj.route = items.attributes.route
-                this.devicesTableData.push(obj)
-              })
-            }
-          })
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      // devices.count().then(
+      //   count => {
+      //     this.childrenDeviceTotal = count
+      //     devices.find().then(resultes => {
+      //       if (resultes) {
+      //         resultes.map(items => {
+      //           var obj = {}
+      //           obj.id = items.id
+      //           obj.name = items.attributes.name
+      //           obj.lastOnlineTime = this.$dateFormat(
+      //             this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
+      //           )
+      //           obj.status = items.attributes.status
+      //           obj.originstatus = items.attributes.status
+      //           obj.nodeType = items.attributes.product.attributes.nodeType
+      //           obj.desc = items.attributes.tag.attributes.desc
+      //           obj.productName = items.attributes.product.attributes.name
+      //           obj.devaddr = items.attributes.devaddr
+      //           obj.isEnable = items.attributes.isEnable
+      //           obj.route = items.attributes.route
+      //           this.devicesTableData.push(obj)
+      //         })
+      //       }
+      //     })
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     // // 初始化
     // getDeviceDetail() {
@@ -1233,27 +1233,28 @@ export default {
     checkProduct(val) {
       this.ischange = true
       this.selectproduct = val
-      var Devices = Parse.Object.extend('Device')
-      var devices = new Parse.Query(Devices)
-      devices.equalTo('product', val)
-      devices.notEqualTo('objectId', this.deviceid)
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Devices = Parse.Object.extend('Device')
+      // var devices = new Parse.Query(Devices)
+      // devices.equalTo('product', val)
+      // devices.notEqualTo('objectId', this.deviceid)
 
-      devices.notEqualTo('parentId', this.deviceid)
-      devices.skip((this.dirstart - 1) * this.dirlength)
-      devices.limit(this.dirlength)
-      devices.find().then(
-        response => {
-          if (response && response.length > 0) {
-            this.productDevices = [...response]
-          } else {
-            this.productDevices = []
-          }
-          this.childrenForm.device = ''
-        },
-        error => {
-          returnLogin(error)
-        }
-      )
+      // devices.notEqualTo('parentId', this.deviceid)
+      // devices.skip((this.dirstart - 1) * this.dirlength)
+      // devices.limit(this.dirlength)
+      // devices.find().then(
+      //   response => {
+      //     if (response && response.length > 0) {
+      //       this.productDevices = [...response]
+      //     } else {
+      //       this.productDevices = []
+      //     }
+      //     this.childrenForm.device = ''
+      //   },
+      //   error => {
+      //     returnLogin(error)
+      //   }
+      // )
     },
     deviceToDetail(row) {
       this.$router.push({
@@ -1275,30 +1276,31 @@ export default {
         if (valid) {
           var route = {}
           route[this.devicedevaddr] = this.childrenForm.route
-          var Devices = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Devices)
-          var devices1 = new Devices()
-          devices.get(this.childrenForm.device).then(
-            response => {
-              devices1.id = this.deviceid
-              response.set('parentId', devices1)
-              response.set('route', route)
-              response.save().then(resultes => {
-                if (resultes) {
-                  this.$message({
-                    type: 'success',
-                    message: '添加成功'
-                  })
-                  this.childDialog = false
-                  this.getDevices()
-                  this.$refs['childrenForm'].resetFields()
-                }
-              })
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var Devices = Parse.Object.extend('Device')
+          // var devices = new Parse.Query(Devices)
+          // var devices1 = new Devices()
+          // devices.get(this.childrenForm.device).then(
+          //   response => {
+          //     devices1.id = this.deviceid
+          //     response.set('parentId', devices1)
+          //     response.set('route', route)
+          //     response.save().then(resultes => {
+          //       if (resultes) {
+          //         this.$message({
+          //           type: 'success',
+          //           message: '添加成功'
+          //         })
+          //         this.childDialog = false
+          //         this.getDevices()
+          //         this.$refs['childrenForm'].resetFields()
+          //       }
+          //     })
+          //   },
+          //   error => {
+          //     returnLogin(error)
+          //   }
+          // )
         } else {
           console.log('error submit!!')
           return false
@@ -1306,90 +1308,93 @@ export default {
       })
     },
     deleteDevcie(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Devices = Parse.Object.extend('Device')
-          // var devices = new Parse.Query(Devices);
-          var devices1 = new Devices()
-          devices1.id = item.id
-          devices1.set('parentId', null)
-          devices1.save().then(resultes => {})
-        })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: '解除关联成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '解除关联失败',
-              type: 'error'
-            })
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释,这里使用批处理方法')
+      // Promise.all([
+      //   this.multipleTable.map(item => {
+      //     var Devices = Parse.Object.extend('Device')
+      //     // var devices = new Parse.Query(Devices);
+      //     var devices1 = new Devices()
+      //     devices1.id = item.id
+      //     devices1.set('parentId', null)
+      //     devices1.save().then(resultes => {})
+      //   })
+      // ])
+      //   .then(data => {
+      //     if (data && data.length != 0) {
+      //       this.$message({
+      //         message: '解除关联成功',
+      //         type: 'success'
+      //       })
+      //       this.getDevices()
+      //     } else {
+      //       this.$message({
+      //         message: '解除关联失败',
+      //         type: 'error'
+      //       })
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log(error)
+      //   })
     },
     // 设备多个启用和禁用
     unactiveDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Devices = Parse.Object.extend('Device')
-          var devices = new Devices()
-          devices.id = item.id
-          devices.set('isEnable', false)
-          devices.save().then(resultes => {})
-        })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: '禁用成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '禁用失败',
-              type: 'error'
-            })
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释，这里使用批处理方法')
+      // Promise.all([
+      //   this.multipleTable.map(item => {
+      //     var Devices = Parse.Object.extend('Device')
+      //     var devices = new Devices()
+      //     devices.id = item.id
+      //     devices.set('isEnable', false)
+      //     devices.save().then(resultes => {})
+      //   })
+      // ])
+      //   .then(data => {
+      //     if (data && data.length != 0) {
+      //       this.$message({
+      //         message: '禁用成功',
+      //         type: 'success'
+      //       })
+      //       this.getDevices()
+      //     } else {
+      //       this.$message({
+      //         message: '禁用失败',
+      //         type: 'error'
+      //       })
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log(error)
+      //   })
     },
     activeDevice(val) {
-      Promise.all([
-        this.multipleTable.map(item => {
-          var Devices = Parse.Object.extend('Device')
-          var devices = new Devices()
-          devices.id = item.id
-          devices.set('isEnable', true)
-          devices.save().then(resultes => {})
-        })
-      ])
-        .then(data => {
-          if (data && data.length != 0) {
-            this.$message({
-              message: '启用成功',
-              type: 'success'
-            })
-            this.getDevices()
-          } else {
-            this.$message({
-              message: '启用失败',
-              type: 'error'
-            })
-          }
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释,这里使用批处理方法')
+      // Promise.all([
+      //   this.multipleTable.map(item => {
+      //     var Devices = Parse.Object.extend('Device')
+      //     var devices = new Devices()
+      //     devices.id = item.id
+      //     devices.set('isEnable', true)
+      //     devices.save().then(resultes => {})
+      //   })
+      // ])
+      //   .then(data => {
+      //     if (data && data.length != 0) {
+      //       this.$message({
+      //         message: '启用成功',
+      //         type: 'success'
+      //       })
+      //       this.getDevices()
+      //     } else {
+      //       this.$message({
+      //         message: '启用失败',
+      //         type: 'error'
+      //       })
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log(error)
+      //   })
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
@@ -1400,30 +1405,30 @@ export default {
       const routeKey = this.devicedevaddr
       // 删除key为上级设备地址值
       delete objRoute[routeKey]
-
-      var Devices = Parse.Object.extend('Device')
-      var devices1 = new Devices()
-      devices1.id = scope.row.id
-      devices1.set('parentId', null)
-      devices1.set('route', objRoute)
-      devices1.save().then(
-        response => {
-          if (response) {
-            this.$message({
-              type: 'success',
-              message: '解除关联成功'
-            })
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
-            this.getDevices()
-          }
-        },
-        error => {
-          this.$message({
-            type: 'error',
-            message: error.message
-          })
-        }
-      )
+      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // var Devices = Parse.Object.extend('Device')
+      // var devices1 = new Devices()
+      // devices1.id = scope.row.id
+      // devices1.set('parentId', null)
+      // devices1.set('route', objRoute)
+      // devices1.save().then(
+      //   response => {
+      //     if (response) {
+      //       this.$message({
+      //         type: 'success',
+      //         message: '解除关联成功'
+      //       })
+      //       scope._self.$refs[`popover-${scope.$index}`].doClose()
+      //       this.getDevices()
+      //     }
+      //   },
+      //   error => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: error.message
+      //     })
+      //   }
+      // )
     },
     handelUpdate(event, row, index) {
       var newData1 = {}
@@ -1443,23 +1448,24 @@ export default {
             newData2[key] = row[key]
           }
           newData2.isEnable = newData2.isEnable == true
-          var Devices = Parse.Object.extend('Device')
-          var devices = new Parse.Query(Devices)
-          devices.get(row.id).then(
-            object => {
-              object.set('isEnable', newData2.isEnable)
-              object.save().then(resultes => {
-                this.$message({
-                  type: 'success',
-                  message: '状态修改成功'
-                })
-              })
-              this.getDevices()
-            },
-            error => {
-              returnLogin(error)
-            }
-          )
+          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+          // var Devices = Parse.Object.extend('Device')
+          // var devices = new Parse.Query(Devices)
+          // devices.get(row.id).then(
+          //   object => {
+          //     object.set('isEnable', newData2.isEnable)
+          //     object.save().then(resultes => {
+          //       this.$message({
+          //         type: 'success',
+          //         message: '状态修改成功'
+          //       })
+          //     })
+          //     this.getDevices()
+          //   },
+          //   error => {
+          //     returnLogin(error)
+          //   }
+          // )
         })
         .catch(() => {
           this.$message({
