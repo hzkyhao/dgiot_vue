@@ -21,9 +21,6 @@ export async function delDevice(ObjectId) {
   return del_object('Device', ObjectId)
 }
 
-export async function batchDeleteDevice(ObjectIdArr) {
-  return this.$postBatch('Device',ObjectIdArr)
-}
 
 export async function putDevice(ObjectId,params) {
   return update_object('Device', ObjectId,params)
@@ -32,6 +29,18 @@ export async function putDevice(ObjectId,params) {
 export async function postDevice(params) {
   return create_object('Device', params)
 }
+
+// export async function changeDeviceStatus(multipleTable,isEnable){
+//   return Promise.all([
+//     multipleTable.map(item => {
+//       var params = {
+//         isEnable : isEnable
+//       }
+//       putDevice(item.id,params)
+//     })
+//   ])
+    
+// }
 export async function getDeviceCountByProduct(productId) {
   const params = {
     keys: 'count(*)',

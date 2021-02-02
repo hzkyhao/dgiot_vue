@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
 
 import { getBatchNumer, postDict, getIndustry, delDict, putDict} from "@/api/Dict"
-import { queryDevice, postDevice, putDevice, delDevice, getDevice, batchDeleteDevice} from "@/api/Device"
+import { queryDevice, postDevice, putDevice, delDevice, getDevice} from "@/api/Device"
 import { queryProduct} from "@/api/Product"
 axios.defaults.withCredentials = true;
 const serviceWen = axios.create({
@@ -180,7 +180,7 @@ export default {
     Vue.prototype.$putDevice = putDevice
     Vue.prototype.$getDevice = getDevice
     Vue.prototype.$deleteDevice = delDevice
-    Vue.prototype.$batchDeleteDevice = batchDeleteDevice
+
     Vue.prototype.$queryProduct = queryProduct
   }
 };
