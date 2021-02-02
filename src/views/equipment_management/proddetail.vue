@@ -4023,7 +4023,7 @@ export default {
         title: this.wmxData[0].identifier,
         name: this.wmxData[0].identifier,
         leftItemPos: 0,
-        content: this.wmxData[0].dataForm.collection
+        content: this.wmxData[0].dataForm == undefined ? "" : this.wmxData[0].dataForm.collection
       });
 
       // 进入先添加一个默认显示的
@@ -4042,8 +4042,8 @@ export default {
           });
           this.ed3isShow = true;
           //  this.editorList.push(editor3);
-          console.log(this.wmxData);
-          this.editorList[0].setValue(this.wmxData[0].dataForm.collection);
+          // console.log(this.wmxData);
+          this.editorList[0].setValue(this.wmxData[0].dataForm == undefined ? "" : this.wmxData[0].dataForm.collection);
         }, 1);
       }
       // this.menuTabClick(this.wmxData)
