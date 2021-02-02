@@ -1,10 +1,12 @@
 /*
  * @Author: h7ml
  * @Date: 2021-02-01 16:45:26
- * @LastEditTime: 2021-02-01 20:21:50
- * @Description: this.Batchdelete('Dict', ['id1','id2'])
+ * @LastEditTime: 2021-02-02 12:12:06
+ * @Description: this.Batchdelete('_Dict', ['id1','id2'])
  * @FilePath: \platform\src\api\batch\index.js
  */
+// https://docs.parseplatform.org/rest/guide/#batch-operations
+// http://132.232.119.105:5080/swagger/#/Data/post_batch
 import request from "@/utils/request";
 import { Message } from "element-ui";
 const Vue = require("vue");
@@ -13,7 +15,7 @@ const Vue = require("vue");
  * @param {*} tableClass
  * @param {*} ObjectIdArr
  */
-export async function Batchdelete(tableClass, ObjectIdArr) {
+export async function Batchdelete(tableClass, ObjectIdArr, body) {
   if (!tableClass && !ObjectIdArr) {
     return Message({
       message: "tableClass 和 ObjectIdArr 字段为必传",
@@ -31,13 +33,13 @@ export async function Batchdelete(tableClass, ObjectIdArr) {
     let requests = []
     for (const key in ObjectIdArr) {
       requests.push({
-        method: 'DELETE', path: `/parse/classes/${tableClass}/${ObjectIdArr[key]}`, body: {}
+        method: 'DELETE', path: `/parse/classes/${tableClass}/${ObjectIdArr[key]}`, body: body
       })
-      console.log(ObjectIdArr[key])
     }
     const params = {
       "requests": requests
     }
+    console.log(params)
     return request({
       url: `iotapi/batch`,
       method: "post",
@@ -45,7 +47,7 @@ export async function Batchdelete(tableClass, ObjectIdArr) {
         accept: "application/json",
         "Content-Type": "application/json"
       },
-      params
+      data: params
     });
   }
 }
