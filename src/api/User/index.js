@@ -13,8 +13,8 @@ export async function delUser(ObjectId) {
   return del_object('_User', ObjectId)
 }
 
-export async function putUser(ObjectId) {
-  return update_object('_User', ObjectId)
+export async function putUser(ObjectId, pamams) {
+  return update_object('_User', ObjectId, pamams)
 }
 
 export async function postUser(params) {
