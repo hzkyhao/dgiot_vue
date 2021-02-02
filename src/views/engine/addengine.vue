@@ -334,7 +334,6 @@ var editorinsert
 var editorsubtable
 // import datalist from "./datalist";
 import { addRule, ruleTest, getActions, getResource, postResource } from '@/api/rules'
-import Parse from 'parse'
 
 import { returnLogin } from '@/utils/return'
 export default {
@@ -583,18 +582,19 @@ export default {
       this.showAllChannel()
     },
     showAllChannel() {
-      var Channel = Parse.Object.extend('Channel')
-      var channel = new Parse.Query(Channel)
-      channel.skip(this.allChannelstart)
-      channel.limit(this.allChannellength)
-      channel.count().then(count => {
-        this.allChanneltotal = count
-        channel.find().then(resultes => {
-          this.channellist = resultes
-        })
-      }, error => {
-        returnLogin(error)
-      })
+      this.$message('Parse')
+      // var Channel = Parse.Object.extend('Channel')
+      // var channel = new Parse.Query(Channel)
+      // channel.skip(this.allChannelstart)
+      // channel.limit(this.allChannellength)
+      // channel.count().then(count => {
+      //   this.allChanneltotal = count
+      //   channel.find().then(resultes => {
+      //     this.channellist = resultes
+      //   })
+      // }, error => {
+      //   returnLogin(error)
+      // })
     },
     testRule(forName) {
       this.formInline.result = ''
