@@ -13,8 +13,8 @@ export async function delChannel(ObjectId) {
   return del_object('Channel', ObjectId)
 }
 
-export async function putChannel(ObjectId) {
-  return update_object('Channel', ObjectId)
+export async function putChannel(ObjectId, params) {
+  return update_object('Channel', ObjectId, params)
 }
 
 export async function postChannel(params) {
@@ -73,6 +73,7 @@ export function updateConnect(objectId, host, port, username, password, database
     }
   })
 }
+
 export function deleteConnect(objectId) {
   return request({
     url: '/resource/edit/' + objectId,

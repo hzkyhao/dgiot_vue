@@ -2238,21 +2238,11 @@
               :name="item.name"
             >
               <div class="diaCollRightCls">
-
-                <<<<<<< HEAD
                 <el-row style="margin:10px">
                   <el-button type="success">测试</el-button>
                   <el-button type="info" @click="onReductionTap(index)">还原</el-button>
                   <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
                 </el-row>
-                =======
-                <el-row style="margin:10px">
-                  <el-button type="success">测试</el-button>
-                  <el-button type="info" @click="onReductionTap(index)">还原</el-button>
-                  <el-button type="primary" @click="onSaveTap(index)">保存</el-button>
-                </el-row>
-                >>>>>>> d85e08d128dacdb196c5741e70f62d4d0f547074
-
                 <pre
                   :id="item.name"
                   class="ace_editor3"
