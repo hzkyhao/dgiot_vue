@@ -50,7 +50,7 @@
                   <el-link :underline="false" type="primary" icon="el-icon-view" @click="deviceToDetail(scope.row)">配置
                   </el-link>
                   <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                    <p>确定删除【{{ scope.row.name }}】这个产品吗？</p>
+                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button size="mini" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">
                         {{ $t('developer.cancel') }}</el-button>
