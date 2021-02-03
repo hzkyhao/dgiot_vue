@@ -30,7 +30,7 @@
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-        </el-form-item>
+        </el-button></el-form-item>
       </el-form>
       <div class="protable">
         <el-table :data="groupData" style="width: 100%">
@@ -284,12 +284,12 @@
                 ]"
                 label="分组名"
                 prop="name"
-              />
-            </el-col>
+            /></el-col>
             <el-col :span="18">
               <el-input v-model="addGroup.name" type="text" autocomplete="off"/></el-form-item>
             </el-col>
           </el-row>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="addDeviceGroup()">新增</el-button>
@@ -629,12 +629,12 @@ export default {
           }
         })
         .then(function(res) {
-          // console.log(res)
+          console.log(res)
         })
       return false // 返回false不会自动上传
     },
     handleUploadSuccess(response, file, fileList) {
-      // console.log('### Success response', response)
+      console.log('### Success response', response)
       this.$message({
         type: 'success',
         message: '产品导入成功'
@@ -663,7 +663,7 @@ export default {
       return date // 2017-03-31 16:02:06
     },
     async getDict(resultes, category) {
-      // console.log(resultes, category)
+      console.log(resultes, category)
       const parsms = {
         limit: 1000,
         where: {
@@ -672,7 +672,7 @@ export default {
       }
       const { results } = await queryDict(parsms)
       // this.groupData = results
-      // console.log("res", results)
+      console.log("res", results)
     },
 
     async searchProduct(start) {
@@ -688,10 +688,10 @@ export default {
         }
       }
       const { results } = await queryProduct(params)
-      // console.log("results", results)
+      console.log("results", results)
       this.groupData = results
       this.total = this.groupData.length
-      // console.log(this.groupData)
+      console.log(this.groupData)
 
       const resApps = await queryRole({
         limit: 100
@@ -751,6 +751,7 @@ export default {
       }
       this.selectApp(this.form.relationApp)
     },
+    handleChange() {},
 
     async Industry() {
       this.categoryList = []
@@ -1027,7 +1028,7 @@ export default {
     // 编辑组态
     proudctEdit(row) {
       // #topoUrl
-      // console.log('编辑组态 row is', row)
+      console.log('编辑组态 row is', row)
       if (this.$globalConfig.serverURL.substr(0, 1) == '/') {
         var topoUrl = window.location.origin + '/spa'
       } else {
