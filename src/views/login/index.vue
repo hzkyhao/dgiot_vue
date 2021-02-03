@@ -230,7 +230,6 @@ export default {
                 user.roles[0] ? user.roles[0].name : ''
               )
               this.getNavigation()
-              this.getApihub()
             })
             .catch(error => {
               loading.close()
@@ -279,23 +278,6 @@ export default {
         })
         .catch(e => {
           console.log(e.error)
-        })
-    },
-    getApihub() {
-      this.$axiosWen
-        .get('iotapi/apihub', {
-          params: {
-            appname: sessionStorage.getItem('roles'),
-            token: this.$Cookies.get('sessionToken')
-          }
-        })
-        .then(res => {
-          if (res.file) {
-            this.$Cookies.set('fileServer', res.file)
-          }
-        })
-        .catch(err => {
-          console.log(err)
         })
     },
     resetPassword() {
