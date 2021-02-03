@@ -954,7 +954,8 @@ export default {
               productSecret: productSecret,
               ACL: setAcl,
               topics: [],
-              dynamicReg: false
+              dynamicReg: false,
+              thing: undefined
             }
             params = Object.assign(initparams, addparams)
             this.createProduct(params)
