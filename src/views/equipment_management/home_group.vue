@@ -341,12 +341,14 @@
 import { queryProduct } from '@/api/Product/index'
 import { queryDict } from '@/api/Dict/index'
 import { queryRole } from '@/api/Role/index'
+import { queryDevice } from "@/api/Device/index";
 const Base64 = require('js-base64').Base64
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
 import Cookies from 'js-cookie'
 import { getRole } from '@/api/Role/index'
 import { addGroup } from '@/api/Group/index'
+import { delProduct, getProduct } from "../../api/Product";
 export default {
   data() {
     return {
@@ -932,43 +934,45 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      const params = {
+        keys: 'count(*)',
+        skip: 0,
+        limit: 1,
+        where: {
+          "product": scope.row.objectId
+        }
+      }
+      queryDevice(params)
+        .then(results => {
+          console.log(results,"jkjjjj")
 
-      // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // var Device = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Device)
-      // devices.equalTo('product', scope.row.id)
-      // devices.find().then(resultes => {
-      //   if (resultes.length > 0) {
-      //     this.$message('请先删除该产品下设备')
-      //     return
-      //   } else {
-      //     product.get(scope.row.id).then(
-      //       resultes => {
-      //         resultes.destroy().then(
-      //           response => {
-      //             if (response) {
-      //               this.$message({
-      //                 type: 'success',
-      //                 message: '删除成功'
-      //               })
-      //               scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //               this.searchProduct()
-      //             }
-      //           },
-      //           error => {
-      //             returnLogin(error)
-      //           }
-      //         )
-      //       },
-      //       error => {
-      //         returnLogin(error)
-      //       }
-      //     )
-      //   }
-      // })
+          if (results.count > 0) {
+            this.$message('请先删除该产品下设备')
+            return
+          } else {
+            getProduct(scope.row.objectId).then(results => {
+              console.log(results)
+              delProduct(scope.row.objectId).then(
+                response => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功'
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.searchProduct()
+                  }
+                },
+                error => {
+                  returnLogin(error)
+                }
+              )
+            }
+            ).catch(e => {
+
+            })
+          }
+        })
     },
     productSizeChange(val) {
       this.length = val
@@ -1048,7 +1052,7 @@ export default {
         // eslint-disable-next-line no-redeclare
         var topoUrl = this.$globalConfig.localTopoUrl
       }
-      var url = `${topoUrl}/#/views/${row.id}`
+      var url = `${topoUrl}/#/views/${row.objectId}`
       window.open(url, '__blank')
     },
     // 导出
