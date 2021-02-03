@@ -49,7 +49,7 @@
       <el-form-item>
         <el-button
           type="primary"
-          @click="editoruser(ruleForm2)"
+          @click="submit_edituser(ruleForm2)"
         >保存</el-button
         >
       </el-form-item>
@@ -57,7 +57,9 @@
   </div>
 </template>
 <script>
-import { putUser } from "@/api/User/index"
+import { putUser, getUser } from "@/api/User/index"
+import { roletree } from "@/api/Role/index"
+
 export default {
   data() {
     return {
@@ -86,15 +88,15 @@ export default {
   },
 
   methods: {
-    async editoruser(formName) {
+    async submit_edituser(formName) {
       console.log(formName)
       // 更新用户详情
       const params = {
         username: this.ruleForm2.account,
         nick: this.ruleForm2.username,
         phone: this.ruleForm2.phone,
-        email: this.ruleForm2.email
-
+        email: this.ruleForm2.email,
+        emailVerified: true
       }
       const res = await putUser(this.$route.query.id, params)
       if (res) {
@@ -108,19 +110,12 @@ export default {
           message: '修改用户失败'
         })
       }
-      // this.$router.push({
-      //   path: "/roles/structure"
-      // });
     },
 
     editUser() {
       // 获取用户详情
-      this.$axiosWen
-        .get(`iotapi/classes/_User/`, { params: {
-          limit: 1, skip: 0, where: { objectId: this.$route.query.id }
-        }})
-        .then(r => {
-          const res = r.results[0]
+      getUser(this.$route.query.id)
+        .then(res => {
           this.ruleForm2.username = res.nick
           this.ruleForm2.phone = res.phone
           this.ruleForm2.account = res.username
@@ -136,8 +131,7 @@ export default {
         })
     },
     getDepartment() {
-      this.$axiosWen
-        .get('iotapi/roletree')
+      roletree()
         .then(res => {
           const results = res.results
           results.forEach(element => {
