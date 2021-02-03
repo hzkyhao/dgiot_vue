@@ -93,8 +93,8 @@ export default {
         username: this.ruleForm2.account,
         nick: this.ruleForm2.username,
         phone: this.ruleForm2.phone,
-        email: this.ruleForm2.email,
-        departmentid: this.ruleForm2.departmentid
+        email: this.ruleForm2.email
+
       }
       const res = await putUser(this.$route.query.id, params)
       if (res) {
