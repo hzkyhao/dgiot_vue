@@ -16,12 +16,14 @@
             v-show="projectid!=''"
             type="primary"
             @click="addproduct"
-          >{{ $t('product.createproduct') }}</el-button>
+          >{{ $t('product.createproduct') }}
+          </el-button>
 
           <el-button
             type="primary"
             @click="addgroup"
-          >新增</el-button>
+          >新增
+          </el-button>
           <!-- <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
           <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
           <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button> -->
@@ -69,19 +71,22 @@
                 icon="el-icon-office-building"
                 type="primary"
                 @click="proudctView(scope.row)"
-              >运行组态</el-link>
+              >运行组态
+              </el-link>
               <el-link
                 :underline="false"
                 icon="el-icon-link"
                 type="primary"
                 @click="proudctEdit(scope.row)"
-              >编辑组态</el-link>
+              >编辑组态
+              </el-link>
               <el-link
                 :underline="false"
                 icon="el-icon-attract"
                 type="primary"
                 @click="GoTodevices(scope.row)"
-              >{{ $t('product.equipment') }}</el-link>
+              >{{ $t('product.equipment') }}
+              </el-link>
               <!-- <el-link
                 :underline="false"
                 :disabled="scope.row.config.config.cloneState == true"
@@ -94,26 +99,30 @@
                 type="primary"
                 icon="el-icon-view"
                 @click="deviceToDetail(scope.row)"
-              >配置</el-link>
+              >配置
+              </el-link>
               <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
                 <p>确定删除这个{{ scope.row.name }}产品吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button
                     size="mini"
                     @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                  >{{ $t('developer.cancel') }}</el-button>
+                  >{{ $t('developer.cancel') }}
+                  </el-button>
                   <el-button
                     type="primary"
                     size="mini"
                     @click="makeSure(scope)"
-                  >{{ $t('developer.determine') }}</el-button>
+                  >{{ $t('developer.determine') }}
+                  </el-button>
                 </div>
                 <el-link
                   slot="reference"
                   :underline="false"
                   icon="el-icon-delete"
                   type="danger"
-                >{{ $t('developer.delete') }}</el-link>
+                >{{ $t('developer.delete') }}
+                </el-link>
               </el-popover>
             </template>
           </el-table-column>
@@ -177,7 +186,7 @@
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
 
-              <el-form-item label="所属应用" prop="roles" >
+              <el-form-item label="所属应用" prop="roles">
                 <el-select v-model="form.relationApp" disabled @change="selectApp">
                   <el-option
                     v-for="(item,index) in allApps"
@@ -202,7 +211,8 @@
               <el-form-item :label="$t('product.nodetype')" prop="nodeType">
                 <el-radio-group v-model="form.nodeType" @change="changeNode">
                   <el-radio :label="0">{{ $t('product.equipment') }}</el-radio>
-                  <el-radio :label="1">{{ $t('product.gateway') }}</el-radio>  <el-radio :label="2"> 分组</el-radio>
+                  <el-radio :label="1">{{ $t('product.gateway') }}</el-radio>
+                  <el-radio :label="2"> 分组</el-radio>
                 </el-radio-group>
               </el-form-item>
               <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
@@ -237,7 +247,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="产品模型">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
                 <i v-loading="loading" v-else class="el-icon-plus avatar-uploader-icon"/>
                 <form
                   ref="uploadform"
@@ -257,7 +267,8 @@
                   size="mini"
                   style="vertical-align:text-bottom"
                   @click="deleteImgsrc"
-                >删除</el-button>
+                >删除
+                </el-button>
               </el-form-item>
               <el-form-item :label="$t('developer.describe')" prop="desc">
                 <el-input v-model="form.desc" type="textarea"/>
@@ -284,9 +295,11 @@
                 ]"
                 label="分组名"
                 prop="name"
-            /></el-col>
+              />
+            </el-col>
             <el-col :span="18">
-              <el-input v-model="addGroup.name" type="text" autocomplete="off"/></el-form-item>
+              <el-input v-model="addGroup.name" type="text" autocomplete="off"/>
+              </el-form-item>
             </el-col>
           </el-row>
           </el-form-item>
@@ -342,6 +355,7 @@ import { queryProduct } from '@/api/Product/index'
 import { queryDict } from '@/api/Dict/index'
 import { queryRole } from '@/api/Role/index'
 import { queryDevice } from "@/api/Device/index";
+
 const Base64 = require('js-base64').Base64
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -349,6 +363,7 @@ import Cookies from 'js-cookie'
 import { getRole } from '@/api/Role/index'
 import { addGroup } from '@/api/Group/index'
 import { delProduct, getProduct } from "../../api/Product";
+
 export default {
   data() {
     return {
@@ -541,12 +556,12 @@ export default {
         var testmsg = event.target.files[0].type
         var type = file.type.split('/')[0]
         var extension =
-          testmsg === 'image/jpeg' ||
-          testmsg === 'image/JPEG' ||
-          testmsg === 'image/png' ||
-          testmsg === 'image/PNG' ||
-          testmsg === 'image/bpm' ||
-          testmsg === 'image/BPM'
+            testmsg === 'image/jpeg' ||
+            testmsg === 'image/JPEG' ||
+            testmsg === 'image/png' ||
+            testmsg === 'image/PNG' ||
+            testmsg === 'image/bpm' ||
+            testmsg === 'image/BPM'
         if (!extension) {
           // 将图片img转化为base64
           this.$message({
@@ -753,7 +768,8 @@ export default {
       }
       this.selectApp(this.form.relationApp)
     },
-    handleChange() {},
+    handleChange() {
+    },
 
     async Industry() {
       this.categoryList = []
@@ -775,133 +791,8 @@ export default {
       this.categoryListOptions = this.treeData(this.categoryList)
     },
 
-    submitForm(formName) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var objectId = Parse.User.current().id
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     var ranNum = Math.ceil(Math.random() * 25)
-      //     var productSecret = Base64.encode(
-      //       String.fromCharCode(65 + ranNum) +
-      //         Math.ceil(Math.random() * 10000000) +
-      //         Number(new Date())
-      //     )
-      //     var Product = Parse.Object.extend('Product')
-      //     var product = new Product()
-      //     var acl = new Parse.ACL()
-      //     if (this.productid == '') {
-      //       // 新增产品
-      //       var Product1 = Parse.Object.extend('Product')
-      //       var product1 = new Parse.Query(Product1)
-      //       product1.equalTo('name', this.form.name)
-      //       product1.count().then(count => {
-      //         if (count != 0) {
-      //           this.$message('产品名称已存在')
-      //           return false
-      //         } else {
-      //           product.set('productSecret', productSecret)
-      //           this.$store.state.project.projectRole.map(item => {
-      //             acl.setRoleReadAccess(item, true)
-      //             acl.setRoleWriteAccess(item, true)
-      //           })
+    submitForm(formName) {},
 
-      //           product.set('ACL', acl)
-      //           product.set('nodeType', this.form.nodeType)
-      //           product.set('netType', this.form.netType)
-      //           product.set('dynamicReg', false)
-      //           product.set(
-      //             'category',
-      //             this.form.category[this.form.category.length - 1]
-      //           ),
-      //           product.set('icon', this.imageUrl)
-      //           product.set('name', this.form.name)
-      //           product.set('devType', this.form.devType)
-      //           product.set('desc', this.form.desc)
-      //           product.set('topics', [])
-      //           product.save().then(
-      //             res => {
-      //               if (res) {
-      //                 this.projectid = this.$route.query.project
-      //                 var Project = Parse.Object.extend('Project')
-      //                 var project = new Parse.Query(Project)
-      //                 var Product2 = Parse.Object.extend('Product')
-      //                 var product2 = new Product2()
-      //                 project.get(this.projectid).then(response => {
-      //                   var relation = response.relation('product')
-      //                   product2.set('objectId', res.id)
-      //                   relation.add(product2)
-      //                   response.save().then(resultes => {
-      //                     if (resultes) {
-      //                       this.$message({
-      //                         type: 'success',
-      //                         message: `创建成功,请完成产品配置`
-      //                       })
-      //                       this.dialogFormVisible = false
-      //                       this.$refs['ruleForm'].resetFields()
-
-      //                       this.resetProductForm()
-      //                       this.searchProduct()
-      //                     }
-      //                   })
-      //                 })
-      //               }
-      //             },
-      //             error => {
-      //               returnLogin(error)
-      //             }
-      //           )
-      //         }
-      //       })
-      //     } else {
-      //       product.id = this.productid
-      //       product.set('productSecret', this.form.productSecret)
-      //       /*    this.form.roles.map(item => {
-      //         acl.setRoleReadAccess(item, true);
-      //         acl.setRoleWriteAccess(item, true);
-      //       });
-
-      //      this.$store.state.project.projectRole.map(item=>{
-      //              acl.setRoleReadAccess(item, true);
-      //              acl.setRoleWriteAccess(item, true);
-      //           })
-      //       product.set("ACL", acl);
-      //       */
-      //       product.set('nodeType', this.form.nodeType)
-      //       product.set('netType', this.form.netType)
-      //       product.set('dynamicReg', false)
-      //       product.set(
-      //         'category',
-      //         this.form.category[this.form.category.length - 1]
-      //       ),
-      //       product.set('icon', this.imageUrl)
-      //       product.set('name', this.form.name)
-      //       product.set('devType', this.form.devType)
-      //       product.set('desc', this.form.desc)
-      //       product.set('topics', [])
-      //       product.save().then(
-      //         res => {
-      //           if (res) {
-      //             this.$message({
-      //               type: 'success',
-      //               message: `编辑成功`
-      //             })
-      //             this.dialogFormVisible = false
-      //             this.$refs['ruleForm'].resetFields()
-      //             this.searchProduct()
-      //             this.productid = ''
-      //           }
-      //         },
-      //         error => {
-      //           returnLogin(error)
-      //         }
-      //       )
-      //     }
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
-    },
     resetProductForm() {
       this.form = {
         name: '',
@@ -944,8 +835,7 @@ export default {
       }
       queryDevice(params)
         .then(results => {
-          console.log(results,"jkjjjj")
-
+          console.log(results, "jkjjjj")
           if (results.count > 0) {
             this.$message('请先删除该产品下设备')
             return
@@ -962,16 +852,17 @@ export default {
                     scope._self.$refs[`popover-${scope.$index}`].doClose()
                     this.searchProduct()
                   }
-                },
-                error => {
-                  returnLogin(error)
                 }
-              )
+              ).catch(e => {
+                console.log("delProduct ", e.error)
+              })
             }
             ).catch(e => {
-
+              console.log("getProduct ", e.error)
             })
           }
+        }).catch(e => {
+          console.log("queryDevice ", e.error)
         })
     },
     productSizeChange(val) {
@@ -1027,7 +918,9 @@ export default {
         if (res) {
           this.CloneData(row)
         }
-      }).catch(e => { console.log(e) })
+      }).catch(e => {
+        console.log(e)
+      })
     },
     // 编辑组态
     proudctEdit(row) {
@@ -1070,90 +963,105 @@ export default {
 }
 </script>
 <style scoped>
-.devproduct {
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
+  .devproduct {
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 </style>
 <style>
-.devproduct .el-tabs__header {
-  margin: 0;
-}
-.devproduct .el-tabs__item {
-  font-size: 16px;
-  margin-top: 20px;
-  margin: 0;
-  height: 50px;
-  line-height: 50px;
-  font-family: auto;
-}
-.devproduct .el-tabs__content {
-  background: #f4f4f4;
-  padding: 20px;
-  box-sizing: border-box;
-}
-.devproduct .el-tab-pane {
-  background: #ffffff;
-}
-.devproduct .procontent,
-.devproduct .prosecond {
-  width: 100%;
-  padding: 20px 10px;
-  box-sizing: border-box;
-}
-.devproduct .el-dialog {
-  margin-top: 5vh;
-}
-.devproduct .el-dialog .el-dialog__header {
-  border-bottom: 1px solid #cccccc;
-}
-.devproduct .el-dialog .el-cascader,
-.devproduct .el-dialog .el-select {
-  width: 100%;
-}
-.devproduct .el-dialog .el-form {
-  padding: 0 10px;
-  box-sizing: border-box;
-}
-.devproduct .el-dialog .el-form .el-form-item {
-  margin-bottom: 5px;
-}
-.devproduct .el-dialog .el-form .el-form-item__content {
-  margin-left: 10px;
-  clear: both;
-}
-.devproduct .avatar-uploader {
-  display: inline-block;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-  border: 1px dashed #cccccc;
-}
-.avatar {
-  width: 150px;
-  height: 150px;
-  display: block;
-}
+  .devproduct .el-tabs__header {
+    margin: 0;
+  }
 
-/* .devproduct .el-icon-close{
-    position:absolute;
-    right:0;
-  } */
+  .devproduct .el-tabs__item {
+    font-size: 16px;
+    margin-top: 20px;
+    margin: 0;
+    height: 50px;
+    line-height: 50px;
+    font-family: auto;
+  }
+
+  .devproduct .el-tabs__content {
+    background: #f4f4f4;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .devproduct .el-tab-pane {
+    background: #ffffff;
+  }
+
+  .devproduct .procontent,
+  .devproduct .prosecond {
+    width: 100%;
+    padding: 20px 10px;
+    box-sizing: border-box;
+  }
+
+  .devproduct .el-dialog {
+    margin-top: 5vh;
+  }
+
+  .devproduct .el-dialog .el-dialog__header {
+    border-bottom: 1px solid #cccccc;
+  }
+
+  .devproduct .el-dialog .el-cascader,
+  .devproduct .el-dialog .el-select {
+    width: 100%;
+  }
+
+  .devproduct .el-dialog .el-form {
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  .devproduct .el-dialog .el-form .el-form-item {
+    margin-bottom: 5px;
+  }
+
+  .devproduct .el-dialog .el-form .el-form-item__content {
+    margin-left: 10px;
+    clear: both;
+  }
+
+  .devproduct .avatar-uploader {
+    display: inline-block;
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    border: 1px dashed #cccccc;
+  }
+
+  .avatar {
+    width: 150px;
+    height: 150px;
+    display: block;
+  }
+
+  /* .devproduct .el-icon-close{
+      position:absolute;
+      right:0;
+    } */
 </style>
