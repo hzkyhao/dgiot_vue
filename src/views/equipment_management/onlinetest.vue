@@ -286,7 +286,7 @@ import {
   DISCONNECT_MSG
 } from '@/utils/wxscoket.js'
 import { queryProduct, getProduct } from '@/api/Product/index'
-import { getDict, postDict } from '@/api/Dict/index'
+import { postDict, delDict, queryDict, putDict } from '@/api/Dict/index'
 
 var editor1
 var editor2
@@ -549,7 +549,6 @@ export default {
         this.$message('请输入功能')
         return
       }
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       getProduct(this.devices.productid).then(response => {
         if (response) {
           var obj = {}
@@ -563,7 +562,7 @@ export default {
           datasobj.commond = obj
 
           const data = {
-            'ACL': datasobj.ACL,
+            'ACL': response.ACL,
             data: datasobj,
             type: 'CMD'
           }
@@ -584,18 +583,22 @@ export default {
     },
     // dataslist初始化数据
     getDict() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.equalTo('type', 'CMD')
-      // datas.equalTo('data.productid', this.devices.productid)
-      // datas.find().then(resultes => {
-      //   if (resultes) {
-      //     this.dataslist = resultes
-      //   }
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const params = {
+        limit: 100,
+        where: {
+          type: 'CMD',
+          "data.productid": this.devices.productid
+        }
+      }
+      queryDict(params)
+        .then(results => {
+          if (results) {
+            this.dataslist = results
+          }
+        }
+        ).catch(e => {
+          console.log("queryDict ", e.error)
+        })
     },
     isInterval(val) {
       var text0 = ''
@@ -647,50 +650,45 @@ export default {
     },
     // 删除datas
     deleteMessage() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Dict()
-      // datas.id = this.editor1.function
-      // datas.destroy().then(deleteresponse => {
-      //   if (deleteresponse) {
-      //     this.$message('删除成功')
-      //     this.getDict()
-      //     this.editor1.function = ''
-      //     editor1.setValue('')
-      //   }
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      delDict(this.editor1.function)
+        .then(deleteresponse => {
+          if (deleteresponse) {
+            this.$message('删除成功')
+            this.getDict()
+            this.editor1.function = ''
+            editor1.setValue('')
+          }
+        }).catch(e => {
+          console.log("delDict ", e.error)
+        })
     },
     editorMessage() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Dict()
-      // datas.id = this.editor1.function
-      // this.detaildatas.commond = JSON.parse(editor1.getValue())
-      // datas.save().then(resultes => {
-      //   if (resultes) {
-      //     this.$message('编辑成功')
-      //     this.getDict()
-      //   }
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      this.detaildatas.commond = JSON.parse(editor1.getValue())
+      const data = {
+        data: this.detaildatas
+      }
+      putDict(this.editor1.function, data).then(resultes => {
+        if (resultes) {
+          this.$message('编辑成功')
+          this.getDict()
+        }
+      }).catch(e => {
+        console.log("putDict " + e.error)
+      })
     },
     getProduct() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // product.limit(1000)
-      // product.find().then(productresultes => {
-      //   this.productlist = productresultes
-      //   this.devices.productid = this.$route.query.productid
-      //   this.getDevices(this.productid, true)
-      //   this.getChannel(this.devices.productid)
-      //   this.getDict()
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const params = {
+        limit: 100
+      }
+      queryProduct(params).then(productresultes => {
+        this.productlist = productresultes
+        this.devices.productid = this.$route.query.productid
+        this.getDevices(this.productid, true)
+        this.getChannel(this.devices.productid)
+        this.getDict()
+      }).catch(e => {
+        console.log("queryProduct ", e.error)
+      })
     },
     getChannel(objectid) {
       this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')

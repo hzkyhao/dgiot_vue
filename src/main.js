@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-01-11 11:38:52
+ * @LastEditTime: 2021-02-03 09:45:01
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \platform\src\main.js
+ */
 const Vue = require("vue");
 import "normalize.css/normalize.css"; // A modern alternative to CSS resets
 import "@/styles/index.scss"; // global css
@@ -13,7 +21,6 @@ import echarts from "echarts";
 import VueResource from "vue-resource";
 import "@/icons"; // icon
 import "@/api/batch"
-import "@/permission"; // permission control
 import "./assets/iconfont/iconfont.css";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
