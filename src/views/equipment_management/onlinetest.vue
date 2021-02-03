@@ -34,7 +34,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="subTopic" >订阅</el-button>
+            <el-button type="primary" @click="subTopic">订阅</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -84,12 +84,21 @@
                 <el-form :model="editor1" :inline="true" label-width="80px" size="mini">
                   <el-form-item label="调试功能">
                     <el-select v-model="editor1.function" @change="selectMessage">
-                      <el-option v-for="(item,index) in dataslist" :key="index" :value="item.id" :label="item.attributes.data.name"/>
+                      <el-option
+                        v-for="(item,index) in dataslist"
+                        :key="index"
+                        :value="item.id"
+                        :label="item.attributes.data.name"/>
                     </el-select>
                   </el-form-item>
                   <el-form-item>
                     <el-button type="primary" icon="el-icon-plus" circle @click="addMessage"/>
-                    <el-button :disabled="editor1.function==''" type="danger" icon="el-icon-delete" circle @click="deleteMessage"/>
+                    <el-button
+                      :disabled="editor1.function==''"
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      @click="deleteMessage"/>
 
                   </el-form-item>
                   <div style="margin-top:10px;">
@@ -110,8 +119,15 @@
                       type="primary"
                       size="mini"
                       @click="sendMessage1"
-                    >发送指令</el-button>
-                    <el-button :disabled="editor1.function==''" type="primary" icon="el-icon-edit" size="mini" @click="editorMessage">更新</el-button>
+                    >发送指令
+                    </el-button>
+                    <el-button
+                      :disabled="editor1.function==''"
+                      type="primary"
+                      icon="el-icon-edit"
+                      size="mini"
+                      @click="editorMessage">更新
+                    </el-button>
                     <el-button :disabled="editor1.function==''" type="info" plain size="mini">重置</el-button>
 
                   </div>
@@ -135,25 +151,29 @@
                   size="mini"
                   plain
                   @click="primary1=1"
-                >属性上报</el-button>
+                >属性上报
+                </el-button>
                 <el-button
                   :type="primary1==2 ? 'primary':'info'"
                   size="mini"
                   plain
                   @click="primary1=2"
-                >事件上报</el-button>
+                >事件上报
+                </el-button>
                 <el-button
                   :type="primary1==3 ? 'primary':'info'"
                   size="mini"
                   plain
                   @click="functionClick"
-                >属性调试</el-button>
+                >属性调试
+                </el-button>
                 <el-button
                   :type="primary1==4 ? 'primary':'info'"
                   size="mini"
                   plain
                   @click="primary1=4"
-                >服务调用</el-button>
+                >服务调用
+                </el-button>
               </el-button-group>
               <!--属性上报-->
               <div v-show="primary1==1" class="primary1">
@@ -175,7 +195,7 @@
               </div>
               <!--事件上报-->
               <div v-show="primary1==2" class="primary2 animated fadeInUp">
-                <img src="../../imgages/logo2.png" alt style="height:80px;width:100px" >
+                <img src="../../imgages/logo2.png" alt style="height:80px;width:100px">
                 <div style="margin-top: 20px;font-size: 20px;margin-bottom:20px;color:#73777a;">暂无数据</div>
                 <div>
                   <el-button type="primary" size="small">编辑物模型</el-button>
@@ -222,13 +242,13 @@
             </div>
             <!--第二个tab-->
             <div v-else class="editor2hidden animated fadeInDown">
-              <img src="../../imgages/logo2.png" alt style="height:80px;width:100px" >
+              <img src="../../imgages/logo2.png" alt style="height:80px;width:100px">
               <div style="margin-top: 20px;font-size: 20px">调试虚拟设备</div>
               <div
                 style="text-align:center;font-size:14px;color:#73777a;margin-top:8px;margin-bottom:20px;"
               >
                 虚拟设备可以模拟真实设备在云端建立连接，上报定义的属性及事件处理，
-                <br >这样可以不依赖真实设备快速开发应用
+                <br>这样可以不依赖真实设备快速开发应用
               </div>
               <el-button type="primary" size="mini" @click="isactive=true">启动真实设备</el-button>
             </div>
@@ -265,6 +285,9 @@ import {
   MSG_EMPTY,
   DISCONNECT_MSG
 } from '@/utils/wxscoket.js'
+import { queryProduct, getProduct } from '@/api/Product/index'
+import { getDict, postDict } from '@/api/Dict/index'
+
 var editor1
 var editor2
 var subprodevice
@@ -361,12 +384,12 @@ export default {
   beforeDestroy() {
     var info = {
       topic:
-          'log/channel/' +
-          this.devices.subtopic +
-          '/' +
-          this.devices.productid +
-          '/' +
-          this.devices.devicedevaddr,
+        'log/channel/' +
+        this.devices.subtopic +
+        '/' +
+        this.devices.productid +
+        '/' +
+        this.devices.devicedevaddr,
       qos: 2
     }
     Websocket.unsubscribe(info, function(res) {
@@ -379,8 +402,10 @@ export default {
   },
   methods: {
     // 发送指令
-    sendZl() {},
-    setJson() {},
+    sendZl() {
+    },
+    setJson() {
+    },
     nowtime() {
       var timestamp3 = Date.parse(new Date())
       var date = new Date(timestamp3)
@@ -419,11 +444,11 @@ export default {
       }
       var channeltopic = new RegExp(
         'log/channel/' +
-          this.devices.subtopic +
-          '/' +
-          this.devices.productid +
-          '/' +
-          this.devices.devicedevaddr
+        this.devices.subtopic +
+        '/' +
+        this.devices.productid +
+        '/' +
+        this.devices.devicedevaddr
       )
 
       var _this = this
@@ -504,10 +529,10 @@ export default {
       var _this = this
       var sendInfo = {
         topic:
-              'thing/' +
-              _this.devices.productid +
-              '/' +
-              _this.devices.devicedevaddr,
+          'thing/' +
+          _this.devices.productid +
+          '/' +
+          _this.devices.devicedevaddr,
         text: editor1.getValue(),
         retained: true,
         qos: 2
@@ -525,40 +550,37 @@ export default {
         return
       }
       this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // product.get(this.devices.productid).then(response => {
-      //   if (response) {
-      //     var obj = {}
+      getProduct(this.devices.productid).then(response => {
+        if (response) {
+          var obj = {}
 
-      //     obj = { ...obj, ...JSON.parse(messageEditor.getValue()) }
-      //     var commond = {
-      //     }
-      //     var datasobj = {}
-      //     datasobj.name = this.messageform.name
-      //     datasobj.type = response.attributes.devType
-      //     datasobj.productid = response.id
-      //     datasobj.commond = obj
-      //     var Dict = Parse.Object.extend('Dict')
-      //     var datas = new Dict()
-      //     var acl = new Parse.ACL()
-      //     var userid = Parse.User.current().id
-      //     acl.setReadAccess(userid, true)
-      //     acl.setWriteAccess(userid, true)
-      //     datas.set('ACL', acl)
-      //     datas.set('data', datasobj)
-      //     datas.set('type', 'CMD')
-      //     datas.save().then(resultes => {
-      //       if (resultes) {
-      //         this.$message('创建成功')
-      //         this.messageDialogVisible = false
-      //         this.getDict()
-      //       }
-      //     }, error => {
-      //       returnLogin(error)
-      //     })
-      //   }
-      // })
+          obj = { ...obj, ...JSON.parse(messageEditor.getValue()) }
+          var commond = {}
+          var datasobj = {}
+          datasobj.name = this.messageform.name
+          datasobj.type = response.devType
+          datasobj.productid = response.objectId
+          datasobj.commond = obj
+
+          const data = {
+            'ACL': datasobj.ACL,
+            data: datasobj,
+            type: 'CMD'
+          }
+          postDict(data).then(results => {
+            if (results) {
+              this.$message('创建成功')
+              this.messageDialogVisible = false
+              this.getDict()
+            }
+          }
+          ).catch(e => {
+            console.log("postDict ", e.error)
+          })
+        }
+      }).catch(e => {
+        console.log("getProduct ", e.error)
+      })
     },
     // dataslist初始化数据
     getDict() {
@@ -740,15 +762,18 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   background: #f0f2f5;
+
   .onlinetest_top {
     padding: 20px;
     width: 100%;
     height: 370px;
     background: white;
     box-sizing: border-box;
+
     /deep/ .el-form-item__label {
       text-align: left;
     }
+
     .status {
       display: inline-block;
       width: 5px;
@@ -757,13 +782,16 @@ export default {
       vertical-align: middle;
       margin-left: 10px;
     }
+
     .active {
       background: green;
     }
+
     .notonline {
       background: red;
     }
   }
+
   .onlinetest_bottom {
     padding: 20px;
     width: 100%;
@@ -771,6 +799,7 @@ export default {
     background: white;
     margin-top: 20px;
     box-sizing: border-box;
+
     /deep/ .editorheader {
       padding: 8px;
       border-top: 1px solid rgb(235, 236, 236);
@@ -781,13 +810,16 @@ export default {
       box-sizing: border-box;
       background: #f9f9f9;
       margin-top: 10px;
+
       /deep/ .el-form-item {
         margin-bottom: 0;
       }
+
       /deep/ .ace_editor {
         margin-top: 0;
       }
     }
+
     /deep/ .editor2header {
       .editor2hidden {
         height: 300px;
@@ -798,10 +830,12 @@ export default {
         overflow: hidden auto;
         justify-content: center;
       }
+
       .editor2show {
         .primary1 {
           margin-top: 10px;
         }
+
         .primary2 {
           display: flex;
           flex-direction: column;
@@ -810,6 +844,7 @@ export default {
           justify-content: center;
         }
       }
+
       /deep/ .primary1content {
         height: 220px;
         border-bottom: 1px solid #cccccc;
