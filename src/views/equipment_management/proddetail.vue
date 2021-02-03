@@ -1139,7 +1139,7 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="sizeForm.false"
-                            :placeholder="$t('egclose')"
+                            :placeholder="$t('product.egclose')"
                             class="inputnumber"
                           />
                         </el-form-item>
@@ -1626,7 +1626,7 @@
               <el-table-column type="selection" width="55" />
               <el-table-column :label="$t('developer.channelnumber')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.id }}</span>
+                  <span>{{ scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channelname')">
@@ -1636,7 +1636,7 @@
               </el-table-column>
               <el-table-column :label="$t('developer.channeladdr')">
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.id }}</span>
+                  <span>{{ "channel/" + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('developer.channeltype')">
@@ -1710,7 +1710,7 @@
                   <el-button
                     type="danger"
                     size="mini"
-                    @click="deletedata(scope.row.id)"
+                    @click="deletedata(scope.row.objectId)"
                   >{{ $t("developer.delete") }}
                   </el-button>
                 </template>
@@ -1733,7 +1733,7 @@
             </div>
             <pre
               id="editor"
-              class="ace_editor"
+              class="ace_editor ace-monokai ace_dark"
               style="min-height:600px;margin-bottom:0;"
             ><textarea class="ace_text-input" /></pre>
             <div style="background:#ffffff">
@@ -2292,7 +2292,7 @@ import {
   MSG_EMPTY,
   DISCONNECT_MSG
 } from "@/utils/wxscoket.js";
-// import TaskCollection1 from "./task_collection1";
+  // import TaskCollection1 from "./task_collection1";
 import { returnLogin } from "@/utils/return";
 import { error } from "util";
 import $ from "jquery";
@@ -2389,7 +2389,7 @@ export default {
         callback(new Error("步长大于0"));
       } else if (
         value >=
-        this.structform.endnumber - this.structform.startnumber
+          this.structform.endnumber - this.structform.startnumber
       ) {
         callback(new Error("步长必须小于最大值和最小值的差值"));
       } else {
@@ -2980,16 +2980,16 @@ export default {
     exportProduct() {
       var _this = this;
       /*
-            postFile (_this.productName).then(response=>{
-              if(response){
-                 window.location.origin = "/iotapi/product?name="+_this.productName
+              postFile (_this.productName).then(response=>{
+                if(response){
+                   window.location.origin = "/iotapi/product?name="+_this.productName
 
-              }
-            })
-            .catch(function (error) {
-             _this.$message({message: error,type: "error"});
-            });
-            */
+                }
+              })
+              .catch(function (error) {
+               _this.$message({message: error,type: "error"});
+              });
+              */
 
       // let url = Cookies.get('apiserver') + '/product?name=' + _this.productName;
 
@@ -3018,23 +3018,15 @@ export default {
     // 热加载弹窗
     async updatesubdialog() {
       this.protoldialog = true;
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Product();
-      // product.id = this.productId;
-      // const params = {
-      //   limit: 100,
-      //   where: {
-      //     "product": product,
-      //     "type": '1'
-      //   }
-      // }
-      // this.$query_object('Channel', params).then(res => {
-      //   this.protolchannel = res;
-      //   this.$refs.multipleTable.toggleAllSelection();
-      // }).catch(err => {
-      //   this.$baseMessage('请求出错', err.error, 3000)
-      // })
+      const type = "1"
+      const product = { __type: "Pointer", className: "Product", objectId: this.productId }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
+        this.protolchannel = res.results;
+        this.$refs.multipleTable.toggleAllSelection();
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     // 通道全选
     handleSelectionChange(val) {
@@ -3155,7 +3147,7 @@ export default {
     async addProductChannel(id) {
       const params = {
         "product":
-          { "__op": "AddRelation", "objects": [{ "__type": "Pointer", "className": "Product", "objectId": this.productId }] }
+            { "__op": "AddRelation", "objects": [{ "__type": "Pointer", "className": "Product", "objectId": this.productId }] }
       }
       const res = await saveChanne(id, params)
       if (res) {
@@ -3256,7 +3248,7 @@ export default {
         });
         if (
           row.config.datamodel &&
-          row.config.datamodel != ""
+            row.config.datamodel != ""
         ) {
           editorcreate.setValue(row.config.datamodel);
         } else {
@@ -3425,23 +3417,21 @@ export default {
     },
     // 添加自定义模型
     addData() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       // console.log(channelrow)
-      // var Channel = Parse.Object.extend("Channel");
-      // var channel = new Channel();
-      // channel.id = this.resourcechannelid;
-      // channelrow.datamodel = editorcreate.getValue();
-      // channel.set("config", channelrow);
-      // channel.save().then(
-      //   response => {
-      //     if (response) {
-      //       this.$message("添加成功");
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      channelrow.datamodel = editorcreate.getValue();
+      const params = {
+        config: channelrow
+      };
+      this.$update_object('Channel', this.resourcechannelid, params).then(
+        response => {
+          if (response) {
+            this.$message("添加成功");
+          }
+        },
+        error => {
+          returnLogin(error);
+        }
+      );
     },
     closeWuDialog() {
       this.resourcedialogFormVisible = false;
@@ -3605,13 +3595,12 @@ export default {
 
           // 检测到
           if (this.wmxSituation == "新增") {
-            console.log("新增");
+            // console.log("新增");
             this.productdetail.thing.properties.unshift(obj);
           } else if (this.wmxSituation == "编辑") {
-            console.log("编辑" + obj);
+            // console.log("编辑" + obj);
             this.productdetail.thing.properties[this.modifyIndex] = obj;
           }
-
           const params = {
             thing: this.productdetail.thing
           };
@@ -3694,9 +3683,9 @@ export default {
           required: false,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "enum") {
         var specsArray = [];
@@ -3717,9 +3706,9 @@ export default {
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "struct") {
         obj = {
@@ -3730,32 +3719,32 @@ export default {
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
           isread: rowData.accessMode,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          identifier: rowData.identifier,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          identifier: rowData.dataForm == undefined ? "" : rowData.identifier,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "string") {
         obj = {
           name: rowData.name,
           type: rowData.dataType.type,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
           string: rowData.dataType.size,
           dis: this.$objGet(rowData, "dataForm.address"),
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          strategy: rowData.dataForm.strategy
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "date") {
         obj = {
           name: rowData.name,
           type: rowData.dataType.type,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy,
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy,
           dis: this.$objGet(rowData, "dataForm.address"),
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
@@ -3775,8 +3764,8 @@ export default {
           var obj = {};
           if (
             this.structform.type == "float" ||
-            this.structform.type == "double" ||
-            this.structform.type == "int"
+              this.structform.type == "double" ||
+              this.structform.type == "int"
           ) {
             obj = {
               name: this.structform.name,
@@ -3908,8 +3897,8 @@ export default {
       this.structform.isread = item.accessMode;
       if (
         item.dataType.type == "float" ||
-        item.dataType.type == "double" ||
-        item.dataType.type == "int"
+          item.dataType.type == "double" ||
+          item.dataType.type == "int"
       ) {
         this.structform.startnumber = item.dataType.specs.min;
         this.structform.endnumber = item.dataType.specs.max;
@@ -3935,29 +3924,20 @@ export default {
       this.sizeForm.struct.splice(index, 1);
     },
     preserve() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(this.productId).then(response => {
-      //   response.set("thing", JSON.parse(editor1.getValue()));
-      //   response.save().then(
-      //     resultes => {
-      //       if (resultes) {
-      //         this.$message({
-      //           type: "success",
-      //           message: "保存成功"
-      //         });
-      //         this.schemadialogVisible = false;
-      //       }
-      //     },
-      //     error => {
-      //       this.$message({
-      //         type: "error",
-      //         message: error.message
-      //       });
-      //     }
-      //   );
-      // });
+      const params = {
+        thing: JSON.parse(editor1.getValue())
+      };
+      this.$update_object('Product', this.productId, params).then(resultes => {
+        if (resultes) {
+          this.$message({
+            type: "success",
+            message: "添加成功"
+          });
+          this.schemadialogVisible = false;
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     async Industry() {
       this.option = []
@@ -4025,7 +4005,7 @@ export default {
         title: this.wmxData[0].identifier,
         name: this.wmxData[0].identifier,
         leftItemPos: 0,
-        content: this.wmxData[0].dataForm.collection
+        content: this.wmxData[0].dataForm == undefined ? "" : this.wmxData[0].dataForm.collection
       });
 
       // 进入先添加一个默认显示的
@@ -4044,8 +4024,8 @@ export default {
           });
           this.ed3isShow = true;
           //  this.editorList.push(editor3);
-          console.log(this.wmxData);
-          this.editorList[0].setValue(this.wmxData[0].dataForm.collection);
+          // console.log(this.wmxData);
+          this.editorList[0].setValue(this.wmxData[0].dataForm == undefined ? "" : this.wmxData[0].dataForm.collection);
         }, 1);
       }
       // this.menuTabClick(this.wmxData)
@@ -4121,31 +4101,23 @@ export default {
     // 保存
     onSaveTap(index) {
       const leftPos = this.editableTabs[index].leftItemPos;
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var obj = {};
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(this.productId).then(response => {
-      //   this.productdetail.thing.properties[leftPos].dataForm.collection = this.editorList[index].getValue();
-      //   // console.log("-------" + this.productdetail.thing.properties[leftPos].dataForm.collection);
-      //   response.set("thing", this.productdetail.thing);
-      //   response.save().then(
-      //     resultes => {
-      //       if (resultes) {
-      //         this.$message({
-      //           type: "success",
-      //           message: "添加成功"
-      //         });
-      //         this.getProDetail();
-      //         // this.$refs[formName].resetFields();
-      //         //  this.wmxdialogVisible = false;
-      //       }
-      //     },
-      //     error => {
-      //       returnLogin(error);
-      //     }
-      //   );
-      // });
+      this.productdetail.thing.properties[leftPos].dataForm.collection = this.editorList[index].getValue();
+      const params = {
+        thing: this.productdetail.thing
+      };
+      this.$update_object('Product', this.productId, params).then(resultes => {
+        if (resultes) {
+          this.$message({
+            type: "success",
+            message: "添加成功"
+          });
+          this.getProDetail();
+          // this.$refs[formName].resetFields();
+          //  this.wmxdialogVisible = false;
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
 
     handleCloseCollecttion(done) {
@@ -4222,7 +4194,7 @@ export default {
             this.formInline.desc = response.decoder.desc;
           } else {
             setdata =
-              "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
+                "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
           }
           if (!this.productdetail.thing) {
             this.productdetail.thing = {
@@ -4237,10 +4209,6 @@ export default {
           // console.log('----------', this.wmxData)
           editor.setValue(Base64.decode(setdata));
           editor.gotoLine(editor.session.getLength());
-          // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Device = Parse.Object.extend("Device");
-          // var devices = new Parse.Query(Device);
         }
       }).catch(err => {
         this.$baseMessage('请求出错', err.error, 3000)
@@ -4259,40 +4227,30 @@ export default {
         isopen = true;
       }
       this.dynamicReg = isopen;
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(this.productId).then(response => {
-      //   response.set("dynamicReg", !isopen);
-      //   response.save().then(
-      //     resultes => {
-      //       if (resultes) {
-      //         this.$message({
-      //           type: "success",
-      //           message: "修改成功"
-      //         });
-      //         this.dynamicReg = !isopen;
-      //       }
-      //     },
-      //     error => {
-      //       returnLogin(error);
-      //     }
-      //   );
-      // });
-      // var isopen =
+      const params = {
+        dynamicReg: !isopen
+      };
+      this.$update_object('Product', this.productId, params).then(
+        resultes => {
+          if (resultes) {
+            this.$message({
+              type: "success",
+              message: "修改成功"
+            });
+            this.dynamicReg = !isopen;
+          }
+        }).catch(e => {
+        console.log(e)
+      })
     },
-    //    updateisshow(isshow){
-    //     this.$set(this.productdetail,'isshow',isshow)
-    //     console.log(this.productdetail)
 
-    //    }
     wmxhandleClose() {
       this.wmxdialogVisible = false;
 
       this.sizeForm = this.getFormOrginalData();
 
       /*     this.sizeForm.type = "int";
-            this.$refs["sizeForm"].resetFields(); */
+              this.$refs["sizeForm"].resetFields(); */
     },
     // 协议编辑
     protol() {
@@ -4330,22 +4288,15 @@ export default {
       this.decoderstart = (val - 1) * this.decoderlength;
       this.chaxun();
     },
-    deletedata(id) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Dict();
-      // datas.id = id;
-      // datas.destroy().then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.$message("成功删除");
-      //       this.chaxun();
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+    deletedata(objectId) {
+      this.$del_object('Dict', objectId).then(resultes => {
+        if (resultes) {
+          this.$message("成功删除");
+          this.chaxun();
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     subAce(formName, istrue) {
       this.$refs[formName].validate(valid => {
@@ -4386,47 +4337,52 @@ export default {
     subAce1(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var userid = Parse.User.current().id;
-          // var obj = {
-          //   name: this.formInline.name,
-          //   version: this.formInline.version,
-          //   code: Base64.encode(editor.getValue()),
-          //   desc: this.formInline.desc
-          // };
-          // const params = {
-          //   where: {
-          //     "data.name": obj.name,
-          //     "data.version": obj.version
-          //   }
-          // };
-          // this.$query_object('Dict', this.productId, params).then(response => {
-          //   if (response) {
-          //     if (response.length >= 1) {
-          //       this.$messages("此协议版本已存在");
-          //       return;
-          //     } else {
-          //       var acl = new Parse.ACL();
-          //       acl.setReadAccess(userid, true);
-          //       acl.setWriteAccess(userid, true);
-          //       acl.setPublicReadAccess(true);
-          //       const params = {
-          //         where: {
-          //           type: "decoder",
-          //           "data": obj,
-          //           "ACL": acl
-          //         }
-          //       };
-          //       this.$create_object('Dict', params).then(resultes => {
-          //         if (resultes) {
-          //           this.$message("保存到公共协议库成功");
-          //         }
-          //       })
-          //     }
-          //   }
-          // }).catch(e => {
-          //   console.log(e)
-          // })
+          const params = {
+            where: {
+              "data.name": this.formInline.name,
+              "data.version": this.formInline.version
+            }
+          };
+          this.$query_object('Dict', params).then(response => {
+            if (response.results && response.results.length >= 1) {
+              this.$message("此协议版本已存在");
+              return;
+            } else {
+              this.$get_object('Product', this.productId).then(response => {
+                if (response) {
+                  var obj = {
+                    name: this.formInline.name,
+                    version: this.formInline.version,
+                    code: Base64.encode(editor.getValue()),
+                    desc: this.formInline.desc
+                  };
+                  const params = {
+                    key: this.formInline.name + ":" + this.formInline.version,
+                    type: "decoder",
+                    data: obj,
+                    ACL: response.ACL
+                  };
+                  this.$create_object('Dict', params).then(resultes => {
+                    if (resultes.error) {
+                      this.$message({
+                        type: "error",
+                        message: resultes.error
+                      });
+                    } else {
+                      this.$message({
+                        type: "success",
+                        message: "保存到公共协议库成功"
+                      });
+                    }
+                  }).catch(e => {
+                    console.log(e)
+                  })
+                }
+              })
+            }
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message({
             type: "warning",
@@ -4449,27 +4405,23 @@ export default {
     },
 
     chaxun() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.skip(this.decoderstart);
-      // datas.limit(this.decoderlength);
-      // datas.equalTo("type", "decoder");
-      // datas.ascending("-createdAt");
-      // datas.count().then(
-      //   count => {
-      //     this.decodertotal = count;
-      //     datas.find().then(resultes => {
-      //       if (resultes) {
-      //         this.dialogTableVisible = true;
-      //         this.gridData = resultes;
-      //       }
-      //     });
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const params = {
+        keys: 'count(*)',
+        skip: this.decoderstart,
+        limit: this.decoderlength,
+        where: {
+          "type": "decoder"
+        }
+      }
+      this.dialogTableVisible = true;
+      this.$query_object('Dict', params).then(res => {
+        if (res) {
+          this.decodertotal = res.count;
+          this.gridData = res.results;
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     editordata(row) {
       this.formInline.name = row.data.name;
@@ -4518,8 +4470,8 @@ export default {
           origin.push(obj);
         } else if (
           items.DataType == "double" ||
-          items.DataType == "int" ||
-          items.DataType == "float"
+            items.DataType == "int" ||
+            items.DataType == "float"
         ) {
           var obj = {
             dataType: {
@@ -4553,7 +4505,7 @@ export default {
           JSON.parse(items.DataSpecsList).map(children => {
             if (
               children.childDataType == "enum" ||
-              children.childDataType == "bool"
+                children.childDataType == "bool"
             ) {
               var obj = {
                 dataType: {
@@ -4575,8 +4527,8 @@ export default {
               structobj.dataType.specs.push(obj);
             } else if (
               children.childDataType == "double" ||
-              children.childDataType == "int" ||
-              children.childDataType == "float"
+                children.childDataType == "int" ||
+                children.childDataType == "float"
             ) {
               var obj = {
                 dataType: {
@@ -4682,23 +4634,23 @@ export default {
       var date = new Date(timestamp3);
       var Y = date.getFullYear() + "年";
       var M =
-        (date.getMonth() + 1 <= 10
-          ? "0" + (date.getMonth() + 1)
-          : date.getMonth() + 1) + "月";
+          (date.getMonth() + 1 <= 10
+            ? "0" + (date.getMonth() + 1)
+            : date.getMonth() + 1) + "月";
       var D =
-        (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
-        "日  ";
+          (date.getDate() + 1 <= 10 ? "0" + date.getDate() : date.getDate()) +
+          "日  ";
       var h =
-        (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
-        ":";
+          (date.getHours() + 1 <= 10 ? "0" + date.getHours() : date.getHours()) +
+          ":";
       var m =
-        (date.getMinutes() + 1 <= 10
-          ? "0" + date.getMinutes()
-          : date.getMinutes()) + ":";
+          (date.getMinutes() + 1 <= 10
+            ? "0" + date.getMinutes()
+            : date.getMinutes()) + ":";
       var s =
-        date.getSeconds() + 1 <= 10
-          ? "0" + date.getSeconds()
-          : date.getSeconds();
+          date.getSeconds() + 1 <= 10
+            ? "0" + date.getSeconds()
+            : date.getSeconds();
       return h + m + s + " ";
     },
     // 订阅日志
@@ -4799,7 +4751,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           var Topic =
-            "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
+              "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
 
           this.$get_object('Product', this.productId).then(resultes => {
             var addTopic = {
@@ -4923,234 +4875,234 @@ export default {
 };
 </script>
 <style scoped>
-/* <!--李宏杰新增--> */
-.diaCollLeftCls {
-  height: calc(100vh - 100px);
-  width: 100%;
-}
-.ace_editor3 {
-  height: calc(100vh - 100px);
-}
-.diaCollRightCls {
-  height: calc(100vh - 100px);
-  width: 100%;
-}
-.editproduct {
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
+  /* <!--李宏杰新增--> */
+  .diaCollLeftCls {
+    height: calc(100vh - 100px);
+    width: 100%;
+  }
+  .ace_editor3 {
+    height: calc(100vh - 100px);
+  }
+  .diaCollRightCls {
+    height: calc(100vh - 100px);
+    width: 100%;
+  }
+  .editproduct {
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 
-.mailtable .cloumn {
-  text-align: left;
-  color: #74777a;
-  font-weight: 400;
-  background: #fafafc;
-  width: 200px;
-  font-weight: bold;
-  border-right: 1px solid #ebecec;
-  border-bottom: 1px solid #ebecec;
-}
+  .mailtable .cloumn {
+    text-align: left;
+    color: #74777a;
+    font-weight: 400;
+    background: #fafafc;
+    width: 200px;
+    font-weight: bold;
+    border-right: 1px solid #ebecec;
+    border-bottom: 1px solid #ebecec;
+  }
 
-.mailtable td {
-  padding: 15px;
-  font-size: 14px;
-  text-align: left;
-  box-sizing: border-box;
-  color: #74777a;
-  border: 1px solid #ebecec;
-}
+  .mailtable td {
+    padding: 15px;
+    font-size: 14px;
+    text-align: left;
+    box-sizing: border-box;
+    color: #74777a;
+    border: 1px solid #ebecec;
+  }
 
-.mailtable .notbottom {
-  border-bottom: 0;
-}
+  .mailtable .notbottom {
+    border-bottom: 0;
+  }
 
-.editheader .product ul {
-  width: 100%;
-  height: 50px;
-  padding-left: 0;
-  display: flex;
-  justify-content: space-between;
-}
+  .editheader .product ul {
+    width: 100%;
+    height: 50px;
+    padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+  }
 
-.editheader .product ul li {
-  list-style: none;
-  font-size: 16px;
-  text-align: left;
-  color: #74777a;
-}
+  .editheader .product ul li {
+    list-style: none;
+    font-size: 16px;
+    text-align: left;
+    color: #74777a;
+  }
 
-/* .editheader .product ul li:first-child,
-.editheader .product ul li:last-child {
-  width: 25%;
-  list-style: none;
-  color: #74777a;
-  font-size: 16px;
-  line-height: 50px;
-  float: left;
-  text-align: left;
-}
-.editheader .product ul li:nth-child(2) {
-  width: 50%;
-  list-style: none;
-  color: #74777a;
-  font-size: 16px;
-  line-height: 50px;
-  float: left;
-  text-align: left;
-} */
+  /* .editheader .product ul li:first-child,
+  .editheader .product ul li:last-child {
+    width: 25%;
+    list-style: none;
+    color: #74777a;
+    font-size: 16px;
+    line-height: 50px;
+    float: left;
+    text-align: left;
+  }
+  .editheader .product ul li:nth-child(2) {
+    width: 50%;
+    list-style: none;
+    color: #74777a;
+    font-size: 16px;
+    line-height: 50px;
+    float: left;
+    text-align: left;
+  } */
 </style>
 <style>
-.editproduct .el-tabs__item {
-  font-size: 16px;
-  margin-top: 20px;
-  margin: 0;
-  height: 50px;
-  line-height: 50px;
-  font-family: auto;
-  width: 150px;
-}
+  .editproduct .el-tabs__item {
+    font-size: 16px;
+    margin-top: 20px;
+    margin: 0;
+    height: 50px;
+    line-height: 50px;
+    font-family: auto;
+    width: 150px;
+  }
 
-.editproduct .el-tabs__header {
-  margin: 0;
-}
+  .editproduct .el-tabs__header {
+    margin: 0;
+  }
 
-.editproduct .el-tabs__content {
-  background: #f4f4f4;
-  padding: 20px 10px 0 10px;
-  box-sizing: border-box;
-}
+  .editproduct .el-tabs__content {
+    background: #f4f4f4;
+    padding: 20px 10px 0 10px;
+    box-sizing: border-box;
+  }
 
-.editproduct .el-tab-pane {
-  background: #ffffff;
-  padding-top: 10px;
-  box-sizing: border-box;
-}
+  .editproduct .el-tab-pane {
+    background: #ffffff;
+    padding-top: 10px;
+    box-sizing: border-box;
+  }
 
-.editproduct .el-dialog__body {
-  padding: 0 20px;
-}
+  .editproduct .el-dialog__body {
+    padding: 0 20px;
+  }
 
-.editproduct .inputnumber {
-  width: auto;
-}
+  .editproduct .inputnumber {
+    width: auto;
+  }
 
-.editproduct .el-table td,
-.editproduct .el-table th {
-  padding: 5px 0;
-}
+  .editproduct .el-table td,
+  .editproduct .el-table th {
+    padding: 5px 0;
+  }
 
-.editproduct .warning {
-  background: #272822;
-  color: #ffffff;
-  width: 100%;
-}
+  .editproduct .warning {
+    background: #272822;
+    color: #ffffff;
+    width: 100%;
+  }
 
-.editproduct .error {
-  background: #272822;
-  color: #f56c6c;
-  width: 100%;
-}
+  .editproduct .error {
+    background: #272822;
+    color: #f56c6c;
+    width: 100%;
+  }
 
-.editproduct .el-form-item {
-  margin-bottom: 5px;
-}
+  .editproduct .el-form-item {
+    margin-bottom: 5px;
+  }
 
-.editproduct .el-form-item__content {
-  clear: both;
-  margin-left: 0;
-}
+  .editproduct .el-form-item__content {
+    clear: both;
+    margin-left: 0;
+  }
 
-.editproduct .el-dialog__header {
-  border-bottom: 1px solid #dddddd;
-}
+  .editproduct .el-dialog__header {
+    border-bottom: 1px solid #dddddd;
+  }
 
-.editproduct .el-cascader {
-  width: 60%;
-}
+  .editproduct .el-cascader {
+    width: 60%;
+  }
 
-.editproduct .el-cascader .el-input__inner {
-  height: 30px;
-}
+  .editproduct .el-cascader .el-input__inner {
+    height: 30px;
+  }
 
-.editproduct .topiccontent {
-  padding: 10px;
-  box-sizing: border-box;
-}
+  .editproduct .topiccontent {
+    padding: 10px;
+    box-sizing: border-box;
+  }
 
-.editproduct .topicform .el-select {
-  width: 100%;
-}
+  .editproduct .topicform .el-select {
+    width: 100%;
+  }
 
-.editproduct .row-expand-cover td:first-child .el-icon-arrow-right {
-  visibility: hidden;
-}
+  .editproduct .row-expand-cover td:first-child .el-icon-arrow-right {
+    visibility: hidden;
+  }
 
-/* .editproduct .row-expand-cover + tr {
-  display: none;
-} */
-.editproduct .el-table__expanded-cell {
-  padding: 20px 0 !important;
-  text-align: center;
-  margin: 0 auto;
-  box-sizing: border-box;
-  left: 100px;
-}
+  /* .editproduct .row-expand-cover + tr {
+    display: none;
+  } */
+  .editproduct .el-table__expanded-cell {
+    padding: 20px 0 !important;
+    text-align: center;
+    margin: 0 auto;
+    box-sizing: border-box;
+    left: 100px;
+  }
 
-.editproduct .el-table__expanded-cell .el-table th.is-leaf {
-  background: #ced7de9c;
-}
+  .editproduct .el-table__expanded-cell .el-table th.is-leaf {
+    background: #ced7de9c;
+  }
 
-/* .editproduct #pane-sixeth {
-  display: flex;
-} */
-.editproduct .el-col-2 {
-  text-align: center;
-}
+  /* .editproduct #pane-sixeth {
+    display: flex;
+  } */
+  .editproduct .el-col-2 {
+    text-align: center;
+  }
 
-.green_active {
-  color: green;
-}
+  .green_active {
+    color: green;
+  }
 
-.red_active {
-  color: red;
-}
+  .red_active {
+    color: red;
+  }
 
-.wumoxing .el-form-item__content {
-  margin-left: 10px;
-}
+  .wumoxing .el-form-item__content {
+    margin-left: 10px;
+  }
 
-.task_collection .el-form-item__content {
-  clear: none;
-}
+  .task_collection .el-form-item__content {
+    clear: none;
+  }
 
-.task_collection .el-form-item {
-  margin-bottom: 10px;
-}
+  .task_collection .el-form-item {
+    margin-bottom: 10px;
+  }
 </style>
 <style lang="scss" scoped>
-.engintable {
-  width: 100%;
-  height: auto;
+  .engintable {
+    width: 100%;
+    height: auto;
 
-  .engineheader {
-    h3 {
-      float: left;
+    .engineheader {
+      h3 {
+        float: left;
+      }
+    }
+
+    .block {
+      margin-top: 20px;
     }
   }
 
-  .block {
-    margin-top: 20px;
+  /deep/ .firstcolumn {
+    color: #34c388;
+    cursor: pointer;
   }
-}
 
-/deep/ .firstcolumn {
-  color: #34c388;
-  cursor: pointer;
-}
-
-.export-p {
-  text-align: center;
-}
+  .export-p {
+    text-align: center;
+  }
 </style>
