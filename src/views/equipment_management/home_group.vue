@@ -22,15 +22,7 @@
             type="primary"
             @click="addgroup"
           >新增</el-button>
-          <!-- <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button>
-          <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
-          <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button> -->
-
-          <!-- <el-button
-                type="primary"
-                @click="test"
-              >测试</el-button>-->
-        </el-button></el-form-item>
+        </el-form-item>
       </el-form>
       <div class="protable">
         <el-table :data="groupData" style="width: 100%">
@@ -96,7 +88,7 @@
                 @click="deviceToDetail(scope.row)"
               >配置</el-link>
               <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                <p>确定删除【{{ scope.row.name }}】这个分组吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button
                     size="mini"
@@ -284,12 +276,12 @@
                 ]"
                 label="分组名"
                 prop="name"
-            /></el-col>
+              />
+            </el-col>
             <el-col :span="18">
-              <el-input v-model="addGroup.name" type="text" autocomplete="off"/></el-form-item>
+              <el-input v-model="addGroup.name" type="text" autocomplete="off"/>
             </el-col>
           </el-row>
-          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="addDeviceGroup()">新增</el-button>
@@ -753,7 +745,6 @@ export default {
       }
       this.selectApp(this.form.relationApp)
     },
-    handleChange() {},
 
     async Industry() {
       this.categoryList = []
@@ -776,131 +767,50 @@ export default {
     },
 
     submitForm(formName) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var objectId = Parse.User.current().id
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     var ranNum = Math.ceil(Math.random() * 25)
-      //     var productSecret = Base64.encode(
-      //       String.fromCharCode(65 + ranNum) +
-      //         Math.ceil(Math.random() * 10000000) +
-      //         Number(new Date())
-      //     )
-      //     var Product = Parse.Object.extend('Product')
-      //     var product = new Product()
-      //     var acl = new Parse.ACL()
-      //     if (this.productid == '') {
-      //       // 新增产品
-      //       var Product1 = Parse.Object.extend('Product')
-      //       var product1 = new Parse.Query(Product1)
-      //       product1.equalTo('name', this.form.name)
-      //       product1.count().then(count => {
-      //         if (count != 0) {
-      //           this.$message('产品名称已存在')
-      //           return false
-      //         } else {
-      //           product.set('productSecret', productSecret)
-      //           this.$store.state.project.projectRole.map(item => {
-      //             acl.setRoleReadAccess(item, true)
-      //             acl.setRoleWriteAccess(item, true)
-      //           })
-
-      //           product.set('ACL', acl)
-      //           product.set('nodeType', this.form.nodeType)
-      //           product.set('netType', this.form.netType)
-      //           product.set('dynamicReg', false)
-      //           product.set(
-      //             'category',
-      //             this.form.category[this.form.category.length - 1]
-      //           ),
-      //           product.set('icon', this.imageUrl)
-      //           product.set('name', this.form.name)
-      //           product.set('devType', this.form.devType)
-      //           product.set('desc', this.form.desc)
-      //           product.set('topics', [])
-      //           product.save().then(
-      //             res => {
-      //               if (res) {
-      //                 this.projectid = this.$route.query.project
-      //                 var Project = Parse.Object.extend('Project')
-      //                 var project = new Parse.Query(Project)
-      //                 var Product2 = Parse.Object.extend('Product')
-      //                 var product2 = new Product2()
-      //                 project.get(this.projectid).then(response => {
-      //                   var relation = response.relation('product')
-      //                   product2.set('objectId', res.id)
-      //                   relation.add(product2)
-      //                   response.save().then(resultes => {
-      //                     if (resultes) {
-      //                       this.$message({
-      //                         type: 'success',
-      //                         message: `创建成功,请完成产品配置`
-      //                       })
-      //                       this.dialogFormVisible = false
-      //                       this.$refs['ruleForm'].resetFields()
-
-      //                       this.resetProductForm()
-      //                       this.searchProduct()
-      //                     }
-      //                   })
-      //                 })
-      //               }
-      //             },
-      //             error => {
-      //               returnLogin(error)
-      //             }
-      //           )
-      //         }
-      //       })
-      //     } else {
-      //       product.id = this.productid
-      //       product.set('productSecret', this.form.productSecret)
-      //       /*    this.form.roles.map(item => {
-      //         acl.setRoleReadAccess(item, true);
-      //         acl.setRoleWriteAccess(item, true);
-      //       });
-
-      //      this.$store.state.project.projectRole.map(item=>{
-      //              acl.setRoleReadAccess(item, true);
-      //              acl.setRoleWriteAccess(item, true);
-      //           })
-      //       product.set("ACL", acl);
-      //       */
-      //       product.set('nodeType', this.form.nodeType)
-      //       product.set('netType', this.form.netType)
-      //       product.set('dynamicReg', false)
-      //       product.set(
-      //         'category',
-      //         this.form.category[this.form.category.length - 1]
-      //       ),
-      //       product.set('icon', this.imageUrl)
-      //       product.set('name', this.form.name)
-      //       product.set('devType', this.form.devType)
-      //       product.set('desc', this.form.desc)
-      //       product.set('topics', [])
-      //       product.save().then(
-      //         res => {
-      //           if (res) {
-      //             this.$message({
-      //               type: 'success',
-      //               message: `编辑成功`
-      //             })
-      //             this.dialogFormVisible = false
-      //             this.$refs['ruleForm'].resetFields()
-      //             this.searchProduct()
-      //             this.productid = ''
-      //           }
-      //         },
-      //         error => {
-      //           returnLogin(error)
-      //         }
-      //       )
-      //     }
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+      var params = {}
+      var initparams = {
+        name: this.form.name,
+        nodeType: this.form.nodeType,
+        netType: this.form.netType,
+        icon: this.imageUrl,
+        devType: this.form.devType,
+        desc: this.form.desc
+      }
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // 判断是新增产品还是修改
+          if (this.custom_status === 'add') {
+            var ranNum = Math.ceil(Math.random() * 25)
+            var productSecret = Base64.encode(
+              String.fromCharCode(65 + ranNum) +
+              Math.ceil(Math.random() * 10000000) +
+              Number(new Date())
+            )
+            const aclKey = 'role' + ':' + this.form.relationApp
+            const setAcl = {}
+            setAcl[aclKey] = {
+              read: true,
+              write: true
+            }
+            var addparams = {
+              category: this.form.category[this.form.category.length - 1],
+              productSecret: productSecret,
+              ACL: setAcl,
+              topics: [],
+              dynamicReg: false
+            }
+            params = Object.assign(initparams, addparams)
+            this.createProduct(params)
+          } else {
+            console.log(this.custom_row)
+            var editparams = {}
+            params = Object.assign(initparams, editparams)
+            this.editProduct(params)
+          }
+        } else {
+          this.$message('必填项未填')
+        }
+      })
     },
     resetProductForm() {
       this.form = {
@@ -932,7 +842,6 @@ export default {
         }
       })
     },
-    /* el-popover点击关闭*/
     makeSure(scope) {
       const params = {
         keys: 'count(*)',
@@ -942,37 +851,34 @@ export default {
           "product": scope.row.objectId
         }
       }
-      queryDevice(params)
-        .then(results => {
-          console.log(results,"jkjjjj")
-
-          if (results.count > 0) {
-            this.$message('请先删除该产品下设备')
-            return
-          } else {
-            getProduct(scope.row.objectId).then(results => {
-              console.log(results)
-              delProduct(scope.row.objectId).then(
-                response => {
-                  if (response) {
-                    this.$message({
-                      type: 'success',
-                      message: '删除成功'
-                    })
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    this.searchProduct()
-                  }
-                },
-                error => {
-                  returnLogin(error)
+      queryDevice(params).then(results => {
+        if (results.count > 0) {
+          this.$message('请先删除该产品下设备')
+          return
+        } else {
+          getProduct(scope.row.objectId).then(results => {
+            console.log(results)
+            delProduct(scope.row.objectId).then(
+              response => {
+                if (response) {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功'
+                  })
+                  scope._self.$refs[`popover-${scope.$index}`].doClose()
+                  this.searchProduct()
                 }
-              )
-            }
-            ).catch(e => {
-
-            })
+              },
+              error => {
+                returnLogin(error)
+              }
+            )
           }
-        })
+          ).catch(e => {
+
+          })
+        }
+      })
     },
     productSizeChange(val) {
       this.length = val

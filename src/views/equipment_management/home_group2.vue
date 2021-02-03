@@ -12,14 +12,8 @@
             </el-form-item>
             <el-form-item style="float:right;text-align:right">
               <el-button type="primary" @click="addproduct">{{ $t('product.createproduct') }}</el-button>
-              <!-- <el-button type="primary" @click="goTopoview">{{ $t('product.topoview') }}</el-button> -->
               <el-button type="primary" @click="exportpro">{{ $t('product.exportpro') }}</el-button>
               <el-button type="primary" @click="importDialogShow = true">{{ $t('product.importpro') }}</el-button>
-
-              <!-- <el-button
-                type="primary"
-                @click="test"
-              >测试</el-button>-->
             </el-form-item>
           </el-form>
           <div class="protable">
@@ -56,7 +50,7 @@
                   <el-link :underline="false" type="primary" icon="el-icon-view" @click="deviceToDetail(scope.row)">配置
                   </el-link>
                   <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                    <p>确定删除【{{ scope.row.name }}】这个产品吗？</p>
                     <div style="text-align: right; margin: 0">
                       <el-button size="mini" @click="scope._self.$refs[`popover-${scope.$index}`].doClose()">
                         {{ $t('developer.cancel') }}</el-button>
@@ -262,6 +256,8 @@
   </div>
 </template>
 <script>
+import { delProduct, getProduct } from "@/api/Product";
+import { queryDevice } from "@/api/Device/index";
 const Base64 = require('js-base64').Base64
 import {
   export_txt_to_zip
@@ -508,18 +504,6 @@ export default {
         }
         ]
       }
-    },
-    getRoles() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // return new Promise((resolve, reject) => {
-      //   var App = Parse.Object.extend('App')
-      //   var query = new Parse.Query(App)
-      //   query.find().then(res => {
-      //     resolve(res)
-      //   }, error => {
-      //     reject(error)
-      //   })
-      // })
     },
     selectApp(val) {
       if (!val) {
@@ -834,6 +818,17 @@ export default {
     },
     // 添加产品弹窗
     addproduct() {
+      this.form = {
+        name: '',
+        category: [],
+        nodeType: 0,
+        desc: '',
+        netType: ' ',
+        devType: '',
+        productSecret: '',
+        roles: [],
+        relationApp: ''
+      }
       this.custom_status = 'add'
       this.dialogFormVisible = true
     },
@@ -1167,42 +1162,32 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // var Device = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Device)
-      // devices.equalTo('product', scope.row.id)
-      // devices.find().then(resultes => {
-      //   if (resultes.length > 0) {
-      //     this.$message('请先删除该产品下设备')
-      //     return
-      //   } else {
-      //     product.get(scope.row.id).then(
-      //       resultes => {
-      //         resultes.destroy().then(
-      //           response => {
-      //             if (response) {
-      //               this.$message({
-      //                 type: 'success',
-      //                 message: '删除成功'
-      //               })
-      //               scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //               this.searchProduct()
-      //             }
-      //           },
-      //           error => {
-      //             returnLogin(error)
-      //           }
-      //         )
-      //       },
-      //       error => {
-      //         returnLogin(error)
-      //       }
-      //     )
-      //   }
-      // })
+      const params = {
+        keys: 'count(*)',
+        skip: 0,
+        limit: 1,
+        where: {
+          "product": scope.row.objectId
+        }
+      }
+      queryDevice(params).then(results => {
+        if (results.count > 0) {
+          this.$message('请先删除该产品下设备')
+          return
+        } else {
+          delProduct(scope.row.objectId).then(
+            response => {
+              if (response) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功'
+                })
+                scope._self.$refs[`popover-${scope.$index}`].doClose()
+                this.searchProduct()
+              }
+            })
+        }
+      })
     },
     productSizeChange(val) {
       this.length = val
