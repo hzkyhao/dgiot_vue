@@ -212,24 +212,16 @@
   </div>
 </template>
 <script>
+import { getAllunit, getDictCount } from "@/api/Dict/index";
 const Base64 = require("js-base64").Base64;
 var isupdatetrue = "";
 var editor;
-var editor1;
 var editor2;
-var editorgraphql;
-var editor5;
-var editor6;
-var subdialog;
-var editormodel;
-var editorcreate;
 var editorinsert;
-var editorsubtable;
 var channelrow = {};
 var setdata = "";
 var isallchannel = false;
 import { Compile, subupadte } from "@/api/System/index.js";
-import { returnLogin } from "@/utils/return";
 export default {
   name: "ThingsParse",
   props: {},
@@ -326,30 +318,17 @@ export default {
           console.log(e);
         });
     },
-    Industry() {
-      this.option = [];
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.equalTo("data.key", "category");
-      // datas.limit(1000);
-      // datas.find().then(
-      //   response => {
-      //     if (response) {
-      //       response.map(items => {
-      //         var obj = {};
-      //         obj.value = items.attributes.type;
-      //         obj.label = items.attributes.data.CategoryName;
-      //         obj.id = items.attributes.data.Id;
-      //         obj.parentid = items.attributes.data.SuperId;
-      //         this.option.push(obj);
-      //       });
-      //     }
-      //   },
-      //   error => {
-      //     this.$message(error.message);
-      //   }
-      // );
+    async Industry() {
+      this.option = []
+      const { results } = await this.$getIndustry('category', 100)
+      results.map(items => {
+        var obj = {};
+        obj.value = items.type;
+        obj.label = items.data.CategoryName;
+        obj.id = items.data.Id;
+        obj.parentid = items.data.SuperId;
+        this.option.push(obj);
+      })
     },
     // 得到产品详情
     getProDetail(productId) {
@@ -443,30 +422,16 @@ export default {
       editor.setValue(Base64.decode(row.attributes.data.code));
       this.dialogTableVisible = false;
     },
-    getAllunit() {
+    async getAllunit() {
       this.allunit = [];
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // var arr = [{}];
-      // datas.equalTo("type", "unit");
-      // datas.limit(1000);
-      // datas.find().then(
-      //   response => {
-      //     this.allunit = response.concat([]);
-      //     this.allunit.unshift({
-      //       attributes: {
-      //         data: {
-      //           Name: "无",
-      //           Symbol: ""
-      //         }
-      //       }
-      //     });
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const { results } = await getAllunit('unit', 100)
+      this.allunit = results.concat([]);
+      this.allunit.unshift({
+        data: {
+          Name: "无",
+          Symbol: ""
+        }
+      });
     },
     subAce(thingsParseModel, istrue) {
       this.$refs[thingsParseModel].validate(valid => {
