@@ -21,3 +21,4 @@ spa/
 *.zip
 *.lock
 *.lock.json
+email.sh
