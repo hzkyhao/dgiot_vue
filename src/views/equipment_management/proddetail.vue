@@ -1139,7 +1139,7 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="sizeForm.false"
-                            :placeholder="$t('egclose')"
+                            :placeholder="$t('product.egclose')"
                             class="inputnumber"
                           />
                         </el-form-item>
@@ -3683,9 +3683,9 @@ export default {
           required: false,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "enum") {
         var specsArray = [];
@@ -3706,9 +3706,9 @@ export default {
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "struct") {
         obj = {
@@ -3719,32 +3719,32 @@ export default {
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
           isread: rowData.accessMode,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          identifier: rowData.identifier,
-          strategy: rowData.dataForm.strategy
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          identifier: rowData.dataForm == undefined ? "" : rowData.identifier,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "string") {
         obj = {
           name: rowData.name,
           type: rowData.dataType.type,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
           string: rowData.dataType.size,
           dis: this.$objGet(rowData, "dataForm.address"),
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
           isread: rowData.accessMode,
           identifier: rowData.identifier,
-          strategy: rowData.dataForm.strategy
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy
         };
       } else if (rowData.dataType.type == "date") {
         obj = {
           name: rowData.name,
           type: rowData.dataType.type,
-          collection: rowData.dataForm.collection,
-          control: rowData.dataForm.control,
-          strategy: rowData.dataForm.strategy,
+          collection: rowData.dataForm == undefined ? "" : rowData.dataForm.collection,
+          control: rowData.dataForm == undefined ? "" : rowData.dataForm.control,
+          strategy: rowData.dataForm == undefined ? "" : rowData.dataForm.strategy,
           dis: this.$objGet(rowData, "dataForm.address"),
           dinumber: this.$objGet(rowData, "dataForm.quantity"),
           required: true,
@@ -4337,54 +4337,48 @@ export default {
     subAce1(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var obj = {
-            name: this.formInline.name,
-            version: this.formInline.version,
-            code: Base64.encode(editor.getValue()),
-            desc: this.formInline.desc
-          };
           const params = {
             where: {
-              "data.name": obj.name,
-              "data.version": obj.version
+              "data.name": this.formInline.name,
+              "data.version": this.formInline.version
             }
           };
-          this.$query_object('Dict', this.productId, params).then(response => {
-            if (response) {
-              if (response.length >= 1) {
-                this.$messages("此协议版本已存在");
-                return;
-              } else {
-                // var acl = new Parse.ACL();
-                // acl.setReadAccess(userid, true);
-                // acl.setWriteAccess(userid, true);
-                let aclKey = {}
-                // const setAcl = {}
-                // setAcl[aclKey] = {
-                //   read: true,
-                //   write: true
-                // }
-                this.$get_object('Product', this.productid).then(response => {
-                  if (response) {
-                    console.log("sss", response)
-                    console.log("aaa", response.ACL)
-                    aclKey = response.ACL
-                  }
-                })
-
-                const params = {
-                  where: {
+          this.$query_object('Dict', params).then(response => {
+            if (response.results && response.results.length >= 1) {
+              this.$message("此协议版本已存在");
+              return;
+            } else {
+              this.$get_object('Product', this.productId).then(response => {
+                if (response) {
+                  var obj = {
+                    name: this.formInline.name,
+                    version: this.formInline.version,
+                    code: Base64.encode(editor.getValue()),
+                    desc: this.formInline.desc
+                  };
+                  const params = {
+                    key: this.formInline.name + ":" + this.formInline.version,
                     type: "decoder",
-                    "data": obj,
-                    "ACL": aclKey
-                  }
-                };
-                this.$create_object('Dict', params).then(resultes => {
-                  if (resultes) {
-                    this.$message("保存到公共协议库成功");
-                  }
-                })
-              }
+                    data: obj,
+                    ACL: response.ACL
+                  };
+                  this.$create_object('Dict', params).then(resultes => {
+                    if (resultes.error) {
+                      this.$message({
+                        type: "error",
+                        message: resultes.error
+                      });
+                    } else {
+                      this.$message({
+                        type: "success",
+                        message: "保存到公共协议库成功"
+                      });
+                    }
+                  }).catch(e => {
+                    console.log(e)
+                  })
+                }
+              })
             }
           }).catch(e => {
             console.log(e)
