@@ -45,7 +45,7 @@
         </el-table-column>
         <el-table-column :label="$t('developer.channeladdr')" width="200">
           <template slot-scope="scope">
-            <span>{{ 'channel/'+scope.row.id }}</span>
+            <span>{{ 'channel/'+scope.row.objectId }}</span>
           </template>
         </el-table-column>
 
@@ -402,7 +402,7 @@ export default {
     },
     // 更新状态
     qyChannel(row, action) {
-      subupadte(row.id, action)
+      subupadte(row.objectId, action)
         .then(resultes => {
           if (resultes) {
             this.$message({
@@ -420,7 +420,7 @@ export default {
     updateChannel(row) {
       console.log(row)
       this.dialogVisible = true
-      this.resourceid = row.id
+      this.resourceid = row.objectId
       this.detailchannel = row.config
       this.resoucetype = row.cType
       this.description = row.desc
@@ -619,7 +619,7 @@ export default {
     },
     editorChannel(row) {
       this.channelrow = row
-      this.resourceid = row.id
+      this.resourceid = row.objectId
       this.channelForm = true
       this.channelupdated = '编辑'
       this.removeauto(row.cType)
@@ -651,8 +651,8 @@ export default {
     },
     subProTopic(row) {
       this.subdialog = true
-      this.subdialogid = row.id
-      this.channelname = row.id
+      this.subdialogid = row.objectId
+      this.channelname = row.objectId
       setTimeout(() => {
         subdialog = ace.edit('subdialog')
         subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -665,10 +665,10 @@ export default {
         })
       })
       var info = {
-        topic: 'log/channel/' + row.id,
+        topic: 'log/channel/' + row.objectId,
         qos: 2
       }
-      var channeltopic = new RegExp('log/channel/' + row.id)
+      var channeltopic = new RegExp('log/channel/' + row.objectId)
       var submessage = ''
       var _this = this
       Websocket.add_hook(channeltopic, function(Msg) {
@@ -688,7 +688,7 @@ export default {
           console.log(info)
           console.log('订阅成功')
           var sendInfo = {
-            topic: 'channel/' + row.id,
+            topic: 'channel/' + row.objectId,
             text: text0,
             retained: true,
             qos: 2

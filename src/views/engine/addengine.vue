@@ -232,12 +232,12 @@
                 <el-table :data="channellist" height="400" style="width: 100%">
                   <el-table-column :label="$t('developer.channelnumber')" align="center">
                     <template slot-scope="scope">
-                      <span>{{ scope.row.id }}</span>
+                      <span>{{ scope.row.objectId }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('developer.channelname')" align="center">
                     <template slot-scope="scope">
-                      <span>{{ scope.row.attributes.name }}</span>
+                      <span>{{ scope.row.name }}</span>
                     </template>
                   </el-table-column>
                   <!-- <el-table-column :label="$t('developer.channeladdr')" width="200" align="center">
@@ -253,7 +253,7 @@
                 </el-table-column> -->
                   <el-table-column :label="$t('developer.servicetype')" align="center">
                     <template slot-scope="scope">
-                      <span>{{ scope.row.attributes.cType }}</span>
+                      <span>{{ scope.row.cType }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$t('developer.operation')" align="center">
@@ -261,7 +261,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="relationChannel(scope.row.id)"
+                        @click="relationChannel(scope.row.objectId)"
                       >{{ $t('developer.add') }}</el-button>
                     </template>
                   </el-table-column>
@@ -564,11 +564,11 @@ export default {
       // }
       // });
     },
-    relationChannel(id) {
+    relationChannel(objectId) {
       this.actionData.push({
         name: 'data_to_resource',
         params: {
-          $resource: 'channel:' + id
+          $resource: 'channel:' + objectId
           // type: this.ctype
         }
       })
@@ -582,19 +582,15 @@ export default {
       this.showAllChannel()
     },
     showAllChannel() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend('Channel')
-      // var channel = new Parse.Query(Channel)
-      // channel.skip(this.allChannelstart)
-      // channel.limit(this.allChannellength)
-      // channel.count().then(count => {
-      //   this.allChanneltotal = count
-      //   channel.find().then(resultes => {
-      //     this.channellist = resultes
-      //   })
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const params = {
+        keys: 'count(*)',
+        limit: this.allChannelstart,
+        where:{}
+      }
+      this.$query_object('Channel', params).then(res => {
+        this.allChanneltotal = res.count
+        this.channellist = res.results
+      })
     },
     testRule(forName) {
       this.formInline.result = ''

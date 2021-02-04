@@ -441,7 +441,7 @@ export default {
     },
     // 更新状态
     qyChannel(row, action) {
-      subupadte(row.id, action)
+      subupadte(row.objectId, action)
         .then(resultes => {
           if (resultes) {
             this.$message({
