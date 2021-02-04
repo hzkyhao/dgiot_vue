@@ -1322,12 +1322,6 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          const parsms = {
-            limit: 1000,
-            where: {
-              'data.key': 'category'
-            }
-          }
           var location = {
             "__type": "GeoPoint",
             "latitude": this.center.lat,
@@ -1352,11 +1346,7 @@ export default {
                   'devaddr': this.deviceform.devaddr,
                   "objectId": this.deviceform.devaddr,
                   "lastOnlineTime": 0,
-                  'product': {
-                    '__type': 'Pointer',
-                    'className': 'Product',
-                    'objectId': this.deviceform.productName
-                  },
+                  'product': response,
                   'detail': detail,
                   'location': location
                 }
