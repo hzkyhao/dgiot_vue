@@ -185,7 +185,7 @@ export const constantRouterMap = [
       {
         path: "/roles/menu",
         name: "菜单管理",
-        component: () => import("@/views/roles/test"),
+        component: () => import("@/views/roles/menu"),
         meta: { title: "菜单管理", icon: "menu" }
       },
       {
@@ -335,26 +335,6 @@ export const constantRouterMap = [
     name: "帮助中心",
     meta: { title: "帮助中心", icon: "help" }
   },
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   name: '开发者平台',
-  //   meta: { title: '开发者平台', icon: 'department' },
-  //   children: [
-  //     {
-  //       path: 'http://ci.iotn2n.com:18083',
-  //       name: '数蛙iot平台',
-  //       // component: () => import('@/views/developer/developer'),
-  //       meta: { title: '数蛙iot平台', icon: 'report' }
-  //     },
-  //     {
-  //       path: 'http://prod.iotn2n.com:5080/swagger/',
-  //       name: '文档中心',
-  //       // component: () => import('@/views/developer/developer'),
-  //       meta: { title: '文档中心', icon: 'report' }
-  //     }
-  //   ]
-  // },
   { path: "*", redirect: "/404", hidden: true }
 ];
 

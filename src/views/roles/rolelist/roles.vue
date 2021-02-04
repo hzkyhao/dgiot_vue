@@ -711,19 +711,6 @@ export default {
           console.log('response', response)
         })
     },
-    //编辑权限
-    handleEditrole(row) {
-      this.editroleid = row.id
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var roles = Parse.Object.extend('_Role')
-      // var query = new Parse.Query(roles)
-      // query.get(row.id).then(resultes => {
-      //   this.roleEdit = true
-      //   this.form.name = resultes.attributes.name
-      //   this.form.desc = resultes.attributes.desc
-      //   this.form.alias = resultes.attributes.alias
-      // })
-    },
     updaterole() {
       this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       // var roles = Parse.Object.extend('_Role')
