@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function Upload({ file }) {
   return request({
-    url: '/upload',
+    url: 'iotapi/upload',
     method: 'post',
     params: {
       file

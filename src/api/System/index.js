@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getNode() {
   return request({
-    url: '/nodes',
+    url: 'iotapi/nodes',
     method: 'get',
     params: {
 
@@ -11,7 +11,7 @@ export function getNode() {
 }
 export function joinNode(action, node) {
   return request({
-    url: '/cluster?action=' + action,
+    url: 'iotapi/cluster?action=' + action,
     method: 'post',
     data: {
       node: node
@@ -21,7 +21,7 @@ export function joinNode(action, node) {
 
 export function Getapp(node, start, length) {
   return request({
-    url: '/plugin',
+    url: 'iotapi/plugin',
     method: 'get',
     params: {
       node: node,
@@ -32,7 +32,7 @@ export function Getapp(node, start, length) {
 }
 export function Getmodule(app) {
   return request({
-    url: '/plugin/' + app,
+    url: 'iotapi/plugin/' + app,
     method: 'post',
     params: {
       Action: 'modules'
@@ -42,7 +42,7 @@ export function Getmodule(app) {
 
 export function Getstart(app) {
   return request({
-    url: '/plugin/' + app,
+    url: 'iotapi/plugin/' + app,
     method: 'post',
     params: {
       Action: 'start'
@@ -51,7 +51,7 @@ export function Getstart(app) {
 }
 export function Getstop(app) {
   return request({
-    url: '/plugin/' + app,
+    url: 'iotapi/plugin/' + app,
     method: 'post',
     params: {
       Action: 'stop'
@@ -60,7 +60,7 @@ export function Getstop(app) {
 }
 export function GetReload(app) {
   return request({
-    url: '/plugin/' + app,
+    url: 'iotapi/plugin/' + app,
     method: 'post',
     params: {
       Action: 'reload'
@@ -69,7 +69,7 @@ export function GetReload(app) {
 }
 export function Compile(code) {
   return request({
-    url: '/compile',
+    url: 'iotapi/compile',
     method: 'post',
     data: {
       code: code
@@ -79,7 +79,7 @@ export function Compile(code) {
 
 export function subupadte(channelId, action) {
   return request({
-    url: `iotpai/control/channel`,
+    url: `iotapi/control/channel`,
     method: 'post',
     params: {
       id: channelId,

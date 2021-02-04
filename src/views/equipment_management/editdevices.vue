@@ -736,30 +736,30 @@ export default {
       if (this.childrendevices.devicesname != '') {
         params.where.devaddr = this.childrendevices.devicesname
       }
-      this.$queryDevice(params).then(res => {
-        this.childrenDeviceTotal = res.count
-        if (res.results) {
-          res.results.map(items => {
-            var obj = {}
-            obj.id = items.id
-            obj.name = items.name
-            obj.lastOnlineTime = this.$dateFormat(
-              this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
-            )
-            obj.status = items.status
-            obj.originstatus = items.status
-            obj.nodeType = items.product.nodeType
-            obj.productName = items.product.name
-            obj.devaddr = items.devaddr
-            obj.isEnable = items.isEnable
-            obj.route = items.route
-            this.devicesTableData.push(obj)
-          })
-        }
-      }).catch(err => {
-        console.log(err)
-        this.$baseMessage('请求出错', err.error, 3000)
-      })
+      // this.$queryDevice(params).then(res => {
+      //   this.childrenDeviceTotal = res.count
+      //   if (res.results) {
+      //     res.results.map(items => {
+      //       var obj = {}
+      //       obj.id = items.id
+      //       obj.name = items.name
+      //       obj.lastOnlineTime = this.$dateFormat(
+      //         this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
+      //       )
+      //       obj.status = items.status
+      //       obj.originstatus = items.status
+      //       obj.nodeType = items.product.nodeType
+      //       obj.productName = items.product.name
+      //       obj.devaddr = items.devaddr
+      //       obj.isEnable = items.isEnable
+      //       obj.route = items.route
+      //       this.devicesTableData.push(obj)
+      //     })
+      //   }
+      // }).catch(err => {
+      //   console.log(err)
+      //   this.$baseMessage('请求出错', err.error, 3000)
+      // })
     },
 
     // 实时刷新
