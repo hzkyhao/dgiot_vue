@@ -109,12 +109,14 @@
                     v-if="!scope.row.isdef"
                     type="primary"
                     size="mini"
-                  >{{ $t('developer.edit') }}</el-button>
+                  >{{ $t('developer.edit') }}
+                  </el-button>
                   <el-button
                     v-if="!scope.row.isdef"
                     type="danger"
                     size="mini"
-                  >{{ $t('developer.delete') }}</el-button>
+                  >{{ $t('developer.delete') }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -141,14 +143,16 @@
                   plain
                   size="small"
                   @click="isshowtable=false"
-                >{{ $t('equipment.chart') }}</el-button>
+                >{{ $t('equipment.chart') }}
+                </el-button>
                 <el-button
                   :class="isshowtable ? 'buttonactive':''"
                   type="primary"
                   plain
                   size="small"
                   @click="isshowtable=true"
-                >{{ $t('equipment.table') }}</el-button>
+                >{{ $t('equipment.table') }}
+                </el-button>
               </el-button-group>
             </div>
 
@@ -163,12 +167,18 @@
                       <svg-icon :icon-class="item.name"/>
                     </span>
                   </div>
-                  <div v-if="item.dataType.type=='double'||item.dataType.type=='float'||item.dataType.type=='int'" :title="item.dataType.type" class="stla">
+                  <div
+                    v-if="item.dataType.type=='double'||item.dataType.type=='float'||item.dataType.type=='int'"
+                    :title="item.dataType.type"
+                    class="stla">
                     <span>{{ item.value | filterVal }}</span>
                     <span v-if="item.dataType.specs.unit">{{ item.dataType.specs.unit }}</span>
                   </div>
 
-                  <div v-if="item.dataType.type=='enmu'||item.dataType.type=='bool'" :title="item.dataType.type" class="stla">
+                  <div
+                    v-if="item.dataType.type=='enmu'||item.dataType.type=='bool'"
+                    :title="item.dataType.type"
+                    class="stla">
                     <span>{{ item.value | filterVal }}</span>
                     <span>{{ item.dataType.specs[item.value] }}</span>
                   </div>
@@ -179,7 +189,9 @@
                       :key="index"
                       style="display:block;height:30px;font-style:normal"
                     >
-                      <div v-if="key.dataType.type=='double'||key.dataType.type=='float'||key.dataType.type=='int'" class="stla" >
+                      <div
+                        v-if="key.dataType.type=='double'||key.dataType.type=='float'||key.dataType.type=='int'"
+                        class="stla">
                         <span>{{ key.name+':' }}</span>
                         <span>{{ key.value }}</span>
                         <span v-if="key.dataType.specs.unit">{{ key.dataType.specs.unit }}</span>
@@ -263,17 +275,20 @@
                   :disabled="multipleTable.length==0"
                   type="primary"
                   @click="deleteDevcie"
-                >{{ $t('equipment.RelievingAssociation') }}</el-button>
+                >{{ $t('equipment.RelievingAssociation') }}
+                </el-button>
                 <el-button
                   :disabled="multipleTable.length==0"
                   type="primary"
                   @click="unactiveDevice"
-                >{{ $t('developer.prohibit') }}</el-button>
+                >{{ $t('developer.prohibit') }}
+                </el-button>
                 <el-button
                   :disabled="multipleTable.length==0"
                   type="primary"
                   @click="activeDevice"
-                >{{ $t('developer.enable') }}</el-button>
+                >{{ $t('developer.enable') }}
+                </el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="info" plain>{{ $t('equipment.Refresh') }}</el-button>
@@ -281,7 +296,8 @@
                 <el-button
                   type="primary"
                   @click="childDialog=true"
-                >{{ $t('equipment.addchilddevice') }}</el-button>
+                >{{ $t('equipment.addchilddevice') }}
+                </el-button>
               </el-form-item>
             </el-form>
             <div class="devicetable">
@@ -352,7 +368,8 @@
                       type="primary"
                       icon="el-icon-view"
                       @click="deviceToDetail(scope.row)"
-                    >{{ $t('equipment.see') }}</el-link>
+                    >{{ $t('equipment.see') }}
+                    </el-link>
 
                     <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
                       <p>确定解除这个{{ scope.row.name }}设备关联吗？</p>
@@ -360,19 +377,22 @@
                         <el-button
                           size="mini"
                           @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
-                        >{{ $t('developer.cancel') }}</el-button>
+                        >{{ $t('developer.cancel') }}
+                        </el-button>
                         <el-button
                           type="primary"
                           size="mini"
                           @click="makeSure(scope)"
-                        >{{ $t('developer.determine') }}</el-button>
+                        >{{ $t('developer.determine') }}
+                        </el-button>
                       </div>
                       <el-link
                         slot="reference"
                         :underline="false"
                         icon="el-icon-delete"
                         type="danger"
-                      >{{ $t('equipment.RelievingAssociation') }}</el-link>
+                      >{{ $t('equipment.RelievingAssociation') }}
+                      </el-link>
                     </el-popover>
 
                   </template>
@@ -506,7 +526,7 @@
                 <i class="el-icon-tickets"/> 图表
               </span>
               <div id="echarts" style="height:auto;width:100%;">
-                <line-chart :chart-data="lineChartData" />
+                <line-chart :chart-data="lineChartData"/>
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -521,9 +541,10 @@
 </template>
 <script>
 import { getTdDevice } from "@/api/Device/index.js"
-import { utc2beijing,timestampToTime } from '@/utils/index'
+import { utc2beijing, timestampToTime } from '@/utils/index'
 import LineChart from '../dashboard/admin/components/LineChart'
 import { returnLogin } from '@/utils/return'
+
 var dataobj = {}
 export default {
   components: {
@@ -547,14 +568,14 @@ export default {
         )
         SELECTWRAP_DOM.addEventListener('scroll', function() {
           /**
-           * scrollHeight 获取元素内容高度(只读)
-           * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
-           * clientHeight 读取元素的可见高度(只读)
-           * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
-           * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
-           */
+             * scrollHeight 获取元素内容高度(只读)
+             * scrollTop 获取或者设置元素的偏移值,常用于, 计算滚动条的位置, 当一个元素的容器没有产生垂直方向的滚动条, 那它的scrollTop的值默认为0.
+             * clientHeight 读取元素的可见高度(只读)
+             * 如果元素滚动到底, 下面等式返回true, 没有则返回false:
+             * ele.scrollHeight - ele.scrollTop === ele.clientHeight;
+             */
           const condition =
-            this.scrollHeight - this.scrollTop <= this.clientHeight
+              this.scrollHeight - this.scrollTop <= this.clientHeight
           if (condition) {
             binding.value()
           }
@@ -639,7 +660,8 @@ export default {
   watch: {
     properties: {
       deep: true,
-      handler(val) {}
+      handler(val) {
+      }
     }
   },
   mounted() {
@@ -672,23 +694,23 @@ export default {
       var date = new Date(timestamp * 1000)
       var Y = date.getFullYear() + '-'
       var M =
-        (date.getMonth() + 1 < 10
-          ? '0' + (date.getMonth() + 1)
-          : date.getMonth() + 1) + '-'
+          (date.getMonth() + 1 < 10
+            ? '0' + (date.getMonth() + 1)
+            : date.getMonth() + 1) + '-'
       var D =
-        (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
-        ' '
+          (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
+          ' '
       var h =
-        (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
-        ':'
+          (date.getHours() + 1 <= 10 ? '0' + date.getHours() : date.getHours()) +
+          ':'
       var m =
-        (date.getMinutes() + 1 <= 10
-          ? '0' + date.getMinutes()
-          : date.getMinutes()) + ':'
+          (date.getMinutes() + 1 <= 10
+            ? '0' + date.getMinutes()
+            : date.getMinutes()) + ':'
       var s =
-        date.getSeconds() + 1 <= 10
-          ? '0' + date.getSeconds()
-          : date.getSeconds()
+          date.getSeconds() + 1 <= 10
+            ? '0' + date.getSeconds()
+            : date.getSeconds()
       return Y + M + D + h + m + s
     },
     getDevices(start) {
@@ -696,373 +718,126 @@ export default {
         this.childrenDeviceStart = 0
       }
       this.devicesTableData = []
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Devices = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Devices)
-      // devices.limit(this.childrenDeviceLength)
-      // devices.skip(this.childrenDeviceStart)
-      // devices.ascending('-updatedAt')
 
-      // if (this.childrendevices.devicesname != '') {
-      //   devices.equalTo('devaddr', this.childrendevices.devicesname)
-      // }
       // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
+      // const key = 'route.' + this.devicedetail.devaddr + ":{$regex: '.+'}"
+      // const where = {}
+      // where[key] = {}
+      // todo
+      const params = {
+        limit: this.childrenDeviceLength,
+        skip: this.childrenDeviceStart,
+        keys: 'count(*)',
+        include: 'product',
+        where: {
 
-      // devices.count().then(
-      //   count => {
-      //     this.childrenDeviceTotal = count
-      //     devices.find().then(resultes => {
-      //       if (resultes) {
-      //         resultes.map(items => {
-      //           var obj = {}
-      //           obj.id = items.id
-      //           obj.name = items.attributes.name
-      //           obj.lastOnlineTime = this.$dateFormat(
-      //             this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
-      //           )
-      //           obj.status = items.attributes.status
-      //           obj.originstatus = items.attributes.status
-      //           obj.nodeType = items.attributes.product.attributes.nodeType
-      //           obj.desc = items.attributes.tag.attributes.desc
-      //           obj.productName = items.attributes.product.attributes.name
-      //           obj.devaddr = items.attributes.devaddr
-      //           obj.isEnable = items.attributes.isEnable
-      //           obj.route = items.attributes.route
-      //           this.devicesTableData.push(obj)
-      //         })
-      //       }
-      //     })
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
+        }
+      }
+      if (this.childrendevices.devicesname != '') {
+        params.where.devaddr = this.childrendevices.devicesname
+      }
+      this.$queryDevice(params).then(res => {
+        this.childrenDeviceTotal = res.count
+        if (res.results) {
+          res.results.map(items => {
+            var obj = {}
+            obj.id = items.id
+            obj.name = items.name
+            obj.lastOnlineTime = this.$dateFormat(
+              this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
+            )
+            obj.status = items.status
+            obj.originstatus = items.status
+            obj.nodeType = items.product.nodeType
+            obj.productName = items.product.name
+            obj.devaddr = items.devaddr
+            obj.isEnable = items.isEnable
+            obj.route = items.route
+            this.devicesTableData.push(obj)
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
-    // // 初始化
-    // getDeviceDetail() {
-    //   var vm = this
-    //   this.deviceid = this.$route.query.deviceid
-    //   this.ischildren = this.$route.query.ischildren
-    //
-    //   var Product = Parse.Object.extend('Product')
-    //   var product = new Parse.Query(Product)
-    //
-    //   var Devices = Parse.Object.extend('Device')
-    //   var devices = new Parse.Query(Devices)
-    //   devices.get(this.deviceid).then(resultes => {
-    //     var obj = {}
-    //     this.productid = this.$objGet(resultes, 'attributes.product.id')
-    //     this.devicedevaddr = this.$objGet(resultes, 'attributes.devaddr')
-    //     obj.id = resultes.id
-    //     obj.createdAt = utc2beijing(resultes.createdAt)
-    //     obj.productName = this.$objGet(resultes, 'attributes.product.attributes.name')
-    //     obj.productid = this.$objGet(resultes, 'attributes.product.id')
-    //     obj.address = this.$objGet(resultes, 'attributes.address')
-    //
-    //     obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'attributes.lastOnlineTime'), true)
-    //
-    //     obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'attributes.updatedAt'))
-    //     obj.ip = this.$objGet(resultes, 'attributes.ip')
-    //
-    //     console.log(" obj.updatedAt", obj.updatedAt)
-    //
-    //     obj.basedata = JSON.stringify(resultes.attributes.basedata)
-    //     obj.DeviceName = resultes.attributes.name
-    //     obj.status = resultes.attributes.status
-    //     obj.desc = this.$objGet(resultes, 'attributes.desc')
-    //     obj.devaddr = this.$objGet(resultes, 'attributes.devaddr')
-    //     obj.nodeType = this.$objGet(resultes, 'attributes.product.attributes.nodeType')
-    //     // obj.node = resultes.attributes.tag.attributes.node
-    //     obj.devType = this.$objGet(resultes, 'attributes.product.attributes.devType')
-    //     obj.productSecret = this.$objGet(resultes, 'attributes.product.attributes.productSecret')
-    //
-    //     const thingTemp = vm.$objGet(resultes, 'attributes.product.attributes.thing')
-    //
-    //     if (thingTemp) {
-    //       vm.properties = JSON.parse(
-    //         JSON.stringify(
-    //           thingTemp.properties
-    //         )
-    //       )
-    //
-    //       console.log('vm.properties ', vm.properties)
-    //
-    //       vm.properties.map(items => {
-    //         dataobj[items['identifier']] = {
-    //           expectedData: [],
-    //           actualData: [],
-    //           results: [],
-    //           title:
-    //             items['dataType']['type'] == 'int' ||
-    //             items['dataType']['type'] == 'float' ||
-    //             items['dataType']['type'] == 'double'
-    //               ? items['name'] +
-    //                 '(' +
-    //                 items['dataType']['specs']['unit'] +
-    //                 ')'
-    //               : items['name'],
-    //           data: [],
-    //           max: 0
-    //         }
-    //       })
-    //     } else {
-    //       product.get(vm.productid).then(
-    //         resultes => {
-    //           vm.properties = JSON.parse(
-    //             JSON.stringify(vm.$objGet(resultes, 'attributes.thing.properties'))
-    //           )
-    //
-    //           if (vm.properties) {
-    //             vm.properties.map(items => {
-    //               dataobj[items['identifier']] = {
-    //                 expectedData: [],
-    //                 actualData: [],
-    //                 results: [],
-    //                 title:
-    //                   items['dataType']['type'] == 'int' ||
-    //                   items['dataType']['type'] == 'float' ||
-    //                   items['dataType']['type'] == 'double'
-    //                     ? items['name'] +
-    //                       '(' +
-    //                       items['dataType']['specs']['unit'] +
-    //                       ')'
-    //                     : items['name'],
-    //                 data: [],
-    //                 max: 0
-    //               }
-    //             })
-    //           } else {
-    //             console.log('product resultes none')
-    //           }
-    //         },
-    //         error => {
-    //           returnLogin(error)
-    //         }
-    //       )
-    //     }
-    //     if (resultes.attributes.product.attributes.topics) {
-    //       this.topicData = resultes.attributes.product.attributes.topics.concat(
-    //         this.topic
-    //       )
-    //     } else {
-    //       this.topicData = this.topic
-    //     }
-    //
-    //     this.devicedetail = obj
-    //     if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
-    //       this.activeName = 'children'
-    //       this.isshowchild = true
-    //       this.getDevices()
-    //
-    //       /* product.find().then(resultes => {
-    //         console.log('产品列表 ###');
-    //         this.allProudct = resultes;
-    //       }); */
-    //
-    //       this.$axiosWen.get('iotapi/classes/Product', {
-    //         params: {
-    //           'where': {
-    //             objectId: {
-    //               $ne: vm.productid
-    //             }
-    //           },
-    //           'order': 'updatedAt' // -updatedAt  updatedAt
-    //         }
-    //       })
-    //         .then(response => {
-    //           // this.productListForReport = response.results
-    //           this.allProudct = response.results
-    //         })
-    //     }
-    //     //  else if (
-    //     //   this.$route.query.nodeType !=0 &&
-    //     //   this.ischildren == 'false'
-    //     // ) {
-    //     //   this.isshowchild = true
-    //     // }
-    //     else {
-    //       console.log("this.$route.query.nodeType", this.$route.query.nodeType)
-    //       console.log("this.ischildren", this.ischildren)
-    //       this.ischildren == 'false'
-    //       this.isshowchild = true
-    //     }
-    //     // 初始化物模型数据
-    //     this.isupdate = true
-    //     // this.Update()
-    //     this.updateTrue(true)
-    //   })
-    // },
+
     // 实时刷新
     async getDeviceDetail() {
       var vm = this
       this.deviceid = this.$route.query.deviceid
       this.ischildren = this.$route.query.ischildren
       const resultes = await this.$get_object('Device', this.deviceid)
-      if (resultes.objectId) {
+      if (resultes.objectId && resultes.product.objectId) {
+        // 产品
+        const resproduct = await this.$get_object('Product', resultes.product.objectId)
         var obj = {}
         this.productid = this.$objGet(resultes, 'product.objectId')
         this.devicedevaddr = this.$objGet(resultes, 'devaddr')
         obj.id = resultes.objectId
         obj.createdAt = utc2beijing(resultes.createdAt)
-        obj.productName = this.$objGet(resultes, 'product.name')
+        obj.productName = this.$objGet(resproduct, 'name')
         obj.productid = this.$objGet(resultes, 'product.objectId')
         obj.address = this.$objGet(resultes, 'address')
         // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
-        obj.updatedAt = vm.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'resultes.updatedAt'))
+        obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'resultes.updatedAt'))
         obj.ip = this.$objGet(resultes, 'ip')
         obj.basedata = JSON.stringify(resultes.basedata)
         obj.DeviceName = resultes.name
         obj.status = resultes.status
         obj.desc = this.$objGet(resultes, 'desc')
         obj.devaddr = this.$objGet(resultes, 'devaddr')
-        obj.nodeType = this.$objGet(resultes, 'product.nodeType')
-        obj.devType = this.$objGet(resultes, 'product.devType')
-        obj.productSecret = this.$objGet(resultes, 'product.productSecret')
-        const thingTemp = vm.$objGet(resultes, 'product.thing')
-
-        if (thingTemp) {
-          vm.properties = JSON.parse(
-            JSON.stringify(
-              thingTemp.properties
-            )
-          )
-
-          console.log('vm.properties ', vm.properties)
-
+        obj.nodeType = this.$objGet(resproduct, 'nodeType')
+        obj.devType = this.$objGet(resproduct, 'devType')
+        obj.productSecret = this.$objGet(resproduct, 'productSecret')
+        // const thingTemp = this.$objGet(resultes, 'product.thing')
+        vm.properties = JSON.parse(
+          JSON.stringify(this.$objGet(resproduct, 'thing.properties'))
+        )
+        if (vm.properties) {
           vm.properties.map(items => {
             dataobj[items['identifier']] = {
               expectedData: [],
               actualData: [],
               results: [],
               title:
-                    items['dataType']['type'] == 'int' ||
-                    items['dataType']['type'] == 'float' ||
-                    items['dataType']['type'] == 'double'
-                      ? items['name'] +
-                        '(' +
-                        items['dataType']['specs']['unit'] +
-                        ')'
-                      : items['name'],
+                  items['dataType']['type'] === 'int' ||
+                  items['dataType']['type'] === 'float' ||
+                  items['dataType']['type'] === 'double'
+                    ? items['name'] +
+                    '(' +
+                    items['dataType']['specs']['unit'] +
+                    ')'
+                    : items['name'],
               data: [],
               max: 0
             }
           })
         } else {
-          this.$axiosWen('iotapi/classes/Product/' + vm.productid).then(resultes => {
-            console.log(resultes)
-            vm.properties = JSON.parse(
-              JSON.stringify(vm.$objGet(resultes, 'attributes.thing.properties'))
-            )
-            if (vm.properties) {
-              vm.properties.map(items => {
-                dataobj[items['identifier']] = {
-                  expectedData: [],
-                  actualData: [],
-                  results: [],
-                  title:
-                              items['dataType']['type'] === 'int' ||
-                              items['dataType']['type'] === 'float' ||
-                              items['dataType']['type'] === 'double'
-                                ? items['name'] +
-                                  '(' +
-                                  items['dataType']['specs']['unit'] +
-                                  ')'
-                                : items['name'],
-                  data: [],
-                  max: 0
-                }
-              })
-            } else {
-              console.log('product resultes none')
-            }
-          }).catch(e => {
-            this.$message(e.error)
-          })
-          if (resultes.product.topics) {
-            this.topicData = resultes.product.topics.concat(
-              this.topic
-            )
-          } else {
-            this.topicData = this.topic
-          }
-          this.devicedetail = obj
-
-          if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
-            this.activeName = 'children'
-            this.isshowchild = true
-            this.getDevices()
-
-            /* product.find().then(resultes => {
-                  console.log('产品列表 ###');
-                  this.allProudct = resultes;
-                }); */
-
-            this.$axiosWen.get('iotapi/classes/Product', {
-              params: {
-                'where': {
-                  objectId: {
-                    $ne: vm.productid
-                  }
-                },
-                'order': 'updatedAt' // -updatedAt  updatedAt
-              }
-            })
-              .then(response => {
-                // this.productListForReport = response.results
-                this.allProudct = response.results
-              })
-          }
-          //  else if (
-          //   this.$route.query.nodeType !=0 &&
-          //   this.ischildren == 'false'
-          // ) {
-          //   this.isshowchild = true
-          // }
-          else {
-            console.log("this.$route.query.nodeType", this.$route.query.nodeType)
-            console.log("this.ischildren", this.ischildren)
-            this.ischildren == 'false'
-            this.isshowchild = true
-          }
-          // 初始化物模型数据
-          this.isupdate = true
-          // this.Update()
-          this.updateTrue(true)
-
-          // product.get(vm.productid).then(
-          //   resultes => {
-          //     vm.properties = JSON.parse(
-          //       JSON.stringify(vm.$objGet(resultes, 'thing.properties'))
-          //     )
-          //
-          //     if (vm.properties) {
-          //       vm.properties.map(items => {
-          //         dataobj[items['identifier']] = {
-          //           expectedData: [],
-          //           actualData: [],
-          //           results: [],
-          //           title:
-          //                 items['dataType']['type'] == 'int' ||
-          //                 items['dataType']['type'] == 'float' ||
-          //                 items['dataType']['type'] == 'double'
-          //                   ? items['name'] +
-          //                     '(' +
-          //                     items['dataType']['specs']['unit'] +
-          //                     ')'
-          //                   : items['name'],
-          //           data: [],
-          //           max: 0
-          //         }
-          //       })
-          //     } else {
-          //       console.log('product resultes none')
-          //     }
-          //   },
-          //   error => {
-          //     returnLogin(error)
-          //   }
-          // )
+          console.log('product resultes none')
         }
+        this.devicedetail = obj
+
+        if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
+          this.activeName = 'children'
+          this.isshowchild = true
+          this.getDevices()
+
+          /* product.find().then(resultes => {
+                    console.log('产品列表 ###');
+                    this.allProudct = resultes;
+                  }); */
+          this.allProudct = resproduct
+        } else {
+          console.log("this.$route.query.nodeType", this.$route.query.nodeType)
+          console.log("this.ischildren", this.ischildren)
+          this.ischildren == 'false'
+          this.isshowchild = true
+        }
+        // 初始化物模型数据
+        this.isupdate = true
+        // this.Update()
+        this.updateTrue(true)
         if (resultes.product.topics) {
           this.topicData = resultes.product.topics.concat(
             this.topic
@@ -1096,6 +871,7 @@ export default {
         uniques = uniques;
         return uniques;
       }
+
       var vm = this
 
       console.log('实时刷新')
@@ -1193,15 +969,15 @@ export default {
     },
     // 定时器启动
     updateTrue(event) {
-      this.ispushdata = false
-      if (event == true) {
-        this.timer = window.setInterval(() => {
-          this.Update()
-        }, 5000)
-      } else {
-        window.clearInterval(this.timer)
-        this.timer = null
-      }
+      // this.ispushdata = false
+      // if (event == true) {
+      //   this.timer = window.setInterval(() => {
+      //     this.Update()
+      //   }, 5000)
+      // } else {
+      //   window.clearInterval(this.timer)
+      //   this.timer = null
+      // }
     },
     // 实时数据的分页
     dataDeviceSizeChange(val) {
@@ -1480,108 +1256,124 @@ export default {
     // 查看历史数据
     /**/
 
-    handleClick(val) {}
+    handleClick(val) {
+    }
   }
 }
 </script>
 <style scoped>
-.editdevices {
-  height: 100%;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
-.editdevices .OFFLINE {
-  color: red;
-}
-.editdevices .ACTIVE,
-.editdevices .ONLINE {
-  color: green;
-}
-.mailtable .cloumn {
-  text-align: left;
-  background: #fafafc;
-  color: #74777a;
+  .editdevices {
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 
-  font-weight: bold;
-  border-right: 1px solid #ebecec;
-  border-bottom: 1px solid #ebecec;
-}
-.editdevices .updatedtable {
-  width: 300px;
-  height: 190px;
-  margin: 20px 20px 0 0;
-  border: 1px solid #cccccc;
-  /* text-align: center; */
-  border-radius: 5px;
-  font-size: 14px;
-  box-shadow: 10px 10px 10px 5px grey;
-  list-style: none;
-  line-height: 40px;
-  /* letter-spacing: 1px; */
-  padding-left: 20px;
-  box-sizing: border-box;
-}
-.editdevices .buttonactive {
-  background-color: #409eff;
-  color: white;
-}
-.mailtable td {
-  padding: 15px;
-  font-size: 14px;
-  text-align: left;
-  box-sizing: border-box;
-  color: #74777a;
-  border: 1px solid #ebecec;
-}
-.childrendevices {
-  width: 100%;
-  height: auto;
-  padding: 10px;
-  box-sizing: border-box;
-  background: white;
-}
+  .editdevices .OFFLINE {
+    color: red;
+  }
+
+  .editdevices .ACTIVE,
+  .editdevices .ONLINE {
+    color: green;
+  }
+
+  .mailtable .cloumn {
+    text-align: left;
+    background: #fafafc;
+    color: #74777a;
+
+    font-weight: bold;
+    border-right: 1px solid #ebecec;
+    border-bottom: 1px solid #ebecec;
+  }
+
+  .editdevices .updatedtable {
+    width: 300px;
+    height: 190px;
+    margin: 20px 20px 0 0;
+    border: 1px solid #cccccc;
+    /* text-align: center; */
+    border-radius: 5px;
+    font-size: 14px;
+    box-shadow: 10px 10px 10px 5px grey;
+    list-style: none;
+    line-height: 40px;
+    /* letter-spacing: 1px; */
+    padding-left: 20px;
+    box-sizing: border-box;
+  }
+
+  .editdevices .buttonactive {
+    background-color: #409eff;
+    color: white;
+  }
+
+  .mailtable td {
+    padding: 15px;
+    font-size: 14px;
+    text-align: left;
+    box-sizing: border-box;
+    color: #74777a;
+    border: 1px solid #ebecec;
+  }
+
+  .childrendevices {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    background: white;
+  }
 </style>
 <style>
-.editdevices .el-tabs__item {
-  font-size: 16px;
-  margin-top: 20px;
-  margin: 0;
-  height: 50px;
-  line-height: 50px;
-  font-family: auto;
-}
-.editdevices .el-tabs__content {
-  background: #f4f4f4;
-  padding: 20px;
-  box-sizing: border-box;
-}
-.editdevices .childrendevices .el-form-item:last-child {
-  float: right;
-}
-.editdevices .childdialog .el-form-item__content {
-  clear: both;
-}
-.editdevices .childdialog .el-form-item__content .el-select {
-  width: 100%;
-}
-.fontSize {
-  font-size: 12px;
-  color: #666666;
-}
-.editdevices .svg-icon {
-  width: 3rem;
-  height: 3rem;
-  margin-top: 5px;
-}
-.stla {
-  font-size: 25px;
-  color: #666666;
-  font-family: fantasy;
-  text-align: center;
-}
-.ht7 {
-  height: 70px;
-}
+  .editdevices .el-tabs__item {
+    font-size: 16px;
+    margin-top: 20px;
+    margin: 0;
+    height: 50px;
+    line-height: 50px;
+    font-family: auto;
+  }
+
+  .editdevices .el-tabs__content {
+    background: #f4f4f4;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .editdevices .childrendevices .el-form-item:last-child {
+    float: right;
+  }
+
+  .editdevices .childdialog .el-form-item__content {
+    clear: both;
+  }
+
+  .editdevices .childdialog .el-form-item__content .el-select {
+    width: 100%;
+  }
+
+  .fontSize {
+    font-size: 12px;
+    color: #666666;
+  }
+
+  .editdevices .svg-icon {
+    width: 3rem;
+    height: 3rem;
+    margin-top: 5px;
+  }
+
+  .stla {
+    font-size: 25px;
+    color: #666666;
+    font-family: fantasy;
+    text-align: center;
+  }
+
+  .ht7 {
+    height: 70px;
+  }
 </style>
 
