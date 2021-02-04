@@ -8,8 +8,8 @@
               <el-option
                 v-for="(item,index) in productlist"
                 :key="index"
-                :label="item.attributes.name"
-                :value="item.id"
+                :label="item.name"
+                :value="item.objectId"
               />
             </el-select>
           </el-form-item>
@@ -18,8 +18,8 @@
               <el-option
                 v-for="(item,index) in devicelist"
                 :key="index"
-                :label="item.attributes.name"
-                :value="item.attributes.devaddr"
+                :label="item.name"
+                :value="item.devaddr"
               />
             </el-select>
           </el-form-item>
@@ -28,7 +28,7 @@
               <el-option
                 v-for="(item,index) in channellist"
                 :key="index"
-                :label="item.attributes.name"
+                :label="item.name"
                 :value="item.id"
               />
             </el-select>
@@ -88,7 +88,7 @@
                         v-for="(item,index) in dataslist"
                         :key="index"
                         :value="item.id"
-                        :label="item.attributes.data.name"/>
+                        :label="item.name"/>
                     </el-select>
                   </el-form-item>
                   <el-form-item>
@@ -287,7 +287,7 @@ import {
 } from '@/utils/wxscoket.js'
 import { queryProduct, getProduct } from '@/api/Product/index'
 import { postDict, delDict, queryDict, putDict } from '@/api/Dict/index'
-
+import { getChannelCountByProduct } from "@/api/Channel/index";
 var editor1
 var editor2
 var subprodevice
@@ -512,8 +512,8 @@ export default {
     selectMessage(val) {
       this.dataslist.map(item => {
         if (item.id == val) {
-          editor1.setValue(JSON.stringify(item.attributes.data.commond))
-          this.detaildatas = JSON.parse(JSON.stringify(item.attributes.data))
+          editor1.setValue(JSON.stringify(item.data.commond))
+          this.detaildatas = JSON.parse(JSON.stringify(item.data))
         }
       })
     },
@@ -590,15 +590,14 @@ export default {
           "data.productid": this.devices.productid
         }
       }
-      queryDict(params)
-        .then(results => {
-          if (results) {
-            this.dataslist = results
-          }
+      queryDict(params).then(results => {
+        if (results) {
+          this.dataslist = results.results
         }
-        ).catch(e => {
-          console.log("queryDict ", e.error)
-        })
+      }
+      ).catch(e => {
+        console.log("queryDict ", e.error)
+      })
     },
     isInterval(val) {
       var text0 = ''
@@ -681,9 +680,9 @@ export default {
         limit: 100
       }
       queryProduct(params).then(productresultes => {
-        this.productlist = productresultes
+        this.productlist = productresultes.results
         this.devices.productid = this.$route.query.productid
-        this.getDevices(this.productid, true)
+        this.getDevices(this.devices.productid, true)
         this.getChannel(this.devices.productid)
         this.getDict()
       }).catch(e => {
@@ -691,37 +690,44 @@ export default {
       })
     },
     getChannel(objectid) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend('Channel')
-      // var channel = new Parse.Query(Channel)
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Product()
-      // product.id = objectid
-      // channel.equalTo('product', product)
-      // channel.equalTo('type', '1')
-      // channel.find().then(resultes => {
-      //   this.channellist = resultes
-      //   this.devices.subtopic = resultes[0].id
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const type = "1"
+      const product = { __type: "Pointer", className: "Product", objectId: objectid }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
+        if (res.count > 0) {
+          this.channellist = res.results
+          this.devices.subtopic = res.results[0].id
+        } else {
+          this.channellist = {}
+          this.devices.subtopic = ""
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     // 设备
     getDevices(productid, isfirst) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Devices = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Devices)
-      // devices.equalTo('product', productid)
-      // devices.skip((this.formData.pageIndex - 1) * this.formData.pageSize)
-      // devices.limit(this.formData.pageSize)
-      // devices.find().then(deviceresultes => {
-      //   this.devicelist = [...this.devicelist, ...deviceresultes]
-      //   if (isfirst) {
-      //     this.devices.devicedevaddr = this.$route.query.deviceid
-      //   }
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const params = {
+        limit: this.formData.pageSize,
+        skip: (this.formData.pageIndex - 1) * this.formData.pageSize,
+        keys: 'count(*)',
+        include: 'product',
+        where: {
+          "product": productid
+        }
+      }
+      this.$queryDevice(params).then(res => {
+        if (res.count > 0) {
+          this.devicelist = res.results
+          this.devices.devicedevaddr = res.results[0].devaddr
+        }
+        if (isfirst) {
+          this.devices.devicedevaddr = this.$route.query.deviceid
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     // 选择产品
     selsectProduct(value) {
