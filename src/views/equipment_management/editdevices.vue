@@ -192,9 +192,9 @@
                       <div
                         v-if="key.dataType.type=='double'||key.dataType.type=='float'||key.dataType.type=='int'"
                         class="stla">
-                        <span>{{ key.name+':' }}</span>
-                        <span>{{ key.value }}</span>
-                        <span v-if="key.dataType.specs.unit">{{ key.dataType.specs.unit }}</span>
+                        <span>{{ key.name+':' }}ee</span>
+                        <span>{{ key.value }}aa</span>
+                        <span v-if="key.dataType.specs.unit">{{ key.dataType.specs.unit }}rr</span>
                       </div>
                       <div v-if="key.dataType.type=='enmu'||key.dataType.type=='bool'" class="stla">
                         <span>{{ key.name+':' }}</span>
@@ -767,40 +767,42 @@ export default {
       var vm = this
       this.deviceid = this.$route.query.deviceid
       this.ischildren = this.$route.query.ischildren
-      const resultes = await this.$get_object('Device', this.deviceid)
-      if (resultes.objectId && resultes.product.objectId) {
-        // 产品
-        const resproduct = await this.$get_object('Product', resultes.product.objectId)
-        var obj = {}
-        this.productid = this.$objGet(resultes, 'product.objectId')
-        this.devicedevaddr = this.$objGet(resultes, 'devaddr')
-        obj.id = resultes.objectId
-        obj.createdAt = utc2beijing(resultes.createdAt)
-        obj.productName = this.$objGet(resproduct, 'name')
-        obj.productid = this.$objGet(resultes, 'product.objectId')
-        obj.address = this.$objGet(resultes, 'address')
-        // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
-        obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'resultes.updatedAt'))
-        obj.ip = this.$objGet(resultes, 'ip')
-        obj.basedata = JSON.stringify(resultes.basedata)
-        obj.DeviceName = resultes.name
-        obj.status = resultes.status
-        obj.desc = this.$objGet(resultes, 'desc')
-        obj.devaddr = this.$objGet(resultes, 'devaddr')
-        obj.nodeType = this.$objGet(resproduct, 'nodeType')
-        obj.devType = this.$objGet(resproduct, 'devType')
-        obj.productSecret = this.$objGet(resproduct, 'productSecret')
-        // const thingTemp = this.$objGet(resultes, 'product.thing')
-        vm.properties = JSON.parse(
-          JSON.stringify(this.$objGet(resproduct, 'thing.properties'))
-        )
-        if (vm.properties) {
-          vm.properties.map(items => {
-            dataobj[items['identifier']] = {
-              expectedData: [],
-              actualData: [],
-              results: [],
-              title:
+      getTdDevice(this.deviceid).then(res => {
+        if (res.results.length > 0) {
+          var resultes = res.results[0]
+          console.log(resultes, 'resproduct')
+          // 产品
+          var obj = {}
+          this.productid = this.$objGet(resultes, 'product.objectId')
+          this.devicedevaddr = this.$objGet(resultes, 'devaddr')
+          obj.id = resultes.objectId
+          obj.createdAt = utc2beijing(resultes.createdAt)
+          obj.productName = this.$objGet(resultes, 'name')
+          obj.productid = this.$objGet(resultes, 'product.objectId')
+          obj.address = this.$objGet(resultes, 'address')
+          // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
+          // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
+          obj.ip = this.$objGet(resultes, 'ip')
+          obj.basedata = JSON.stringify(resultes.basedata)
+          obj.DeviceName = resultes.name
+          obj.status = resultes.status
+          obj.desc = this.$objGet(resultes, 'desc')
+          obj.devaddr = this.$objGet(resultes, 'devaddr')
+          obj.nodeType = this.$objGet(resultes, 'product.nodeType')
+          obj.devType = this.$objGet(resultes, 'product.devType')
+          obj.productSecret = this.$objGet(resultes, 'product.productSecret')
+          const tddata = this.$objGet(resultes, 'tddata')
+          // const thingTemp = this.$objGet(resultes, 'product.thing')
+          vm.properties = JSON.parse(
+            JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
+          )
+          if (vm.properties) {
+            vm.properties.map(items => {
+              dataobj[items['identifier']] = {
+                expectedData: [],
+                actualData: [],
+                results: [],
+                title:
                   items['dataType']['type'] === 'int' ||
                   items['dataType']['type'] === 'float' ||
                   items['dataType']['type'] === 'double'
@@ -809,45 +811,42 @@ export default {
                     items['dataType']['specs']['unit'] +
                     ')'
                     : items['name'],
-              data: [],
-              max: 0
-            }
-          })
-        } else {
-          console.log('product resultes none')
-        }
-        this.devicedetail = obj
+                data: [],
+                max: 0
+              }
+            })
+          } else {
+            console.log('product resultes none')
+          }
+          this.devicedetail = obj
 
-        if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
-          this.activeName = 'children'
-          this.isshowchild = true
-          this.getDevices()
+          if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
+            this.activeName = 'children'
+            this.isshowchild = true
+            this.getDevices()
 
-          /* product.find().then(resultes => {
-                    console.log('产品列表 ###');
-                    this.allProudct = resultes;
-                  }); */
-          this.allProudct = resproduct
+            this.allProudct = resultes.product
+          } else {
+            console.log("this.$route.query.nodeType", this.$route.query.nodeType)
+            console.log("this.ischildren", this.ischildren)
+            this.ischildren == 'false'
+            this.isshowchild = true
+          }
+          // 初始化物模型数据
+          this.isupdate = true
+          // this.Update()
+          this.updateTrue(true)
+          if (resultes.product.topics) {
+            this.topicData = resultes.product.topics.concat(
+              this.topic
+            )
+          } else {
+            this.topicData = this.topic
+          }
         } else {
-          console.log("this.$route.query.nodeType", this.$route.query.nodeType)
-          console.log("this.ischildren", this.ischildren)
-          this.ischildren == 'false'
-          this.isshowchild = true
+          this.$message('objectId 未返回')
         }
-        // 初始化物模型数据
-        this.isupdate = true
-        // this.Update()
-        this.updateTrue(true)
-        if (resultes.product.topics) {
-          this.topicData = resultes.product.topics.concat(
-            this.topic
-          )
-        } else {
-          this.topicData = this.topic
-        }
-      } else {
-        this.$message('objectId 未返回')
-      }
+      })
     },
     Update() {
       function deteleObject(obj) {
@@ -879,7 +878,7 @@ export default {
       // this.deviceid 李宏杰修改
       getTdDevice(this.deviceid) // 此方法数据渲染还需调整 todo
         .then(response => {
-          console.log(response, "response")
+          // console.log(response, "response")
           if (response) {
             if (response.results && response.results.length != 0) {
               vm.thirdData.unshift({
@@ -890,23 +889,12 @@ export default {
             vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
             // 动态$set,数据更新试图也一样更新，如果只是遍历的话试图回更新过慢
             if (vm.properties && response.results) {
-              // vm.properties.map((item, index) => {
-              //   response.results.map((updatedata, updatedindex) => {
-              //   //  for ( var i = 0; i < response.results. )
-              //   console.log(updatedata[item.identifier])
-              //     if (item.identifier == updatedata.identifier) {
-              //       var obj = response.results[updatedindex]
-              //       vm.$set(vm.properties[index], 'value', updatedata[item.identifier])
-              //     }
-              //  })
-              // })
-              // console.log(vm.properties)
               vm.properties.map((item, index) => {
-                for (var key in response.results[0]) {
+                for (var key in response.results[0].tddata[index].data) {
                   if (item.identifier.toLowerCase() == key.toLowerCase()) {
-                    item.createdat = response.results[0].createdat
+                    item.createdat = response.results[0].createdAt
                     //    console.log(key,vm.properties[index], response.results[0][key])
-                    vm.$set(vm.properties[index], 'value', response.results[0][key])
+                    vm.$set(vm.properties[index], 'value', response.results[0].tddata[index].data[key])
                   }
                 }
               })
@@ -919,31 +907,9 @@ export default {
                     if (dataobj[key].results && dataobj[key].results.length > 0) {
                       dataobj[key].results = Array.from(new Set(dataobj[key].results.unshift(item)))
                     }
-                    //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
-                    // dataobj[key].max =
                   }
                 }
               }
-
-              // for (var key in dataobj) {
-              response.results.map(items => {
-                //   console.log('items',items, key.toLowerCase() ,items.identifier)
-                //    // dataobj[key].expectedData.push(items.value)
-                //    dataobj[key].expectedData.push(25)
-                //     dataobj[key].actualData.push(
-                //      items.createdat
-                //     )
-                //     console.log(dataobj[key].actualData)
-                //     if (dataobj[key].results && dataobj[key].results.length > 0) {
-                //       dataobj[key].results.unshift(items)
-                //     }
-                //     //dataobj[key].max = this.$objGet(items, 'dataType.specs.max')
-                //      dataobj[key].max =100
-                // //  }
-
-                console.log("items items", items)
-              })
-              // }
             }
           }
         })
@@ -969,15 +935,15 @@ export default {
     },
     // 定时器启动
     updateTrue(event) {
-      // this.ispushdata = false
-      // if (event == true) {
-      //   this.timer = window.setInterval(() => {
-      //     this.Update()
-      //   }, 5000)
-      // } else {
-      //   window.clearInterval(this.timer)
-      //   this.timer = null
-      // }
+      this.ispushdata = false
+      if (event == true) {
+        this.timer = window.setInterval(() => {
+          this.Update()
+        }, 5000)
+      } else {
+        window.clearInterval(this.timer)
+        this.timer = null
+      }
     },
     // 实时数据的分页
     dataDeviceSizeChange(val) {
