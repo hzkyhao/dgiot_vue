@@ -270,7 +270,7 @@
 </template>
 <script>
 import { subupadte } from '@/api/System/index'
-import { resourceTypes } from '@/api/rules'
+import { resourceTypes } from '@/api/Rules'
 import { returnLogin } from '@/utils/return'
 var subdialog
 import { Websocket, sendInfo, TOPIC_EMPTY, MSG_EMPTY, DISCONNECT_MSG } from '@/utils/wxscoket.js'

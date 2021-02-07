@@ -230,7 +230,7 @@
 <script>
 var editor1
 var editor2
-import { addRule, ruleTest, postResource } from '@/api/rules'
+import { addRule, ruleTest, postResource } from '@/api/Rules'
 
 export default {
   data() {

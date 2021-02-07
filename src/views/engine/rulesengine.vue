@@ -54,7 +54,7 @@
   </div>
 </template>
 <script>
-import { getRule, ruleDelete } from '@/api/rules'
+import { getRule, ruleDelete } from '@/api/Rules'
 export default {
   data() {
     return {

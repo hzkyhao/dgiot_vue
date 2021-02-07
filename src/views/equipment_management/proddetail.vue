@@ -2265,7 +2265,7 @@ import { getDeviceCountByProduct } from "@/api/Device/index";
 import { getProduct } from "@/api/Product/index";
 import { getAllunit, getDictCount } from "@/api/Dict/index";
 import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
-import { getRule, ruleDelete } from "@/api/rules";
+import { getRule, ruleDelete } from "@/api/Rules";
 import Cookies from "js-cookie";
 var editor;
 var editor1;
