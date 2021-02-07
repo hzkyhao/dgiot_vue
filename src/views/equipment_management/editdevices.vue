@@ -206,7 +206,7 @@
 
                   <div class="ta">
                     <span class="fontSize">{{ $t('equipment.updatetime')+':' }}</span>
-                    <span v-if="item.createdat" class="fontSize" @click="print(properties)">{{ item.createdat.substring(0, 19) }}</span>
+                    <span v-if="item.createdat" class="fontSize" @click="print(properties)">{{ timestampToTime(item.createdat) }}</span>
                   </div>
                   <div class="ta">
                     <el-link :underline="false" type="primary" @click="dataDetail(item)">查看数据</el-link>
@@ -215,6 +215,8 @@
               </ul>
             </div>
             <div v-if="isshowtable" class="thirdtable">
+              <!--运行状态表格-->
+
               <el-table
                 :data="thirdData.slice((thirdstart-1)*thirdlength,thirdstart*thirdlength)"
                 style="width: 100%;text-align:center;margin-top:10px"
@@ -252,7 +254,7 @@
             </div>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
+        <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
                 <el-tab-pane label="服务调用" name="sixth">服务调用</el-tab-pane>
                 <el-tab-pane label="设备影子" name="seventh">设备影子</el-tab-pane>
         <el-tab-pane label="日志服务" name="eighth">日志服务</el-tab-pane>-->
@@ -762,7 +764,7 @@ export default {
       // })
     },
 
-    // 实时刷新
+    // 详情
     async getDeviceDetail() {
       var vm = this
       this.deviceid = this.$route.query.deviceid
@@ -867,13 +869,13 @@ export default {
             stringify[str] = true;
           }
         }
-        uniques = uniques;
+        // uniques = uniques;
         return uniques;
       }
 
       var vm = this
 
-      console.log('实时刷新')
+      // console.log('实时刷新')
 
       // this.deviceid 李宏杰修改
       getTdDevice(this.deviceid) // 此方法数据渲染还需调整 todo
@@ -883,27 +885,31 @@ export default {
             if (response.results && response.results.length != 0) {
               vm.thirdData.unshift({
                 time: timestampToTime(Math.ceil(new Date().getTime() / 1000)),
-                value: JSON.stringify(response.results)
+                value: JSON.stringify(response.results[0].tddata[0].data)
               })
             }
+            // console.log('vm.properties1',vm.properties)
             vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
             // 动态$set,数据更新试图也一样更新，如果只是遍历的话试图回更新过慢
             if (vm.properties && response.results) {
               vm.properties.map((item, index) => {
-                for (var key in response.results[0].tddata[index].data) {
+                for (var key in response.results[0].tddata[0].data) {
                   if (item.identifier.toLowerCase() == key.toLowerCase()) {
-                    item.createdat = response.results[0].createdAt
+                    item.createdat = response.results[0].lasttime
                     //    console.log(key,vm.properties[index], response.results[0][key])
-                    vm.$set(vm.properties[index], 'value', response.results[0].tddata[index].data[key])
+                    vm.$set(vm.properties[index], 'value', response.results[0].tddata[0].data[key])
                   }
                 }
               })
 
+              // console.log("dataobj", dataobj)
               for (var key in dataobj) {
-                for (var item in response.results[0]) {
+                for (var item in response.results[0].tddata[0].data) {
                   if (key.toLowerCase() == item.toLowerCase()) {
-                    dataobj[key].expectedData = Array.from(new Set(dataobj[key].expectedData.push(response.results[0][item])))
-                    dataobj[key].actualData = Array.from(new Set(dataobj[key].actualData.push(response.results[0]['createdat'].substring(0, 19))))
+                    // dataobj[key].expectedData = Array.from(new Set(dataobj[key].expectedData.push(response.results[0].tddata[0].data[item])))
+                    dataobj[key].expectedData.push(response.results[0].tddata[0].data[item])
+                    // dataobj[key].actualData = Array.from(new Set(dataobj[key].actualData.push(response.results[0].createdAt.substring(0, 19))))
+                    dataobj[key].actualData.push((response.results[0].createdAt).substring(0, 19))
                     if (dataobj[key].results && dataobj[key].results.length > 0) {
                       dataobj[key].results = Array.from(new Set(dataobj[key].results.unshift(item)))
                     }
@@ -912,13 +918,13 @@ export default {
               }
             }
           }
-        })
-        .catch(error => {
+        }).catch(error => {
           console.log('update error 清除timer', error)
           window.clearInterval(vm.timer)
           this.isupdate = false
         })
     },
+
     dataDetail(item) {
       this.datadialogVisible = true
       var lineChartData = {}

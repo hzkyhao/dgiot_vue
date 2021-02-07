@@ -178,57 +178,7 @@
                 width="60%"
                 top="1vh"
               >
-                <!-- <el-form :model="form" :rules="formrule" ref="form">
-                  <el-row style="border:0">
-                    <el-col :span="20">
-                      <el-form-item label="动作" prop="action">
 
-                        <el-popover
-                          placement="top-start"
-                          width="200"
-                          trigger="hover"
-                          content="动作类型"
-                        >
-                          <i class="el-icon-question" slot="reference" style="color:#71737d;"></i>
-                        </el-popover>
-
-                        <el-select v-model="form.action" @change="selectaction" disabled>
-
-                          <el-option v-for="(action,index) in actionslist" :key="index" :label="action.description.zh" :value="action.name"></el-option>
-
-                        </el-select>
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2" style="margin-left:20px;min-width:100px">
-                      <el-link type="primary" :underline="false" style="line-height:8" @click="openDialog">新建资源</el-link>
-                    </el-col>
-
-                  </el-row>
-                  <el-row style="border:0">
-                     <el-col
-                      :span="20"
-                      v-if="form.action!='do_nothing'"
-                    >
-                      <el-form-item
-                        label="关联资源"
-                        prop="resource"
-                        :rules="
-                            [{required:true,message:'请选择资源',trigger:'change'}]
-                          "
-                      >
-                        <el-select v-model="form.resource" @change="selectResource">
-                          <el-option
-                            v-for="(item,index) in resourcelist"
-                            :key="index"
-                            :label="item.id"
-                            :value="item.id"
-                          ></el-option>
-                        </el-select>
-
-                      </el-form-item>
-                    </el-col>
-                  </el-row>
-                </el-form> -->
                 <el-table :data="channellist" height="400" style="width: 100%">
                   <el-table-column :label="$t('developer.channelnumber')" align="center">
                     <template slot-scope="scope">
@@ -240,17 +190,6 @@
                       <span>{{ scope.row.name }}</span>
                     </template>
                   </el-table-column>
-                  <!-- <el-table-column :label="$t('developer.channeladdr')" width="200" align="center">
-                  <template slot-scope="scope">
-                    <span>{{'channel/'+scope.row.id}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="$t('developer.channeltype')" align="center">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.attributes.type==1">{{$t('developer.collectionchannel')}}</span>
-                    <span v-else>{{$t('developer.resourcechannel')}}</span>
-                  </template>
-                </el-table-column> -->
                   <el-table-column :label="$t('developer.servicetype')" align="center">
                     <template slot-scope="scope">
                       <span>{{ scope.row.cType }}</span>
@@ -276,10 +215,6 @@
                     @current-change="allChannelCurrentChange"
                   />
                 </div>
-                <!-- <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="addData">确 定</el-button>
-                </div> -->
               </el-dialog>
             </div>
           </div>
@@ -290,52 +225,13 @@
         </el-form>
       </el-card>
     </div>
-    <!-- <el-dialog title="Resource" :visible.sync="dialogVisible" width="40%" top="1vh">
-          <el-form :model="resourceform" label-width="120px" :rules="resourcerule" ref="resourceform">
-            <el-row style="border:0">
-              <el-col :span="11">
-            <el-form-item label="通道类别" prop="region">
-
-              <el-select v-model="resourceform.region" placeholder="请选择通道类型" style="width:100%">
-                <el-option label="资源/采集通道" value="data_resource"></el-option>
-              </el-select>
-            </el-form-item>
-              </el-col>
-              </el-row>
-
-             <el-row style="border:0">
-              <el-col :span="11">
-            <el-form-item label="通道编号" prop="objectId">
-             <el-select v-model="resourceform.objectId" placeholder="请选择通道编号" style="width:100%">
-                <el-option v-for="(item,index) in channellist" :label="item.attributes.name" :key="index" :value="item.id"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-            <el-col :span="11">
-            <el-form-item label="通道描述" prop="desc">
-             <el-input v-model="resourceform.desc" autocomplete="off"></el-input>
-            </el-form-item>
-            </el-col>
-            </el-row>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addRes('resourceform')">确 定</el-button>
-          </div>
-        </el-dialog> -->
   </div>
 </template>
 <script>
 var editor1
 var editor2
-var editormodel
-var editorcreate
-var editorinsert
-var editorsubtable
-// import datalist from "./datalist";
-import { addRule, ruleTest, getActions, getResource, postResource } from '@/api/rules'
+import { addRule, ruleTest, postResource } from '@/api/rules'
 
-import { returnLogin } from '@/utils/return'
 export default {
   data() {
     return {
@@ -585,7 +481,7 @@ export default {
       const params = {
         keys: 'count(*)',
         limit: this.allChannelstart,
-        where:{}
+        where: {}
       }
       this.$query_object('Channel', params).then(res => {
         this.allChanneltotal = res.count
@@ -771,3 +667,4 @@ export default {
   // }
 }
 </style>
+

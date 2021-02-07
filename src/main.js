@@ -20,7 +20,7 @@ import i18n from "./common/language";
 import echarts from "echarts";
 import VueResource from "vue-resource";
 import "@/icons"; // icon
-import "@/api/batch"
+// import "@/api/batch"
 import "./assets/iconfont/iconfont.css";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
