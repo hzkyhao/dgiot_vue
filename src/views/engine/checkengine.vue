@@ -96,7 +96,7 @@
   </div>
 </template>
 <script>
-import { getRuleDetail } from '@/api/rules'
+import { getRuleDetail } from '@/api/Rules'
 export default {
   data() {
     return {
