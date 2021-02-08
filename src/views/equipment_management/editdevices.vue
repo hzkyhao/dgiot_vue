@@ -323,7 +323,7 @@
                 </el-table-column>
                 <el-table-column label="子网地址" align="center">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.route[devicedetail.devaddr] }}</span>
+                    <span>{{ scope.row.route == undefined ? "" : scope.row.route[devicedetail.devaddr] }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('equipment.product')" align="center">
@@ -458,8 +458,8 @@
                     <el-option
                       v-for="(item,index) in productDevices"
                       :key="index"
-                      :label="item.attributes.devaddr"
-                      :value="item.id"
+                      :label="item.devaddr"
+                      :value="item.objectId"
                     />
                   </el-select>
                 </el-form-item>
@@ -731,37 +731,37 @@ export default {
         skip: this.childrenDeviceStart,
         keys: 'count(*)',
         include: 'product',
-        where: {
-
-        }
+        parentId: this.deviceId,
+        where: {}
       }
       if (this.childrendevices.devicesname != '') {
         params.where.devaddr = this.childrendevices.devicesname
       }
-      // this.$queryDevice(params).then(res => {
-      //   this.childrenDeviceTotal = res.count
-      //   if (res.results) {
-      //     res.results.map(items => {
-      //       var obj = {}
-      //       obj.id = items.id
-      //       obj.name = items.name
-      //       obj.lastOnlineTime = this.$dateFormat(
-      //         this.$objGet(items, 'attributes.tag.attributes.lastOnlineTime')
-      //       )
-      //       obj.status = items.status
-      //       obj.originstatus = items.status
-      //       obj.nodeType = items.product.nodeType
-      //       obj.productName = items.product.name
-      //       obj.devaddr = items.devaddr
-      //       obj.isEnable = items.isEnable
-      //       obj.route = items.route
-      //       this.devicesTableData.push(obj)
-      //     })
-      //   }
-      // }).catch(err => {
-      //   console.log(err)
-      //   this.$baseMessage('请求出错', err.error, 3000)
-      // })
+      this.$queryDevice(params).then(res => {
+        // console.log('aaaaa', res)
+        this.childrenDeviceTotal = res.count
+        if (res.results) {
+          res.results.map(items => {
+            var obj = {}
+            obj.objectId = items.objectId
+            obj.name = items.name
+            // obj.lastOnlineTime = this.$dateFormat(
+            //   this.$objGet(items, 'tag.lastOnlineTime')
+            // )
+            obj.status = items.status
+            obj.originstatus = items.status
+            obj.nodeType = items.product.nodeType
+            obj.productName = items.product.name
+            obj.devaddr = items.devaddr
+            obj.isEnable = items.isEnable
+            obj.route = items.route
+            this.devicesTableData.push(obj)
+          })
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
 
     // 详情
@@ -798,6 +798,7 @@ export default {
           vm.properties = JSON.parse(
             JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
           )
+          console.log('vm.properties', vm.properties)
           if (vm.properties) {
             vm.properties.map(items => {
               dataobj[items['identifier']] = {
@@ -826,11 +827,11 @@ export default {
             this.activeName = 'children'
             this.isshowchild = true
             this.getDevices()
-
-            this.allProudct = resultes.product
+            const params = {}
+            this.$queryProduct(params).then(res => {
+              this.allProudct = res.results
+            })
           } else {
-            console.log("this.$route.query.nodeType", this.$route.query.nodeType)
-            console.log("this.ischildren", this.ischildren)
             this.ischildren == 'false'
             this.isshowchild = true
           }
@@ -981,28 +982,27 @@ export default {
     checkProduct(val) {
       this.ischange = true
       this.selectproduct = val
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Devices = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Devices)
+
       // devices.equalTo('product', val)
       // devices.notEqualTo('objectId', this.deviceid)
-
       // devices.notEqualTo('parentId', this.deviceid)
-      // devices.skip((this.dirstart - 1) * this.dirlength)
-      // devices.limit(this.dirlength)
-      // devices.find().then(
-      //   response => {
-      //     if (response && response.length > 0) {
-      //       this.productDevices = [...response]
-      //     } else {
-      //       this.productDevices = []
-      //     }
-      //     this.childrenForm.device = ''
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
+
+      const params = {
+        limit: this.dirlength,
+        skip: (this.dirstart - 1) * this.dirlength,
+        keys: 'count(*)',
+        where: {
+          "product": val
+        }
+      }
+      this.$queryDevice(params).then(response => {
+        if (response.results && response.results.length > 0) {
+          this.productDevices = response.results
+        } else {
+          this.productDevices = []
+        }
+        this.childrenForm.device = ''
+      })
     },
     deviceToDetail(row) {
       this.$router.push({
@@ -1028,27 +1028,38 @@ export default {
           // var Devices = Parse.Object.extend('Device')
           // var devices = new Parse.Query(Devices)
           // var devices1 = new Devices()
-          // devices.get(this.childrenForm.device).then(
-          //   response => {
-          //     devices1.id = this.deviceid
-          //     response.set('parentId', devices1)
-          //     response.set('route', route)
-          //     response.save().then(resultes => {
-          //       if (resultes) {
-          //         this.$message({
-          //           type: 'success',
-          //           message: '添加成功'
-          //         })
-          //         this.childDialog = false
-          //         this.getDevices()
-          //         this.$refs['childrenForm'].resetFields()
-          //       }
-          //     })
-          //   },
-          //   error => {
-          //     returnLogin(error)
-          //   }
-          // )
+          // this.$getDevice(this.childrenForm.device).then(response => {
+          //   console.log("response", response)
+          //   devices1.id = this.deviceid
+          //   response.set('parentId', this.deviceid)
+          //   response.set('route', route)
+          //   response.save().then(resultes => {
+          //
+          //   })
+          // })
+          var childrenDevicesParmas = {
+            'product': {
+              '__type': 'Pointer',
+              'className': 'Product',
+              'objectId': this.childrenForm.product
+            },
+            "parentId": this.childrenForm.device,
+            "route": this.childrenForm.route,
+            'status': 'OFFLINE',
+            'isEnable': false,
+            "lastOnlineTime": 0
+          }
+          this.$postDevice(childrenDevicesParmas).then(resultes => {
+            if (resultes) {
+              this.$message({
+                type: 'success',
+                message: '添加成功'
+              })
+              this.childDialog = false
+              this.getDevices()
+              this.$refs['childrenForm'].resetFields()
+            }
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -1227,7 +1238,6 @@ export default {
     },
     // 查看历史数据
     /**/
-
     handleClick(val) {
     }
   }

@@ -796,7 +796,7 @@ export default {
       );
     },
     goEdit(row) {
-      console.log(row);
+      // console.log(row);
       // #topoUrl
       // window.open(
       //   `${window.location.origin}/spa/#/equipment?devaddr=${row.devaddr}&productid=${row.productid}`,
@@ -1053,7 +1053,7 @@ export default {
       results.map(items => {
         var obj = {}
         obj.status = this.$objGet(items, 'status')
-        obj.id = items.objectId;
+        obj.objectId = items.objectId;
         obj.name = items.name ? items.name : "";
         obj.originstatus = this.$objGet(items, "status");
         obj.nodeType = this.$objGet(items, "product.nodeType");
@@ -1093,7 +1093,7 @@ export default {
         obj.createdAt = items.createdAt ? items.createdAt : ''
         obj.productid = this.$objGet(items, 'product.id')
         if (items.tag) {
-          obj.tagid = _this.$objGet(items, 'tag.id')
+          obj.tagid = this.$objGet(items, 'tag.id')
           if (items.tag.location) {
             obj.latitude = items.tag.location._latitude
             obj.longitude = items.tag.location._longitude
@@ -1447,7 +1447,7 @@ export default {
     /* el-popover点击关闭*/
     makeSure(scope) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
-      this.$deleteDevice(scope.row.id).then(response => {
+      this.$deleteDevice(scope.row.objectId).then(response => {
         if (!response.error) {
           this.initQuery('删除成功', 'success')
           scope._self.$refs[`popover-${scope.$index}`].doClose();
@@ -1486,7 +1486,7 @@ export default {
     },
     /* device添加表单提交*/
     editorDevice(row) {
-      this.deviceid = row.id;
+      this.deviceid = row.objectId;
       this.devicedialogVisible = true;
       this.deviceform = {
         devaddr: row.devaddr,

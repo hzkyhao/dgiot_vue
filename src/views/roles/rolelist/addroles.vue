@@ -247,7 +247,7 @@ export default {
         tempname: this.roleFormObj.dictvalue
       }
       this.$axiosWen
-        .post('/role', params)
+        .post('iotapi/role', params)
         .then(res => {
           console.log(res)
           this.$message({

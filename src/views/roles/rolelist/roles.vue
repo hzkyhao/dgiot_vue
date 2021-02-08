@@ -204,17 +204,17 @@
         <el-table-column type="selection" width="55" />
         <el-table-column :label="$t('user.name')" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.name }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('user.Remarks')" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.attributes.desc }}</span>
+            <span>{{ scope.row.desc }}</span>
           </template>
         </el-table-column>
         <el-table-column label="ID" align="center">
           <template slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
+            <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -409,7 +409,7 @@ export default {
     },
     add() {
       this.$router.push({
-        path: '/roles/editroles',
+        path: 'iotapi/roles/editroles',
         query: {
           insert: 0
         }
@@ -422,27 +422,28 @@ export default {
     addacl() {
       // var Role = Parse.Object.extend('_Role')
       // var role = new Parse.Query(Role)
-      // role.get(this.objectId).then(object => {
-      //   let acl = new Parse.ACL()
-      //   this.multipleSelection.map(item => {
-      //     acl.setRoleReadAccess(item.attributes.name, true)
-      //     acl.setRoleWriteAccess(item.attributes.name, true)
-      //     object.set('ACL', acl)
-      //   })
-      //   object.save().then(
-      //     res => {
-      //       this.$message({
-      //         type: 'success',
-      //         message: '添加成功!'
-      //       })
-      //       this.centerDialogVisible = false
-      //       this.getRolesList()
-      //     },
-      //     error => {
-      //       console.log(error)
-      //     }
-      //   )
-      // })
+      // role.get(this.objectId)
+      this.$get_object('_Role', this.objectId).then(object => {
+        // let acl = new Parse.ACL()
+        // this.multipleSelection.map(item => {
+        //   acl.setRoleReadAccess(item.attributes.name, true)
+        //   acl.setRoleWriteAccess(item.attributes.name, true)
+        //   object.set('ACL', acl)
+        // })
+        // console.log('sss',this.multipleSelection)
+        // object.save()
+        // const params = {
+        //   ACL =
+        // }
+        // create_object('_Role',params).then(res => {
+        //     this.$message({
+        //       type: 'success',
+        //       message: '添加成功!'
+        //     })
+        //     this.centerDialogVisible = false
+        //     this.getRolesList()
+        //   })
+      })
     },
     //关闭菜单弹窗
     handleClose() {
@@ -675,7 +676,7 @@ export default {
         })
         console.log(row, 'row', row)
         this.$axios
-          .put('/role', {
+          .put('iotapi/role', {
             objectId: this.roleItem.objectId,
             name: row.name,
             alias: row.alias,
@@ -702,17 +703,23 @@ export default {
     exportRoletemp(row) {
       this.$axiosWen
         .post(
-          '/roletemp?name=' +
+          'iotapi/roletemp?name=' +
             row.name +
             '&tempname=' +
             row.name
         )
         .then(response => {
-          console.log('response', response)
+          // console.log('response', response)
+          if(response){
+            this.$message({
+                    type: 'success',
+                    message: '保存模板成功'
+                  })
+          }
         })
     },
     updaterole() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       // var roles = Parse.Object.extend('_Role')
       // var query = new Parse.Query(roles)
       // query.get(this.editroleid).then(resultes => {
@@ -727,6 +734,20 @@ export default {
       //   this.roleEdit = false
       //   this.getRolesList()
       // })
+      const params = {
+        alias:this.form.alias,
+        desc:this.form.desc
+      }
+      this.$update_object(this.editroleid,params).then(res => {
+        this.$message({
+          type: 'success',
+          message: '更新成功'
+        })
+        this.roleEdit = false
+        this.getRolesList()
+      })
+
+
     },
     handleNodeClick(data) {
       this.getRolesList(0, data)

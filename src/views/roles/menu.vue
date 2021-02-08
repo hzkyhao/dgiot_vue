@@ -341,8 +341,8 @@ export default {
   },
   methods: {
     getRole() {
-      queryMenu({}).then(results => {
-        results.map(item => {
+      queryMenu({}).then(res => {
+        res.results.map(item => {
           var obj = {};
           obj.objectId = item.id;
           obj.alias = item.alias;
@@ -658,43 +658,40 @@ export default {
         }
       ];
       //  this.data=[]
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       const params = {
       }
-      queryMenu(params)
-        .then(
-          resultes => {
-            resultes.map(items => {
-              var obj = {};
-              obj.name = items.name;
-              obj.objectId = items.objectId;
-              obj.icon = items.icon;
-              obj.parent = items.parent.id;
-              obj.createtime = utc2beijing(items.createdAt);
-              obj.number = items.orderBy;
-              obj.url = items.url;
-              obj.isshowtop = [];
-              obj.showobjectId = [];
-              obj.showtopmenu = "";
-              if (items.attributes.navShow) {
-                items.attributes.navShow.map(navshow => {
-                  var roleobj = {};
-                  roleobj.name = navshow.alias;
-                  roleobj.value = navshow.roleId;
-                  obj.isshowtop.push(navshow.alias);
-                  obj.showobjectId.push(navshow.roleId);
-                });
-                obj.showtopmenu = obj.isshowtop.join(",");
-
-                this.data.push(obj);
-              } else {
-                this.data.push(obj);
-              }
+      queryMenu(params).then(res => {
+        res.results.map(items => {
+          var obj = {};
+          obj.name = items.name;
+          obj.objectId = items.objectId;
+          obj.icon = items.icon;
+          obj.parent = items.parent.objectId;
+          obj.createtime = utc2beijing(items.createdAt);
+          obj.number = items.orderBy;
+          obj.url = items.url;
+          obj.isshowtop = [];
+          obj.showobjectId = [];
+          obj.showtopmenu = "";
+          if (items.navShow) {
+            items.navShow.map(navshow => {
+              var roleobj = {};
+              roleobj.name = navshow.alias;
+              roleobj.value = navshow.roleId;
+              obj.isshowtop.push(navshow.alias);
+              obj.showobjectId.push(navshow.roleId);
             });
+            obj.showtopmenu = obj.isshowtop.join(",");
+
+            this.data.push(obj);
+          } else {
+            this.data.push(obj);
           }
-        ).catch(e => {
-          console.log("queryMenu ", e.error)
         });
+      }).catch(e => {
+        console.log("queryMenu error", e.error)
+      });
     }
   }
 };
