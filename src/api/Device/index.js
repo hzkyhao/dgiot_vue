@@ -58,8 +58,8 @@ export async function getTdDevice(objectId) {
     "order": "-createdAt",
     "where": { "objectId": objectId }
   }
-  console.info("params", initData)
-  console.log(new Date())
+  // console.info("params", initData)
+  // console.log(new Date())
   return request({
     url: `iotapi/device`,
     method: "post",

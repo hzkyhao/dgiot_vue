@@ -731,7 +731,7 @@ export default {
       //   }
       // )
       this.$axiosWen.get('iotapi/roletree').then(res => {
-        console.log(res)
+        // console.log(res)
         this.allApps = res.results
       }).catch(e => {
         console.log(e)
@@ -954,8 +954,7 @@ export default {
               productSecret: productSecret,
               ACL: setAcl,
               topics: [],
-              dynamicReg: false,
-              thing: undefined
+              dynamicReg: false
             }
             params = Object.assign(initparams, addparams)
             this.createProduct(params)

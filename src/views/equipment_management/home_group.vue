@@ -488,6 +488,12 @@ export default {
           return false;
         }
       });
+      // for (let i = 1; i <= 1000; i++) {
+      //   const groupname = "Repository_" + ("0000" + i).slice(-4)
+      //
+      //   // console.log('sss',groupname)
+      //   addGroup(groupname)
+      // }
     },
     resetForm() {
       this.$refs['addGroup'].resetFields();
@@ -835,7 +841,7 @@ export default {
       }
       queryDevice(params)
         .then(results => {
-          console.log(results, "jkjjjj")
+          // console.log(results, "jkjjjj")
           if (results.count > 0) {
             this.$message('请先删除该产品下设备')
             return
