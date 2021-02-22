@@ -1,7 +1,7 @@
 /*
  * @Author: h7ml
  * @Date: 2021-02-01 16:45:26
- * @LastEditTime: 2021-02-02 17:56:46
+ * @LastEditTime: 2021-02-22 11:11:56
  * @Description: this.Batchdelete('Dict', ['id1','id2'])
  * @FilePath: \platform\src\api\batch\index.js
  */
@@ -65,6 +65,6 @@ export async function batch(data) {
     data: { requests: data }
   });
 }
-Vue.prototype.$batch = batch
+Vue.prototype.$methodBatch = batch
 Vue.prototype.$postBatch = Batchdelete
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-02 17:52:06
- * @LastEditTime: 2021-02-02 17:53:35
+ * @LastEditTime: 2021-02-22 11:15:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \platform\src\views\equipment_management\platform_overview.vue
@@ -141,6 +141,7 @@
   </div>
 </template>
 <script>
+import { batch } from "@/api/Batch/index"
 export default {
   components: {
   },
@@ -240,8 +241,7 @@ export default {
             }
           }
         ]
-
-      await this.$batch(requests).then(res => {
+      await batch(requests).then(res => {
         this.project_count = res[0].success ? res[0].success.count : "-";
         this.product_count = res[1].success ? res[1].success.count : "-";
         this.app_count = res[2].success ? res[2].success.count : "-";
