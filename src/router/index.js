@@ -111,6 +111,12 @@ export const constantRouterMap = [
               require(["@/views/engine/home_resourcechannel"], resolve)
           },
           {
+            path: "dict",
+            meta: { title: "字典" },
+            component: resolve =>
+              require(["@/views/engine/dict"], resolve)
+          },
+          {
             path: "engine",
             meta: { title: "规则" },
             component: resolve =>
