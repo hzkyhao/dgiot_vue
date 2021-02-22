@@ -1272,7 +1272,7 @@ export default {
 
       // row.location.latitude +  row.location.longitude
       // this.addresspointer = row.latitude + ',' + row.longitude
-      this.addresspointer = row.detail == undefined ? "" : row.location.latitude + row.detail == undefined ? "" : row.location.longitude
+      this.addresspointer = row.detail == undefined ? "" : row.location == undefined ? "" : row.location.latitude + row.detail == undefined ? "" : row.location.longitude
       this.equipmentEditor = '编辑'
       // this.rolesSelect(row.productid)
 
@@ -1325,8 +1325,8 @@ export default {
         if (valid) {
           var location = {
             "__type": "GeoPoint",
-            "latitude": this.center.lat,
-            "longitude": this.center.lng
+            "latitude": this.center.lat ? this.center.lat : 0,
+            "longitude": this.center.lng ? this.center.lng : 0
           }
           var detail = {
             'assetNum': this.deviceform.assetNum,
@@ -1347,7 +1347,11 @@ export default {
                   'devaddr': this.deviceform.devaddr,
                   "objectId": this.deviceform.devaddr,
                   "lastOnlineTime": 0,
-                  'product': response,
+                  'product': {
+                    '__type': 'Pointer',
+                    'className': 'Product',
+                    'objectId': response.objectId
+                  },
                   'detail': detail,
                   'location': location
                 }
