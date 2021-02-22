@@ -458,7 +458,7 @@
                     <el-option
                       v-for="(item,index) in productDevices"
                       :key="index"
-                      :label="item.devaddr"
+                      :label="item.name"
                       :value="item.objectId"
                     />
                   </el-select>
@@ -724,7 +724,7 @@ export default {
       // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
       const key = 'route.' + this.devicedetail.devaddr
       const setkey = {}
-      setkey[key] = "{$regex: '.+'}"
+      setkey[key] = {$regex: '.+'}
 
       const params = {
         limit: this.childrenDeviceLength,
@@ -738,7 +738,6 @@ export default {
         params.where.devaddr = this.childrendevices.devicesname
       }
       this.$queryDevice(params).then(res => {
-        // console.log('aaaaa', res)
         this.childrenDeviceTotal = res.count
         if (res.results) {
           res.results.map(items => {
@@ -1030,32 +1029,15 @@ export default {
         if (valid) {
           var route = {}
           route[this.devicedevaddr] = this.childrenForm.route
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Devices = Parse.Object.extend('Device')
-          // var devices = new Parse.Query(Devices)
-          // var devices1 = new Devices()
-          // this.$getDevice(this.childrenForm.device).then(response => {
-          //   console.log("response", response)
-          //   devices1.id = this.deviceid
-          //   response.set('parentId', this.deviceid)
-          //   response.set('route', route)
-          //   response.save().then(resultes => {
-          //
-          //   })
-          // })
           var childrenDevicesParmas = {
-            'product': {
-              '__type': 'Pointer',
-              'className': 'Product',
-              'objectId': this.childrenForm.product
+            parentId: {
+              "__type": "Pointer",
+              "className": "Device",
+              "objectId": this.deviceid
             },
-            "parentId": this.childrenForm.device,
-            "route": this.childrenForm.route,
-            'status': 'OFFLINE',
-            'isEnable': false,
-            "lastOnlineTime": 0
+            route: route
           }
-          this.$postDevice(childrenDevicesParmas).then(resultes => {
+          this.$putDevice(this.childrenForm.device, childrenDevicesParmas).then(resultes => {
             if (resultes) {
               this.$message({
                 type: 'success',
