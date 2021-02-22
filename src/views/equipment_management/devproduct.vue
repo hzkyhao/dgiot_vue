@@ -37,18 +37,18 @@
               <el-table-column prop="id" label="ProductID"/>
               <el-table-column :label="$t('product.productname')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.name }}</span>
+                  <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.productgrouping')">
                 <template slot-scope="scope">
-                  <span>{{ scope.row.attributes.devType }}</span>
+                  <span>{{ scope.row.devType }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$t('product.nodetype')">
                 <template slot-scope="scope">
 
-                  <span v-if="scope.row.attributes.nodeType==0">{{ $t('product.equipment') }}</span>
+                  <span v-if="scope.row.nodeType==0">{{ $t('product.equipment') }}</span>
                   <span v-else>{{ $t('product.gateway') }}</span>
                 </template>
               </el-table-column>
@@ -162,16 +162,16 @@
                 <el-cascader v-model="form.category" :options="categoryListOptions"/>
               </el-form-item>
 
-              <!--  :label="item.attributes.desc"
-              :value="item.attributes.name"-->
+              <!--  :label="item.desc"
+              :value="item.name"-->
 
               <el-form-item label="所属应用" prop="roles" >
                 <el-select v-model="form.relationApp" disabled @change="selectApp">
                   <el-option
                     v-for="(item,index) in allApps"
                     :key="index"
-                    :label="item.attributes.title"
-                    :value="item.attributes.title"
+                    :label="item.title"
+                    :value="item.title"
                   />
                 </el-select>
               </el-form-item>
@@ -735,19 +735,19 @@ export default {
       // this.form.roles = [];
       this.form.relationApp = ''
       this.dialogFormVisible = true
-      this.productid = row.id
-      this.getIndustryParent(row.attributes.category, this.categoryList)
-      this.form.desc = row.attributes.desc
-      this.form.name = row.attributes.name
-      this.form.nodeType = row.attributes.nodeType
-      this.form.netType = row.attributes.netType
-      this.form.devType = row.attributes.devType
-      this.form.productSecret = row.attributes.productSecret
-      this.changeNode(row.attributes.nodeType, 0)
-      if (row.attributes.icon) {
-        this.imageUrl = row.attributes.icon
+      this.productid = row.objectId
+      this.getIndustryParent(row.category, this.categoryList)
+      this.form.desc = row.desc
+      this.form.name = row.name
+      this.form.nodeType = row.nodeType
+      this.form.netType = row.netType
+      this.form.devType = row.devType
+      this.form.productSecret = row.productSecret
+      this.changeNode(row.nodeType, 0)
+      if (row.icon) {
+        this.imageUrl = row.icon
       }
-      for (var key in row.attributes.ACL.permissionsById) {
+      for (var key in row.ACL.permissionsById) {
         this.form.relationApp = key ? key.substr(5) : ''
       }
       this.selectApp(this.form.relationApp)
@@ -935,7 +935,7 @@ export default {
       this.$router.push({
         path: '/roles/detailproduct',
         query: {
-          id: row.id
+          id: row.objectId
         }
       })
     },
@@ -943,7 +943,7 @@ export default {
       this.$router.push({
         path: '/roles/thing',
         query: {
-          productid: row.id
+          productid: row.objectId
         }
       })
     },
@@ -1003,7 +1003,7 @@ export default {
         var topoUrl = this.$globalConfig.localTopoUrl
       }
       // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#/views/${row.id}`
+      var url = `${topoUrl}/#/views/${row.objectId}`
       window.open(url, '__blank')
     },
     // 跳转到组态大屏

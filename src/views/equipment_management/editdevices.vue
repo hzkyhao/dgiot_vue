@@ -770,6 +770,9 @@ export default {
       this.deviceid = this.$route.query.deviceid
       this.ischildren = this.$route.query.ischildren
       getTdDevice(this.deviceid).then(res => {
+        console.log(
+          res, "res"
+        )
         if (res.results.length > 0) {
           var resultes = res.results[0]
           // console.log(resultes, 'resproduct')
@@ -1011,7 +1014,7 @@ export default {
       this.$router.push({
         path: '/roles/editdevices',
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
           ischildren: 'false'
         }

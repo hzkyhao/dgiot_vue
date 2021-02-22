@@ -731,6 +731,7 @@ export default {
     //   )
     // },
     async selectProductid(val) {
+      console.log("selectProductid", val)
       console.log(this.equvalue)
       this.productroleslist = [];
       const parsms = {};
@@ -1503,6 +1504,7 @@ export default {
     },
     // 设备详情
     deviceToDetail(row) {
+      console.log('设备数据', row)
       this.$router.push({
         path: '/roles/editdevices',
         query: {
@@ -1523,10 +1525,11 @@ export default {
     },
     // 前往子设备
     deviceToChildren(row) {
+      console.log('设备数据', row)
       this.$router.push({
         path: '/roles/editdevices',
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
           ischildren: 'true'
         }

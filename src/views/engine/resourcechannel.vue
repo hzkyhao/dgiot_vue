@@ -19,49 +19,49 @@
           <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;">
             <el-table-column :label="$t('developer.channelnumber')">
               <template slot-scope="scope">
-                <span>{{ scope.row.id }}</span>
+                <span>{{ scope.row.objectId }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channelname')">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.name }}</span>
+                <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channeltype')">
               <template slot-scope="scope">
-                <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
-                <span v-else-if="scope.row.attributes.type==2">{{ $t('developer.resourcechannel') }}</span>
+                <span v-if="scope.row.type==1">{{ $t('developer.collectionchannel') }}</span>
+                <span v-else-if="scope.row.type==2">{{ $t('developer.resourcechannel') }}</span>
                 <span v-else>任务通道</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.servicetype')">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.cType }}</span>
+                <span>{{ scope.row.cType }}</span>
               </template>
             </el-table-column>
 
             <el-table-column :label="$t('developer.channelstatus')">
               <template slot-scope="scope">
-                <span v-if="scope.row.attributes.status=='ONLINE'" style="color:green">在线</span>
+                <span v-if="scope.row.status=='ONLINE'" style="color:green">在线</span>
                 <span v-else style="color:red">离线</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channeladdr')" width="200">
               <template slot-scope="scope">
-                <span>{{ 'channel/'+scope.row.id }}</span>
+                <span>{{ 'channel/'+scope.row.objectId }}</span>
               </template>
             </el-table-column>
 
             <el-table-column :label="$t('developer.describe')">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.desc }}</span>
+                <span>{{ scope.row.desc }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.operation')" width="350">
               <template slot-scope="scope">
                 <el-button slot="reference" type="primary" size="mini" @click="editorChannel(scope.row)">编辑</el-button>
                 <el-button
-                  v-if="scope.row.attributes.isEnable==false"
+                  v-if="scope.row.isEnable==false"
                   type="success"
                   size="mini"
                   @click="qyChannel(scope.row,'enable')"
@@ -75,7 +75,7 @@
                 >{{ $t('developer.prohibit') }}</el-button>
                 <el-button type="primary" size="mini" @click="updateChannel(scope.row)">详情</el-button>
                 <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                  <p>确定删除这个{{ scope.row.attributes.name }}通道吗？</p>
+                  <p>确定删除这个{{ scope.row.name }}通道吗？</p>
                   <div style="text-align: right; margin: 0">
                     <el-button
                       size="mini"
@@ -98,10 +98,10 @@
                 content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
-                <el-tooltip :disabled="scope.row.attributes.status!='OFFLINE'" class="item" effect="dark" content="请先启用通道" placement="top">
+                <el-tooltip :disabled="scope.row.status!='OFFLINE'" class="item" effect="dark" content="请先启用通道" placement="top">
                   <el-button type="primary" size="mini" style="width:100px;height:10px;opacity:0;position:absolute" @click="subProTopic(scope.row)"/>
                 </el-tooltip>
-                <el-button :disabled="scope.row.attributes.status=='OFFLINE'" type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
+                <el-button :disabled="scope.row.status=='OFFLINE'" type="primary" size="mini" @click="subProTopic(scope.row)">订阅日志</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -459,10 +459,10 @@ export default {
     updateChannel(row) {
       console.log(row)
       this.dialogVisible = true
-      this.resourceid = row.id
-      this.detailchannel = row.attributes.config
-      this.resoucetype = row.attributes.cType
-      this.description = row.attributes.desc
+      this.resourceid = row.objectId
+      this.detailchannel = row.config
+      this.resoucetype = row.cType
+      this.description = row.desc
     },
     addchannelForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -552,7 +552,7 @@ export default {
       this.resourceid = ''
     },
     getChannelEnable(row, rowIndex) {
-      if (row.row.attributes.isEnable == true) {
+      if (row.row.isEnable == true) {
         return 'green_active'
       } else {
         return 'red_active'
@@ -633,9 +633,9 @@ export default {
             this.selectregion = item
             this.arrlist = this.orderObject(this.selectregion.params)
             this.arrlist.map(item => {
-              for (var key in this.channelrow.attributes.config) {
+              for (var key in this.channelrow.config) {
                 if (item.showname == key) {
-                  obj[item.showname] = this.channelrow.attributes.config[key]
+                  obj[item.showname] = this.channelrow.config[key]
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
@@ -645,18 +645,18 @@ export default {
                   }
                 }
                 obj.region = val
-                obj.desc = this.channelrow.attributes.desc
-                obj.name = this.channelrow.attributes.name
+                obj.desc = this.channelrow.desc
+                obj.name = this.channelrow.name
                 obj.type = this.selectregion.type
-                obj.isEnable = this.channelrow.attributes.isEnable
+                obj.isEnable = this.channelrow.isEnable
               }
             })
           }
         })
       }
       // 读取acl列表,获取所属应用名称
-      if (this.channelrow && this.channelrow.attributes) {
-        for (var key in this.channelrow.attributes.ACL.permissionsById) {
+      if (this.channelrow) {
+        for (var key in this.channelrow.ACL.permissionsById) {
           obj.applicationtText = key ? key.substr(5) : ''
         }
       }
@@ -667,10 +667,10 @@ export default {
     },
     editorChannel(row) {
       this.channelrow = row
-      this.resourceid = row.id
+      this.resourceid = row.objectId
       this.channelForm = true
       this.channelupdated = '编辑'
-      this.removeauto(row.attributes.cType)
+      this.removeauto(row.cType)
     },
     // 弹窗订阅日志
     nowtime() {
@@ -699,8 +699,8 @@ export default {
     },
     subProTopic(row) {
       this.subdialog = true
-      this.subdialogid = row.id
-      this.channelname = row.id
+      this.subdialogid = row.objectId
+      this.channelname = row.objectId
       setTimeout(() => {
         subdialog = ace.edit('subdialog')
         subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -713,10 +713,10 @@ export default {
         })
       })
       var info = {
-        topic: 'log/channel/' + row.id,
+        topic: 'log/channel/' + row.objectId,
         qos: 2
       }
-      var channeltopic = new RegExp('log/channel/' + row.id)
+      var channeltopic = new RegExp('log/channel/' + row.objectId)
       var submessage = ''
       var _this = this
       Websocket.add_hook(channeltopic, function(Msg) {
@@ -736,7 +736,7 @@ export default {
           console.log(info)
           console.log('订阅成功')
           var sendInfo = {
-            topic: 'channel/' + row.id,
+            topic: 'channel/' + row.objectId,
             text: text0,
             retained: true,
             qos: 2

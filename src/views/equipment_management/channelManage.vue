@@ -19,29 +19,29 @@
         <el-table :data="tableData" :row-class-name="getChannelEnable" style="width: 100%;">
           <el-table-column :label="$t('developer.channelnumber')">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channelname')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.name }}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channeltype')">
             <template slot-scope="scope">
-              <span v-if="scope.row.attributes.type==1">{{ $t('developer.collectionchannel') }}</span>
+              <span v-if="scope.row.type==1">{{ $t('developer.collectionchannel') }}</span>
               <span v-else>{{ $t('developer.resourcechannel') }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.servicetype')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.cType }}</span>
+              <span>{{ scope.row.cType }}</span>
             </template>
           </el-table-column>
 
           <el-table-column :label="$t('developer.channelstatus')">
             <template slot-scope="scope">
-              <span v-if="scope.row.attributes.status=='ONLINE'" style="color:green">在线</span>
+              <span v-if="scope.row.status=='ONLINE'" style="color:green">在线</span>
               <span v-else style="color:red">离线</span>
             </template>
           </el-table-column>
@@ -57,19 +57,19 @@
               </span>
             </template>-->
             <template slot-scope="scope">
-              <span>{{ 'channel/'+scope.row.id }}</span>
+              <span>{{ 'channel/'+scope.row.objectId }}</span>
             </template>
           </el-table-column>
 
           <el-table-column :label="$t('developer.describe')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.desc }}</span>
+              <span>{{ scope.row.desc }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.operation')" width="300">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.attributes.isEnable==false"
+                v-if="scope.row.isEnable==false"
                 type="success"
                 size="mini"
                 @click="qyChannel(scope.row,'enable')"
@@ -77,7 +77,7 @@
               <el-button v-else type="danger" size="mini" @click="qyChannel(scope.row,'disable')">{{ $t('developer.prohibit') }}</el-button>
               <el-button type="primary" size="mini" @click="updateChannel(scope.row)">{{ $t('developer.edit') }}</el-button>
               <el-popover :ref="`popover-${scope.$index}`" placement="top" width="300">
-                <p>确定删除这个{{ scope.row.attributes.name }}通道吗？</p>
+                <p>确定删除这个{{ scope.row.name }}通道吗？</p>
                 <div style="text-align: right; margin: 0">
                   <el-button
                     size="mini"
@@ -497,7 +497,7 @@ export default {
       }
     },
     getChannelEnable(row, rowIndex) {
-      if (row.row.attributes.isEnable == true) {
+      if (row.row.isEnable == true) {
         return 'green_active'
       } else {
         return 'red_active'
@@ -741,7 +741,7 @@ export default {
     },
     // 更新状态
     qyChannel(row, action) {
-      subupadte(row.id, action)
+      subupadte(row.objectId, action)
         .then(resultes => {
           if (resultes) {
             this.$message({
@@ -759,38 +759,38 @@ export default {
     updateChannel(row) {
       this.channelForm = true
       this.channelupdated = '编辑'
-      this.addchannel.name = row.attributes.name
-      this.addchannel.region = row.attributes.cType
-      if (row.attributes.cType == 'MQTT') {
-        this.addchannel.topic = row.attributes.config.topic
-        this.addchannel.client = row.attributes.config.client
-      } else if (row.attributes.cType == 'HTTP') {
-        this.addchannel.path = row.attributes.config.path
-      } else if (row.attributes.cType == 'Tdengine') {
-        this.addchannel.auto_save = row.attributes.config.auto_save
-        this.addchannel.max_size = row.attributes.config.max_size
-        this.addchannel.max_memory = row.attributes.config.max_memory
+      this.addchannel.name = row.name
+      this.addchannel.region = row.cType
+      if (row.cType == 'MQTT') {
+        this.addchannel.topic = row.config.topic
+        this.addchannel.client = row.config.client
+      } else if (row.cType == 'HTTP') {
+        this.addchannel.path = row.config.path
+      } else if (row.cType == 'Tdengine') {
+        this.addchannel.auto_save = row.config.auto_save
+        this.addchannel.max_size = row.config.max_size
+        this.addchannel.max_memory = row.config.max_memory
         //  this.addchannel.path=row.attributes.config.path
-        this.addchannel.server = row.attributes.config.server.substring(7)
-        this.addchannel.username = row.attributes.config.username
-        this.addchannel.password = row.attributes.config.password
-      } else if (row.attributes.cType == 'TCP' || this.addchannel.region == 'TCPMRTU') {
-        this.addchannel.buff_size = row.attributes.config.buff_size
+        this.addchannel.server = row.config.server.substring(7)
+        this.addchannel.username = row.config.username
+        this.addchannel.password = row.config.password
+      } else if (row.cType == 'TCP' || this.addchannel.region == 'TCPMRTU') {
+        this.addchannel.buff_size = row.config.buff_size
         // this.addchannel.port = row.attributes.config.port;
-      } else if (row.attributes.cType == 'MQTTCLI') {
-        this.addchannel.address = row.attributes.config.address
-        this.addchannel.username = row.attributes.config.username
-        this.addchannel.password = row.attributes.config.password
-        this.addchannel.clean_start = row.attributes.config.clean_start
-        this.addchannel.ssl = row.attributes.config.ssl
-        this.addchannel.keepalive = row.attributes.config.keepalive
+      } else if (row.cType == 'MQTTCLI') {
+        this.addchannel.address = row.config.address
+        this.addchannel.username = row.config.username
+        this.addchannel.password = row.config.password
+        this.addchannel.clean_start = row.config.clean_start
+        this.addchannel.ssl = row.config.ssl
+        this.addchannel.keepalive = row.config.keepalive
       }
       this.addchannel.ip = '0.0.0.0'
-      this.addchannel.port = row.attributes.config.port
-      this.addchannel.desc = row.attributes.desc
-      this.addchannel.channeltype = row.attributes.type
-      this.addchannel.isEnable = row.attributes.isEnable
-      this.channelId = row.id
+      this.addchannel.port = row.config.port
+      this.addchannel.desc = row.desc
+      this.addchannel.channeltype = row.type
+      this.addchannel.isEnable = row.isEnable
+      this.channelId = row.objectId
     },
     // 删除
     deleteChannel(scope) {
@@ -842,8 +842,8 @@ export default {
     // 订阅日志
     subProTopic(row) {
       this.subdialog = true
-      this.subdialogid = row.id
-      this.channelname = row.id
+      this.subdialogid = row.objectId
+      this.channelname = row.objectId
       setTimeout(() => {
         subdialog = ace.edit('subdialog')
         subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -856,10 +856,10 @@ export default {
         })
       })
       var info = {
-        topic: 'log/channel/' + row.id,
+        topic: 'log/channel/' + row.objectId,
         qos: 2
       }
-      var channeltopic = new RegExp('log/channel/' + row.id)
+      var channeltopic = new RegExp('log/channel/' + row.objectId)
       var submessage = ''
       var _this = this
       Websocket.add_hook(channeltopic, function(Msg) {
@@ -879,7 +879,7 @@ export default {
           console.log(info)
           console.log('订阅成功')
           var sendInfo = {
-            topic: 'channel/' + row.id,
+            topic: 'channel/' + row.objectId,
             text: text0,
             retained: true,
             qos: 2

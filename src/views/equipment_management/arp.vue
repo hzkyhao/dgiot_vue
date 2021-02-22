@@ -71,30 +71,30 @@
           <el-table-column type="selection" width="55" />
           <el-table-column :label="$t('developer.channelnumber')">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channelname')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.name }}</span>
+              <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channeladdr')">
             <template slot-scope="scope">
-              <span>{{ 'channel/'+scope.row.id }}</span>
+              <span>{{ 'channel/'+scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.channeltype')">
             <template slot-scope="scope">
               <span
-                v-if="scope.row.attributes.type==1"
+                v-if="scope.row.type==1"
               >{{ $t('developer.collectionchannel') }}</span>
               <span v-else>{{ $t('developer.resourcechannel') }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.servicetype')">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.cType }}</span>
+              <span>{{ scope.row.cType }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -115,22 +115,22 @@
         >
           <el-table-column :label="$t('product.protocolname')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.data.name }}</span>
+              <span>{{ scope.row.data.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('plugins.version')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.data.version }}</span>
+              <span>{{ scope.row.data.version }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.describe')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.data.desc }}</span>
+              <span>{{ scope.row.data.desc }}</span>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="center">
             <template slot-scope="scope">
-              <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
+              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -147,7 +147,7 @@
               <el-button
                 type="danger"
                 size="mini"
-                @click="deletedata(scope.row.id)"
+                @click="deletedata(scope.row.objectId)"
               >{{ $t('developer.delete') }}</el-button>
             </template>
           </el-table-column>
