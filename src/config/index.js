@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-18 11:39:49
- * @LastEditTime: 2021-02-18 11:48:14
+ * @LastEditTime: 2021-02-22 11:38:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \platform\src\config\index.js
@@ -24,7 +24,7 @@
 var sekeUrl = 'http://132.232.121.164'
 var platFormUrl = 'http://124.156.212.253'
 // var serverURL = "http://124.156.212.253";
-var serverURL = platFormUrl
+var serverURL = sekeUrl
 // var serverURL = "http://pump.iotn2n.com:5080/iotapi";
 
 // var serverURL = "http://132.232.121.164:5080/iotapi";

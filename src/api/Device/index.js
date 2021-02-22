@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-02-01 19:02:18
- * @LastEditTime: 2021-02-01 21:29:13
+ * @LastEditTime: 2021-02-22 11:56:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \platform\src\api\Device\index.js
@@ -54,7 +54,7 @@ export async function getDeviceCountByProduct(productId) {
 }
 export async function getTdDevice(objectId) {
   var initData = {
-    "include": "product",
+    // "include": "product",
     "order": "-createdAt",
     "where": { "objectId": objectId }
   }
