@@ -772,7 +772,7 @@ export default {
       getTdDevice(this.deviceid).then(res => {
         if (res.results.length > 0) {
           var resultes = res.results[0]
-          console.log(resultes, 'resproduct')
+          // console.log(resultes, 'resproduct')
           // 产品
           var obj = {}
           this.productid = this.$objGet(resultes, 'product.objectId')
@@ -1070,93 +1070,86 @@ export default {
       })
     },
     deleteDevcie(val) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释,这里使用批处理方法')
-      // Promise.all([
-      //   this.multipleTable.map(item => {
-      //     var Devices = Parse.Object.extend('Device')
-      //     // var devices = new Parse.Query(Devices);
-      //     var devices1 = new Devices()
-      //     devices1.id = item.id
-      //     devices1.set('parentId', null)
-      //     devices1.save().then(resultes => {})
-      //   })
-      // ])
-      //   .then(data => {
-      //     if (data && data.length != 0) {
-      //       this.$message({
-      //         message: '解除关联成功',
-      //         type: 'success'
-      //       })
-      //       this.getDevices()
-      //     } else {
-      //       this.$message({
-      //         message: '解除关联失败',
-      //         type: 'error'
-      //       })
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error)
-      //   })
+      Promise.all([
+        this.multipleTable.map(item => {
+          const params = {
+            "parentId": null
+          }
+          this.$putDevice(item.objectId, params).then(resultes => {})
+        })
+      ])
+        .then(data => {
+          if (data && data.length != 0) {
+            this.$message({
+              message: '解除关联成功',
+              type: 'success'
+            })
+            this.getDevices()
+          } else {
+            this.$message({
+              message: '解除关联失败',
+              type: 'error'
+            })
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     // 设备多个启用和禁用
     unactiveDevice(val) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释，这里使用批处理方法')
-      // Promise.all([
-      //   this.multipleTable.map(item => {
-      //     var Devices = Parse.Object.extend('Device')
-      //     var devices = new Devices()
-      //     devices.id = item.id
-      //     devices.set('isEnable', false)
-      //     devices.save().then(resultes => {})
-      //   })
-      // ])
-      //   .then(data => {
-      //     if (data && data.length != 0) {
-      //       this.$message({
-      //         message: '禁用成功',
-      //         type: 'success'
-      //       })
-      //       this.getDevices()
-      //     } else {
-      //       this.$message({
-      //         message: '禁用失败',
-      //         type: 'error'
-      //       })
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error)
-      //   })
+      Promise.all([
+        this.multipleTable.map(item => {
+          const params = {
+            "isEnable": false
+          }
+          this.$putDevice(item.objectId, params).then(resultes => {})
+        })
+      ])
+        .then(data => {
+          if (data && data.length != 0) {
+            this.$message({
+              message: '禁用成功',
+              type: 'success'
+            })
+            this.getDevices()
+          } else {
+            this.$message({
+              message: '禁用失败',
+              type: 'error'
+            })
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     activeDevice(val) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释,这里使用批处理方法')
-      // Promise.all([
-      //   this.multipleTable.map(item => {
-      //     var Devices = Parse.Object.extend('Device')
-      //     var devices = new Devices()
-      //     devices.id = item.id
-      //     devices.set('isEnable', true)
-      //     devices.save().then(resultes => {})
-      //   })
-      // ])
-      //   .then(data => {
-      //     if (data && data.length != 0) {
-      //       this.$message({
-      //         message: '启用成功',
-      //         type: 'success'
-      //       })
-      //       this.getDevices()
-      //     } else {
-      //       this.$message({
-      //         message: '启用失败',
-      //         type: 'error'
-      //       })
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error)
-      //   })
+      Promise.all([
+        this.multipleTable.map(item => {
+          const params = {
+            "isEnable": true
+          }
+          this.$putDevice(item.objectId, params).then(resultes => {})
+        })
+      ])
+        .then(data => {
+          if (data && data.length != 0) {
+            this.$message({
+              message: '启用成功',
+              type: 'success'
+            })
+            this.getDevices()
+          } else {
+            this.$message({
+              message: '启用失败',
+              type: 'error'
+            })
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
@@ -1167,30 +1160,20 @@ export default {
       const routeKey = this.devicedevaddr
       // 删除key为上级设备地址值
       delete objRoute[routeKey]
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Devices = Parse.Object.extend('Device')
-      // var devices1 = new Devices()
-      // devices1.id = scope.row.id
-      // devices1.set('parentId', null)
-      // devices1.set('route', objRoute)
-      // devices1.save().then(
-      //   response => {
-      //     if (response) {
-      //       this.$message({
-      //         type: 'success',
-      //         message: '解除关联成功'
-      //       })
-      //       scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //       this.getDevices()
-      //     }
-      //   },
-      //   error => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: error.message
-      //     })
-      //   }
-      // )
+      const params = {
+        "parentId": null,
+        "route": objRoute
+      }
+      this.$putDevice(scope.row.objectId, params).then(response => {
+        if (response) {
+          this.$message({
+            type: 'success',
+            message: '解除关联成功'
+          })
+          scope._self.$refs[`popover-${scope.$index}`].doClose()
+          this.getDevices()
+        }
+      })
     },
     handelUpdate(event, row, index) {
       var newData1 = {}
@@ -1210,24 +1193,16 @@ export default {
             newData2[key] = row[key]
           }
           newData2.isEnable = newData2.isEnable == true
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Devices = Parse.Object.extend('Device')
-          // var devices = new Parse.Query(Devices)
-          // devices.get(row.id).then(
-          //   object => {
-          //     object.set('isEnable', newData2.isEnable)
-          //     object.save().then(resultes => {
-          //       this.$message({
-          //         type: 'success',
-          //         message: '状态修改成功'
-          //       })
-          //     })
-          //     this.getDevices()
-          //   },
-          //   error => {
-          //     returnLogin(error)
-          //   }
-          // )
+          const params = {
+            "isEnable": newData2.isEnable
+          }
+          this.$putDevice(row.objectId, params).then(resultes => {
+            this.$message({
+              type: 'success',
+              message: '状态修改成功'
+            })
+          })
+          this.getDevices()
         })
         .catch(() => {
           this.$message({

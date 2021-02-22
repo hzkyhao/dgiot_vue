@@ -24,7 +24,7 @@
 var sekeUrl = 'http://132.232.121.164'
 var platFormUrl = 'http://124.156.212.253'
 // var serverURL = "http://124.156.212.253";
-var serverURL = platFormUrl
+var serverURL = sekeUrl
 // var serverURL = "http://pump.iotn2n.com:5080/iotapi";
 
 // var serverURL = "http://132.232.121.164:5080/iotapi";
