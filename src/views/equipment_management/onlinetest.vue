@@ -87,8 +87,8 @@
                       <el-option
                         v-for="(item,index) in dataslist"
                         :key="index"
-                        :value="item.id"
-                        :label="item.name"/>
+                        :value="item.objectId"
+                        :label="item.data.name"/>
                     </el-select>
                   </el-form-item>
                   <el-form-item>
@@ -511,7 +511,7 @@ export default {
     // 挑选功能
     selectMessage(val) {
       this.dataslist.map(item => {
-        if (item.id == val) {
+        if (item.objectId == val) {
           editor1.setValue(JSON.stringify(item.data.commond))
           this.detaildatas = JSON.parse(JSON.stringify(item.data))
         }
@@ -695,7 +695,7 @@ export default {
       getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
         if (res.count > 0) {
           this.channellist = res.results
-          this.devices.subtopic = res.results[0].id
+          this.devices.subtopic = res.results[0].objectId
         } else {
           this.channellist = {}
           this.devices.subtopic = ""
