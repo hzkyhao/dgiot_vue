@@ -719,21 +719,6 @@ export default {
         })
     },
     updaterole() {
-      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var roles = Parse.Object.extend('_Role')
-      // var query = new Parse.Query(roles)
-      // query.get(this.editroleid).then(resultes => {
-      //   resultes.set('alias', this.form.alias)
-      //   resultes.set('desc', this.form.desc)
-      //   resultes.save().then(res => {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '更新成功'
-      //     })
-      //   })
-      //   this.roleEdit = false
-      //   this.getRolesList()
-      // })
       const params = {
         alias:this.form.alias,
         desc:this.form.desc

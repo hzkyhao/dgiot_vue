@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-02-18 11:39:49
+ * @LastEditTime: 2021-02-18 11:48:14
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \platform\src\config\index.js
+ */
 /**
  * @description 系统全局配置
  */
@@ -13,7 +21,10 @@
 //  var serverURL = "http://prod.iotn2n.com/iotapi";//线上环境
 //  var serverURL = "http://192.168.2.44:5080/iotapi"
 // var serverURL = "http://192.168.2.51:5080/iotapi"
-var serverURL = "http://124.156.212.253";
+var sekeUrl = 'http://132.232.121.164'
+var platFormUrl = 'http://124.156.212.253'
+// var serverURL = "http://124.156.212.253";
+var serverURL = platFormUrl
 // var serverURL = "http://pump.iotn2n.com:5080/iotapi";
 
 // var serverURL = "http://132.232.121.164:5080/iotapi";

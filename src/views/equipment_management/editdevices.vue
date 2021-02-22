@@ -722,17 +722,17 @@ export default {
       this.devicesTableData = []
 
       // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
-      // const key = 'route.' + this.devicedetail.devaddr + ":{$regex: '.+'}"
-      // const where = {}
-      // where[key] = {}
-      // todo
+      const key = 'route.' + this.devicedetail.devaddr
+      const setkey = {}
+      setkey[key] = "{$regex: '.+'}"
+
       const params = {
         limit: this.childrenDeviceLength,
         skip: this.childrenDeviceStart,
         keys: 'count(*)',
         include: 'product',
         parentId: this.deviceId,
-        where: {}
+        where: setkey
       }
       if (this.childrendevices.devicesname != '') {
         params.where.devaddr = this.childrendevices.devicesname
@@ -760,7 +760,7 @@ export default {
         }
       }).catch(err => {
         console.log(err)
-        this.$baseMessage('请求出错', err.error, 3000)
+        this.$baseMessage('请求出错11', err.error, 3000)
       })
     },
 
@@ -834,6 +834,9 @@ export default {
           } else {
             this.ischildren == 'false'
             this.isshowchild = true
+            this.$queryProduct({}).then(res => {
+              this.allProudct = res.results
+            })
           }
           // 初始化物模型数据
           this.isupdate = true
