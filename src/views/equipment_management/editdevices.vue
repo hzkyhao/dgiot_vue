@@ -1014,7 +1014,7 @@ export default {
       this.$router.push({
         path: '/roles/editdevices',
         query: {
-          deviceid: row.id,
+          deviceid: row.objectId,
           nodeType: row.nodeType,
           ischildren: 'false'
         }

@@ -14,7 +14,7 @@
       <el-table :data="engineData" :cell-class-name="getRowindex" style="width: 100%;text-align:center">
         <el-table-column label="ID" align="center" width="180">
           <template slot-scope="scope">
-            <span @click="detailRules(scope.row.id)">{{ scope.row.id }}</span>
+            <span @click="detailRules(scope.row.objectId)">{{ scope.objectId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="主题" align="center">
@@ -35,8 +35,8 @@
         </el-table-column>
         <el-table-column :label="$t('developer.operation')" align="center">
           <template slot-scope="scope">
-            <el-button type="info" size="mini" plain @click="detailRules(scope.row.id)">查看</el-button>
-            <el-button type="info" size="mini" plain @click="deleteRule(scope.row.id)">删除</el-button>
+            <el-button type="info" size="mini" plain @click="detailRules(scope.row.objectId)">查看</el-button>
+            <el-button type="info" size="mini" plain @click="deleteRule(scope.row.objectId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
