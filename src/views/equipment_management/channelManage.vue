@@ -794,26 +794,19 @@ export default {
     },
     // 删除
     deleteChannel(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend('Channel')
-      // var channel = new Channel()
-      // channel.id = scope.row.id
-      // channel.destroy().then(
-      //   resultes => {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '删除成功'
-      //     })
-      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //     this.getChannel()
-      //   },
-      //   error => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: error.message
-      //     })
-      //   }
-      // )
+      this.$del_object('Channel', scope.row.objectId).then(resultes => {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        scope._self.$refs[`popover-${scope.$index}`].doClose()
+        this.getChannel()
+      }).catch(error => {
+        this.$message({
+          type: 'error',
+          message: error.message
+        })
+      })
     },
     nowtime() {
       var timestamp3 = Date.parse(new Date())

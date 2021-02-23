@@ -27,7 +27,7 @@
         <el-form-item :label="$t('user.name')" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off" style="width:300px;" disabled/>
         </el-form-item>
-        <el-form-item :label="$t('user.Reamrks')" :label-width="formLabelWidth">
+        <el-form-item :label="$t('user.Remarks')" :label-width="formLabelWidth">
           <el-input v-model="form.alias" autocomplete="off" style="width:300px;"/>
         </el-form-item>
         <el-form-item :label="$t('developer.describe')" :label-width="formLabelWidth">
@@ -49,7 +49,7 @@
 </template>
 <script>
 import treeTable from '@/components/TreeTable'
-import { getPermission } from '@/api/Permission/index.js'
+import { getPermission, queryPermission } from '@/api/Permission/index.js'
 import { utc2beijing } from '@/utils'
 export default {
   components: { treeTable },
@@ -107,9 +107,9 @@ export default {
   methods: {
     async handleEdit(row) {
       this.permissionid = row.objectId
-      console.log(row, this.permissionid)
+      // console.log(row, this.permissionid)
       const resultes = await getPermission(row.objectId)
-      console.log("QueryP", resultes)
+      // console.log("QueryP", resultes)
       this.form.name = resultes.name
       this.form.description = resultes.description
       this.form.alias = resultes.alias

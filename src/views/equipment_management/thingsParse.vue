@@ -89,22 +89,22 @@
             <el-table-column type="selection" width="55" />
             <el-table-column :label="$t('developer.channelnumber')">
               <template slot-scope="scope">
-                <span>{{ scope.row.id }}</span>
+                <span>{{ scope.row.objectId }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channelname')">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.name }}</span>
+                <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channeladdr')">
               <template slot-scope="scope">
-                <span>{{ "channel/" + scope.row.id }}</span>
+                <span>{{ "channel/" + scope.row.objectId }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.channeltype')">
               <template slot-scope="scope">
-                <span v-if="scope.row.attributes.type == 1">{{
+                <span v-if="scope.row.type == 1">{{
                   $t("developer.collectionchannel")
                 }}</span>
                 <span v-else>{{ $t("developer.resourcechannel") }}</span>
@@ -112,7 +112,7 @@
             </el-table-column>
             <el-table-column :label="$t('developer.servicetype')">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.cType }}</span>
+                <span>{{ scope.row.cType }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -133,22 +133,22 @@
           >
             <el-table-column :label="$t('product.protocolname')" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.name }}</span>
+                <span>{{ scope.row.data.name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('plugins.version')" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.version }}</span>
+                <span>{{ scope.row.data.version }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$t('developer.describe')" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.desc }}</span>
+                <span>{{ scope.row.data.desc }}</span>
               </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center">
               <template slot-scope="scope">
-                <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
+                <span>{{ utc2beijing(scope.row.createdAt) }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -166,7 +166,7 @@
                 <el-button
                   type="danger"
                   size="mini"
-                  @click="deletedata(scope.row.id)"
+                  @click="deletedata(scope.row.ObjectId)"
                 >{{ $t("developer.delete") }}
                 </el-button>
               </template>
@@ -212,6 +212,8 @@
   </div>
 </template>
 <script>
+import { getDeviceCountByProduct } from "@/api/Device/index";
+import { getChannelCountByProduct } from "@/api/Channel/index";
 import { getAllunit, getDictCount } from "@/api/Dict/index";
 const Base64 = require("js-base64").Base64;
 var isupdatetrue = "";
@@ -332,7 +334,7 @@ export default {
     },
     // 得到产品详情
     getProDetail(productId) {
-      console.log('===')
+      // console.log('===')
       this.productId = productId;
       editor = ace.edit("editor");
       editor.session.setMode("ace/mode/erlang"); // 设置语言
@@ -351,75 +353,66 @@ export default {
       //   enableSnippets: true,
       //   enableLiveAutocompletion: true // 设置自动提示
       // });
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(productId).then(
-      //   response => {
-      //     if (response) {
-      //       this.productName = response.attributes.name;
-      //       for (var key in response.attributes) {
-      //         this.productdetail[key] = response.attributes[key];
-      //       }
-      //       this.option.map(items => {
-      //         if (this.productdetail.category == items.value) {
-      //           this.productdetail.category = items.label;
-      //         }
-      //       });
-      //       this.productdetail.createdAt = this.utc2beijing(response.createdAt);
-      //       this.productdetail.id = response.id;
-      //       this.dynamicReg = response.attributes.dynamicReg;
-      //       this.productdetail.isshow = 0;
-      //       this.form.Productname = response.attributes.name;
-      //       this.ProductSecret = response.attributes.productSecret;
-      //       this.form.Productkey = this.productId;
-      //       // window.location.origin
-      //       this.productimg = response.attributes.icon;
-      //       if (response.attributes.decoder) {
-      //         setdata = response.attributes.decoder.code;
-      //         this.thingsParseModel.name = response.attributes.decoder.name;
-      //         this.thingsParseModel.version =
-      //             response.attributes.decoder.version;
-      //         this.thingsParseModel.desc = response.attributes.decoder.desc;
-      //       } else {
-      //         setdata =
-      //             "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
-      //       }
-      //       if (!this.productdetail.thing) {
-      //         this.productdetail.thing = {
-      //           properties: []
-      //         };
-      //       }
+      this.$get_object('Product', productId).then(response => {
+        if (response) {
+          this.productName = response.name;
+          for (var key in response) {
+            this.productdetail[key] = response[key];
+          }
+          this.option.map(items => {
+            if (this.productdetail.category == items.value) {
+              this.productdetail.category = items.label;
+            }
+          });
+          this.productdetail.createdAt = this.utc2beijing(response.createdAt);
+          this.productdetail.id = response.id;
+          this.dynamicReg = response.dynamicReg;
+          this.productdetail.isshow = 0;
+          this.form.Productname = response.name;
+          this.ProductSecret = response.productSecret;
+          this.form.Productkey = this.productId;
+          // window.location.origin
+          this.productimg = response.icon;
+          if (response.decoder) {
+            setdata = response.decoder.code;
+            this.thingsParseModel.name = response.decoder.name;
+            this.thingsParseModel.version =
+                  response.decoder.version;
+            this.thingsParseModel.desc = response.decoder.desc;
+          } else {
+            setdata =
+                  "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
+          }
+          if (!this.productdetail.thing) {
+            this.productdetail.thing = {
+              properties: []
+            };
+          }
 
-      //       this.wmxData = this.productdetail.thing.properties.filter(item => {
-      //         return item.name && item.dataType;
-      //       });
+          this.wmxData = this.productdetail.thing.properties.filter(item => {
+            return item.name && item.dataType;
+          });
 
-      //       editor.setValue(Base64.decode(setdata));
+          editor.setValue(Base64.decode(setdata));
 
-      //       editor.gotoLine(editor.session.getLength());
-      //       // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-      //       var Device = Parse.Object.extend("Device");
-      //       var devices = new Parse.Query(Device);
+          editor.gotoLine(editor.session.getLength());
+          // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
 
-      //       devices.equalTo("product", this.productId);
-      //       devices.skip(0);
-      //       devices.count().then(count => {
-      //         this.form.ProductAll = count;
-      //       });
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+          this.queryDeviceCount(this.productId)
+        }
+      });
     },
+    // 查询设备总数
+    async queryDeviceCount(productId) {
+      this.form.ProductAll = await getDeviceCountByProduct(productId)
+    },
+
     editordata(row) {
-      this.thingsParseModel.name = row.attributes.data.name;
-      this.thingsParseModel.version = row.attributes.data.version;
-      this.thingsParseModel.desc = row.attributes.data.desc;
-      this.thingsParseModel.resource = row.attributes.data.enable;
-      editor.setValue(Base64.decode(row.attributes.data.code));
+      this.thingsParseModel.name = row.data.name;
+      this.thingsParseModel.version = row.data.version;
+      this.thingsParseModel.desc = row.data.desc;
+      this.thingsParseModel.resource = row.data.enable;
+      editor.setValue(Base64.decode(row.data.code));
       this.dialogTableVisible = false;
     },
     async getAllunit() {
@@ -442,32 +435,23 @@ export default {
             code: Base64.encode(editor.getValue()),
             desc: thingsParseModel.desc
           };
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Product = Parse.Object.extend("Product");
-          // var product = new Product();
-          // product.id = this.productId;
-          // // product.get(this.productId).then(object => {
-          // product.set("decoder", obj);
-          // product.save().then(
-          //   res => {
-          //     if (this.issub == false) {
-          //       this.$message({
-          //         type: "success",
-          //         message: "保存成功"
-          //       });
-          //       if (istrue == true) {
-          //         isupdatetrue += "保存成功" + "\r\n";
-          //         editor2.setValue(isupdatetrue);
-          //       }
-          //     } else {
-          //     }
-          //     this.issub = true;
-          //   },
-          //   error => {
-          //     returnLogin(error);
-          //   }
-          // );
-          // });
+          const params = {
+            "decoder": obj
+          };
+          this.$update_object('Product', this.productId, params).then(res => {
+            if (this.issub == false) {
+              this.$message({
+                type: "success",
+                message: "保存成功"
+              });
+              if (istrue == true) {
+                isupdatetrue += "保存成功";
+                editor2.setValue(isupdatetrue);
+              }
+            } else {
+            }
+            this.issub = true;
+          });
         } else {
           this.$message({
             type: "warning",
@@ -479,52 +463,49 @@ export default {
     subAce1(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var userid = Parse.User.current().id;
-          // var obj = {
-          //   name: this.thingsParseModel.name,
-          //   version: this.thingsParseModel.version,
-          //   code: Base64.encode(editor.getValue()),
-          //   desc: this.thingsParseModel.desc
-          // };
-
-          // var Dict = Parse.Object.extend("Dict");
-          // var datas1 = new Parse.Query(Dict);
-          // datas1.equalTo("data.name", obj.name);
-          // datas1.equalTo("data.version", obj.version);
-
-          // datas1.find().then(
-          //   response => {
-          //     if (response) {
-          //       if (response.length >= 1) {
-          //         this.$messages("此协议版本已存在");
-          //         return;
-          //       } else {
-          //         var datas = new Dict();
-          //         var acl = new Parse.ACL();
-          //         acl.setReadAccess(userid, true);
-          //         acl.setWriteAccess(userid, true);
-          //         acl.setPublicReadAccess(true);
-          //         datas.set("type", "decoder");
-          //         datas.set("data", obj);
-          //         datas.set("ACL", acl);
-          //         datas.save().then(
-          //           resultes => {
-          //             if (resultes) {
-          //               this.$message("保存到公共协议库成功");
-          //             }
-          //           },
-          //           error => {
-          //             this.$message(error.message);
-          //           }
-          //         );
-          //       }
-          //     }
-          //   },
-          //   error => {
-          //     returnLogin(error);
-          //   }
-          // );
+          const params = {
+            where: {
+              "data.name": this.thingsParseModel.name,
+              "data.version": this.thingsParseModel.version
+            }
+          };
+          this.$query_object('Dict', params).then(response => {
+            if (response.results && response.results.length >= 1) {
+              this.$message("此协议版本已存在");
+              return;
+            } else {
+              this.$get_object('Product', this.productId).then(response => {
+                if (response) {
+                  var obj = {
+                    name: this.thingsParseModel.name,
+                    version: this.thingsParseModel.version,
+                    code: Base64.encode(editor.getValue()),
+                    desc: this.thingsParseModel.desc
+                  };
+                  const params = {
+                    type: "decoder",
+                    data: obj,
+                    ACL: response.ACL
+                  };
+                  this.$create_object('Dict', params).then(resultes => {
+                    if (resultes.error) {
+                      this.$message({
+                        type: "error",
+                        message: resultes.error
+                      });
+                    } else {
+                      this.$message({
+                        type: "success",
+                        message: "保存到公共协议库成功"
+                      });
+                    }
+                  }).catch(e => {
+                    console.log(e)
+                  })
+                }
+              })
+            }
+          })
         } else {
           this.$message({
             type: "warning",
@@ -592,73 +573,54 @@ export default {
       return date; // 2017-03-31 16:02:06
     },
     getChannelEnable(row, rowIndex) {
-      if (row.row.attributes.isEnable == true) {
+      if (row.isEnable == true) {
         return "green_active";
       } else {
         return "red_active";
       }
     },
-    deletedata(id) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Dict();
-      // datas.id = id;
-      // datas.destroy().then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.$message("成功删除");
-      //       this.chaxun();
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+    deletedata(ObjectId) {
+      this.$del_object('Dict', ObjectId).then(resultes => {
+        if (resultes) {
+          this.$message("成功删除");
+          this.chaxun();
+        }
+      });
     },
     // 热加载弹窗
     updatesubdialog() {
       this.protoldialog = true;
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend("Channel");
-      // var query = new Parse.Query(Channel);
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Product();
-      // product.id = this.productId;
-      // query.equalTo("product", product);
-      // query.equalTo("type", "1");
-      // query.ascending("-updatedAt");
-      // query.find().then(
-      //   res => {
-      //     this.protolchannel = res;
-      //     this.$refs.multipleTable.toggleAllSelection();
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const type = "1"
+      const product = { __type: "Pointer", className: "Product", objectId: this.productId }
+      getChannelCountByProduct(10, 0, product, type).then(res => {
+        if (res.count > 0) {
+          this.protolchannel = res.results;
+          this.$refs.multipleTable.toggleAllSelection();
+        } else {
+          this.protolchannel = {};
+          this.$refs.multipleTable.toggleAllSelection();
+        }
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     chaxun() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.skip(this.decoderstart);
-      // datas.limit(this.decoderlength);
-      // datas.equalTo("type", "decoder");
-      // datas.ascending("-createdAt");
-      // datas.count().then(
-      //   count => {
-      //     this.decodertotal = count;
-      //     datas.find().then(resultes => {
-      //       if (resultes) {
-      //         this.dialogTableVisible = true;
-      //         this.gridData = resultes;
-      //       }
-      //     });
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const params = {
+        skip: this.decoderstart,
+        limit: this.decoderlength,
+        order: "-createdAt",
+        where: {
+          "type": 'decoder'
+        }
+      }
+      this.$query_object('Dict', params).then(res => {
+        if (res) {
+          this.decodertotal = res.count;
+          this.dialogTableVisible = true;
+          this.gridData = res.results;
+        }
+      });
     },
     // 协议编辑
     protol() {

@@ -434,13 +434,13 @@ export default {
         .then(res => {
           this.appdata = res.results;
           this.appdata.map(item => {
-            console.log(item)
+            // console.log(item)
             if (item.tag.appconfig.secret) {
               item.isshow = false;
             }
           });
           this.total = res.count;
-          console.log(this.appdata, "appdata");
+          // console.log(this.appdata, "appdata");
         })
         .catch(e => {
           console.log(e);
@@ -506,7 +506,7 @@ export default {
         appconfig: {}
       };
       tag.appconfig = formParam;
-      console.log(tag.appconfig);
+      // console.log(tag.appconfig);
       await putRole(objectId, tag).then(res => {
         this.$message({
           type: "success",
@@ -525,7 +525,7 @@ export default {
     },
     // 跳转新增
     nodeDeployment(row) {
-      console.log(row)
+      // console.log(row)
       this.$router.push({
         path: "/roles/server_control",
         query: {
