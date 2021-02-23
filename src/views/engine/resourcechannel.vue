@@ -358,45 +358,38 @@ export default {
       if (start == 0) {
         this.start = 0
       }
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend('Channel')
-      // var channel = new Parse.Query(Channel)
-      // channel.skip(this.start)
-      // channel.limit(this.length)
-      // channel.ascending('-createdAt')
-      // if (this.channelformsearch.name != '') {
-      //   channel.contains('name', this.channelformsearch.name)
-      // }
-      // channel.count().then(count => {
-      //   this.total = count
-      //   channel.find().then(
-      //     resultes => {
-      //       if (resultes) {
-      //         this.tableData = resultes
-      //       }
-      //     },
-      //     error => {
-      //       if (error.code == '209') {
-      //         this.$message({
-      //           type: 'warning',
-      //           message: '登陆权限过期，请重新登录'
-      //         })
-      //         this.$router.push({
-      //           path: '/login'
-      //         })
-      //       } else if (error.code == 119) {
-      //         this.$message({
-      //           type: 'error',
-      //           message: '没有操作权限'
-      //         })
-      //       }
-      //     }, error => {
-      //       returnLogin(error)
-      //     }
-      //   )
-      // }, error => {
-      //   returnLogin(error)
-      // })
+      const params = {
+        keys: 'count(*)',
+        order: "-createdAt",
+        limit: this.length,
+        skip: this.start,
+        where: {
+        }
+      }
+      if (this.channelformsearch.name != '') {
+        params.where.name = this.channelformsearch.name
+      }
+      this.$query_object('Channel', params).then(res => {
+        if (res) {
+          this.total = res.count
+          this.tableData = res.results
+        }
+      }).catch(error => {
+        if (error.code == '209') {
+          this.$message({
+            type: 'warning',
+            message: '登陆权限过期，请重新登录'
+          })
+          this.$router.push({
+            path: '/login'
+          })
+        } else if (error.code == 119) {
+          this.$message({
+            type: 'error',
+            message: '没有操作权限'
+          })
+        }
+      })
     },
     // 获取应用列表
     getApplication() {

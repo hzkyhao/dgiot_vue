@@ -23,7 +23,7 @@
 // var serverURL = "http://192.168.2.51:5080/iotapi"
 var sekeUrl = 'http://132.232.121.164'
 var platFormUrl = 'http://124.156.212.253'
-// var serverURL = "http://124.156.212.253";
+var sinmaheURL = "http://132.232.119.105";
 var serverURL = sekeUrl
 // var serverURL = "http://pump.iotn2n.com:5080/iotapi";
 
