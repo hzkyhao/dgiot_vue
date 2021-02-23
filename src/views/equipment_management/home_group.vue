@@ -299,10 +299,8 @@
             </el-col>
             <el-col :span="18">
               <el-input v-model="addGroup.name" type="text" autocomplete="off"/>
-              </el-form-item>
             </el-col>
           </el-row>
-          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="addDeviceGroup()">新增</el-button>
