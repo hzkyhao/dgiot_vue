@@ -5,48 +5,78 @@
       <el-dialog
         :visible.sync="add_dict_dialog"
         :title="title_dict_dialog"
-        width="20%"
+        width="40%"
       >
         <el-form
           ref="dictForm"
           :model="dictForm"
           :rules="rules"
-          label-width="80px"
+          class="dict_type"
+          label-width="120px"
           size="mini"
         >
-          <el-form-item label="词典类型" prop="type">
-            <el-select v-model="dictForm.type" style="width: 100%;" placeholder="请选择">
-              <el-option
-                v-for="item in dictRecord"
-                :key="item.data.name"
-                :label="item.data.name"
-                :value="item.data.name"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="指令名称" prop="name">
-            <el-input v-model="dictForm.name" />
-          </el-form-item>
-          <el-form-item label="加密指令" prop="nameEncrypt">
-            <el-input v-model="dictForm.nameEncrypt" />
-          </el-form-item>
-          <el-form-item label="回复类型" prop="needReply">
-            <el-radio
-              v-model="dictForm.needReply"
-              label="1"
-              border
-            >需要</el-radio
-            >
-            <el-radio
-              v-model="dictForm.needReply"
-              label="2"
-              border
-            >不需要</el-radio
-            >
-          </el-form-item>
-          <el-form-item label="指令状态" prop="enable">
-            <el-radio v-model="dictForm.enable" label="1" border>启用</el-radio>
-            <el-radio v-model="dictForm.enable" label="2" border>废弃</el-radio>
-          </el-form-item>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="词典类型" prop="type">
+                <el-select
+                  v-model="dictForm.type"
+                  style="width: 100%;"
+                  placeholder="请选择"
+                  @change="selectChange"
+                >
+                  <el-option
+                    v-for="item in dictRecord"
+                    :key="item.data.name"
+                    :label="item.data.name"
+                    :value="item.data.name"
+                  />
+              </el-select> </el-form-item
+            ></el-col>
+            <el-col :span="12">
+              <el-form-item label="词典名称" prop="name">
+              <el-input v-model="dictForm.name" /> </el-form-item
+            ></el-col>
+            <div v-for="(item, i) in dictForm.tempconfig" :key="i">
+              <el-col :span="12">
+                <el-form-item
+                  v-if="item.description.zh"
+                  :title="item.description.zh"
+                  :label="item.description.zh"
+                >
+                <el-input v-model="item.default" /> </el-form-item
+              ></el-col>
+            </div>
+            <el-col :span="12">
+              <el-form-item label="所属应用" prop="roles">
+                <el-input v-model="dictForm.applicationtText" placeholder="请选择所属应用">
+                  <template slot="append">
+                    <i :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" style="cursor: pointer;" @click="showTree = !showTree"/>
+                  </template>
+                </el-input>
+                <div v-if="showTree">
+                  <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"/>
+                </div>
+              </el-form-item>
+
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="状态" prop="enable">
+                <el-radio
+                  v-model="dictForm.enable"
+                  label="1"
+                  border
+                >启用</el-radio
+                >
+                <el-radio
+                  v-model="dictForm.enable"
+                  label="2"
+                  border
+                >废弃</el-radio
+                >
+              </el-form-item>
+            </el-col>
+          </el-row>
+
           <el-form-item label="备注">
             <el-input
               :autosize="{ minRows: 2, maxRows: 4 }"
@@ -241,19 +271,19 @@
           :rules="rules"
           size="mini"
           status-icon
-          label-width="100px"
+          label-width="70px"
           class="demo-ruleForm"
         >
           <el-row :gutter="20">
-            <el-col :span="5">
-              <el-form-item label="名称" prop="name">
+            <el-col :span="6">
+              <el-form-item label="名称" label-width="50px" prop="name">
                 <el-input
                   v-model="tempparams.name"
                   autocomplete="off"
               /> </el-form-item
             ></el-col>
-            <el-col :span="6">
-              <el-form-item label="类型" prop="type">
+            <el-col :span="5">
+              <el-form-item label="类型" label-width="50px" prop="type">
                 <el-select v-model="tempparams.type" placeholder="请选择">
                   <el-option
                     v-for="item in dictOptions"
@@ -264,13 +294,13 @@
               </el-select> </el-form-item
             ></el-col>
             <el-col :span="5">
-              <el-form-item label="序号" prop="order">
+              <el-form-item label="序号" label-width="50px" prop="order">
               <el-input v-model.number="tempparams.order" /> </el-form-item
             ></el-col>
 
             <el-col
               :span="8"
-            ><el-form-item label="必填">
+            ><el-form-item label="必填" label-width="50px">
               <el-radio
                 v-model="tempparams.required"
                 label="1"
@@ -436,7 +466,7 @@
               {{ scope.row.data.type }}
             </template>
           </el-table-column>
-          <el-table-column label="指令名称">
+          <el-table-column label="词典名称">
             <template slot-scope="scope">
               {{ scope.row.data.name }}
             </template>
@@ -446,7 +476,7 @@
               {{ scope.row.data.nameEncrypt }}
             </template>
           </el-table-column>
-          <el-table-column label="指令状态">
+          <el-table-column label="状态">
             <template slot-scope="scope">
               <el-tag
                 v-if="scope.row.data.enable == '1'"
@@ -513,6 +543,7 @@
 
 <script>
 import { queryDict, postDict, delDict, putDict } from "@/api/Direct/index.js";
+import { resourceTypes } from '@/api/Rules'
 import vueJsonEditor from "vue-json-editor";
 export default {
   name: "Dict",
@@ -528,10 +559,14 @@ export default {
         needReply: [
           { required: true, message: "请选择指令回复类型", trigger: "change" }
         ],
-        enable: [
-          { required: true, message: "请选择指令状态", trigger: "change" }
-        ]
+        enable: [{ required: true, message: "请选择状态", trigger: "change" }]
       },
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      allApps: [],
+      showTree: false,
       editIndexId: "",
       editDictId: "",
       editDictTempId: "",
@@ -554,7 +589,8 @@ export default {
         nameEncrypt: "",
         needReply: "",
         enable: "",
-        description: ""
+        description: "",
+        tempconfig: []
       },
       tempparams: {
         name: "",
@@ -656,6 +692,7 @@ export default {
   mounted() {
     this.getDictData();
     this.getDictRecord();
+    this.dialogType();
   },
   beforeCreate() {}, // 生命周期 - 创建之前
   beforeMount() {}, // 生命周期 - 挂载之前
@@ -665,6 +702,33 @@ export default {
   destroyed() {}, // 生命周期 - 销毁完成
   activated() {},
   methods: {
+    dialogType() {
+      this.$axiosWen.get('iotapi/roletree').then(res => {
+        console.log(res)
+        this.allApps = res.results
+      }).catch(e => {
+        console.log(e)
+      }),
+      resourceTypes().then(resultes => {
+        this.channelregion = resultes
+      })
+    },
+    handleNodeClick(data) {
+      this.showTree = !this.showTree
+      this.dictForm.applicationtText = data.alias
+    },
+    selectChange(v) {
+      const dictRecord = this.dictRecord;
+      const tempconfig = dictRecord.filter(i => {
+        return i.data.name == v;
+      });
+      const config = tempconfig.filter(i => {
+        return i.data.params;
+      });
+      console.log("config", config);
+      this.dictForm.tempconfig = config[0].data.params;
+      console.log(this.dictForm.tempconfig);
+    },
     submitFormTempDict() {
       this.edit_dict_temp_dialog = false;
       if (this.editIndexId) {
@@ -843,7 +907,8 @@ export default {
         nameEncrypt: "",
         needReply: "",
         enable: "",
-        description: ""
+        description: "",
+        tempconfig: []
       };
     },
     onSubmit(formName) {
@@ -1011,6 +1076,8 @@ export default {
 
   /deep/.json-save-btn {
     cursor: pointer;
+  }
+  .dict_type /deep/ .el-form-item {
   }
 }
 </style>
