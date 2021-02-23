@@ -665,42 +665,42 @@ export default {
         //   })
         // })
       } else {
-        this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-        // var Product = Parse.Object.extend('Product')
-        // var product = new Parse.Query(Product)
-        // if (this.formInline.productname != '') {
-        //   product.matches('name', this.formInline.productname, 'i')
-        // }
-        // this.getRoles().then(data => {
-        //   this.allApps = data
-        // }).catch(error => {
-        //   returnLogin(error)
-        // })
+        this.getRoles().then(data => {
+          this.allApps = data
+        }).catch(error => {
+          returnLogin(error)
+        })
         // product.ascending('-updatedAt')
         // product.skip(this.start)
         // product.limit(this.length)
         // product.notEqualTo('devType', 'report')
-        // product.count().then(
-        //   count => {
-        //     this.total = count
-        //     product.find().then(resultes => {
-        //       if (resultes) {
-        //         resultes.map(items => {
-        //           if (
-        //             items.attributes.category != '' &&
-        //             items.attributes.category
-        //           ) {
-        //             category.push(items.attributes.category)
-        //           }
-        //         })
-        //         this.getDict(resultes, category)
-        //       }
-        //     })
-        //   },
-        //   error => {
-        //     returnLogin(error)
-        //   }
-        // )
+        const params = {
+          keys: 'count(*)',
+          order: '-updatedAt',
+          skip: this.start,
+          limit: this.length,
+          $ne: {
+            'devType': 'report'
+          },
+          where: {}
+        }
+        if (this.formInline.productname != '') {
+          params.where.name = this.formInline.productname
+        }
+        this.$query_object('Product', params).then(res => {
+          if (res.count > 0) {
+            this.total = res.count
+            res.results.map(items => {
+              if (
+                items.category != '' &&
+                    items.category
+              ) {
+                category.push(items.category)
+              }
+            })
+            this.getDict(res.results, category)
+          }
+        })
       }
     },
     handleClose() {

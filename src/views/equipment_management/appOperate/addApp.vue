@@ -390,7 +390,7 @@ export default {
     },
     onApplicationchange(val) {},
     getProductList(relAppid) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
+      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
       // var Product = Parse.Object.extend('Product')
       // var product = new Parse.Query(Product)
       // product.find().then(response => {
@@ -398,6 +398,11 @@ export default {
       //     this.productlist = response
       //   }
       // })
+      this.$query_object('Product', {}).then(res => {
+        if (res.results) {
+          this.productlist = res.results
+        }
+      })
     },
     // 产生随机secrets
     randomSecret() {

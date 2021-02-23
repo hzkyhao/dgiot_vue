@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import {  getIndustry} from "@/api/Dict/index"
+import { getIndustry } from "@/api/Dict/index"
 export default {
 
   name: 'Modules',
@@ -243,31 +243,29 @@ export default {
     // 查询样品
     Industry() {
       this.categoryList = []
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // this.getProduct()
-      // datas.equalTo('data.key', 'category')
-      // datas.limit(1000)
-      // datas.find().then(
-      //   response => {
-      //     if (response) {
-      //       response.map(items => {
-      //         var obj = {}
-      //         obj.value = items.attributes.type
-      //         obj.label = items.attributes.data.CategoryName
-      //         obj.id = items.attributes.data.Id
-      //         obj.parentid = items.attributes.data.SuperId
-      //         this.categoryList.push(obj)
-      //       })
-      //       // this.searchProduct();
-      //       this.categoryListOptions = this.treeData(this.categoryList)
-      //     }
-      //   },
-      //   error => {
-      //     console.log(error, "error")
-      //   }
-      // )
+      this.getProduct()
+      const params = {
+        limit: 10,
+        where: {
+          "data.key": "category"
+        }
+      }
+      this.$query_object('Dict', params).then(res => {
+        if (res.results) {
+          res.results.map(items => {
+            var obj = {}
+            obj.value = items.type
+            obj.label = items.data.CategoryName
+            obj.id = items.data.Id
+            obj.parentid = items.data.SuperId
+            this.categoryList.push(obj)
+          })
+          // this.searchProduct();
+          this.categoryListOptions = this.treeData(this.categoryList)
+        }
+      }).catch(error => {
+        console.log(error, "error")
+      })
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

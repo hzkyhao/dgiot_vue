@@ -711,10 +711,10 @@ export default {
         }
       }
       const { results } = await queryProduct(params)
-      console.log("results", results)
+      // console.log("results", results)
       this.groupData = results
       this.total = this.groupData.length
-      console.log(this.groupData)
+      // console.log(this.groupData)
 
       const resApps = await queryRole({
         limit: 100
