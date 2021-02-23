@@ -2,7 +2,6 @@
 <template>
   <div class="dict">
     <div class="dialog">
-
       <el-dialog
         :visible.sync="add_dict_dialog"
         :title="title_dict_dialog"
@@ -68,40 +67,70 @@
         </el-form>
       </el-dialog>
 
-      <el-dialog :visible.sync="dict_temp_dialog" :title="title_temp_dialog" width="80%">
-        <el-form ref="dictTempForm" :model="dictTempForm" :rules="rules" size="mini">
-          <el-form-item
-            :label-width="formLabelWidth"
-            label="词典名称"
-            prop="name"
-          >
-            <el-input v-model="dictTempForm.name" autocomplete="off" />
-          </el-form-item>
-          <el-form-item :label-width="formLabelWidth" label="词典类型">
-            <el-input v-model="dictTempForm.cType" autocomplete="off" />
-          </el-form-item>
-          <el-form-item
-            :label-width="formLabelWidth"
-            label="词典状态"
-            prop="enable"
-          >
-            <el-radio
-              v-model="dictTempForm.enable"
-              label="1"
-              border
-            >启用</el-radio
+      <el-dialog
+        :visible.sync="dict_temp_dialog"
+        :title="title_temp_dialog"
+        width="80%"
+      >
+        <el-form
+          ref="dictTempForm"
+          :model="dictTempForm"
+          :rules="rules"
+          size="mini"
+        >
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-form-item
+                :label-width="formLabelWidth"
+                label="词典名称"
+                prop="name"
+              >
+                <el-input
+                  v-model="dictTempForm.name"
+                  autocomplete="off"
+              /> </el-form-item
+            ></el-col>
+            <el-col
+              :span="8"
+            ><el-form-item :label-width="formLabelWidth" label="词典类型">
+              <el-input
+                v-model="dictTempForm.cType"
+                autocomplete="off"
+            /> </el-form-item
+            ></el-col>
+            <el-col :span="8">
+              <el-form-item
+                :label-width="formLabelWidth"
+                label="词典状态"
+                prop="enable"
+              >
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  label="1"
+                  border
+                >启用</el-radio
+                >
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  label="0"
+                  border
+                >禁用</el-radio
+                >
+            </el-form-item></el-col
             >
-            <el-radio
-              v-model="dictTempForm.enable"
-              label="0"
-              border
-            >禁用</el-radio
-            >
-          </el-form-item>
+          </el-row>
+
           <el-form-item :label-width="formLabelWidth" label="词典数据">
             <el-tabs v-model="elactiveName">
               <el-tab-pane label="Table" name="Table">
-                <el-button type="primary" class="mt-3" size="small" icon="el-icon-plus" @click.native="addRow(dictTempForm.params)">新 增</el-button>
+                <el-button
+                  type="primary"
+                  class="mt-3"
+                  size="small"
+                  icon="el-icon-plus"
+                  @click.native="addRow(dictTempForm.params)"
+                >新 增</el-button
+                >
 
                 <el-table
                   :data="dictTempForm.params"
@@ -138,28 +167,31 @@
                     </template>
                   </el-table-column>
 
-                  <el-table-column
-                    label="操作"
-                    width="160"
-                    align="center">
+                  <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
                         type="danger"
                         plain
                         title="删除"
-                        @click.native="delRow(scope.$index,dictTempForm.params)">删除
+                        @click.native="
+                          delRow(scope.$index, dictTempForm.params)
+                        "
+                      >删除
                       </el-button>
                       <el-button
                         size="mini"
                         type="info"
                         plain
                         title="编辑"
-                        @click.native="editRow(scope.row,scope.$index,dictTempForm.params)">编辑
+                        @click.native="
+                          editRow(scope.row, scope.$index, dictTempForm.params)
+                        "
+                      >编辑
                       </el-button>
                     </template>
-
-                </el-table-column></el-table>
+                </el-table-column></el-table
+                >
               </el-tab-pane>
               <el-tab-pane label="Json" name="Json">
                 <vue-json-editor
@@ -197,42 +229,51 @@
         :title="title_dict_edit_dialog"
         size="mini"
       >
-        <el-form ref="tempparams" :model="tempparams" :rules="rules" size="mini" status-icon label-width="100px" class="demo-ruleForm">
+        <el-form
+          ref="tempparams"
+          :model="tempparams"
+          :rules="rules"
+          size="mini"
+          status-icon
+          label-width="100px"
+          class="demo-ruleForm"
+        >
           <el-form-item label="名称" prop="name">
-            <el-input v-model="tempparams.name" autocomplete="off"/>
+            <el-input v-model="tempparams.name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="类型" prop="type">
-            <el-input v-model="tempparams.type" autocomplete="off"/>
+            <el-input v-model="tempparams.type" autocomplete="off" />
           </el-form-item>
           <el-form-item label="序号" prop="order">
-            <el-input v-model.number="tempparams.order"/>
+            <el-input v-model.number="tempparams.order" />
           </el-form-item>
           <el-form-item label="中文标题" prop="title">
-            <el-input v-model="tempparams.title.zh" autocomplete="off"/>
+            <el-input v-model="tempparams.title.zh" autocomplete="off" />
           </el-form-item>
           <el-form-item label="英文标题" prop="title">
-            <el-input v-model="tempparams.title.en" autocomplete="off"/>
+            <el-input v-model="tempparams.title.en" autocomplete="off" />
           </el-form-item>
           <el-form-item label="默认值" prop="default">
-            <el-input v-model="tempparams.default"/>
+            <el-input v-model="tempparams.default" />
           </el-form-item>
-          <el-form-item label="是否必填" prop="required">
-            <el-radio-group v-model="tempparams.required" size="mini">
-              <el-radio label="true" border>必填</el-radio>
-              <el-radio label="false" border>非必填</el-radio>
-            </el-radio-group>
+          <el-form-item label="是否必填">
+            <el-radio v-model="tempparams.required" label="1" border>必填</el-radio>
+            <el-radio v-model="tempparams.required" label="0" border>非必填</el-radio>
           </el-form-item>
           <el-form-item label="中文描述" prop="title">
-            <el-input v-model="tempparams.description.zh" autocomplete="off"/>
+            <el-input v-model="tempparams.description.zh" autocomplete="off" />
           </el-form-item>
           <el-form-item label="英文描述" prop="title">
-            <el-input v-model="tempparams.description.en" autocomplete="off"/>
+            <el-input v-model="tempparams.description.en" autocomplete="off" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitFormTempDict()">提交</el-button>
+            <el-button
+              type="primary"
+              @click="submitFormTempDict()"
+            >提交</el-button
+            >
           </el-form-item>
         </el-form>
-
       </el-dialog>
     </div>
     <el-tabs v-model="activeName">
@@ -455,13 +496,13 @@ export default {
           { required: true, message: "请选择指令状态", trigger: "change" }
         ]
       },
-      editIndexId: '',
+      editIndexId: "",
       editDictId: "",
       editDictTempId: "",
       infoData: new Date(),
       elactiveName: "Table",
       activeName: "词典模板管理",
-      title_dict_edit_dialog: '新增词典数据',
+      title_dict_edit_dialog: "新增词典数据",
       title_temp_dialog: "新增词典模板",
       title_dict_dialog: "新增词典",
       search_dict: "",
@@ -491,7 +532,8 @@ export default {
         description: {
           en: "",
           zh: ""
-        }},
+        }
+      },
       dictTempForm: {
         name: "",
         cType: "",
@@ -587,19 +629,19 @@ export default {
   activated() {},
   methods: {
     submitFormTempDict() {
-      this.edit_dict_temp_dialog = false
+      this.edit_dict_temp_dialog = false;
       if (this.editIndexId) {
-        this.dictTempForm.params[this.editIndexId] = this.tempparams
-        this.$message('编辑成功')
+        this.dictTempForm.params[this.editIndexId] = this.tempparams;
+        this.$message("编辑成功");
       } else {
-        this.dictTempForm.params.push(this.tempparams)
-        this.$message('新增成功')
+        this.dictTempForm.params.push(this.tempparams);
+        this.$message("新增成功");
       }
     },
     addRow(tabs) {
-      this.editIndexId = ''
-      this.title_dict_edit_dialog = '新增词典数据'
-      this.edit_dict_temp_dialog = true
+      this.editIndexId = "";
+      this.title_dict_edit_dialog = "新增词典数据";
+      this.edit_dict_temp_dialog = true;
       this.tempparams = {
         name: "",
         type: "",
@@ -613,17 +655,18 @@ export default {
         description: {
           en: "",
           zh: ""
-        }}
+        }
+      };
     },
     delRow(index, rows) {
-      rows.splice(index, 1)
-      this.onJsonSave('dictTempForm')
+      rows.splice(index, 1);
+      this.onJsonSave("dictTempForm");
     },
     editRow(row, index, params) {
-      this.editIndexId = index
-      this.title_dict_edit_dialog = '修改词典数据'
-      this.edit_dict_temp_dialog = true
-      this.tempparams = row
+      this.editIndexId = index;
+      this.title_dict_edit_dialog = "修改词典数据";
+      this.edit_dict_temp_dialog = true;
+      this.tempparams = row;
     },
     clearFormValidate(formName) {
       if (this.$refs[formName] !== undefined) {
