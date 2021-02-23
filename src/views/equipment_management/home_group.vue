@@ -32,7 +32,7 @@
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-        </el-button></el-form-item>
+        </el-form-item>
       </el-form>
       <div class="protable">
         <el-table :data="groupData" style="width: 100%">
