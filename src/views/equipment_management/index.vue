@@ -626,6 +626,7 @@
 import { Promise } from "q";
 import Cookies from "js-cookie";
 import elDragDialog from "@/directive/el-dragDialog"; // base on element-ui
+import { Batchdelete } from '@/api/Batch'
 import { BmlMarkerClusterer } from "vue-baidu-map";
 import { utc2beijing } from "@/utils";
 import { returnLogin } from "@/utils/return";
@@ -1315,7 +1316,7 @@ export default {
         idarr.push(item.id)
       })
 
-      await this.$Batchdelete(
+      await Batchdelete(
         '_Device', idarr, {}).then(res => {
         if (!res.error) {
           this.initQuery(`设备${idarr}删除成功`, 'success')

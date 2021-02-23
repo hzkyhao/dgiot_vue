@@ -540,6 +540,7 @@
 </template>
 <script>
 import { query_object, get_object, del_object, update_object } from "@/api/shuwa_parse"
+import { Batchdelete } from '@/api/Batch'
 import { Promise } from 'q'
 import Cookies from 'js-cookie'
 import { getProduct } from "@/api/Product/index";
@@ -1099,9 +1100,9 @@ export default {
       const body = {
         "isEnable": isEnable
       }
-      const res = await this.$Batchdelete('PUT',
+      const res = await Batchdelete('PUT',
         'Device', idarr, body)
-      console.log(res)
+      // console.log(res)
       if (res) {
         // 处理不规则的返回参数
         res.forEach((li, index) => {
@@ -1119,7 +1120,7 @@ export default {
           }
           requests.push({ type: Object.keys(res[index])[0], message: li.msg, dangerouslyUseHTMLString: li.dangerouslyUseHTMLString })
         })
-        console.log(requests)
+        // console.log(requests)
         requests.forEach((i, index) => {
           this.$baseNotify(i.message, `${idarr[index]}`, i.type, "top-right", 5000 * i.sortIndex, i.dangerouslyUseHTMLString)
         })
