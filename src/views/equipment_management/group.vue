@@ -376,7 +376,7 @@ export default {
     }
     }
     .is-leaf {
-      display: none;
+      /* display: none; */
     }
     /* .el-tree-node__content{
       padding-left: 8px;
