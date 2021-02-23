@@ -5,17 +5,23 @@
       <el-dialog
         :visible.sync="add_dict_dialog"
         :title="title_dict_dialog"
-        width="26%"
+        width="20%"
       >
         <el-form
           ref="dictForm"
           :model="dictForm"
           :rules="rules"
-          label-width="120px"
+          label-width="80px"
           size="mini"
         >
-          <el-form-item label="设备类型" prop="type">
-            <el-input v-model="dictForm.type" />
+          <el-form-item label="词典类型" prop="type">
+            <el-select v-model="dictForm.type" style="width: 100%;" placeholder="请选择">
+              <el-option
+                v-for="item in dictRecord"
+                :key="item.data.name"
+                :label="item.data.name"
+                :value="item.data.name"/>
+            </el-select>
           </el-form-item>
           <el-form-item label="指令名称" prop="name">
             <el-input v-model="dictForm.name" />
@@ -23,18 +29,18 @@
           <el-form-item label="加密指令" prop="nameEncrypt">
             <el-input v-model="dictForm.nameEncrypt" />
           </el-form-item>
-          <el-form-item label="指令回复类型" prop="needReply">
+          <el-form-item label="回复类型" prop="needReply">
             <el-radio
               v-model="dictForm.needReply"
               label="1"
               border
-            >需要回复</el-radio
+            >需要</el-radio
             >
             <el-radio
               v-model="dictForm.needReply"
               label="2"
               border
-            >不需要回复</el-radio
+            >不需要</el-radio
             >
           </el-form-item>
           <el-form-item label="指令状态" prop="enable">
@@ -238,15 +244,49 @@
           label-width="100px"
           class="demo-ruleForm"
         >
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="tempparams.name" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="类型" prop="type">
-            <el-input v-model="tempparams.type" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="序号" prop="order">
-            <el-input v-model.number="tempparams.order" />
-          </el-form-item>
+          <el-row :gutter="20">
+            <el-col :span="5">
+              <el-form-item label="名称" prop="name">
+                <el-input
+                  v-model="tempparams.name"
+                  autocomplete="off"
+              /> </el-form-item
+            ></el-col>
+            <el-col :span="6">
+              <el-form-item label="类型" prop="type">
+                <el-select v-model="tempparams.type" placeholder="请选择">
+                  <el-option
+                    v-for="item in dictOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+              </el-select> </el-form-item
+            ></el-col>
+            <el-col :span="5">
+              <el-form-item label="序号" prop="order">
+              <el-input v-model.number="tempparams.order" /> </el-form-item
+            ></el-col>
+
+            <el-col
+              :span="8"
+            ><el-form-item label="必填">
+              <el-radio
+                v-model="tempparams.required"
+                label="1"
+                border
+              >是</el-radio
+              >
+              <el-radio
+                v-model="tempparams.required"
+                label="0"
+                border
+              >否</el-radio
+              >
+            </el-form-item></el-col
+            >
+          </el-row>
+
           <el-form-item label="中文标题" prop="title">
             <el-input v-model="tempparams.title.zh" autocomplete="off" />
           </el-form-item>
@@ -255,10 +295,6 @@
           </el-form-item>
           <el-form-item label="默认值" prop="default">
             <el-input v-model="tempparams.default" />
-          </el-form-item>
-          <el-form-item label="是否必填">
-            <el-radio v-model="tempparams.required" label="1" border>必填</el-radio>
-            <el-radio v-model="tempparams.required" label="0" border>非必填</el-radio>
           </el-form-item>
           <el-form-item label="中文描述" prop="title">
             <el-input v-model="tempparams.description.zh" autocomplete="off" />
@@ -395,7 +431,7 @@
           :row-class-name="tableRowClassName"
           style="width: 100%"
         >
-          <el-table-column prop="type" label="设备类型">
+          <el-table-column prop="type" label="词典类型">
             <template slot-scope="scope">
               {{ scope.row.data.type }}
             </template>
@@ -484,10 +520,10 @@ export default {
   data() {
     return {
       rules: {
-        type: [{ required: true, message: "请输入设备类型", trigger: "blur" }],
-        name: [{ required: true, message: "请输入设备类型", trigger: "blur" }],
+        type: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
+        name: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
         nameEncrypt: [
-          { required: true, message: "请输入设备类型", trigger: "blur" }
+          { required: true, message: "请输入词典类型", trigger: "blur" }
         ],
         needReply: [
           { required: true, message: "请选择指令回复类型", trigger: "change" }
@@ -511,6 +547,7 @@ export default {
       edit_dict_temp_dialog: false,
       dictData: [],
       dictRecord: [],
+      dictOptions: ["String", "Boolean", "Number", "Function"],
       dictForm: {
         type: "",
         name: "",
