@@ -39,9 +39,9 @@
             <div v-for="(item, i) in dictForm.tempconfig" :key="i">
               <el-col :span="12">
                 <el-form-item
-                  v-if="item.description.zh"
-                  :title="item.description.zh"
-                  :label="item.description.zh"
+                  v-if="item.title.zh"
+                  :title="item.title.zh"
+                  :label="item.title.zh"
                 >
                 <el-input v-model="item.default" /> </el-form-item
               ></el-col>
@@ -57,7 +57,6 @@
                   <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"/>
                 </div>
               </el-form-item>
-
             </el-col>
             <el-col :span="12">
               <el-form-item label="状态" prop="enable">
@@ -460,6 +459,8 @@
           :data="dictData"
           :row-class-name="tableRowClassName"
           style="width: 100%"
+          border
+          stripe
         >
           <el-table-column prop="type" label="词典类型">
             <template slot-scope="scope">
@@ -565,6 +566,7 @@ export default {
         children: 'children',
         label: 'label'
       },
+      tempObjectId: "",
       allApps: [],
       showTree: false,
       editIndexId: "",
@@ -725,9 +727,10 @@ export default {
       const config = tempconfig.filter(i => {
         return i.data.params;
       });
-      console.log("config", config);
+      // console.log("config", config);
+      this.tempObjectId = config[0].objectId
       this.dictForm.tempconfig = config[0].data.params;
-      console.log(this.dictForm.tempconfig);
+      // console.log(this.dictForm.tempconfig);
     },
     submitFormTempDict() {
       this.edit_dict_temp_dialog = false;
@@ -959,7 +962,8 @@ export default {
       const params = {
         data: form,
         ACL: set_acl,
-        key: form.name
+        key: form.name,
+        type: this.tempObjectId
       };
       const res = await postDict(params);
       if (res) {
@@ -1043,6 +1047,7 @@ export default {
         }
       };
       const { results } = await queryDict(parsms);
+
       this.dictRecord = results;
     },
     async getDictRecord() {
@@ -1053,7 +1058,7 @@ export default {
         }
       };
       const { results } = await queryDict(parsms);
-      console.log(results);
+      console.log('aa', results);
       this.dictData = results;
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
