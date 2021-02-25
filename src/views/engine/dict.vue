@@ -453,6 +453,20 @@
           @click="showDictDialog"
         >创建词典
         </el-button>
+        <el-select
+          v-model="dictType"
+          style="width: 200px"
+          size="mini"
+          placeholder="请选择"
+          @change="selectDictChange"
+        >
+          <el-option
+            v-for="item in dictRecord"
+            :key="item.data.name"
+            :label="item.data.name"
+            :value="item.data.name"
+          />
+        </el-select>
         <el-table
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
@@ -470,11 +484,6 @@
           <el-table-column label="词典名称">
             <template slot-scope="scope">
               {{ scope.row.data.name }}
-            </template>
-          </el-table-column>
-          <el-table-column label="加密指令">
-            <template slot-scope="scope">
-              {{ scope.row.data.nameEncrypt }}
             </template>
           </el-table-column>
           <el-table-column label="状态">
@@ -537,6 +546,61 @@
             </template>
           </el-table-column>
         </el-table>
+
+        <el-table
+          :header-cell-style="{ 'text-align': 'center' }"
+          :cell-style="{ 'text-align': 'center' }"
+          :data="filterObj"
+          :row-class-name="tableRowClassName"
+          style="width: 100%"
+          border
+          stripe
+        >
+          <div v-for="(item,index) in filterObj" :key="index">{{ item }}
+
+            <el-table-column prop="type">
+              <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
+                <div v-for="(item,index) in scope.row.data.tempconfig" :key="index"><el-table-column :title = "item.title.zh + item.title.en" :label="item.title.zh">{{ item.default }}</el-table-column></div>
+
+              </template>
+            </el-table-column>
+          </div>
+          <el-table-column label="指令操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="success"
+                plain
+                @click="editDict(scope.row)"
+              >编辑</el-button
+              >
+              <el-button
+                v-if="scope.row.data.enable == '0'"
+                size="mini"
+                type="warning"
+                plain
+                @click="disabledDict(scope.row, '1')"
+              >启用</el-button
+              >
+              <el-button
+                v-else
+                size="mini"
+                type="warning"
+                plain
+                @click="disabledDict(scope.row, '0')"
+              >禁用</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                plain
+                @click="deleteDict(scope.row.objectId, '词典')"
+              >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -566,7 +630,9 @@ export default {
         children: 'children',
         label: 'label'
       },
+      filterObj: [],
       tempObjectId: "",
+      dictType: '',
       allApps: [],
       showTree: false,
       editIndexId: "",
@@ -704,6 +770,14 @@ export default {
   destroyed() {}, // 生命周期 - 销毁完成
   activated() {},
   methods: {
+    selectDictChange(v) {
+      this.filterObj = this.dictData.filter(i => {
+        if (i.data.type == v && i.data.tempconfig.length) {
+          return i.data.tempconfig
+        }
+      })
+      console.log(this.filterObj)
+    },
     dialogType() {
       this.$axiosWen.get('iotapi/roletree').then(res => {
         console.log(res)
