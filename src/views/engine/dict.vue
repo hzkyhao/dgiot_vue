@@ -468,6 +468,7 @@
           />
         </el-select>
         <el-table
+          v-show="isALL"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="dictData"
@@ -546,8 +547,8 @@
             </template>
           </el-table-column>
         </el-table>
-
         <el-table
+          v-show="!isALL"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="filterObj"
@@ -556,16 +557,20 @@
           border
           stripe
         >
-          <div v-for="(item,index) in filterObj" :key="index">{{ item }}
+          <!--          <div v-for="(item,index) in filterObj" :key="index">-->
+          <el-table-column>
+            <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
+              <div v-for="(item,index) in scope.row.data.tempconfig" :key="index">
+                <el-table-column :title="item.title.zh + item.title.en" :label="item.title.zh">
 
-            <el-table-column prop="type">
-              <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
-                <div v-for="(item,index) in scope.row.data.tempconfig" :key="index"><el-table-column :title = "item.title.zh + item.title.en" :label="item.title.zh">{{ item.default }}</el-table-column></div>
+                  {{ item.default }}
 
-              </template>
-            </el-table-column>
-          </div>
-          <el-table-column label="指令操作">
+                </el-table-column>
+              </div>
+            </template>
+          </el-table-column>
+          <!--          </div>-->
+          <el-table-column label="指令操作" width="250">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -630,6 +635,7 @@ export default {
         children: 'children',
         label: 'label'
       },
+      isALL: true,
       filterObj: [],
       tempObjectId: "",
       dictType: '',
@@ -771,12 +777,17 @@ export default {
   activated() {},
   methods: {
     selectDictChange(v) {
-      this.filterObj = this.dictData.filter(i => {
-        if (i.data.type == v && i.data.tempconfig.length) {
-          return i.data.tempconfig
-        }
-      })
-      console.log(this.filterObj)
+      if (v == "ALL") {
+        this.isALL = true;
+      } else {
+        this.isALL = false;
+        this.filterObj = this.dictData.filter(i => {
+          if (i.data.type == v && i.data.tempconfig.length) {
+            return i.data.tempconfig
+          }
+        })
+        console.log('filterObj', this.filterObj)
+      }
     },
     dialogType() {
       this.$axiosWen.get('iotapi/roletree').then(res => {
@@ -1123,6 +1134,8 @@ export default {
       const { results } = await queryDict(parsms);
 
       this.dictRecord = results;
+      this.dictRecord.push({ data: { name: "ALL" }})
+      // console.log('aa', this.dictRecord);
     },
     async getDictRecord() {
       const parsms = {
@@ -1132,7 +1145,7 @@ export default {
         }
       };
       const { results } = await queryDict(parsms);
-      console.log('aa', results);
+
       this.dictData = results;
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发

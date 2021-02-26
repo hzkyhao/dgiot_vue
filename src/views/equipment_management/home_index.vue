@@ -193,9 +193,12 @@
 
           <el-table-column
             :label="$t('equipment.product')"
-            prop="productName"
             align="center"
-          />
+          >
+            <template slot-scope="scope">
+              <span>{{ scope.row.product.name }}</span>
+            </template>
+          </el-table-column>
 
           <el-table-column :label="$t('equipment.nodetype')" align="center">
             <template slot-scope="scope">

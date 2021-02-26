@@ -681,6 +681,7 @@ export default {
       }
       var category = []
       const parsms = {
+        keys: 'count(*)',
         order: '-updatedAt',
         limit: this.length,
         skip: this.start,
@@ -691,9 +692,9 @@ export default {
       if (this.formInline.productname != '') {
         parsms.where.name = this.formInline.productname
       }
-      const { results } = await this.$query_object('Product', parsms)
+      const res = await this.$query_object('Product', parsms)
       // console.log("results", results)
-      results.map(items => {
+      res.results.map(items => {
         if (
           items.category != '' &&
             items.category && items.devType != 'report'
@@ -701,8 +702,9 @@ export default {
           category.push(items.category)
         }
       })
-      this.proTableData = results
-      this.total = results.length
+
+      this.proTableData = res.results
+      this.total = res.count
 
       // this.getDict( category)
       // product.ascending('-updatedAt')
