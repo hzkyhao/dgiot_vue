@@ -29,6 +29,7 @@
                     :key="item.data.name"
                     :label="item.data.name"
                     :value="item.data.name"
+                    :disabled="item.data.name =='ALL'"
                   />
               </el-select> </el-form-item
             ></el-col>
@@ -372,8 +373,12 @@
           :row-class-name="tableRowClassName"
           style="width: 100%"
         >
+          <el-table-column
+            label="索引"
+            type="index"
+            width="50"/>
           <el-table-column label="词典编号">
-            <template slot-scope="scope">
+            <template v-if="scope.row.objectId" slot-scope="scope">
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
@@ -403,7 +408,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作">
-            <template slot-scope="scope">
+            <template v-if="scope.row.objectId" slot-scope="scope">
               <el-button
                 size="mini"
                 type="success"
@@ -461,7 +466,7 @@
           @change="selectDictChange"
         >
           <el-option
-            v-for="item in dictRecord"
+            v-for="item in dictRecordOpt"
             :key="item.data.name"
             :label="item.data.name"
             :value="item.data.name"
@@ -697,6 +702,7 @@ export default {
       edit_dict_temp_dialog: false,
       dictData: [],
       dictRecord: [],
+      dictRecordOpt: [],
       dictOptions: ["String", "Boolean", "Number", "Function"],
       dictForm: {
         type: "",
@@ -1180,7 +1186,7 @@ export default {
       const { results } = await queryDict(parsms);
 
       this.dictRecord = results;
-      this.dictRecord.push({ data: { name: "ALL" }})
+      this.dictRecordOpt.push({ data: { name: "ALL" }},...results)
       // console.log('aa', this.dictRecord);
     },
     async getDictRecord() {
