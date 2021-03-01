@@ -3,94 +3,6 @@
   <div class="dict">
     <div class="dialog">
       <el-dialog
-        :visible.sync="dialogtempconfigVisible"
-        width="40%"
-      >
-        <el-table :data="dialogtempconfig" stripe style="width: 100%" class="box-table">
-          <el-table-column v-for="(item,key,index) in dialogtempconfig" :key="index">
-            <template slot="header">{{ item.title.zh }}</template>
-            <template slot-scope="scope">{{ item }} </template>
-          </el-table-column>
-        </el-table>
-          <!-- <el-table
-          v-show="!isALL"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :cell-style="{ 'text-align': 'center' }"
-          :data="dialogtempconfig"
-          :row-class-name="tableRowClassName"
-          class="filter_obj"
-          style="width: 100%"
-          size="mini"
-          border
-        >
-
-          <el-table-column
-            v-for="(item, index) in dialogtempconfig"
-            :key="index"
-            :prop="item.default"
-            :label="item.title.zh"
-            align="center">
-            <template slot-scope="scope">
-              <span>{{ item.default }}</span>
-            </template>
-             <template>
-            <el-table-column
-              v-for="(item,index) in dialogtempconfig"
-              :key="index"
-              :label="dialogtempconfig[index].title.zh"
-            >
-              {{ dialogtempconfig[index].default  }}
-            </el-table-column>
-          </template> -->
-          <!-- <el-table-column v-for="(item,index) in dialogtempconfig" :title="dialogtempconfig[index].title.zh + dialogtempconfig[index].title.en" :key="index" :label="item.title.zh">
-            <template slot-scope="scope">
-              <span>{{ dialogtempconfig[index].default }}</span>
-            </template>
-          </el-table-column> -->
-        </el-table-column></el-table>
-      </el-dialog>
-          <!-- <el-table-column label="索引" type="index" width="50" />
-          <el-table-column label="title-zh">
-            <template slot-scope="scope">
-              {{ scope.row.title.zh }}
-            </template>
-          </el-table-column>
-          <el-table-column label="title-en">
-            <template slot-scope="scope" >
-              {{ scope.row.title.en }}
-            </template>
-          </el-table-column>
-          <el-table-column label="name">
-            <template slot-scope="scope">
-              {{ scope.row.name }}
-            </template>
-          </el-table-column>
-          <el-table-column label="order">
-            <template slot-scope="scope">
-              {{ scope.row.order }}
-            </template>
-          </el-table-column>
-          <el-table-column label="required">
-            <template slot-scope="scope">
-              {{ scope.row.required }}
-            </template>
-          </el-table-column>
-          <el-table-column label="description-zh">
-            <template slot-scope="scope"> {{ scope.row.description.zh }}</template>
-
-          </el-table-column>
-          <el-table-column label="description-en">
-            <template slot-scope="scope"> {{ scope.row.description.en }}</template>
-
-          </el-table-column>
-          <el-table-column label="type">
-            <template slot-scope="scope">
-              {{ scope.row.type }}
-            </template>
-          </el-table-column> -->
-        </el-table>
-      </el-dialog>
-      <el-dialog
         :visible.sync="add_dict_dialog"
         :title="title_dict_dialog"
         width="40%"
@@ -549,13 +461,6 @@
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="词典管理" name="词典管理">
-        <el-button
-          size="mini"
-          type="primary"
-          icon="el-icon-plus"
-          @click="showDictDialog"
-        >创建词典
-        </el-button>
         <el-select
           v-model="dictType"
           style="width: 200px"
@@ -570,6 +475,13 @@
             :value="item.data.name"
           />
         </el-select>
+        <el-button
+          size="mini"
+          type="primary"
+          icon="el-icon-plus"
+          @click="showDictDialog"
+        >创建词典
+        </el-button>
         <el-table
           v-show="isALL"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -667,56 +579,11 @@
           style="width: 100%"
           border
         >
-          <!-- <el-table-column>
-            <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
-              <div v-for="(item,index) in scope.row.data.tempconfig" :key="index">
-                <el-table-column :title="item.title.zh + item.title.en" :label="item.title.zh">
-
-                  {{ item.default }}
-
-                </el-table-column>
-              </div>
-            </template>
-          </el-table-column> -->
-          <el-table-column label="索引" type="index" width="50" />
-          <el-table-column prop="description" label="objectId">
-            <template slot-scope="scope">
-              {{ scope.row.objectId }}
-            </template>
-          </el-table-column>
-          <!-- <el-table-column prop="description" label="value">
-            <template slot-scope="scope">
-              <vue-json-editor
-                v-model="scope.row.data.tempconfig"
-                :mode="'code'"
-                lang="zh"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column prop="description" label="createdAt">
-            <template slot-scope="scope">
-              {{ scope.row.createdAt }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="description" label="key">
-            <template slot-scope="scope">
-              {{ scope.row.key }}
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="description" label="详情">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="success"
-                plain
-                @click="showTable(scope.row.data.tempconfig)"
-              >查看</el-button
-              >
-
-            </template>
-            <!-- {{ scope.row.data.tempconfig }} -->
-          </el-table-column>
+          <template v-for="(item,index) in dialogtempconfig">
+            <el-table-column :label="dialogtempconfig[index].title.zh" >
+              <template slot-scope="scope">{{ scope.row.data.tempconfig[index].default }} </template>
+            </el-table-column>
+          </template>
           <el-table-column label="指令操作" >
             <template slot-scope="scope">
               <el-button
@@ -973,6 +840,7 @@ export default {
   activated() {},
   methods: {
     showTable(row) {
+      console.log("row", row)
       this.dialogtempconfigVisible = true
       this.dialogtempconfig = row
       console.log(this.dialogtempconfig)
@@ -988,6 +856,9 @@ export default {
             return i.data.tempconfig;
           }
         });
+
+        this.dialogtempconfig = this.filterObj[0].data.tempconfig
+        console.log('aa', this.dialogtempconfig)
         // filterObj.forEach(k => {
         //   console.log(k)
         //   this.filterObj.push(...k.data.tempconfig)
@@ -1379,24 +1250,6 @@ export default {
     cursor: pointer;
   }
   .dict_type /deep/ .el-form-item {
-  }
-  .filter_obj /deep/ {
-    /* .el-table__header-wrapper {
-      table > thead > tr {
-        th:nth-child(1) {
-          display: none;
-          color: red;
-        }
-      }
-    }
-    .el-table__body-wrapper {
-      tbody > tr {
-        td:nth-child(1) {
-          display: none;
-          color: red;
-        }
-      }
-    } */
   }
 }
 </style>
