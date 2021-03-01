@@ -580,7 +580,7 @@
           border
         >
           <template v-for="(item,index) in dialogtempconfig">
-            <el-table-column :label="dialogtempconfig[index].title.zh" >
+            <el-table-column :label="dialogtempconfig[index].title.zh" :key="index" >
               <template slot-scope="scope">{{ scope.row.data.tempconfig[index].default }} </template>
             </el-table-column>
           </template>
