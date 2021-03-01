@@ -929,7 +929,7 @@ export default {
     },
     delRow(index, rows) {
       rows.splice(index, 1);
-      this.onJsonSave("dictTempForm");
+      // this.onJsonSave("dictTempForm");
     },
     editRow(row, index, params) {
       this.editIndexId = index;
