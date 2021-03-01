@@ -1212,7 +1212,7 @@ export default {
         }
       };
       const { results } = await queryDict(parsms);
-
+      this.dictRecordOpt = []
       this.dictRecord = results;
       this.dictRecordOpt.push({ data: { name: "ALL" }}, ...results);
       // console.log('aa', this.dictRecord);
