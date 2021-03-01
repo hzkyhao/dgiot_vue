@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-02-02 17:52:06
- * @LastEditTime: 2021-02-22 11:15:36
+ * @LastEditTime: 2021-03-01 10:22:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \platform\src\views\equipment_management\platform_overview.vue
@@ -142,6 +142,7 @@
 </template>
 <script>
 import { batch } from "@/api/Batch/index"
+import { Project_count, product_count, app_count, dev_count, dev_active_count, dev_online_count } from "@/api/Platform/index"
 export default {
   components: {
   },
@@ -163,7 +164,12 @@ export default {
     };
   },
   mounted() {
-    this.query();
+    this.getProject_count()
+    this.getProduct_count()
+    this.getApp_count()
+    this.getDev_count()
+    this.getDev_active_count()
+    this.getDev_online_count()
   },
   methods: {
     handleChange() {},
@@ -183,72 +189,54 @@ export default {
         }
       });
     },
-    async query() {
-      const requests =
-        [
-          {
-            method: "GET",
-            path: "/classes/Project",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Product",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/App",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1,
-              where: {
-                status: "ACTIVE"
-              }
-            }
-          },
-          {
-            method: "GET",
-            path: "/classes/Device",
-            body: {
-              limit: 0,
-              count: 1,
-              where: {
-                status: "ONLINE"
-              }
-            }
-          }
-        ]
-      await batch(requests).then(res => {
-        this.project_count = res[0].success ? res[0].success.count : "-";
-        this.product_count = res[1].success ? res[1].success.count : "-";
-        this.app_count = res[2].success ? res[2].success.count : "-";
-        this.dev_count = res[3].success ? res[3].success.count : "-";
-        this.dev_active_count = res[4].success ? res[4].success.count : "-";
-        this.dev_online_count = res[5].success ? res[5].success.count : "-";
-      });
+    async  getProject_count() {
+      const Project_num = await Project_count({
+        limit: 0,
+        count: 1
+      })
+      this.project_count = Project_num.count
+    },
+    async  getProduct_count() {
+      const Product_num = await product_count({
+        limit: 0,
+        count: 1
+      })
+      this.product_count = Product_num.count
+    },
+    async  getApp_count() {
+      const app_num = await app_count({
+        limit: 0,
+        count: 1
+      })
+      this.app_count = app_num.count
+    },
+    async  getDev_count() {
+      const dev_num = await dev_count({
+        limit: 0,
+        count: 1
+      })
+      console.log(dev_num, "dev_num")
+      this.dev_count = dev_num.count
+    },
+    async  getDev_active_count() {
+      const dev_active_num = await dev_active_count({
+        limit: 0,
+        count: 1,
+        where: {
+          status: "ACTIVE"
+        }
+      })
+      this.dev_active_count = dev_active_num.count
+    },
+    async  getDev_online_count() {
+      const dev_online_num = await dev_online_count({
+        limit: 0,
+        count: 1,
+        where: {
+          status: "ONLINE"
+        }
+      })
+      this.dev_online_count = dev_online_num.count
     }
   }
 }
