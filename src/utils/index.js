@@ -1,6 +1,7 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+const Vue = require("vue");
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
@@ -84,7 +85,7 @@ export function param2Obj(url) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -101,7 +102,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -146,7 +147,7 @@ export function unixtime() {
   return Y + M + D + h + m + s
 }
 
-export function timetounix(val){
+export function timetounix(val) {
   var nowTime = val
   var date = new Date(nowTime)
   var time = date.getTime()
@@ -154,6 +155,17 @@ export function timetounix(val){
   return time
 }
 
+Vue.prototype.$utc2beijing = (utc_datetime) => {
+  // 转为正常的时间格式 年-月-日 时:分:秒
+  var date = new Date(utc_datetime)
+  var Y = date.getFullYear() + '-'
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  var D = (date.getDate() + 1 <= 10 ? '0' + (date.getDate()) : date.getDate()) + ' '
+  var h = (date.getHours() + 1 <= 10 ? '0' + (date.getHours()) : date.getHours()) + ':'
+  var m = (date.getMinutes() + 1 <= 10 ? '0' + (date.getMinutes()) : date.getMinutes()) + ':'
+  var s = (date.getSeconds() + 1 <= 10 ? '0' + (date.getSeconds()) : date.getSeconds())
+  return Y + M + D + h + m + s
+}
 
 export function utc2beijing(utc_datetime) {
   // 转为正常的时间格式 年-月-日 时:分:秒

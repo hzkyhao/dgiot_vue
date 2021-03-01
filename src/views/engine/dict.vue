@@ -3,6 +3,94 @@
   <div class="dict">
     <div class="dialog">
       <el-dialog
+        :visible.sync="dialogtempconfigVisible"
+        width="40%"
+      >
+        <el-table :data="dialogtempconfig" stripe style="width: 100%" class="box-table">
+          <el-table-column v-for="(item,key,index) in dialogtempconfig" :key="index">
+            <template slot="header">{{ item.title.zh }}</template>
+            <template slot-scope="scope">{{ item }} </template>
+          </el-table-column>
+        </el-table>
+          <!-- <el-table
+          v-show="!isALL"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :cell-style="{ 'text-align': 'center' }"
+          :data="dialogtempconfig"
+          :row-class-name="tableRowClassName"
+          class="filter_obj"
+          style="width: 100%"
+          size="mini"
+          border
+        >
+
+          <el-table-column
+            v-for="(item, index) in dialogtempconfig"
+            :key="index"
+            :prop="item.default"
+            :label="item.title.zh"
+            align="center">
+            <template slot-scope="scope">
+              <span>{{ item.default }}</span>
+            </template>
+             <template>
+            <el-table-column
+              v-for="(item,index) in dialogtempconfig"
+              :key="index"
+              :label="dialogtempconfig[index].title.zh"
+            >
+              {{ dialogtempconfig[index].default  }}
+            </el-table-column>
+          </template> -->
+          <!-- <el-table-column v-for="(item,index) in dialogtempconfig" :title="dialogtempconfig[index].title.zh + dialogtempconfig[index].title.en" :key="index" :label="item.title.zh">
+            <template slot-scope="scope">
+              <span>{{ dialogtempconfig[index].default }}</span>
+            </template>
+          </el-table-column> -->
+        </el-table-column></el-table>
+      </el-dialog>
+          <!-- <el-table-column label="索引" type="index" width="50" />
+          <el-table-column label="title-zh">
+            <template slot-scope="scope">
+              {{ scope.row.title.zh }}
+            </template>
+          </el-table-column>
+          <el-table-column label="title-en">
+            <template slot-scope="scope" >
+              {{ scope.row.title.en }}
+            </template>
+          </el-table-column>
+          <el-table-column label="name">
+            <template slot-scope="scope">
+              {{ scope.row.name }}
+            </template>
+          </el-table-column>
+          <el-table-column label="order">
+            <template slot-scope="scope">
+              {{ scope.row.order }}
+            </template>
+          </el-table-column>
+          <el-table-column label="required">
+            <template slot-scope="scope">
+              {{ scope.row.required }}
+            </template>
+          </el-table-column>
+          <el-table-column label="description-zh">
+            <template slot-scope="scope"> {{ scope.row.description.zh }}</template>
+
+          </el-table-column>
+          <el-table-column label="description-en">
+            <template slot-scope="scope"> {{ scope.row.description.en }}</template>
+
+          </el-table-column>
+          <el-table-column label="type">
+            <template slot-scope="scope">
+              {{ scope.row.type }}
+            </template>
+          </el-table-column> -->
+        </el-table>
+      </el-dialog>
+      <el-dialog
         :visible.sync="add_dict_dialog"
         :title="title_dict_dialog"
         width="40%"
@@ -29,7 +117,7 @@
                     :key="item.data.name"
                     :label="item.data.name"
                     :value="item.data.name"
-                    :disabled="item.data.name =='ALL'"
+                    :disabled="item.data.name == 'ALL'"
                   />
               </el-select> </el-form-item
             ></el-col>
@@ -49,13 +137,26 @@
             </div>
             <el-col :span="12">
               <el-form-item label="所属应用" prop="roles">
-                <el-input v-model="dictForm.applicationtText" placeholder="请选择所属应用">
+                <el-input
+                  v-model="dictForm.applicationtText"
+                  placeholder="请选择所属应用"
+                >
                   <template slot="append">
-                    <i :class="[showTree ? 'el-icon-arrow-up' :'el-icon-arrow-down']" style="cursor: pointer;" @click="showTree = !showTree"/>
+                    <i
+                      :class="[
+                        showTree ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
+                      ]"
+                      style="cursor: pointer;"
+                      @click="showTree = !showTree"
+                    />
                   </template>
                 </el-input>
                 <div v-if="showTree">
-                  <el-tree :data="allApps" :props="defaultProps" @node-click="handleNodeClick"/>
+                  <el-tree
+                    :data="allApps"
+                    :props="defaultProps"
+                    @node-click="handleNodeClick"
+                  />
                 </div>
               </el-form-item>
             </el-col>
@@ -373,10 +474,7 @@
           :row-class-name="tableRowClassName"
           style="width: 100%"
         >
-          <el-table-column
-            label="索引"
-            type="index"
-            width="50"/>
+          <el-table-column label="索引" type="index" width="50" />
           <el-table-column label="词典编号">
             <template v-if="scope.row.objectId" slot-scope="scope">
               {{ scope.row.objectId }}
@@ -482,10 +580,7 @@
           border
           stripe
         >
-          <el-table-column
-            label="索引"
-            type="index"
-            width="50"/>
+          <el-table-column label="索引" type="index" width="50" />
           <el-table-column prop="type" label="Id">
             <template slot-scope="scope">
               {{ scope.row.objectId }}
@@ -563,60 +658,66 @@
         </el-table>
         <el-table
           v-show="!isALL"
+          ref="filterObj"
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="filterObj"
           :row-class-name="tableRowClassName"
+          class="filter_obj"
           style="width: 100%"
           border
         >
-          <el-table-column
-            label="索引"
-            type="index"
-            width="50"/>
-          <el-table-column prop="description" label="字段名">
+          <!-- <el-table-column>
+            <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
+              <div v-for="(item,index) in scope.row.data.tempconfig" :key="index">
+                <el-table-column :title="item.title.zh + item.title.en" :label="item.title.zh">
+
+                  {{ item.default }}
+
+                </el-table-column>
+              </div>
+            </template>
+          </el-table-column> -->
+          <el-table-column label="索引" type="index" width="50" />
+          <el-table-column prop="description" label="objectId">
             <template slot-scope="scope">
-              {{ scope.row.name }}
+              {{ scope.row.objectId }}
             </template>
           </el-table-column>
-          <el-table-column prop="description" label="序列">
+          <!-- <el-table-column prop="description" label="value">
             <template slot-scope="scope">
-              {{ scope.row.order }}
+              <vue-json-editor
+                v-model="scope.row.data.tempconfig"
+                :mode="'code'"
+                lang="zh"
+              />
+            </template>
+          </el-table-column> -->
+          <el-table-column prop="description" label="createdAt">
+            <template slot-scope="scope">
+              {{ scope.row.createdAt }}
             </template>
           </el-table-column>
-          <el-table-column prop="description" label="必填">
+          <el-table-column prop="description" label="key">
             <template slot-scope="scope">
-              {{ scope.row.required }}
+              {{ scope.row.key }}
             </template>
           </el-table-column>
-          <el-table-column prop="description" label="类型">
+
+          <el-table-column prop="description" label="详情">
             <template slot-scope="scope">
-              {{ scope.row.type }}
+              <el-button
+                size="mini"
+                type="success"
+                plain
+                @click="showTable(scope.row.data.tempconfig)"
+              >查看</el-button
+              >
+
             </template>
+            <!-- {{ scope.row.data.tempconfig }} -->
           </el-table-column>
-          <el-table-column prop="description" label="中文名">
-            <template slot-scope="scope">
-              {{ scope.row.title.zh }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="description" label="英文名">
-            <template slot-scope="scope">
-              {{ scope.row.title.en }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="description" label="中文描述">
-            <template slot-scope="scope">
-              {{ scope.row.description.zh }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="description" label="英文描述">
-            <template slot-scope="scope">
-              {{ scope.row.description.en }}
-            </template>
-          </el-table-column>
-          <!--          <div v-for="(item,index) in filterObj" :key="index">-->
-          <!--          </div>-->
-          <!-- <el-table-column label="指令操作" width="250">
+          <el-table-column label="指令操作" >
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -649,17 +750,17 @@
               >删除</el-button
               >
             </template>
-          </el-table-column> -->
+          </el-table-column>
         </el-table>
-
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+// import { utc2beijing, timestampToTime } from '@/utils/index'
 import { queryDict, postDict, delDict, putDict } from "@/api/Direct/index.js";
-import { resourceTypes } from '@/api/Rules'
+import { resourceTypes } from "@/api/Rules";
 import vueJsonEditor from "vue-json-editor";
 export default {
   name: "Dict",
@@ -677,14 +778,48 @@ export default {
         ],
         enable: [{ required: true, message: "请选择状态", trigger: "change" }]
       },
+      checkList: ['标题', '作者', '评级', '点击量', '时间'],
+      columns: [
+        {
+          label: '标题',
+          width: 'auto',
+          prop: 'title',
+          sortable: true,
+          disableCheck: true
+        },
+        {
+          label: '作者',
+          width: 'auto',
+          prop: 'author',
+          sortable: true
+        },
+        {
+          label: '评级',
+          width: '200',
+          prop: 'rate',
+          sortable: true
+        },
+        {
+          label: '点击量',
+          width: 'auto',
+          prop: 'pageViews',
+          sortable: true
+        },
+        {
+          label: '时间',
+          width: 'auto',
+          prop: 'datetime',
+          sortable: true
+        }
+      ],
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: "children",
+        label: "label"
       },
       isALL: true,
       filterObj: [],
       tempObjectId: "",
-      dictType: '',
+      dictType: "",
       allApps: [],
       showTree: false,
       editIndexId: "",
@@ -700,6 +835,8 @@ export default {
       add_dict_dialog: false,
       dict_temp_dialog: false,
       edit_dict_temp_dialog: false,
+      dialogtempconfigVisible: false,
+      dialogtempconfig: [],
       dictData: [],
       dictRecord: [],
       dictRecordOpt: [],
@@ -809,7 +946,19 @@ export default {
       formLabelWidth: "120px"
     };
   },
-  computed: {},
+  computed: {
+    dragOptions() {
+      return {
+        animation: 600,
+        group: 'description'
+      }
+    },
+    finallyColumns() {
+      return this.columns.filter((item) =>
+        this.checkList.includes(item.label)
+      )
+    }
+  },
   mounted() {
     this.getDictData();
     this.getDictRecord();
@@ -823,38 +972,46 @@ export default {
   destroyed() {}, // 生命周期 - 销毁完成
   activated() {},
   methods: {
+    showTable(row) {
+      this.dialogtempconfigVisible = true
+      this.dialogtempconfig = row
+      console.log(this.dialogtempconfig)
+    },
     selectDictChange(v) {
       if (v == "ALL") {
         this.isALL = true;
       } else {
         this.isALL = false;
-        this.filterObj = []
-        const filterObj = this.dictData.filter(i => {
+        // this.filterObj = []
+        this.filterObj = this.dictData.filter(i => {
           if (i.data.type == v && i.data.tempconfig.length) {
-            return i.data.tempconfig
+            return i.data.tempconfig;
           }
-        })
-        filterObj.forEach(k => {
-          console.log(k)
-          this.filterObj.push(...k.data.tempconfig)
-        })
-        console.log('filterObj', this.filterObj)
+        });
+        // filterObj.forEach(k => {
+        //   console.log(k)
+        //   this.filterObj.push(...k.data.tempconfig)
+        // })
+        console.log(this.filterObj)
       }
     },
     dialogType() {
-      this.$axiosWen.get('iotapi/roletree').then(res => {
-        console.log(res)
-        this.allApps = res.results
-      }).catch(e => {
-        console.log(e)
-      }),
+      this.$axiosWen
+        .get("iotapi/roletree")
+        .then(res => {
+          console.log(res);
+          this.allApps = res.results;
+        })
+        .catch(e => {
+          console.log(e);
+        }),
       resourceTypes().then(resultes => {
-        this.channelregion = resultes
-      })
+        this.channelregion = resultes;
+      });
     },
     handleNodeClick(data) {
-      this.showTree = !this.showTree
-      this.dictForm.applicationtText = data.alias
+      this.showTree = !this.showTree;
+      this.dictForm.applicationtText = data.alias;
     },
     selectChange(v) {
       const dictRecord = this.dictRecord;
@@ -865,7 +1022,7 @@ export default {
         return i.data.params;
       });
       // console.log("config", config);
-      this.tempObjectId = config[0].objectId
+      this.tempObjectId = config[0].objectId;
       this.dictForm.tempconfig = config[0].data.params;
       // console.log(this.dictForm.tempconfig);
     },
@@ -1186,7 +1343,7 @@ export default {
       const { results } = await queryDict(parsms);
 
       this.dictRecord = results;
-      this.dictRecordOpt.push({ data: { name: "ALL" }},...results)
+      this.dictRecordOpt.push({ data: { name: "ALL" }}, ...results);
       // console.log('aa', this.dictRecord);
     },
     async getDictRecord() {
@@ -1222,6 +1379,24 @@ export default {
     cursor: pointer;
   }
   .dict_type /deep/ .el-form-item {
+  }
+  .filter_obj /deep/ {
+    /* .el-table__header-wrapper {
+      table > thead > tr {
+        th:nth-child(1) {
+          display: none;
+          color: red;
+        }
+      }
+    }
+    .el-table__body-wrapper {
+      tbody > tr {
+        td:nth-child(1) {
+          display: none;
+          color: red;
+        }
+      }
+    } */
   }
 }
 </style>
