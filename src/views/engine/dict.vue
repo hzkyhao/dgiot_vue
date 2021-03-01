@@ -477,6 +477,15 @@
           border
           stripe
         >
+          <el-table-column
+            label="索引"
+            type="index"
+            width="50"/>
+          <el-table-column prop="type" label="Id">
+            <template slot-scope="scope">
+              {{ scope.row.objectId }}
+            </template>
+          </el-table-column>
           <el-table-column prop="type" label="词典类型">
             <template slot-scope="scope">
               {{ scope.row.data.type }}
@@ -555,22 +564,54 @@
           :row-class-name="tableRowClassName"
           style="width: 100%"
           border
-          stripe
         >
-          <!--          <div v-for="(item,index) in filterObj" :key="index">-->
-          <el-table-column>
-            <template v-if="scope.row.data.tempconfig" slot-scope="scope" >
-              <div v-for="(item,index) in scope.row.data.tempconfig" :key="index">
-                <el-table-column :title="item.title.zh + item.title.en" :label="item.title.zh">
-
-                  {{ item.default }}
-
-                </el-table-column>
-              </div>
+          <el-table-column
+            label="索引"
+            type="index"
+            width="50"/>
+          <el-table-column prop="description" label="字段名">
+            <template slot-scope="scope">
+              {{ scope.row.name }}
             </template>
           </el-table-column>
+          <el-table-column prop="description" label="序列">
+            <template slot-scope="scope">
+              {{ scope.row.order }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="必填">
+            <template slot-scope="scope">
+              {{ scope.row.required }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="类型">
+            <template slot-scope="scope">
+              {{ scope.row.type }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="中文名">
+            <template slot-scope="scope">
+              {{ scope.row.title.zh }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="英文名">
+            <template slot-scope="scope">
+              {{ scope.row.title.en }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="中文描述">
+            <template slot-scope="scope">
+              {{ scope.row.description.zh }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="description" label="英文描述">
+            <template slot-scope="scope">
+              {{ scope.row.description.en }}
+            </template>
+          </el-table-column>
+          <!--          <div v-for="(item,index) in filterObj" :key="index">-->
           <!--          </div>-->
-          <el-table-column label="指令操作" width="250">
+          <!-- <el-table-column label="指令操作" width="250">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -603,7 +644,7 @@
               >删除</el-button
               >
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
 
       </el-tab-pane>
@@ -781,10 +822,15 @@ export default {
         this.isALL = true;
       } else {
         this.isALL = false;
-        this.filterObj = this.dictData.filter(i => {
+        this.filterObj = []
+        const filterObj = this.dictData.filter(i => {
           if (i.data.type == v && i.data.tempconfig.length) {
             return i.data.tempconfig
           }
+        })
+        filterObj.forEach(k => {
+          console.log(k)
+          this.filterObj.push(...k.data.tempconfig)
         })
         console.log('filterObj', this.filterObj)
       }
