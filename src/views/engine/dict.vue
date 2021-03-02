@@ -691,7 +691,7 @@ export default {
       isALL: true,
       filterObj: [],
       tempObjectId: "",
-      dictType: "",
+      dictType: "ALL",
       allApps: [],
       showTree: false,
       editIndexId: "",
@@ -858,6 +858,7 @@ export default {
         if (this.filterObj.length > 0) {
           this.dialogtempconfig = this.filterObj[0].data.tempconfig
         }
+        console.log("this.filterObj",this.filterObj)
       }
     },
     dialogType() {
@@ -1215,6 +1216,7 @@ export default {
       const parsms = {
         limit: 1000,
         keys: 'count(*)',
+        order: "-createdAt",
         where: {
           "data.key": "dict"
         }
