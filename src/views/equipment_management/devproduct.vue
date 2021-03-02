@@ -935,42 +935,22 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // // 可以在这里执行删除数据的回调操作.......删除操作 .....
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // var Device = Parse.Object.extend('Device')
-      // var devices = new Parse.Query(Device)
-      // devices.equalTo('product', scope.row.id)
-      // devices.find().then(resultes => {
-      //   if (resultes.length > 0) {
-      //     this.$message('请先删除该产品下设备')
-      //     return
-      //   } else {
-      //     product.get(scope.row.id).then(
-      //       resultes => {
-      //         resultes.destroy().then(
-      //           response => {
-      //             if (response) {
-      //               this.$message({
-      //                 type: 'success',
-      //                 message: '删除成功'
-      //               })
-      //               scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //               this.searchProduct()
-      //             }
-      //           },
-      //           error => {
-      //             returnLogin(error)
-      //           }
-      //         )
-      //       },
-      //       error => {
-      //         returnLogin(error)
-      //       }
-      //     )
-      //   }
-      // })
+      this.$deleteDevice(scope.row.objectId).then(response => {
+        if (!response.error) {
+          this.initQuery('删除成功', 'success')
+          scope._self.$refs[`popover-${scope.$index}`].doClose();
+          this.getDevices();
+        } else {
+          scope._self.$refs[`popover-${scope.$index}`].doClose();
+          this.initQuery('删除失败', 'error')
+        }
+      })
+    },
+    initQuery(msg, type) {
+      this.$message({
+        type: type || "info",
+        message: msg
+      })
     },
     productSizeChange(val) {
       this.length = val
