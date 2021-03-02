@@ -357,108 +357,8 @@ export default {
       //   }
       // });
     },
-    selectaction(val) {
-      // if (val == "data_resource") {
-      //   //物模型
-      //   editormodel = ace.edit("editormodel");
-      //   editormodel.session.setMode("ace/mode/json"); // 设置语言
-      //   editormodel.setTheme("ace/theme/twilight"); // 设置主题
-      //   editormodel.setOptions({
-      //     enableBasicAutocompletion: true,
-      //     enableSnippets: true,
-      //     enableLiveAutocompletion: true // 设置自动提示
-      //   });
-      //   editormodel.setReadOnly(true);
-      //   //物建表
-      //   editorcreate = ace.edit("editorcreate");
-      //   editorcreate.session.setMode("ace/mode/mysql"); // 设置语言
-      //   editorcreate.setTheme("ace/theme/twilight"); // 设置主题
-      //   editorcreate.setOptions({
-      //     enableBasicAutocompletion: true,
-      //     enableSnippets: true,
-      //     enableLiveAutocompletion: true // 设置自动提示
-      //   });
-      //   //物存储
-      //   editorinsert = ace.edit("editorinsert");
-      //   editorinsert.session.setMode("ace/mode/mysql"); // 设置语言
-      //   editorinsert.setTheme("ace/theme/gob"); // 设置主题
-      //   editorinsert.setOptions({
-      //     enableBasicAutocompletion: true,
-      //     enableSnippets: true,
-      //     enableLiveAutocompletion: true // 设置自动提示
-      //   });
-      //   //子表
-      //   editorsubtable = ace.edit("editorsubtable");
-      //   editorsubtable.session.setMode("ace/mode/mysql"); // 设置语言
-      //   editorsubtable.setTheme("ace/theme/gob"); // 设置主题
-      //   editorsubtable.setOptions({
-      //     enableBasicAutocompletion: true,
-      //     enableSnippets: true,
-      //     enableLiveAutocompletion: true // 设置自动提示
-      //   });
-      //   var Product = Parse.Object.extend("Product");
-      //   var product = new Parse.Query(Product);
-      //   product.get(this.productid).then(resultes => {
-      //     if (resultes) {
-      //       editormodel.setValue(
-      //         JSON.stringify(resultes.attributes.thing, null, 4)
-      //       );
-      //     }
-      //   });
-      // }
-    },
     openDialog() {
       this.dialogVisible = true
-    },
-    addData() {
-      // this.$refs[forName].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.action == "data_to_resource") {
-      //       this.actionData.push({
-      //         name: this.form.action,
-      //         params: {
-      //           channel: this.form.resource,
-      //           // type: this.ctype
-      //         }
-      //       });
-      //     } else {
-      //       this.actionData.push({
-      //         name: this.form.action,
-      //         params: {}
-      //       });
-      //     }
-      // if (this.form.resource != "") {
-      // this.resourcelist.map(item => {
-      //   if (item.id == this.form.resource) {
-      //     for (var key in item.attributes.config) {
-      //       obj[key] = item.attributes.config[key];
-      //     }
-      //   }
-      // });
-      // var Channel = Parse.Object.extend("Channel");
-      // var channel = new Channel();
-      // obj.insert = editorinsert.getValue();
-      // channel.id = this.form.resource;
-      // obj.subtable = editorsubtable.getValue();
-      // obj.datamodel = editorcreate.getValue();
-      // channel.set("config", obj);
-      // console.log(obj);
-      // channel.save().then(
-      //   response => {
-      //     if (response) {
-      //       this.$message("添加成功");
-      //       this.dialogFormVisible = false;
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
-      // } else {
-      this.dialogFormVisible = false
-      // }
-      // }
-      // });
     },
     relationChannel(objectId) {
       this.actionData.push({
@@ -586,7 +486,7 @@ export default {
             }
           })
         } else {
-          this.$message, error('error submit!!')
+          this.$message.error('error submit!!')
           return false
         }
       })
