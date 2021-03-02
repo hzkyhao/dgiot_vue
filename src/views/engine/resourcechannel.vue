@@ -269,7 +269,9 @@
   </div>
 </template>
 <script>
+import { queryChannel, delChannel, postChannel } from '@/api/Channel/index'
 import { subupadte } from '@/api/System/index'
+import { queryRole } from '@/api/Role/index'
 import { resourceTypes } from '@/api/Rules'
 import { returnLogin } from '@/utils/return'
 var subdialog
@@ -392,29 +394,17 @@ export default {
       })
     },
     // 获取应用列表
-    getApplication() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var App = Parse.Object.extend('App')
-      // var query = new Parse.Query(App)
-      // var _this = this
-      // query.limit(100)
-      // query.find().then(
-      //   response => {
-      //     console.log('### response', response)
-      //     // this.$objGet
-      //     if (response) {
-      //       response.map(item => {
-      //         var obj = {}
-      //         obj.id = item.id
-      //         obj.name = item.attributes.desc
-      //         _this.applicationList.push(obj)
-      //       })
-      //     }
-      //   },
-      //   error => {
-      //     this.$message(error.message)
-      //   }
-      // )
+    async getApplication() {
+      const params = {
+        limit: 100
+      }
+      const { results } = await queryRole(params)
+      results.map(item => {
+        var obj = {}
+        obj.id = item.id
+        obj.name = item.desc
+        this.applicationList.push(obj)
+      })
     },
     handleNodeClick(data) {
       this.showTree = !this.showTree
@@ -469,69 +459,57 @@ export default {
           delete obj.type
           delete obj.isEnable
           delete obj.name
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Channel = Parse.Object.extend('Channel')
-          // var channel = new Channel()
-          // // var userid = Parse.User.current().id;
-          // var acl = new Parse.ACL()
-          // // 设置权限控制列表
-          // acl.setRoleReadAccess(this.addchannel.applicationtText, true)
-          // acl.setRoleWriteAccess(this.addchannel.applicationtText, true)
-
-          // if (this.resourceid != '') {
-          //   channel.id = this.resourceid
-          // }
-          // channel.set('config', obj)
-          // channel.set('ACL', acl)
-          // channel.set('name', this.addchannel.name)
-          // channel.set('cType', this.addchannel.region)
-          // channel.set('desc', this.addchannel.desc)
-          // if (this.addchannel.type) {
-          //   channel.set('type', this.addchannel.type.toString())
-          // }
-          // channel.set('isEnable', this.addchannel.isEnable)
-          // channel.save().then(resultes => {
-          //   if (resultes) {
-          //     this.$message({
-          //       type: 'success',
-          //       message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
-          //     })
-          //     this.$refs['addchannel'].resetFields()
-          //     this.addchannel = {}
-          //     // this.reload()
-          //     this.channelForm = false
-
-          //     this.resourceid = ''
-          //     this.Get_Re_Channel(0)
-          //   }
-          // })
+          console.log("addchannelForm", this.addchannel)
+          const aclKey = 'role' + ':' + this.addchannel.applicationtText
+          const aclObj = {}
+          aclObj[aclKey] = { read: true, write: true }
+          const data = {
+            'ACL': aclObj,
+            config: obj,
+            name: this.addchannel.name,
+            cType: this.addchannel.region,
+            desc: this.addchannel.desc,
+            type: this.addchannel.type,
+            isEnable: this.addchannel.isEnable
+          }
+          this.addchannelaxios(data)
         }
       }, error => {
         returnLogin(error)
       })
     },
+    async addchannelaxios(data) {
+      await postChannel(data).then(
+        results => {
+          if (results) {
+            this.$message({
+              type: 'success',
+              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功'
+            })
+            this.$refs['addchannel'].resetFields()
+            this.addchannel = {}
+            // this.reload()
+            this.channelForm = false
+            this.resourceid = ''
+            this.Get_Re_Channel(0)
+          }
+        }
+      )
+    },
     // 删除通道
     deleteChannel(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend('Channel')
-      // var channel = new Channel()
-      // channel.id = scope.row.id
-      // channel.destroy().then(
-      //   resultes => {
-      //     this.$message({
-      //       type: 'success',
-      //       message: '删除成功'
-      //     })
-      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //     this.Get_Re_Channel(0)
-      //   },
-      //   error => {
-      //     this.$message({
-      //       type: 'error',
-      //       message: error.message
-      //     })
-      //   }
-      // )
+      delChannel(scope.row.objectId).then(
+        results => {
+          this.$message({
+            type: 'success',
+            message: '删除成功'
+          })
+          scope._self.$refs[`popover-${scope.$index}`].doClose()
+          this.Get_Re_Channel(0)
+        },
+      ).catch(e => {
+        console.log(e.error)
+      })
     },
     addchanneltype() {
       this.channelForm = true
@@ -587,6 +565,8 @@ export default {
       return arr.sort(this.arrSort)
     },
     removeauto(val) {
+      console.log(val)
+      console.log(this.channelregion, this.allApps)
       var obj = {}
       var obj1 = {
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
@@ -648,7 +628,8 @@ export default {
         })
       }
       // 读取acl列表,获取所属应用名称
-      if (this.channelrow) {
+      console.log("this.channelrow", this.channelrow)
+      if (this.channelrow.length > 0) {
         for (var key in this.channelrow.ACL.permissionsById) {
           obj.applicationtText = key ? key.substr(5) : ''
         }

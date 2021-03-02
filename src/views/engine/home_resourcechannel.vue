@@ -607,7 +607,8 @@ export default {
         })
       }
       // 读取acl列表,获取所属应用名称
-      if (this.channelrow) {
+      console.log("this.channelrow", this.channelrow)
+      if (this.channelrow.length > 0) {
         for (var key in this.channelrow.ACL.permissionsById) {
           obj.applicationtText = key ? key.substr(5) : ''
         }
