@@ -376,8 +376,7 @@ export default {
     // 真正的文件上传
     handleFileChange(e) {
       this.inputDOM = this.$refs.inputer;
-      console.log(this.inputDOM.files[0]);
-      if (!/[.](zip)$/.menu(this.inputDOM.files[0].name)) {
+      if (!/\.zip$/.test(this.inputDOM.files[0].name)) {
         this.$message({
           type: "warning",
           message: "仅支持zip文件"
@@ -547,7 +546,7 @@ export default {
       this.menuid = row.objectId;
       this.objectId = row.objectId;
       this.$get_object('Menu', row.objectId).then(resultes => {
-        console.log('sssss', resultes,row);
+        console.log('sssss', resultes, row);
         this.MenuEdit = true;
         this.MenuForm.name = resultes.name;
         this.MenuForm.url = resultes.url;
