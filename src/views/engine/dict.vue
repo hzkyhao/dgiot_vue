@@ -579,6 +579,11 @@
           style="width: 100%"
           border
         >
+          <el-table-column label="词典类型">
+            <template slot-scope="scope">
+              {{ scope.row.data.type }}
+            </template>
+          </el-table-column>
           <template v-for="(item,index) in dialogtempconfig">
             <el-table-column :label="dialogtempconfig[index].title.zh" :key="index" >
               <template slot-scope="scope">{{ scope.row.data.tempconfig[index].default }} </template>
@@ -839,31 +844,20 @@ export default {
   destroyed() {}, // 生命周期 - 销毁完成
   activated() {},
   methods: {
-    showTable(row) {
-      console.log("row", row)
-      this.dialogtempconfigVisible = true
-      this.dialogtempconfig = row
-      console.log(this.dialogtempconfig)
-    },
     selectDictChange(v) {
       if (v == "ALL") {
         this.isALL = true;
       } else {
+        this.getDictRecord();
         this.isALL = false;
-        // this.filterObj = []
         this.filterObj = this.dictData.filter(i => {
-          if (i.data.type == v && i.data.tempconfig.length) {
+          if (i.data.type == v) {
             return i.data.tempconfig;
           }
         });
-
-        this.dialogtempconfig = this.filterObj[0].data.tempconfig
-        console.log('aa', this.dialogtempconfig)
-        // filterObj.forEach(k => {
-        //   console.log(k)
-        //   this.filterObj.push(...k.data.tempconfig)
-        // })
-        console.log(this.filterObj)
+        if (this.filterObj.length > 0) {
+          this.dialogtempconfig = this.filterObj[0].data.tempconfig
+        }
       }
     },
     dialogType() {
@@ -1134,7 +1128,7 @@ export default {
       if (res) {
         this.$message("创建成功");
         this.add_dict_dialog = false;
-        this.getDictRecord();
+        this.selectDictChange(form.type);
       }
     },
     editDictTemp(row) {
@@ -1172,7 +1166,7 @@ export default {
       };
       const { updatedAt } = await putDict(editDictId, params);
       if (updatedAt) {
-        this.getDictRecord();
+        this.selectDictChange(row.type);
         this.add_dict_dialog = false;
         this.$message("词典数据更新成功");
       } else {
@@ -1220,6 +1214,7 @@ export default {
     async getDictRecord() {
       const parsms = {
         limit: 1000,
+        keys: 'count(*)',
         where: {
           "data.key": "dict"
         }
