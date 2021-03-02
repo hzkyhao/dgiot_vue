@@ -162,7 +162,7 @@
             type="number"
           />
         </el-form-item>
-        <el-form-item
+        <!-- <el-form-item
           :label="$t('menu.Navigation')"
           :label-width="formLabelWidth"
         >
@@ -181,7 +181,7 @@
               :value="item.objectId"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="MenuEdit = false">{{
@@ -428,22 +428,6 @@ export default {
         this.getMenu();
       });
     },
-    // remove-tag
-    removerole(val) {
-      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Roles = Parse.Object.extend("_Role");
-      // var roles = new Parse.Query(Roles);
-      // var Menu = Parse.Object.extend("Menu");
-      // var menu = new Parse.Query(Menu);
-      // roles.get(val).then(res => {
-      //   menu.get(this.menuid).then(resultes => {
-      //     var relation = res.relation("menus");
-      //     resultes.set("objectId", this.menuid);
-      //     relation.remove(resultes);
-      //     res.save().then(response => {});
-      //   });
-      // });
-    },
     standardName() {
       this.isaddmenu = true;
       this.data.map(item => {
@@ -563,13 +547,13 @@ export default {
       this.menuid = row.objectId;
       this.objectId = row.objectId;
       this.$get_object('Menu', row.objectId).then(resultes => {
-        console.log('sssss', resultes);
+        console.log('sssss', resultes,row);
         this.MenuEdit = true;
         this.MenuForm.name = resultes.name;
         this.MenuForm.url = resultes.url;
         this.MenuForm.number = resultes.orderBy;
         this.MenuForm.fathername = this.getParent(this.data, row.parent, arr1);
-        // this.MenuForm.roles = row.showobjectId;
+        this.MenuForm.roles = row.showobjectId;
       });
     },
     // 删除菜单
