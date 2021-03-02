@@ -591,23 +591,6 @@ export default {
       return date // 2017-03-31 16:02:06
     },
     // 得到category
-    // getDict(resultes, category) {
-    //   var Dict = Parse.Object.extend('Dict')
-    //   var datas = new Parse.Query(Dict)
-    //   datas.containedIn('type', category)
-    //   datas.limit(1000)
-    //   datas.find().then(response => {
-    //     this.allTableDate = response
-    //     resultes.map(items => {
-    //       response.map(category => {
-    //         if (items.attributes.category == category.attributes.type) {
-    //           items.CategoryKey = category.attributes.data.CategoryName
-    //         }
-    //       })
-    //     })
-    //     this.proTableData = resultes
-    //   })
-    // },
     async getDict(resultes, category) {
       console.log(resultes, category)
       const parsms = {
@@ -620,6 +603,9 @@ export default {
       console.log("res", res)
     },
     searchProduct(start) {
+      // alert(
+      //   "this.$route.query.project", this.$route.query.project
+      // )
       if (start == 0) {
         this.start = 0
       }

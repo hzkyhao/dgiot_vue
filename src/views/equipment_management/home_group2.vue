@@ -705,33 +705,6 @@ export default {
 
       this.proTableData = res.results
       this.total = res.count
-
-      // this.getDict( category)
-      // product.ascending('-updatedAt')
-      // product.skip(this.start)
-      // product.limit(this.length)
-      // product.notEqualTo('devType', 'report')
-      // product.count().then(
-      //   count => {
-      //     this.total = count
-      //     product.find().then(resultes => {
-      //       if (resultes) {
-      //         resultes.map(items => {
-      //           if (
-      //             items.attributes.category != '' &&
-      //               items.attributes.category
-      //           ) {
-      //             category.push(items.attributes.category)
-      //           }
-      //         })
-      //         this.getDict(resultes, category)
-      //       }
-      //     })
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
       this.$axiosWen.get('iotapi/roletree').then(res => {
         // console.log(res)
         this.allApps = res.results

@@ -772,9 +772,6 @@ export default {
       }
       this.selectApp(this.form.relationApp)
     },
-    handleChange() {
-    },
-
     async Industry() {
       this.categoryList = []
       const parsms = {

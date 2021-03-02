@@ -134,6 +134,10 @@
   </div>
 </template>
 <script>
+import { queryDict } from '@/api/Dict/index'
+import { getDeviceCountByProduct } from "@/api/Device/index";
+import { getChannelCountByProduct } from "@/api/Channel/index";
+import { getAllunit, getDictCount } from "@/api/Dict/index";
 import jsonEdit from "./jsonEdit/index";
 const Base64 = require("js-base64").Base64;
 var isupdatetrue = "";
@@ -476,37 +480,30 @@ export default {
           console.log(e);
         });
     },
-    Industry() {
+    async Industry() {
       this.option = [];
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.equalTo("data.key", "category");
-
-      // datas.limit(1000);
-      // datas.find().then(
-      //   response => {
-      //     if (response) {
-      //       response.map(items => {
-      //         var obj = {};
-      //         obj.value = items.attributes.type;
-      //         obj.label = items.attributes.data.CategoryName;
-      //         obj.id = items.attributes.data.Id;
-      //         obj.parentid = items.attributes.data.SuperId;
-      //         this.option.push(obj);
-      //       });
-      //     }
-      //   },
-      //   error => {
-      //     this.$message(error.message);
-      //   }
-      // );
+      const parsms = {
+        limit: 1000,
+        where: {
+          'data.key': 'category'
+        }
+      }
+      const { results } = await queryDict(parsms)
+      results.map(items => {
+        var obj = {}
+        obj.value = items.type
+        obj.label = items.data.CategoryName
+        obj.id = items.data.Id
+        obj.parentid = items.data.SuperId
+        this.option.push(obj)
+      })
     },
-    // 得到产品详情
-    getProDetail(productId) {
+       // 得到产品详情
+       getProDetail(productId) {
+      // console.log('===')
       this.productId = productId;
       editor = ace.edit("editor");
-      editor.session.setMode("ace/mode/python"); // 设置语言
+      editor.session.setMode("ace/mode/erlang"); // 设置语言
       editor.setTheme("ace/theme/monokai"); // 设置主题
       editor.setOptions({
         enableBasicAutocompletion: true,
@@ -522,70 +519,58 @@ export default {
       //   enableSnippets: true,
       //   enableLiveAutocompletion: true // 设置自动提示
       // });
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Parse.Query(Product);
-      // product.get(productId).then(
-      //   response => {
-      //     if (response) {
-      //       this.productName = response.attributes.name;
-      //       for (var key in response.attributes) {
-      //         this.productdetail[key] = response.attributes[key];
-      //       }
-      //       this.option.map(items => {
-      //         if (this.productdetail.category == items.value) {
-      //           this.productdetail.category = items.label;
-      //         }
-      //       });
-      //       this.productdetail.createdAt = this.utc2beijing(response.createdAt);
-      //       this.productdetail.id = response.id;
-      //       this.dynamicReg = response.attributes.dynamicReg;
-      //       this.productdetail.isshow = 0;
-      //       this.form.Productname = response.attributes.name;
-      //       this.ProductSecret = response.attributes.productSecret;
-      //       this.form.Productkey = this.productId;
-      //       // window.location.origin
-      //       this.productimg = response.attributes.icon;
-      //       if (response.attributes.decoder) {
-      //         setdata = response.attributes.decoder.code;
-      //         this.thingsParseModel.name = response.attributes.decoder.name;
-      //         this.thingsParseModel.version =
-      //             response.attributes.decoder.version;
-      //         this.thingsParseModel.desc = response.attributes.decoder.desc;
-      //       } else {
-      //         var str =
-      //             "IyBjb2Rpbmc9dXRmOAppbXBvcnQgc3lzCmltcG9ydCBvcwppbXBvcnQgcmVxdWVzdHMKaW1wb3J0IGpzb24KaW1wb3J0IGJhc2U2NAppbXBvcnQgbWF0cGxvdGxpYi5weXBsb3QgYXMgcGx0CmZyb20gcHlsYWIgaW1wb3J0IG1wbAppbXBvcnQgbWF0aAoKZ3JvdXBTZXNzaW9uID0gJycKaG9zdCA9ICdwdW1wLmlvdG4ybi5jb206MTMzNycKcyA9IHJlcXVlc3RzLnNlc3Npb24oKQpob3N0ID0gJ3B1bXAuaW90bjJuLmNvbScKCmRlZiBsb2dpbigpOgogICAgdXJsID0gJ2h0dHA6Ly97fTo1MDgwL2lvdGFwaS9sb2dpbicuZm9ybWF0KGhvc3QpCiAgICBoZWFkZXJzID0geydhY2NlcHQnOiAnYXBwbGljYXRpb24vanNvbicsIkNvbnRlbnQtVHlwZSI6ICJ0ZXh0L3BsYWluIn0KICAgIGJvZHkgPSB7InVzZXJuYW1lIjonbGlvdV96aCcsInBhc3N3b3JkIjonbGlvdV96aCd9CiAgICByID0gcy5wb3N0KHVybCwgaGVhZGVycz1oZWFkZXJzLCBkYXRhPWpzb24uZHVtcHMoYm9keSkpCiAgICB0ID0gci5jb250ZW50ICAjIOivu+WPlui/lOWbnueahOWGheWuuQogICAgdCA9IGpzb24ubG9hZHModCkgICMg6Kej56CBSlNPTuWvueixoQogICAgZ3JvdXBTZXNzaW9uID0gci5qc29uKClbJ3Nlc3Npb25Ub2tlbiddCiAgICBzLmhlYWRlcnMudXBkYXRlKHsic2Vzc2lvblRva2VuIjogZ3JvdXBTZXNzaW9uLCAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL2pzb24nfSkKCmRlZiBkZXZpY2UoKToKICAgIHJ0ID0gW10KICAgIGRhdGEgPSBzLmdldCgnaHR0cDovL3t9OjUwODAvaW90YXBpL2RldmljZS9lOTZlZWE5YWU1Jy5mb3JtYXQoaG9zdCksCiAgICAgICAgICAgICAgICAgcGFyYW1zPXsnb3JkZXInOiAnY3JlYXRlZEF0JywgfSkKICAgIGZvciByb3cgaW4gKGRhdGEuanNvbigpWydyZXN1bHRzJ10pOgogICAgICAgIHByaW50KHJvdykKICAgIHJldHVybiBydAoKZGVmIHVwbG9hZCgpOgogICAgdXJsID0gJ2h0dHA6Ly97fTo1MDgwL2lvdGFwaS9sb2dpbicuZm9ybWF0KGhvc3QpCiAgICBoZWFkZXJzID0geydhY2NlcHQnOiAnYXBwbGljYXRpb24vanNvbicsICJDb250ZW50LVR5cGUiOiAidGV4dC9wbGFpbiJ9CiAgICBib2R5ID0geyJ1c2VybmFtZSI6ICdsaW91X3poJywgInBhc3N3b3JkIjogJ2xpb3VfemgnfQogICAgciA9IHMucG9zdCh1cmwsIGhlYWRlcnM9aGVhZGVycywgZGF0YT1qc29uLmR1bXBzKGJvZHkpKQogICAgZ3JvdXBTZXNzaW9uID0gci5qc29uKClbJ3Nlc3Npb25Ub2tlbiddCiAgICB1cmwgPSAnaHR0cDovL3t9OjEyNTAvc2hhcGVzL3VwbG9hZCcuZm9ybWF0KGhvc3QpCiAgICBmaWxlcyA9IHsnZmlsZSc6IG9wZW4oJ3BsYXRmb3JtLnBuZycsJ3JiJyl9CiAgICBvcHRpb25zID0geydvdXRwdXQnOiAnanNvbicsICdwYXRoJzogJycsICdzY2VuZSc6ICdsaW91X3poJywnYXV0aF90b2tlbic6Z3JvdXBTZXNzaW9ufSAgIyDlj4LpmIXmtY/op4jlmajkuIrkvKDnmoTpgInpobkKICAgIHVwbG9hZHJlcyA9IHJlcXVlc3RzLnBvc3QodXJsLCBkYXRhPW9wdGlvbnMsIGZpbGVzPWZpbGVzKQogICAgY29udGVudCA9IGpzb24ubG9hZHModXBsb2FkcmVzLnRleHQpCiAgICBwcmludCgidXBsb2FkSW1nIGlzICIgKyBjb250ZW50WyJ1cmwiXSkKCgpkZWYgcG9zdChhcmdzLHNlc3Npb24pOgogICAgcHJpbnQoYXJncykKICAgIHByaW50KHNlc3Npb24pCiAgICBib2R5ID0gYmFzZTY0LmI2NGRlY29kZShhcmdzKS5kZWNvZGUoInV0Zi04IikKICAgIGRhdGEgPSBqc29uLmxvYWRzKGJvZHkpICMg6Kej56CBSlNPTuWvueixoQogICAgcHJpbnQoZGF0YSkKICAgIHMuaGVhZGVycy51cGRhdGUoeyJzZXNzaW9uVG9rZW4iOiBzZXNzaW9uLCAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL2pzb24nfSkKICAgIHVybCA9ICdodHRwOi8ve306NTA4MC9pb3RhcGkvbG9naW4nLmZvcm1hdChob3N0KQogICAgaGVhZGVycyA9IHsnYWNjZXB0JzogJ2FwcGxpY2F0aW9uL2pzb24nLCJDb250ZW50LVR5cGUiOiAidGV4dC9wbGFpbiJ9CiAgICBib2R5ID0geyJ1c2VybmFtZSI6J2xpb3VfemgnLCJwYXNzd29yZCI6J2xpb3VfemgnfQogICAgciA9IHMucG9zdCh1cmwsIGhlYWRlcnM9aGVhZGVycywgZGF0YT1qc29uLmR1bXBzKGJvZHkpKQogICAgdCA9IHIuY29udGVudCAgIyDor7vlj5bov5Tlm57nmoTlhoXlrrkKICAgIHQgPSBqc29uLmxvYWRzKHQpICAjIOino+eggUpTT07lr7nosaEKICAgIHJldHVybiBhcmdzCgpkZWYgbWFpbihhcmd2cyk6CiAgICBwb3N0KGFyZ3ZzWzBdLGFyZ3ZzWzFdKQogICAgI2xvZ2luKCkKICAgICNkZXZpY2UoKQogICAgI3VwbG9hZCgpCiAgICByZXR1cm4gMAoKZGVmIGV4aXQoKToKICAgIG9zLl9leGl0KDApCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgbWFpbihzeXMuYXJndlsxOl0p";
-      //           // setdata =
-      //           //   decodeURIComponent(escape(window.atob((str).replace(/-/g, "+").replace(/_/g, "/"))))
-      //         setdata = str;
-      //       }
-      //       if (!this.productdetail.thing) {
-      //         this.productdetail.thing = {
-      //           properties: []
-      //         };
-      //       }
+      this.$get_object('Product', productId).then(response => {
+        if (response) {
+          this.productName = response.name;
+          for (var key in response) {
+            this.productdetail[key] = response[key];
+          }
+          this.option.map(items => {
+            if (this.productdetail.category == items.value) {
+              this.productdetail.category = items.label;
+            }
+          });
+          this.productdetail.createdAt = this.utc2beijing(response.createdAt);
+          this.productdetail.id = response.id;
+          this.dynamicReg = response.dynamicReg;
+          this.productdetail.isshow = 0;
+          this.form.Productname = response.name;
+          this.ProductSecret = response.productSecret;
+          this.form.Productkey = this.productId;
+          // window.location.origin
+          this.productimg = response.icon;
+          if (response.decoder) {
+            setdata = response.decoder.code;
+            this.thingsParseModel.name = response.decoder.name;
+            this.thingsParseModel.version =
+                  response.decoder.version;
+            this.thingsParseModel.desc = response.decoder.desc;
+          } else {
+            setdata =
+                  "JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4=";
+          }
+          if (!this.productdetail.thing) {
+            this.productdetail.thing = {
+              properties: []
+            };
+          }
 
-      //       this.wmxData = this.productdetail.thing.properties.filter(item => {
-      //         return item.name && item.dataType;
-      //       });
+          this.wmxData = this.productdetail.thing.properties.filter(item => {
+            return item.name && item.dataType;
+          });
 
-      //       editor.setValue(Base64.decode(setdata));
-      //       editor.gotoLine(editor.session.getLength());
-      //       // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-      //       var Device = Parse.Object.extend("Device");
-      //       var devices = new Parse.Query(Device);
+          editor.setValue(Base64.decode(setdata));
 
-      //       devices.equalTo("product", this.productId);
-      //       devices.skip(0);
-      //       devices.count().then(count => {
-      //         this.form.ProductAll = count;
-      //       });
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+          editor.gotoLine(editor.session.getLength());
+          // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+
+          this.queryDeviceCount(this.productId)
+        }
+      });
+    },
+    // 查询设备总数
+    async queryDeviceCount(productId) {
+      this.form.ProductAll = await getDeviceCountByProduct(productId)
     },
     editordata(row) {
       this.thingsParseModel.name = row.attributes.data.name;
