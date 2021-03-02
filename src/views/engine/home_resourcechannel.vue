@@ -446,9 +446,7 @@ export default {
             config: obj,
             name: this.addchannel.name,
             cType: this.addchannel.region,
-            desc: this.addchannel.desc,
-            type: this.addchannel.type,
-            isEnable: this.addchannel.isEnable
+            desc: this.addchannel.desc
           }
           this.addchannelaxios(data)
         }
