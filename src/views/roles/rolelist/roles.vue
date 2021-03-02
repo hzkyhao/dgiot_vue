@@ -13,9 +13,10 @@
             <!-- @node-click="handleNodeClick" -->
             <div slot-scope="{ node, data }" class="custom-tree-node">
               <span
-                :class="{ selected: data.objectId == curDepartmentId}"
+                :class="{ selected: data.objectId == curDepartmentId }"
                 @click="handleNodeClick(data)"
-              >{{ node.label }}</span>
+                >{{ node.label }}</span
+              >
               <span>
                 <i
                   class="el-icon-circle-plus-outline"
@@ -42,7 +43,8 @@
               icon="el-icon-search"
               style="margin-left:20px;"
               @click="getRolesList(0)"
-            >{{ $t("developer.search") }}</el-button>
+              >{{ $t("developer.search") }}</el-button
+            >
             <!-- icon="el-icon-plus" -->
             <!--           <el-button type="primary" size="mini" @click="add">
               {{
@@ -50,7 +52,9 @@
               }}
             </el-button>-->
             <!-- icon="el-icon-search" -->
-            <el-button type="primary" size="mini" @click="getRolesList()">所有角色</el-button>
+            <el-button type="primary" size="mini" @click="getRolesList()"
+              >所有角色</el-button
+            >
           </div>
           <div class="tableroles" style="margin-top:20px">
             <el-table
@@ -101,12 +105,14 @@
                       <el-dropdown-item
                         icon="el-icon-document"
                         @click.native="exportRoletemp(scope.row)"
-                      >保存模板</el-dropdown-item>
+                        >保存模板</el-dropdown-item
+                      >
                       <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
                         icon="el-icon-delete"
                         @click.native="handleDelete(scope.row)"
-                      >删除</el-dropdown-item>
+                        >删除</el-dropdown-item
+                      >
                       <!-- <el-dropdown-item @click.native="taskDetail(scope.row.objectId,scope.row.test_bed.id)">详情</el-dropdown-item> -->
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -220,14 +226,10 @@
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">
-          {{
-            $t("developer.cancel")
-          }}
+          {{ $t("developer.cancel") }}
         </el-button>
         <el-button type="primary" @click="addacl">
-          {{
-            $t("developer.determine")
-          }}
+          {{ $t("developer.determine") }}
         </el-button>
       </span>
     </el-dialog>
@@ -265,49 +267,45 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="roleEdit = false">
-          {{
-            $t("developer.cancel")
-          }}
+          {{ $t("developer.cancel") }}
         </el-button>
         <el-button type="primary" @click="updaterole">
-          {{
-            $t("developer.determine")
-          }}
+          {{ $t("developer.determine") }}
         </el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import addroles from '@/views/roles/rolelist/addroles'
+import addroles from "@/views/roles/rolelist/addroles";
 export default {
-  name: 'Role',
+  name: "Role",
   data() {
     return {
       deptTreeData: [],
-      curDepartmentId: '',
-      formLabelWidth: '120px',
+      curDepartmentId: "",
+      formLabelWidth: "120px",
       roleEdit: false,
       form: {
-        name: '',
-        alias: '',
-        desc: ''
+        name: "",
+        alias: "",
+        desc: ""
       },
       data: [],
       dialogVisible: false,
       multipleSelection: [],
-      search: '',
+      search: "",
       total: 0,
       pagesize: 10,
       start: 0,
       roleList: [],
       tableDataroles: [],
       centerDialogVisible: false,
-      editroleid: '',
+      editroleid: "",
       currentSelectIndex: null,
       roleProps: {
-        children: 'children',
-        label: 'name'
+        children: "children",
+        label: "name"
       },
       checkMenus: [], // 选中菜单
       checkRoles: [], // 选中权限
@@ -318,81 +316,81 @@ export default {
       loadingService: {},
       roleItem: [],
       centerDialogRole: false
-    }
+    };
   },
   computed: {
     permissionTreeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
+      const cloneData = JSON.parse(JSON.stringify(this.dataPermissions));
       return cloneData.filter(father => {
         /* eslint-disable */
         const branchArr = cloneData.filter(
           child => father.objectId == child.parentId
-        ) // 返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-        return father.parentId == 0 // 返回第一层
+        ); // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : ""; // 如果存在子级，则给父级添加一个children属性，并赋值
+        return father.parentId == 0; // 返回第一层
         /* eslint-disable */
-      })
+      });
     },
     menuTreeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
+      const cloneData = JSON.parse(JSON.stringify(this.dataMenus));
       return cloneData.filter(father => {
         /* eslint-disable */
         const branchArr = cloneData.filter(
           child => father.objectId == child.parentId
-        )
-        branchArr.length > 0 ? (father.children = branchArr) : ''
-        return father.parentId == 0
+        );
+        branchArr.length > 0 ? (father.children = branchArr) : "";
+        return father.parentId == 0;
         /* eslint-disable */
-      })
+      });
     }
   },
   components: {
     addroles
   },
   mounted() {
-    this.getRolesList()
-    this.getMenu()
-    this.getRoleschema()
-    this.$baseEventBus.$on('dialogHide', () => {
-      this.centerDialogRole = false
-    })
+    this.getRolesList();
+    this.getMenu();
+    this.getRoleschema();
+    this.$baseEventBus.$on("dialogHide", () => {
+      this.centerDialogRole = false;
+    });
   },
 
   methods: {
     getMenu() {
-      this.data = []
-      this.dataMenus = []
+      this.data = [];
+      this.dataMenus = [];
       this.$axiosWen
-        .get('iotapi/classes/Menu')
+        .get("iotapi/classes/Menu")
         .then(res => {
           if (res && res.results) {
-            this.menuListRes = res.results
+            this.menuListRes = res.results;
             res.results.map(items => {
-              var obj = {}
-              obj.label = items.name
-              obj.objectId = items.objectId
-              obj.parentId = items.parent.objectId
-              obj.createtime = new Date(items.createdAt).toLocaleDateString()
-              this.data.push(obj)
-              this.dataMenus.push(obj)
-            })
+              var obj = {};
+              obj.label = items.name;
+              obj.objectId = items.objectId;
+              obj.parentId = items.parent.objectId;
+              obj.createtime = new Date(items.createdAt).toLocaleDateString();
+              this.data.push(obj);
+              this.dataMenus.push(obj);
+            });
           }
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
       //查询部门
       this.$axiosWen
-        .get('iotapi/roletree')
+        .get("iotapi/roletree")
         .then(res => {
-          this.deptTreeData = res.results
-          this.handleNodeClick(this.deptTreeData[0])
+          this.deptTreeData = res.results;
+          this.handleNodeClick(this.deptTreeData[0]);
         })
         .catch(err => {
-          this.$message('部门列表获取失败')
-          this.deptTreeData = []
-          console.log(err)
-        })
+          this.$message("部门列表获取失败");
+          this.deptTreeData = [];
+          console.log(err);
+        });
     },
     diguiquchu(datas, arr, v, needdelarr) {
       // 递归找出半选中的数据
@@ -400,283 +398,248 @@ export default {
         // console.log(item.key, v, "----------");
         if (item.key == v && item.children.length > 0) {
           // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
-          needdelarr.push(v)
-          this.diguiquchu(datas, item.children, v, needdelarr)
+          needdelarr.push(v);
+          this.diguiquchu(datas, item.children, v, needdelarr);
         } else if (item.key != v && item.children.length > 0) {
-          this.diguiquchu(datas, item.children, v, needdelarr)
+          this.diguiquchu(datas, item.children, v, needdelarr);
         }
-      })
+      });
     },
     add() {
       this.$router.push({
-        path: 'iotapi/roles/editroles',
+        path: "iotapi/roles/editroles",
         query: {
           insert: 0
         }
-      })
+      });
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val
+      this.multipleSelection = val;
     },
     //给role添加acl权限
     addacl() {
-      // var Role = Parse.Object.extend('_Role')
-      // var role = new Parse.Query(Role)
-      // role.get(this.objectId)
-      this.$get_object('_Role', this.objectId).then(object => {
-        // let acl = new Parse.ACL()
-        // this.multipleSelection.map(item => {
-        //   acl.setRoleReadAccess(item.attributes.name, true)
-        //   acl.setRoleWriteAccess(item.attributes.name, true)
-        //   object.set('ACL', acl)
-        // })
-        // console.log('sss',this.multipleSelection)
-        // object.save()
-        // const params = {
-        //   ACL =
-        // }
-        // create_object('_Role',params).then(res => {
-        //     this.$message({
-        //       type: 'success',
-        //       message: '添加成功!'
-        //     })
-        //     this.centerDialogVisible = false
-        //     this.getRolesList()
-        //   })
-      })
+      this.$get_object("_Role", this.objectId).then(object => {
+      });
     },
     //关闭菜单弹窗
     handleClose() {
-      this.dialogVisible = false
+      this.dialogVisible = false;
     },
     //删除角色
     handleDelete(row) {
-      this.$confirm('此操作将永久删除此角色, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("此操作将永久删除此角色, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
-          this.$axiosWen.delete('iotapi/classes/_Role/' + row.objectId).then(res => {
-            if (res) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              })
-              this.getRolesList()
-              this.getMenu()
-            }
-          })
+          this.$axiosWen
+            .delete("iotapi/classes/_Role/" + row.objectId)
+            .then(res => {
+              if (res) {
+                this.$message({
+                  type: "success",
+                  message: "删除成功!"
+                });
+                this.getRolesList();
+                this.getMenu();
+              }
+            });
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     //增加菜单
     addmenu(row) {
       // console.log(row)
-      this.rolename = row.attributes.name
+      this.rolename = row.attributes.name;
 
       // this.dialogVisible = true;
-      this.getMenu()
+      this.getMenu();
     },
     tableRowClassName({ row, rowIndex }) {
       //把每一行的索引放进row
 
-      row.index = rowIndex
+      row.index = rowIndex;
     },
     selectedHighlight({ row, rowIndex }) {
       if (this.currentSelectIndex === rowIndex) {
         return {
           // "background-color": "#409EFF",
-          color: '#409EFF',
-          'font-weight': 'bold'
+          color: "#409EFF",
+          "font-weight": "bold"
           // border: "5px solid black"
-        }
+        };
       }
     },
     getDetailmenu(row, column, event, cell) {
-      if (column && column.label == '操作') {
-        return
+      if (column && column.label == "操作") {
+        return;
       }
 
       this.loadingService = this.$loading({
         lock: true,
-        text: '数据加载中...',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.6)'
-      })
+        text: "数据加载中...",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.6)"
+      });
 
-      this.currentSelectIndex = row.index
+      this.currentSelectIndex = row.index;
 
       this.$axiosWen
-        .get('iotapi/role?name=' + row.name)
+        .get("iotapi/role?name=" + row.name)
         .then(res => {
-          this.roleItem = res
+          this.roleItem = res;
           if (res && res.menus && res.rules) {
-            this.checkMenus = res.menus
-            this.checkRoles = res.rules
-            this.doSetChecked()
+            this.checkMenus = res.menus;
+            this.checkRoles = res.rules;
+            this.doSetChecked();
           } else {
             this.$message({
-              type: 'warning',
-              message: '获取角色菜单失败'
-            })
+              type: "warning",
+              message: "获取角色菜单失败"
+            });
           }
 
-          this.loadingService.close()
+          this.loadingService.close();
         })
         .catch(error => {
-          this.loadingService.close()
-          console.log(error)
-        })
+          this.loadingService.close();
+          console.log(error);
+        });
     },
     doSetChecked() {
-      this.roleMenuList = []
-      this.rolePermissonList = []
+      this.roleMenuList = [];
+      this.rolePermissonList = [];
 
       this.menuListRes.map(items => {
         this.checkMenus.map(mentItem => {
           if (items.name == mentItem.name) {
-            this.roleMenuList.push(items.objectId)
+            this.roleMenuList.push(items.objectId);
           }
-        })
-      })
+        });
+      });
       // set ###
-      this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+      this.$refs.menusTree.setCheckedKeys(this.roleMenuList);
 
       this.permissionListRes.map(items => {
         this.checkRoles.map(mentItem => {
           if (items.name === mentItem.name) {
-            this.rolePermissonList.push(items.objectId)
+            this.rolePermissonList.push(items.objectId);
           }
-        })
-      })
+        });
+      });
       // set ###
-      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList);
     },
 
     //初始化权限列表
     getRolesList(start, dataR) {
       if (start == 0) {
-        this.start = 0
+        this.start = 0;
       }
 
-      let where = {}
+      let where = {};
 
-      if (dataR && dataR.name != 'admin') {
-        where.objectId = dataR.objectId
+      if (dataR && dataR.name != "admin") {
+        where.objectId = dataR.objectId;
       }
       const loading = this.$loading({
-        background: 'rgba(0, 0, 0, 0.5)'
-      })
+        background: "rgba(0, 0, 0, 0.5)"
+      });
       this.$axiosWen
-        .get('iotapi/classes/_Role', {
+        .get("iotapi/classes/_Role", {
           params: {
             skip: this.start,
             limit: this.pagesize,
-            order: '-createdAt',
+            order: "-createdAt",
             where: where,
-            keys: 'count(*)'
+            keys: "count(*)"
           }
         })
         .then(res => {
-          loading.close()
+          loading.close();
           if (res && res.results) {
-            this.roleList = res.results
-            this.total = res.count
+            this.roleList = res.results;
+            this.total = res.count;
           } else {
-            this.roleList = []
+            this.roleList = [];
           }
         })
         .catch(() => {
-          loading.close()
-        })
+          loading.close();
+        });
     },
     handleSizeChange(val) {
-      this.pagesize = val
-      this.getRolesList()
+      this.pagesize = val;
+      this.getRolesList();
     },
     handleCurrentChange(val) {
-      this.start = Number(val - 1) * Number(this.pagesize)
-      this.getRolesList()
+      this.start = Number(val - 1) * Number(this.pagesize);
+      this.getRolesList();
     },
     handleCheckChange(data, checked) {
-      console.log(data, checked)
-    },
-    searchvalue() {
-      this.roleList = []
-      // var roles = Parse.Object.extend('_Role')
-      // var query = new Parse.Query(roles)
-      // query.equalTo('name', this.search)
-      // query.limit(this.pagesize)
-      // query.count().then(count => {
-      //   if (count) {
-      //     this.total = count
-      //     query.find().then(results => {
-      //       this.roleList = results
-      //     })
-      //   }
-      // })
+      console.log(data, checked);
     },
     // 获取权限
     getRoleschema() {
-      this.dataPermissions = []
+      this.dataPermissions = [];
       this.$axiosWen
-        .get('iotapi/classes/Permission')
+        .get("iotapi/classes/Permission")
         .then(res => {
-          const results = res.results
-          this.permissionListRes = results
+          const results = res.results;
+          this.permissionListRes = results;
           results.map(items => {
-            var obj = {}
-            obj.label = items.alias
-            obj.alias = items.name
-            obj.objectId = items.objectId
-            obj.parentId = items.parent.objectId
-            obj.createtime = new Date(items.createdAt).toLocaleDateString()
-            this.dataPermissions.push(obj)
-          })
+            var obj = {};
+            obj.label = items.alias;
+            obj.alias = items.name;
+            obj.objectId = items.objectId;
+            obj.parentId = items.parent.objectId;
+            obj.createtime = new Date(items.createdAt).toLocaleDateString();
+            this.dataPermissions.push(obj);
+          });
 
           // this.getMenu();
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     // 修改角色权限
     exportRolerole(row) {
-      let usersList = []
-      let rolesList = []
-      let checkrole = []
-      let checkmenu = []
-      let selectMenu = this.$refs.menusTree.getCheckedNodes()
-      let selectRermission = this.$refs.permissionTree.getCheckedNodes()
-      let rolesData = this.roleItem.roles
-      let usersData = this.roleItem.users
+      let usersList = [];
+      let rolesList = [];
+      let checkrole = [];
+      let checkmenu = [];
+      let selectMenu = this.$refs.menusTree.getCheckedNodes();
+      let selectRermission = this.$refs.permissionTree.getCheckedNodes();
+      let rolesData = this.roleItem.roles;
+      let usersData = this.roleItem.users;
 
       if (!usersData || !rolesData) {
         this.$message({
-          message: '未选择正确的角色'
-        })
+          message: "未选择正确的角色"
+        });
 
-        return false
+        return false;
       }
       usersData.forEach(item => {
-        usersList.push(item.username)
-      })
+        usersList.push(item.username);
+      });
       rolesData.forEach(item => {
-        rolesList.push(item.name)
-      })
+        rolesList.push(item.name);
+      });
       if (selectMenu && selectRermission) {
         selectMenu.forEach(item => {
-          console.log('selectMenu', item)
-          checkmenu.push(item.label)
-        })
+          console.log("selectMenu", item);
+          checkmenu.push(item.label);
+        });
         selectRermission.forEach(item => {
-          console.log('selectRermission', item)
-          checkrole.push(item.alias)
-        })
-        console.log(row, 'row', row)
+          console.log("selectRermission", item);
+          checkrole.push(item.alias);
+        });
+        console.log(row, "row", row);
         this.$axios
-          .put('iotapi/role', {
+          .put("iotapi/role", {
             objectId: this.roleItem.objectId,
             name: row.name,
             alias: row.alias,
@@ -687,61 +650,54 @@ export default {
             users: usersList
           })
           .then(res => {
-            this.$message('角色信息更新成功')
+            this.$message("角色信息更新成功");
           })
           .catch(error => {
-            console.log(error)
+            console.log(error);
             this.$message({
-              message: '更新失败!'
-            })
-          })
+              message: "更新失败!"
+            });
+          });
       } else {
-        this.$message('请选择菜单列表和权限列表')
+        this.$message("请选择菜单列表和权限列表");
       }
     },
     // 保存模板
     exportRoletemp(row) {
       this.$axiosWen
-        .post(
-          'iotapi/roletemp?name=' +
-            row.name +
-            '&tempname=' +
-            row.name
-        )
+        .post("iotapi/roletemp?name=" + row.name + "&tempname=" + row.name)
         .then(response => {
           // console.log('response', response)
-          if(response){
+          if (response) {
             this.$message({
-                    type: 'success',
-                    message: '保存模板成功'
-                  })
+              type: "success",
+              message: "保存模板成功"
+            });
           }
-        })
+        });
     },
     updaterole() {
       const params = {
-        alias:this.form.alias,
-        desc:this.form.desc
-      }
-      this.$update_object(this.editroleid,params).then(res => {
+        alias: this.form.alias,
+        desc: this.form.desc
+      };
+      this.$update_object(this.editroleid, params).then(res => {
         this.$message({
-          type: 'success',
-          message: '更新成功'
-        })
-        this.roleEdit = false
-        this.getRolesList()
-      })
-
-
+          type: "success",
+          message: "更新成功"
+        });
+        this.roleEdit = false;
+        this.getRolesList();
+      });
     },
     handleNodeClick(data) {
-      this.getRolesList(0, data)
+      this.getRolesList(0, data);
 
-      this.curDepartmentId = data.objectId
+      this.curDepartmentId = data.objectId;
 
       // 清除选中的角色
 
-      this.currentSelectIndex = null
+      this.currentSelectIndex = null;
 
       //清除菜单树
 
@@ -749,7 +705,7 @@ export default {
     },
     // 添加子节点
     appendChildTree(data) {
-      console.log(data, '添加子节点')
+      console.log(data, "添加子节点");
     },
     renderContent(h, { node, data, store }) {
       return (
@@ -765,23 +721,23 @@ export default {
             </el-button>
           </span>
         </span>
-      )
+      );
     },
     // 显示弹窗
     setDialogRole(data) {
       // this.$store.commit("set_DeptObj", data);
       // eventBus.$emit("set_DeptObj", data)
-      this.centerDialogRole = true
+      this.centerDialogRole = true;
 
       this.$nextTick(() => {
-        this.$refs['addRoleRef'].getData(data)
-      })
+        this.$refs["addRoleRef"].getData(data);
+      });
     },
     closeDialogRole() {
-      this.centerDialogRole = false
+      this.centerDialogRole = false;
     }
   }
-}
+};
 </script>
 <style scoped lang="scss">
 .roles {
