@@ -4212,7 +4212,7 @@ export default {
           editor.gotoLine(editor.session.getLength());
         }
       }).catch(err => {
-        console.log('err',err)
+        console.log('err', err)
         this.$baseMessage('请求出错', err.error, 3000)
       })
     },
@@ -4322,7 +4322,6 @@ export default {
                 isupdatetrue += "保存成功";
                 editor2.setValue(isupdatetrue);
               }
-            } else {
             }
             this.issub = true;
           }).catch(e => {

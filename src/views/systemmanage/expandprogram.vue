@@ -498,8 +498,8 @@ export default {
         this.option.push(obj)
       })
     },
-       // 得到产品详情
-       getProDetail(productId) {
+    // 得到产品详情
+    getProDetail(productId) {
       // console.log('===')
       this.productId = productId;
       editor = ace.edit("editor");
@@ -580,30 +580,16 @@ export default {
       editor.setValue(Base64.decode(row.attributes.data.code));
       this.dialogTableVisible = false;
     },
-    getAllunit() {
+    async  getAllunit() {
       this.allunit = [];
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // var arr = [{}];
-      // datas.equalTo("type", "unit");
-      // datas.limit(1000);
-      // datas.find().then(
-      //   response => {
-      //     this.allunit = response.concat([]);
-      //     this.allunit.unshift({
-      //       attributes: {
-      //         data: {
-      //           Name: "无",
-      //           Symbol: ""
-      //         }
-      //       }
-      //     });
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const { results } = await getAllunit('unit', 100)
+      this.allunit = results.concat([]);
+      this.allunit.unshift({
+        data: {
+          Name: "无",
+          Symbol: ""
+        }
+      });
     },
     subAce(thingsParseModel, istrue) {
       this.$refs[thingsParseModel].validate(valid => {
@@ -614,32 +600,24 @@ export default {
             code: Base64.encode(editor.getValue()),
             desc: thingsParseModel.desc
           };
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var Product = Parse.Object.extend("Product");
-          // var product = new Product();
-          // product.id = this.productId;
-          // // product.get(this.productId).then(object => {
-          // product.set("decoder", obj);
-          // product.save().then(
-          //   res => {
-          //     if (this.issub == false) {
-          //       this.$message({
-          //         type: "success",
-          //         message: "保存成功"
-          //       });
-          //       if (istrue == true) {
-          //         isupdatetrue += "保存成功" + "\r\n";
-          //         editor2.setValue(isupdatetrue);
-          //       }
-          //     } else {
-          //     }
-          //     this.issub = true;
-          //   },
-          //   error => {
-          //     returnLogin(error);
-          //   }
-          // );
-          // });
+          const params = {
+            decoder: obj
+          };
+          this.$update_object('Product', this.productId, params).then(res => {
+            if (this.issub == false) {
+              this.$message({
+                type: "success",
+                message: "保存成功"
+              });
+              if (istrue == true) {
+                isupdatetrue += "保存成功";
+                editor2.setValue(isupdatetrue);
+              }
+            }
+            this.issub = true;
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message({
             type: "warning",
@@ -651,52 +629,52 @@ export default {
     subAce1(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-          // var userid = Parse.User.current().id;
-          // var obj = {
-          //   name: this.thingsParseModel.name,
-          //   version: this.thingsParseModel.version,
-          //   code: Base64.encode(editor.getValue()),
-          //   desc: this.thingsParseModel.desc
-          // };
-
-          // var Dict = Parse.Object.extend("Dict");
-          // var datas1 = new Parse.Query(Dict);
-          // datas1.equalTo("data.name", obj.name);
-          // datas1.equalTo("data.version", obj.version);
-
-          // datas1.find().then(
-          //   response => {
-          //     if (response) {
-          //       if (response.length >= 1) {
-          //         this.$messages("此协议版本已存在");
-          //         return;
-          //       } else {
-          //         var datas = new Dict();
-          //         var acl = new Parse.ACL();
-          //         acl.setReadAccess(userid, true);
-          //         acl.setWriteAccess(userid, true);
-          //         acl.setPublicReadAccess(true);
-          //         datas.set("type", "decoder");
-          //         datas.set("data", obj);
-          //         datas.set("ACL", acl);
-          //         datas.save().then(
-          //           resultes => {
-          //             if (resultes) {
-          //               this.$message("保存到公共协议库成功");
-          //             }
-          //           },
-          //           error => {
-          //             this.$message(error.message);
-          //           }
-          //         );
-          //       }
-          //     }
-          //   },
-          //   error => {
-          //     returnLogin(error);
-          //   }
-          // );
+          const params = {
+            where: {
+              "data.name": this.formInline.name,
+              "data.version": this.formInline.version
+            }
+          };
+          this.$query_object('Dict', params).then(response => {
+            if (response.results && response.results.length >= 1) {
+              this.$message("此协议版本已存在");
+              return;
+            } else {
+              this.$get_object('Product', this.productId).then(response => {
+                if (response) {
+                  var obj = {
+                    name: this.formInline.name,
+                    version: this.formInline.version,
+                    code: Base64.encode(editor.getValue()),
+                    desc: this.formInline.desc
+                  };
+                  const params = {
+                    key: this.formInline.name + ":" + this.formInline.version,
+                    type: "decoder",
+                    data: obj,
+                    ACL: response.ACL
+                  };
+                  this.$create_object('Dict', params).then(resultes => {
+                    if (resultes.error) {
+                      this.$message({
+                        type: "error",
+                        message: resultes.error
+                      });
+                    } else {
+                      this.$message({
+                        type: "success",
+                        message: "保存到公共协议库成功"
+                      });
+                    }
+                  }).catch(e => {
+                    console.log(e)
+                  })
+                }
+              })
+            }
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message({
             type: "warning",
@@ -770,67 +748,47 @@ export default {
         return "red_active";
       }
     },
-    deletedata(id) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Dict();
-      // datas.id = id;
-      // datas.destroy().then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.$message("成功删除");
-      //       this.chaxun();
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+    deletedata(objectId) {
+      this.$del_object('Dict', objectId).then(resultes => {
+        if (resultes) {
+          this.$message("成功删除");
+          this.chaxun();
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     // 热加载弹窗
-    updatesubdialog() {
+    async updatesubdialog() {
       this.protoldialog = true;
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Channel = Parse.Object.extend("Channel");
-      // var query = new Parse.Query(Channel);
-      // var Product = Parse.Object.extend("Product");
-      // var product = new Product();
-      // product.id = this.productId;
-      // query.equalTo("product", product);
-      // query.equalTo("type", "1");
-      // query.ascending("-updatedAt");
-      // query.find().then(
-      //   res => {
-      //     this.protolchannel = res;
-      //     this.$refs.multipleTable.toggleAllSelection();
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const type = "1"
+      const product = { __type: "Pointer", className: "Product", objectId: this.productId }
+      getChannelCountByProduct(this.channellength, this.channelstart, product, type).then(res => {
+        this.protolchannel = res.results;
+        this.$refs.multipleTable.toggleAllSelection();
+      }).catch(err => {
+        console.log(err)
+        this.$baseMessage('请求出错', err.error, 3000)
+      })
     },
     chaxun() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.skip(this.decoderstart);
-      // datas.limit(this.decoderlength);
-      // datas.equalTo("type", "decoder");
-      // datas.ascending("-createdAt");
-      // datas.count().then(
-      //   count => {
-      //     this.decodertotal = count;
-      //     datas.find().then(resultes => {
-      //       if (resultes) {
-      //         this.dialogTableVisible = true;
-      //         this.gridData = resultes;
-      //       }
-      //     });
-      //   },
-      //   error => {
-      //     returnLogin(error);
-      //   }
-      // );
+      const params = {
+        keys: 'count(*)',
+        skip: this.decoderstart,
+        limit: this.decoderlength,
+        where: {
+          "type": "decoder"
+        }
+      }
+      this.dialogTableVisible = true;
+      this.$query_object('Dict', params).then(res => {
+        if (res) {
+          this.decodertotal = res.count;
+          this.gridData = res.results;
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     // 协议编辑
     protol() {
