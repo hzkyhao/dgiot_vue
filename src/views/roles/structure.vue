@@ -12,7 +12,11 @@
             class="demo-ruleForm"
           >
             <el-form-item label="姓名" prop="nick">
-              <el-input v-model="userInfoForm.nick" placeholder="2-7个文字" auto-complete="off" />
+              <el-input
+                v-model="userInfoForm.nick"
+                placeholder="2-7个文字"
+                auto-complete="off"
+              />
             </el-form-item>
 
             <el-form-item label="手机号" prop="phone">
@@ -24,10 +28,18 @@
               />
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="userInfoForm.email" placeholder="请输入邮箱" auto-complete="off" />
+              <el-input
+                v-model="userInfoForm.email"
+                placeholder="请输入邮箱"
+                auto-complete="off"
+              />
             </el-form-item>
             <el-form-item label="账号" prop="account">
-              <el-input v-model="userInfoForm.account" placeholder="请输入账号" auto-complete="off" />
+              <el-input
+                v-model="userInfoForm.account"
+                placeholder="请输入账号"
+                auto-complete="off"
+              />
             </el-form-item>
 
             <el-form-item label="密码" prop="password">
@@ -47,7 +59,10 @@
               />
             </el-form-item>
             <el-form-item label="部门选择" prop="departmentid">
-              <el-select v-model="userInfoForm.departmentid" placeholder="请选择部门">
+              <el-select
+                v-model="userInfoForm.departmentid"
+                placeholder="请选择部门"
+              >
                 <el-option
                   v-for="item in deptOption"
                   :key="item.objectId"
@@ -85,7 +100,8 @@
                   icon="el-icon-search"
                   size="small"
                   @click="userFordepartment(0)"
-                >{{ $t("developer.search") }}</el-button>
+                >{{ $t("developer.search") }}</el-button
+                >
                 <!--               <el-button
                   class="filter-item"
                   type="primary"
@@ -99,7 +115,8 @@
                   type="primary"
                   size="small"
                   @click="userFordepartment()"
-                >所有用户</el-button>
+                >所有用户</el-button
+                >
                 <!-- <el-tree
               :data="treeData"
               :props="elTreedefaultProps"
@@ -115,9 +132,10 @@
                   >
                     <span slot-scope="{ node, data }" class="custom-tree-node">
                       <span
-                        :class="{ selected: data.objectId == curDepartmentId}"
+                        :class="{ selected: data.objectId == curDepartmentId }"
                         @click="handleNodeClick(data)"
-                      >{{ node.label }}</span>
+                      >{{ node.label }}</span
+                      >
                       <span>
                         <!-- <el-button
                           type="text"
@@ -140,7 +158,10 @@
             </el-col>
             <el-col :span="17">
               <div class="elTable">
-                <el-table :data="tableFilterData" style="width: 90%;margin-top:20px">
+                <el-table
+                  :data="tableFilterData"
+                  style="width: 90%;margin-top:20px"
+                >
                   <el-table-column label="用户名">
                     <template slot-scope="scope">
                       <div>{{ scope.row.username }}</div>
@@ -158,37 +179,47 @@
                   </el-table-column>
                   <el-table-column label="部门">
                     <template slot-scope="scope">
-                      <div>{{ scope.row.departmentname || departmentname }}</div>
+                      <div>
+                        {{ scope.row.departmentname || departmentname }}
+                      </div>
                     </template>
                   </el-table-column>
 
-                  <el-table-column :show-overflow-tooltip="true" label="创建时间">
+                  <el-table-column
+                    :show-overflow-tooltip="true"
+                    label="创建时间"
+                  >
                     <template slot-scope="scope">
                       <span>
-                        {{
-                          new Date(scope.row.createdAt).toLocaleDateString()
-                        }}
+                        {{ new Date(scope.row.createdAt).toLocaleDateString() }}
                       </span>
                     </template>
                   </el-table-column>
 
-                  <el-table-column :label="$t('developer.operation')" align="center" width="400">
+                  <el-table-column
+                    :label="$t('developer.operation')"
+                    align="center"
+                    width="400"
+                  >
                     <template slot-scope="scope">
                       <el-button
                         type="success"
                         size="small"
                         @click="handleEditor(scope.row)"
-                      >{{ $t("developer.edit") }}</el-button>
+                      >{{ $t("developer.edit") }}</el-button
+                      >
                       <el-button
                         type="danger"
                         size="small"
                         @click="handleDetele(scope.row)"
-                      >{{ $t("developer.delete") }}</el-button>
+                      >{{ $t("developer.delete") }}</el-button
+                      >
                       <el-button
                         size="mini"
                         type="primary"
                         @click="editorrole(scope.row.objectId)"
-                      >{{ $t("user.assignroles") }}</el-button>
+                      >{{ $t("user.assignroles") }}</el-button
+                      >
                     </template>
                   </el-table-column>
 
@@ -216,27 +247,36 @@
         :visible.sync="roleacl"
         :close-on-click-modal="false"
       >
-        <el-table ref="multipleTable" :data="rolelist" @selection-change="handleSelectionChange">
+        <el-table
+          ref="multipleTable"
+          :data="rolelist"
+          height="60%"
+          @selection-change="handleSelectionChange"
+        >
           <el-table-column type="selection" width="55" />
           <el-table-column :label="$t('user.name')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.alias }}</span>
+              <span>{{ scope.row.alias }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$t('developer.describe')" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.attributes.desc }}</span>
+              <span>{{ scope.row.desc }}</span>
             </template>
           </el-table-column>
           <el-table-column label="ID" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.id }}</span>
+              <span>{{ scope.row.objectId }}</span>
             </template>
           </el-table-column>
         </el-table>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="roleacl = false">{{ $t("developer.cancel") }}</el-button>
-          <el-button type="primary" @click="adduseracl">{{ $t("developer.determine") }}</el-button>
+          <el-button @click="roleacl = false">{{
+            $t("developer.cancel")
+          }}</el-button>
+          <el-button type="primary" @click="adduseracl">{{
+            $t("developer.determine")
+          }}</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -431,43 +471,45 @@ export default {
           });
       });
     },
-    editorrole(id) {
-      this.$message(id)
-      // this.rolelist = [];
-      // this.userrolelist = [];
-      // this.objectId = id;
-      // this.roleacl = true;
-      // var User = Parse.Object.extend("_User");
-      // var user = new Parse.Query(User);
-      // user
-      //   .get(this.objectId)
-      //   .then(resultes => {
-      //     var Role = Parse.Object.extend("_Role");
-      //     var query = new Parse.Query(Role);
-      //     var user = new User();
-      //     query.addAscending("createdAt");
-      //     query.find().then(resultes => {
-      //       this.rolelist = resultes;
-      //       user.set("objectId", this.objectId);
-      //       query.equalTo("users", user);
-      //       query.find().then(result => {
-      //         result.map(item => {
-      //           resultes.map((roleitem, index) => {
-      //             if (item.id == roleitem.id) {
-      //               this.$refs.multipleTable.toggleRowSelection(
-      //                 this.rolelist[index],
-      //                 true
-      //               );
-      //               this.userrolelist.push(roleitem.id);
-      //             }
-      //           });
-      //         });
-      //       });
-      //     });
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
+    async editorrole(id) {
+      const params = {
+        order: "createdAt",
+        where: {
+          users: {
+
+            className: "_User",
+            __type: "Pointer"
+          }
+        }}
+      this.rolelist = [];
+      this.userrolelist = [];
+      this.objectId = id;
+      const { results } = await this.$query_object('_User', {
+        limit: 1,
+        where: {
+          objectId: this.objectId
+        }
+      })
+      if (results.length) {
+        params.where.users.objectId = results[0].objectId
+      }
+      const req = await this.$query_object('_Role',
+        params
+      )
+      const result = req.results;
+      this.rolelist = result;
+      if (result.length) {
+        this.roleacl = true;
+        result.map((roleitem, index) => {
+          if (this.objectId == roleitem.objectId) {
+            this.$refs.multipleTable.toggleRowSelection(
+              this.rolelist[index],
+              true
+            );
+            this.userrolelist.push(roleitem.objectId);
+          }
+        });
+      }
     },
     seleItem(arr1, arr2, arr3) {
       arr1.map(items => {
@@ -499,7 +541,7 @@ export default {
       });
     },
     testroles(id) {
-      // console.log(id);
+      console.log(id);
       // var Roles = Parse.Object.extend("_Role");
       // var roles = new Roles();
       // var User = Parse.Object.extend("_User");
