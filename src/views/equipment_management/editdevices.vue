@@ -724,7 +724,7 @@ export default {
       // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
       const key = 'route.' + this.devicedetail.devaddr
       const setkey = {}
-      setkey[key] = {$regex: '.+'}
+      setkey[key] = { $regex: '.+' }
 
       const params = {
         limit: this.childrenDeviceLength,
@@ -781,9 +781,9 @@ export default {
           this.devicedevaddr = this.$objGet(resultes, 'devaddr')
           obj.id = resultes.objectId
           obj.createdAt = utc2beijing(resultes.createdAt)
-          obj.productName = this.$objGet(resultes, 'name')
+          obj.productName = this.$objGet(resultes, 'product.name')
           obj.productid = this.$objGet(resultes, 'product.objectId')
-          obj.address = this.$objGet(resultes, 'address')
+          obj.address = this.$objGet(resultes, 'location.latitude') + "，" + this.$objGet(resultes, 'location.longitude')
           // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
           // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
           obj.ip = this.$objGet(resultes, 'ip')
@@ -800,7 +800,7 @@ export default {
           vm.properties = JSON.parse(
             JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
           )
-          console.log('vm.properties', vm.properties)
+          // console.log('vm.properties', vm.properties)
           if (vm.properties) {
             vm.properties.map(items => {
               dataobj[items['identifier']] = {
