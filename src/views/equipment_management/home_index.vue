@@ -882,7 +882,7 @@ export default {
       const params = {
         limit: this.devicelength,
         skip: this.devicestart,
-        order: '-updatedAt',
+        order: '-createdAt',
         keys: 'count(*)',
         include: 'product',
         where: {}

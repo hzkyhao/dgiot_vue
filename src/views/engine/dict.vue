@@ -858,7 +858,7 @@ export default {
         if (this.filterObj.length > 0) {
           this.dialogtempconfig = this.filterObj[0].data.tempconfig
         }
-        console.log("this.filterObj",this.filterObj)
+        // console.log("this.filterObj",this.filterObj)
       }
     },
     dialogType() {
@@ -887,10 +887,17 @@ export default {
       const config = tempconfig.filter(i => {
         return i.data.params;
       });
-      // console.log("config", config);
+      console.log("config", config);
       this.tempObjectId = config[0].objectId;
-      this.dictForm.tempconfig = config[0].data.params;
-      // console.log(this.dictForm.tempconfig);
+      // this.dictForm.tempconfig = config[0].data.params;
+
+      // const data = {}
+      config[0].data.params.forEach(item =>{
+        const key = item.name
+        this.dictForm.tempconfig[key] = item.default
+      })
+
+      console.log(this.dictForm.tempconfig);
     },
     submitFormTempDict() {
       this.edit_dict_temp_dialog = false;
@@ -1077,6 +1084,8 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          console.log("this.dictForm ", this.dictForm)
+
           if (this.editDictId) {
             this.put_Dict(this.editDictId, this.dictForm);
           } else {
