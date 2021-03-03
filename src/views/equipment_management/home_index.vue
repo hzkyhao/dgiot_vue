@@ -683,8 +683,6 @@ export default {
     }
   },
   mounted() {
-    // this.userId = Parse.User.current().objectId
-    // this.getRole();
     this.searchProduct()
     this.getDevices(0)
     this.addDeviceBatch(0)
@@ -716,24 +714,6 @@ export default {
       // )
     },
     // 从产品处进来
-    // selectProductid(val) {
-    //   this.productroleslist = []
-    //   var Product = Parse.Object.extend('Product')
-    //   var product = new Parse.Query(Product)
-    //   product.get(val).then(
-    //     response => {
-    //       if (response) {
-    //         for (var key in response.attributes.ACL.permissionsById) {
-    //           this.productroleslist.push(key.substr(5))
-    //         }
-    //       }
-    //       this.productimg = response.attributes.icon
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
     async selectProductid(val) {
       console.log("selectProductid", val)
       console.log(this.equvalue)
@@ -958,22 +938,6 @@ export default {
             console.log('Device error', error)
             returnLogin(error)
           }
-
-          // console.log(result)
-          // var Device = Parse.Object.extend('Device')
-          // var devices = new Parse.Query(Device)
-          // devices.get(row.id).then(
-          //   object => {
-          //     object.set('isEnable', newData2.isEnable)
-          //     object.save().then(resultes => {
-
-          //     })
-          //     this.getDevices()
-          //   },
-          //   error => {
-          //     returnLogin(error)
-          //   }
-          // )
         })
         .catch(async() => {
           this.$message({
@@ -1007,26 +971,6 @@ export default {
           : date.getSeconds()
       return Y + M + D + h + m + s
     },
-    // 得到权限
-    // getRole() {
-    //   this.options = [];
-    //   var roles = Parse.Object.extend("_Role");
-    //   var query = new Parse.Query(roles);
-    //   query.find().then(
-    //     resultes => {
-    //       resultes.map(item => {
-    //         var obj = {};
-    //         obj.objectId = item.id;
-    //         obj.alias = item.attributes.alias;
-    //         obj.name = item.attributes.name;
-    //         this.options.push(obj);
-    //       });
-    //     },
-    //     error => {
-    //       returnLogin(error);
-    //     }
-    //   );
-    // },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒
       var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
@@ -1196,29 +1140,6 @@ export default {
       }
       scope._self.$refs[`popover-${scope.$index}`].doClose()
     },
-    // // 增加批次
-    // addDeviceBatch(isdialog) {
-    //   if (isdialog == 0) {
-    //     this.pcdialogVisible = false
-    //   } else {
-    //     this.pcdialogVisible = true
-    //   }
-    //   var Dict = Parse.Object.extend('Dict')
-    //   var datas = new Parse.Query(Dict)
-    //   datas.equalTo('type', 'batch_number')
-    //   datas.ascending('-createdAt')
-    //   datas.find().then(
-    //     resultes => {
-    //       if (resultes) {
-    //         this.pctableData = resultes
-    //         pcdata = resultes
-    //       }
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
     // 增加批次
     async addDeviceBatch(isdialog) {
       if (isdialog == 0) {
