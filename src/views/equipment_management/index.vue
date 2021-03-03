@@ -362,21 +362,21 @@
                 <span>{{ utc2beijing(scope.row.createdAt) }}</span>
               </template>
             </el-table-column>
-            <!-- <el-table-column label="操作" align="center" width="300">
+            <el-table-column label="操作" align="center" width="300">
               <template slot-scope="scope">
                 <el-button
                   type="primary"
-                  @click="updatebatch(scope.row,scope.row.objectId)"
                   size="mini"
+                  @click="updatebatch(scope.row,scope.row.objectId)"
                 >编辑</el-button>
-                <el-button type="danger" @click="deletebatch(scope.row.objectId)" size="mini">删除</el-button>
+                <el-button type="danger" size="mini" @click="deletebatch(scope.row.objectId)">删除</el-button>
                 <el-button
                   type="success"
-                  @click="selectbatch(scope.row,scope.row.objectId)"
                   size="mini"
+                  @click="selectbatch(scope.row,scope.row.objectId)"
                 >选择</el-button>
               </template>
-            </el-table-column>-->
+            </el-table-column>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -630,7 +630,7 @@ import { Batchdelete } from '@/api/Batch'
 import { BmlMarkerClusterer } from "vue-baidu-map";
 import { utc2beijing } from "@/utils";
 import { returnLogin } from "@/utils/return";
-
+import { getBatchNumer } from '@/api/Dict'
 var language;
 var pcdata;
 export default {
@@ -765,7 +765,7 @@ export default {
     // Todo 这里拿到的还是空的
     // this.userId = this.$route.query.__ob__.dep.id; 我注释的
     // console.log(this.$route)
-    // this.getRole();
+    this.getRole();
     this.searchProduct();
     this.addDeviceBatch(0);
     language = Cookies.get("language");
@@ -827,27 +827,13 @@ export default {
         return i.objectId == val;
       });
       console.log(val, results, res);
+      this.productimg = res[0].icon
       for (var key in res[0].ACL) {
         if (key.includes("role")) {
           this.productroleslist.push(key.substr(5));
           console.log(key, this.productroleslist);
         }
       }
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // product.get(val).then(
-      //   response => {
-      //     if (response) {
-      //       for (var key in response.attributes.ACL.permissionsById) {
-      //         this.productroleslist.push(key.substr(5))
-      //       }
-      //     }
-      //     this.productimg = response.attributes.icon
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
     },
     addressSure() {
       var localSearch = new BMap.LocalSearch(this.map);
@@ -959,39 +945,6 @@ export default {
         this.onlineall = res.results.length
       }
     },
-
-    // // 查询产品
-    // searchProduct() {
-    //   this.proTableData = []
-    //   this.proTableData1 = []
-    //   var Product = Parse.Object.extend('Product')
-    //   var product = new Parse.Query(Product)
-    //   product.limit(10000)
-    //   product.find().then(
-    //     resultes => {
-    //       resultes.map(items => {
-    //         var obj = {}
-    //         obj.id = items.id
-    //         obj.name = items.attributes.name
-    //         this.proTableData.push(obj)
-    //         this.proTableData1.push(obj)
-    //       })
-
-    //       this.proTableData.unshift({
-    //         name: language == 'zh' ? '全部产品' : 'All Products',
-    //         id: '0'
-    //       })
-    //       if (this.$route.query.productid) {
-    //         this.equvalue = this.$route.query.productid
-    //         this.productenable = false
-    //       }
-    //       this.getDevices()
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
 
     async searchProduct() {
       this.proTableData = [];
@@ -1274,25 +1227,19 @@ export default {
       return Y + M + D + h + m + s;
     },
     // 得到权限
-    // getRole() {
-    //   this.options = [];
-    //   var roles = Parse.Object.extend("_Role");
-    //   var query = new Parse.Query(roles);
-    //   query.find().then(
-    //     resultes => {
-    //       resultes.map(item => {
-    //         var obj = {};
-    //         obj.objectId = item.id;
-    //         obj.alias = item.attributes.alias;
-    //         obj.name = item.attributes.name;
-    //         this.options.push(obj);
-    //       });
-    //     },
-    //     error => {
-    //       returnLogin(error);
-    //     }
-    //   );
-    // },
+    getRole() {
+      this.options = [];
+      this.$axiosWen.get("iotapi/classes/_Role").then(res => {
+        const resultes = res.results
+        resultes.map(item => {
+          var obj = {};
+          obj.objectId = item.id;
+          obj.alias = item.alias;
+          obj.name = item.name;
+          this.options.push(obj);
+        });
+      }).catch(e => { console.log(e) })
+    },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒
       var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
@@ -1323,34 +1270,7 @@ export default {
         } else {
           this.initQuery(`设备${idarr}删除失败`, 'error')
         }
-      })
-
-      // Promise.all([
-      //   this.multipleTable.map(item => {
-      //     var Device = Parse.Object.extend("Device");
-      //     var devices = new Parse.Query(Device);
-      //     devices.get(item.id).then(resultes => {
-      //       resultes.destroy().then(resultes => {});
-      //     });
-      //   })
-      // ])
-      //   .then(data => {
-      //     if (data.length != 0) {
-      //       this.$message({
-      //         message: "删除成功",
-      //         type: "success"
-      //       });
-      //       this.getDevices();
-      //     } else {
-      //       this.$message({
-      //         message: "删除失败",
-      //         type: "error"
-      //       });
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
+      });
     },
     // 设备多个启用和禁用
     async unactiveDevice(isEnable) {
@@ -1466,24 +1386,8 @@ export default {
       } else {
         this.pcdialogVisible = true;
       }
-
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.equalTo('type', 'batch_number')
-      // datas.ascending('-createdAt')
-      // datas.find().then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.pctableData = resultes
-      //       pcdata = resultes
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
-      const { results } = await this.$getBatchNumer();
-      this.pctableData = results;
+      const { results } = await getBatchNumer()
+      this.pctableData = results
     },
     /* device添加表单提交*/
     editorDevice(row) {
@@ -1545,199 +1449,6 @@ export default {
         }
       });
     },
-    // submitForm(formName) {
-    //   this.$refs[formName].validate(valid => {
-    //     if (valid) {
-    //       var Device = Parse.Object.extend('Device')
-    //       var devices1 = new Parse.Query(Device)
-    //       var Product = Parse.Object.extend('Product')
-    //       var product = new Product()
-    //       var Dict = Parse.Object.extend('Dict')
-    //       var datas = new Dict()
-    //       var acl = new Parse.ACL()
-    //       if (this.deviceid != '') {
-    //         var Promise1 = new Promise((resolve, reject) => {
-    //           var Tags = Parse.Object.extend('Tag')
-    //           var tags = new Tags()
-    //           tags.id = this.tagsid
-
-    //           var location = new Parse.GeoPoint({
-    //             latitude: this.center.lat ? this.center.lat : 0,
-    //             longitude: this.center.lng ? this.center.lng : 0
-    //           })
-    //           datas.id = this.batchid
-    //           tags.set('assetNum', this.deviceform.assetNum)
-    //           tags.set('devModel', this.deviceform.devModel)
-    //           tags.set('brand', this.deviceform.brand)
-    //           tags.set('location', location)
-    //           tags.set('address', this.deviceform.address)
-    //           tags.set('desc', this.deviceform.desc)
-    //           tags.set('batchId', datas)
-
-    //           tags.save().then(
-    //             resultes => {
-    //               resolve(resultes)
-    //             },
-    //             error => {
-    //               reject(error)
-    //             }
-    //           )
-    //         })
-    //           .then(data => {
-    //             console.log('Tags updated')
-
-    //             var Tags1 = Parse.Object.extend('Tag')
-    //             var tags1 = new Tags1()
-    //             tags1.id = data.id
-    //             var devices = new Device()
-    //             devices.id = this.deviceid
-    //             devices.set('status', this.deviceform.status)
-    //             devices.set('isEnable', this.deviceform.isEnable)
-    //             product.id = this.deviceform.productName
-    //             devices.set('product', product)
-    //             devices.set('tag', tags1)
-    //             this.productroleslist.map(item => {
-    //               acl.setRoleReadAccess(item, true)
-    //               acl.setRoleWriteAccess(item, true)
-    //             })
-
-    //             devices.set('ACL', acl)
-    //             devices.set('devaddr', this.deviceform.devaddr)
-    //             devices.set('name', this.deviceform.name)
-    //             devices.save().then(
-    //               resultes => {
-    //                 if (resultes) {
-    //                   this.$message({
-    //                     type: 'success',
-    //                     message: `${
-    //                       this.deviceid != '' ? '编辑成功' : '添加成功'
-    //                     }`
-    //                   })
-    //                   this.devicedialogVisible = false
-    //                   this.equipmentEditor = '添加'
-    //                   this.batchid = ''
-    //                   this.getDevices()
-    //                   this.deviceid = ''
-    //                   this.$refs['deviceform'].resetFields()
-    //                   this.deviceform.assetNum = ''
-    //                   this.deviceform.devModel = ''
-    //                   this.deviceform.address = ''
-    //                   this.deviceform.desc = ''
-    //                   this.deviceform.brand = ''
-    //                 }
-    //               },
-    //               error => {
-    //                 console.log('Device error', error)
-
-    //                 returnLogin(error)
-    //               }
-    //             )
-    //           })
-    //           .catch(error => {
-    //             console.log('p error ###'.error)
-
-    //             reject(error)
-    //           })
-    //       } else {
-    //         console.log('### devaddrid kong')
-
-    //         devices1.equalTo('devaddr', this.deviceform.devaddr)
-    //         devices1.equalTo('name', this.deviceform.name)
-    //         devices1.find().then(resultes => {
-    //           if (resultes.length > 0) {
-    //             this.$message('此设备已被创建')
-    //             return
-    //           } else {
-    //             var Promise2 = new Promise((reslove, reject) => {
-    //               var Tags = Parse.Object.extend('Tag')
-    //               var tags = new Tags()
-    //               var location = new Parse.GeoPoint({
-    //                 latitude: this.center.lat,
-    //                 longitude: this.center.lng
-    //               })
-    //               datas.id = this.batchid
-    //               tags.set('assetNum', this.deviceform.assetNum)
-    //               tags.set('devModel', this.deviceform.devModel)
-    //               tags.set('brand', this.deviceform.brand)
-    //               tags.set('location', location)
-    //               tags.set('address', this.bmapform.address)
-    //               tags.set('desc', this.deviceform.desc)
-    //               tags.set('batchId', datas)
-    //               tags.save().then(
-    //                 resultes => {
-    //                   reslove(resultes)
-    //                 },
-    //                 error => {
-    //                   console.log('Tag ##3', error)
-
-    //                   reject(error)
-    //                 }
-    //               )
-    //             })
-    //               .then(data => {
-    //                 console.log(data)
-    //                 var Tags1 = Parse.Object.extend('Tag')
-    //                 var tags1 = new Tags1()
-    //                 tags1.id = data.id
-    //                 var Device1 = Parse.Object.extend('Device')
-    //                 var devices = new Device1()
-    //                 product.id = this.deviceform.productName
-    //                 devices.set('product', product)
-    //                 devices.set('status', 'OFFLINE')
-    //                 devices.set('isEnable', false)
-    //                 this.productroleslist.map(item => {
-    //                   acl.setRoleReadAccess(item, true)
-    //                   acl.setRoleWriteAccess(item, true)
-    //                 })
-    //                 devices.set('ACL', acl)
-    //                 devices.set('devaddr', this.deviceform.devaddr)
-    //                 devices.set('name', this.deviceform.name)
-    //                 devices.set('tag', tags1)
-    //                 devices.save().then(
-    //                   resultes => {
-    //                     if (resultes) {
-    //                       this.$message({
-    //                         type: 'success',
-    //                         message: `${
-    //                           this.deviceid != '' ? '编辑成功' : '添加成功'
-    //                         }`
-    //                       })
-    //                       this.devicedialogVisible = false
-    //                       this.equipmentEditor = '添加'
-    //                       this.batchid = ''
-    //                       this.getDevices()
-    //                       this.deviceid = ''
-    //                       this.$refs['deviceform'].resetFields()
-    //                       this.deviceform.assetNum = ''
-    //                       this.deviceform.devModel = ''
-    //                       this.deviceform.address = ''
-    //                       this.deviceform.desc = ''
-    //                       this.deviceform.brand = ''
-    //                     }
-    //                   },
-    //                   error => {
-    //                     console.log('##4 error', error)
-
-    //                     returnLogin(error)
-    //                   }
-    //                 )
-    //               })
-    //               .catch(error => {
-    //                 console.log('##7 error', error)
-    //                 returnLogin(error)
-    //               })
-    //           }
-    //         })
-    //       }
-    //     } else {
-    //       this.$message({
-    //         type: 'error',
-    //         message: '请按照要求填写参数'
-    //       })
-    //       return false
-    //     }
-    //   })
-    // },
     submitForm(formName) {
       var initparams = {
         devaddr: this.deviceform.devaddr,
@@ -1861,18 +1572,20 @@ export default {
         if (valid) {
           if (this.batchid === "") {
             // 这里是创建批次
-            const aclKey = 'role' + ':' + this.productroleslist[0]
-            const set_acl = {}
+            const aclKey =
+        "role" + ":" + JSON.parse(this.$Cookies.get("roles"))[0].name;
+            const set_acl = {};
             set_acl[aclKey] = {
               read: true,
               write: true
-            }
+            };
             const params = {
               data: {
                 batch_name: this.pcformInline.pcname,
                 createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
               },
               ACL: set_acl,
+              key: this.pcformInline.pcname,
               type: "batch_number"
             };
             this.$postDict(params).then(res => {
@@ -1891,12 +1604,13 @@ export default {
               }
             })
           } else {
-            const aclKey = 'role' + ':' + this.productroleslist[0]
-            const set_acl = {}
+            const aclKey =
+        "role" + ":" + JSON.parse(this.$Cookies.get("roles"))[0].name;
+            const set_acl = {};
             set_acl[aclKey] = {
               read: true,
               write: true
-            }
+            };
             const params = {
               objectId: this.batchid,
               data: {
@@ -1923,20 +1637,7 @@ export default {
                   this.initQuery("修改失败", 'error')
                 }
               },
-              error => {
-
-              }
             )
-            // datas.save().then(
-            //   resultes => {
-            //     if (resultes) {
-
-            //     }
-            //   },
-            //   error => {
-            //     returnLogin(error)
-            //   }
-            // )
           }
         } else {
           console.log("error submit!!");
@@ -1967,24 +1668,6 @@ export default {
           })
         }
       })
-      // var Dict = Parse.Object.extend("Dict");
-      // var datas = new Parse.Query(Dict);
-      // datas.get(id).then(resultes => {
-      //   resultes.destroy().then(
-      //     res => {
-      //       if (res) {
-      //         this.$message({
-      //           type: "success",
-      //           message: "删除成功"
-      //         });
-      //         this.addDeviceBatch();
-      //       }
-      //     },
-      //     error => {
-      //       returnLogin(error);
-      //     }
-      //   );
-      // });
     },
     // 选择批次
     selectbatch(row, id) {
@@ -2007,24 +1690,11 @@ export default {
     handleClick(tab, event) {
       if (tab.name == "second") {
         this.queryDict();
-        // var Dict = Parse.Object.extend('Dict')
-        // var datas = new Parse.Query(Dict)
-        // datas.equalTo('type', 'batch_number')
-        // datas.ascending('-createdAt')
-        // datas.find().then(
-        //   resultes => {
-        //     if (resultes) {
-        //       this.pctableData = resultes
-        //     }
-        //   },
-        //   error => {
-        //     returnLogin(error)
-        //   }
-        // )
       }
     },
     async queryDict() {
-      const { results } = this.$getBatchNumer();
+      const { results } = await this.$getBatchNumer();
+      console.log("results", results)
       this.pctableData = results;
     },
     // 前往子设备
