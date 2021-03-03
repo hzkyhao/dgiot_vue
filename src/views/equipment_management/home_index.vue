@@ -393,88 +393,6 @@
           <el-button @click="handleClose">{{ $t('developer.cancel') }}</el-button>
         </span>
       </el-dialog>
-      <!--第二个弹窗批次添加-->
-      <el-dialog
-        :visible.sync="pcdialogVisible"
-        :close-on-click-modal="false"
-        :before-close="handleClose1"
-        title="批次添加"
-        width="50%"
-      >
-        <div class="pccontent">
-          <el-form
-            ref="pcformInline"
-            :inline="true"
-            :model="pcformInline"
-            :rules="pcformrule"
-            class="demo-form-inline"
-          >
-            <el-form-item :label="$t('equipment.batchname')" prop="pcname">
-              <el-input
-                v-model="pcformInline.pcname"
-                :placeholder="$t('equipment.batchname')"
-              />
-            </el-form-item>
-            <el-form-item :label="$t('equipment.createdAt')" prop="createdtime">
-              <el-date-picker
-                v-model="pcformInline.createdtime"
-                type="datetime"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                @click="addbatch('pcformInline')"
-              >{{ $t('equipment.addbatch') }}</el-button>
-            </el-form-item>
-          </el-form>
-          <el-table
-            :data="pctableData"
-            height="450"
-            style="width: 100%;text-align:center"
-          >
-            <el-table-column
-              :label="$t('equipment.serialnumber')"
-              type="index"
-              align="center"
-              width="50"
-            />
-            <el-table-column :label="$t('equipment.batchname')" align="center">
-              <template slot-scope="scope">
-                <span>{{ scope.row.attributes.data.batch_name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('equipment.createdAt')" align="center">
-              <template slot-scope="scope">
-                <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              :label="$t('developer.operation')"
-              align="center"
-              width="300"
-            >
-              <template slot-scope="scope">
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="updatebatch(scope.row,scope.row.objectId)"
-                >{{ $t('developer.edit') }}</el-button>
-                <el-button
-                  type="danger"
-                  size="mini"
-                  @click="deletebatch(scope.row.objectId)"
-                >{{ $t('developer.delete') }}</el-button>
-                <el-button
-                  type="success"
-                  size="mini"
-                  @click="selectbatch(scope.row,scope.row.objectId)"
-                >选择</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-dialog>
       <el-dialog
         v-el-drag-dialog
         :visible.sync="bmapdialogVisible"
@@ -578,7 +496,7 @@ export default {
       activeall: '',
       userId: '',
       batchid: '',
-      pcdialogVisible: false,
+      pcdialogVisible: true,
       devicedialogVisible: false,
       equvalue: '0',
       cities: [],
@@ -685,7 +603,6 @@ export default {
   mounted() {
     this.searchProduct()
     this.getDevices(0)
-    this.addDeviceBatch(0)
     language = Cookies.get('language')
     this.$store.dispatch('getUserId', '111')
     if (this.$route.query.productid) {
@@ -1140,32 +1057,6 @@ export default {
       }
       scope._self.$refs[`popover-${scope.$index}`].doClose()
     },
-    // 增加批次
-    async addDeviceBatch(isdialog) {
-      if (isdialog == 0) {
-        this.pcdialogVisible = false;
-      } else {
-        this.pcdialogVisible = true;
-      }
-
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.equalTo('type', 'batch_number')
-      // datas.ascending('-createdAt')
-      // datas.find().then(
-      //   resultes => {
-      //     if (resultes) {
-      //       this.pctableData = resultes
-      //       pcdata = resultes
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
-      const { results } = await this.$getBatchNumer();
-      this.pctableData = results;
-    },
     /* device添加表单提交*/
     async editorDevice(row) {
       // 这里再去查询tag
@@ -1330,106 +1221,6 @@ export default {
           return false
         }
       })
-    },
-    /* @pamars addbatch添加批次名称 */
-    addbatch(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          // if (this.batchid == '') {
-          //   var Dict = Parse.Object.extend('Dict')
-          //   var datas = new Dict()
-          //   var acl = new Parse.ACL()
-          //   datas.set('data', {
-          //     batch_name: this.pcformInline.pcname,
-          //     createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-          //   })
-          //   datas.set('type', 'batch_number')
-          //   acl.setReadAccess(this.userId, true)
-          //   acl.setWriteAccess(this.userId, true)
-          //   datas.set('ACL', acl)
-          //   datas.save().then(
-          //     resultes => {
-          //       this.$message({
-          //         message: '新增成功',
-          //         type: 'success'
-          //       })
-          //       this.$refs[formName].resetFields()
-          //       this.addDeviceBatch()
-          //     },
-          //     error => {
-          //       returnLogin(error)
-          //     }
-          //   )
-          // } else {
-          //   var Dict = Parse.Object.extend('Dict')
-          //   var datas = new Dict()
-          //   datas.id = this.batchid
-
-          //   datas.set('data', {
-          //     batch_name: this.pcformInline.pcname,
-          //     createdtime: Math.ceil(this.pcformInline.createdtime / 1000)
-          //   })
-          //   datas.save().then(
-          //     resultes => {
-          //       if (resultes) {
-          //         this.$message({
-          //           message: '修改成功',
-          //           type: 'success'
-          //         })
-          //         this.batchid = ''
-          //         this.pcformInline = {
-          //           pcname: '',
-          //           createdtime: ''
-          //         }
-          //         this.$refs[formName].resetFields()
-          //         this.addDeviceBatch()
-          //       }
-          //     },
-          //     error => {
-          //       returnLogin(error)
-          //     }
-          //   )
-          // }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    // 编辑批次
-    updatebatch(row, id) {
-      // this.pcdialogVisible=true
-      this.pcformInline.pcname = row.attributes.data.batch_name
-      this.pcformInline.createdtime = row.attributes.data.createdtime * 1000
-      this.batchid = id
-    },
-    // 删除批次
-    deletebatch(id) {
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.get(id).then(resultes => {
-      //   resultes.destroy().then(
-      //     res => {
-      //       if (res) {
-      //         this.$message({
-      //           type: 'success',
-      //           message: '删除成功'
-      //         })
-      //         this.addDeviceBatch()
-      //       }
-      //     },
-      //     error => {
-      //       returnLogin(error)
-      //     }
-      //   )
-      // })
-    },
-    // 选择批次
-    selectbatch(row, id) {
-      this.batchid = id
-      this.deviceform.pc = row.attributes.data.batch_name
-      this.deviceform.batchId = row.attributes.data.batch_name
-      this.pcdialogVisible = false
     },
     // 设备详情
     deviceToDetail(row) {
