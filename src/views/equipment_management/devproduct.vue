@@ -301,21 +301,19 @@
   </div>
 </template>
 <script>
-import { queryProduct } from '@/api/Product/index'
 import { queryDict } from '@/api/Dict/index'
 import { app_count } from '@/api/Platform/index'
 import { queryDevice } from "@/api/Device/index";
-import { delProduct, getProduct } from "@/api/Product";
+import { delProduct, getProduct, queryProduct, putProduct, postProduct } from "@/api/Product";
 const Base64 = require('js-base64').Base64
 // import { getIndustry } from '@/api/applicationManagement'
-// import Parse from 'parse'
 import { setTimeout } from 'timers'
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
 import IconSelect from '@/components/IconSelect'
 import Cookies from 'js-cookie'
 import $ from 'jquery'
-// import { getServer } from '@/api/appcontrol'
+import { getServer } from '@/api/Role/index'
 import { resolve } from 'url'
 export default {
   data() {
@@ -616,22 +614,6 @@ export default {
         })
       })
       this.proTableData = resultes
-      console.log(this.proTableData)
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.containedIn('type', category)
-      // datas.limit(1000)
-      // datas.find().then(response => {
-      //   this.allTableDate = response
-      //   resultes.map(items => {
-      //     response.map(category => {
-      //       if (items.attributes.category == category.attributes.type) {
-      //         items.CategoryKey = category.attributes.data.CategoryName
-      //       }
-      //     })
-      //   })
-      //   this.proTableData = resultes
-      // })
     },
     async searchProduct(start) {
       if (start == 0) {
@@ -664,88 +646,6 @@ export default {
         returnLogin(error)
       })
     },
-    searchProduct1(start) {
-      if (start == 0) {
-        this.start = 0
-      }
-      var category = []
-      if (this.$route.query.project) {
-        this.projectid = this.$route.query.project
-        var Project = Parse.Object.extend('Project')
-        var project = new Parse.Query(Project)
-        project.get(this.projectid).then(response => {
-          this.projectName = response.attributes.title
-          this.form.relationApp = response.attributes.title
-          this.getRoles().then(data => {
-            this.allApps = data
-            this.selectApp(response.attributes.title)
-          }).catch(error => {
-            returnLogin(error)
-          })
-
-          var relation = response.relation('product')
-          var query = relation.query()
-          if (this.formInline.productname != '') {
-            query.matches('name', this.formInline.productname, 'i')
-          }
-          query.ascending('-updatedAt')
-          query.skip(this.start)
-          query.limit(this.length)
-          query.count().then(count => {
-            this.total = count
-            query.find().then(resultes => {
-              if (resultes) {
-                resultes.map(items => {
-                  if (
-                    items.attributes.category != '' &&
-                    items.attributes.category
-                  ) {
-                    category.push(items.attributes.category)
-                  }
-                })
-                this.getDict(resultes, category)
-              }
-            })
-          })
-        })
-      } else {
-        var Product = Parse.Object.extend('Product')
-        var product = new Parse.Query(Product)
-        if (this.formInline.productname != '') {
-          product.matches('name', this.formInline.productname, 'i')
-        }
-        this.getRoles().then(data => {
-          this.allApps = data
-        }).catch(error => {
-          returnLogin(error)
-        })
-        product.ascending('-updatedAt')
-        product.skip(this.start)
-        product.limit(this.length)
-        product.notEqualTo('devType', 'report')
-        product.count().then(
-          count => {
-            this.total = count
-            product.find().then(resultes => {
-              if (resultes) {
-                resultes.map(items => {
-                  if (
-                    items.attributes.category != '' &&
-                    items.attributes.category
-                  ) {
-                    category.push(items.attributes.category)
-                  }
-                })
-                this.getDict(resultes, category)
-              }
-            })
-          },
-          error => {
-            returnLogin(error)
-          }
-        )
-      }
-    },
     handleClose() {
       this.dialogFormVisible = false
     },
@@ -775,22 +675,24 @@ export default {
       })
     },
     editorProduct(row) {
+      console.log("row", row)
       // this.form.roles = [];
       this.form.relationApp = ''
       this.dialogFormVisible = true
       this.productid = row.objectId
-      this.getIndustryParent(row.attributes.category, this.categoryList)
-      this.form.desc = row.attributes.desc
-      this.form.name = row.attributes.name
-      this.form.nodeType = row.attributes.nodeType
-      this.form.netType = row.attributes.netType
-      this.form.devType = row.attributes.devType
-      this.form.productSecret = row.attributes.productSecret
-      this.changeNode(row.attributes.nodeType, 0)
-      if (row.attributes.icon) {
-        this.imageUrl = row.attributes.icon
+      this.getIndustryParent(row.category, this.categoryList)
+      this.form.desc = row.desc
+      this.form.name = row.name
+      this.form.nodeType = row.nodeType
+      this.form.netType = row.netType
+      this.form.devType = row.devType
+      this.form.productSecret = row.productSecret
+      this.changeNode(row.nodeType, 0)
+      if (row.icon) {
+        this.imageUrl = row.icon
       }
-      for (var key in row.attributes.ACL.permissionsById) {
+      for (var key in row.ACL) {
+        console.log(key)
         this.form.relationApp = key ? key.substr(5) : ''
       }
       this.selectApp(this.form.relationApp)
@@ -815,18 +717,36 @@ export default {
       })
       this.categoryListOptions = this.treeData(this.categoryList)
     },
-    // distinct(a, b) {
-    //     let arr = a.concat(b);
-
-    //     return arr.filter((item, index)=> {
-    //         return arr.indexOf(item.id) === index
-    //          console.log(arr)
-    //     })
-
-    // },
-
+    addProduct() {
+      this.$message("新增产品")
+    },
+    async editProduct(productid) {
+      const params = {
+        productSecret: this.form.productSecret,
+        nodeType: this.form.nodeType,
+        netType: this.form.netType,
+        dynamicReg: false,
+        category: this.form.category[this.form.category.length - 1],
+        icon: this.imageUrl,
+        name: this.form.name,
+        devType: this.form.devType,
+        desc: this.form.desc,
+        topics: []
+      }
+      const res = await putProduct(productid, params)
+      if (res) {
+        this.$message({
+          type: 'success',
+          message: `编辑成功`
+        })
+        this.dialogFormVisible = false
+        this.$refs['ruleForm'].resetFields()
+        this.searchProduct()
+        this.productid = ''
+      }
+    },
     submitForm(formName) {
-      var objectId = Parse.User.current().id
+      var objectId = this.$Cookies.get("userId")
       this.$refs[formName].validate(valid => {
         if (valid) {
           var ranNum = Math.ceil(Math.random() * 25)
@@ -835,115 +755,10 @@ export default {
               Math.ceil(Math.random() * 10000000) +
               Number(new Date())
           )
-          var Product = Parse.Object.extend('Product')
-          var product = new Product()
-          var acl = new Parse.ACL()
           if (this.productid == '') {
-            // 新增产品
-            var Product1 = Parse.Object.extend('Product')
-            var product1 = new Parse.Query(Product1)
-            product1.equalTo('name', this.form.name)
-            product1.count().then(count => {
-              if (count != 0) {
-                this.$message('产品名称已存在')
-                return false
-              } else {
-                product.set('productSecret', productSecret)
-                this.$store.state.project.projectRole.map(item => {
-                  acl.setRoleReadAccess(item, true)
-                  acl.setRoleWriteAccess(item, true)
-                })
-
-                product.set('ACL', acl)
-                product.set('nodeType', this.form.nodeType)
-                product.set('netType', this.form.netType)
-                product.set('dynamicReg', false)
-                product.set(
-                  'category',
-                  this.form.category[this.form.category.length - 1]
-                ),
-                product.set('icon', this.imageUrl)
-                product.set('name', this.form.name)
-                product.set('devType', this.form.devType)
-                product.set('desc', this.form.desc)
-                product.set('topics', [])
-                product.save().then(
-                  res => {
-                    if (res) {
-                      this.projectid = this.$route.query.project
-                      var Project = Parse.Object.extend('Project')
-                      var project = new Parse.Query(Project)
-                      var Product2 = Parse.Object.extend('Product')
-                      var product2 = new Product2()
-                      project.get(this.projectid).then(response => {
-                        var relation = response.relation('product')
-                        product2.set('objectId', res.id)
-                        relation.add(product2)
-                        response.save().then(resultes => {
-                          if (resultes) {
-                            this.$message({
-                              type: 'success',
-                              message: `创建成功,请完成产品配置`
-                            })
-                            this.dialogFormVisible = false
-                            this.$refs['ruleForm'].resetFields()
-
-                            this.resetProductForm()
-                            this.searchProduct()
-                          }
-                        })
-                      })
-                    }
-                  },
-                  error => {
-                    returnLogin(error)
-                  }
-                )
-              }
-            })
+            this.addProduct()
           } else {
-            product.id = this.productid
-            product.set('productSecret', this.form.productSecret)
-            /*    this.form.roles.map(item => {
-              acl.setRoleReadAccess(item, true);
-              acl.setRoleWriteAccess(item, true);
-            });
-
-           this.$store.state.project.projectRole.map(item=>{
-                   acl.setRoleReadAccess(item, true);
-                   acl.setRoleWriteAccess(item, true);
-                })
-            product.set("ACL", acl);
-            */
-            product.set('nodeType', this.form.nodeType)
-            product.set('netType', this.form.netType)
-            product.set('dynamicReg', false)
-            product.set(
-              'category',
-              this.form.category[this.form.category.length - 1]
-            ),
-            product.set('icon', this.imageUrl)
-            product.set('name', this.form.name)
-            product.set('devType', this.form.devType)
-            product.set('desc', this.form.desc)
-            product.set('topics', [])
-            product.save().then(
-              res => {
-                if (res) {
-                  this.$message({
-                    type: 'success',
-                    message: `编辑成功`
-                  })
-                  this.dialogFormVisible = false
-                  this.$refs['ruleForm'].resetFields()
-                  this.searchProduct()
-                  this.productid = ''
-                }
-              },
-              error => {
-                returnLogin(error)
-              }
-            )
+            this.editProduct(this.productid)
           }
         } else {
           console.log('error submit!!')
