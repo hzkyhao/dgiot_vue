@@ -774,33 +774,6 @@ export default {
       }
       this.selectApp(this.form.relationApp)
     },
-    // 查询样品
-    // Industry() {
-    //   this.categoryList = []
-    //   var Dict = Parse.Object.extend('Dict')
-    //   var datas = new Parse.Query(Dict)
-    //   datas.equalTo('data.key', 'category')
-    //   datas.limit(1000)
-    //   datas.find().then(
-    //     response => {
-    //       if (response) {
-    //         response.map(items => {
-    //           var obj = {}
-    //           obj.value = items.attributes.type
-    //           obj.label = items.attributes.data.CategoryName
-    //           obj.id = items.attributes.data.Id
-    //           obj.parentid = items.attributes.data.SuperId
-    //           this.categoryList.push(obj)
-    //         })
-    //         // this.searchProduct();
-    //         this.categoryListOptions = this.treeData(this.categoryList)
-    //       }
-    //     },
-    //     error => {
-    //       returnLogin(error)
-    //     }
-    //   )
-    // },
     async Industry() {
       const parsms = {
         limit: 1000,

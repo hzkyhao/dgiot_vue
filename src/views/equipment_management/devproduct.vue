@@ -30,11 +30,11 @@
                 type="primary"
                 @click="test"
               >测试</el-button>-->
-            </el-form-item>
+            </el-button></el-form-item>
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="id" label="ProductID"/>
+              <el-table-column prop="objectId" label="ProductID"/>
               <el-table-column :label="$t('product.productname')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
@@ -162,8 +162,8 @@
                 <el-cascader v-model="form.category" :options="categoryListOptions"/>
               </el-form-item>
 
-              <!--  :label="item.desc"
-              :value="item.name"-->
+              <!--  :label="item.attributes.desc"
+              :value="item.attributes.name"-->
 
               <el-form-item label="所属应用" prop="roles" >
                 <el-select v-model="form.relationApp" disabled @change="selectApp">
@@ -301,12 +301,22 @@
   </div>
 </template>
 <script>
+import { queryProduct } from '@/api/Product/index'
 import { queryDict } from '@/api/Dict/index'
+import { app_count } from '@/api/Platform/index'
+import { queryDevice } from "@/api/Device/index";
+import { delProduct, getProduct } from "@/api/Product";
 const Base64 = require('js-base64').Base64
+// import { getIndustry } from '@/api/applicationManagement'
+// import Parse from 'parse'
+import { setTimeout } from 'timers'
 import { returnLogin } from '@/utils/return'
 import { export_txt_to_zip } from '@/utils/Export2Zip.js'
+import IconSelect from '@/components/IconSelect'
 import Cookies from 'js-cookie'
-import { getServer } from '@/api/Role'
+import $ from 'jquery'
+// import { getServer } from '@/api/appcontrol'
+import { resolve } from 'url'
 export default {
   data() {
     return {
@@ -435,6 +445,9 @@ export default {
           { label: '自定义', value: 'OTHER' }
         ]
       }
+    },
+    async getRoles() {
+      return await app_count({ where: {}})
     },
     selectApp(val) {
       if (!val) {
@@ -592,101 +605,145 @@ export default {
     },
     // 得到category
     async getDict(resultes, category) {
-      console.log(resultes, category)
-      const parsms = {
-        limit: 1000,
+      const { results } = await this.$query_object('Dict', { limit: 1000, where: { type: { $in: category }}})
+      console.log(results, "resresres")
+      this.allTableDate = results
+      resultes.map(items => {
+        results.map(category => {
+          if (items.category == category.type) {
+            items.CategoryKey = category.data.CategoryName
+          }
+        })
+      })
+      this.proTableData = resultes
+      console.log(this.proTableData)
+      // var Dict = Parse.Object.extend('Dict')
+      // var datas = new Parse.Query(Dict)
+      // datas.containedIn('type', category)
+      // datas.limit(1000)
+      // datas.find().then(response => {
+      //   this.allTableDate = response
+      //   resultes.map(items => {
+      //     response.map(category => {
+      //       if (items.attributes.category == category.attributes.type) {
+      //         items.CategoryKey = category.attributes.data.CategoryName
+      //       }
+      //     })
+      //   })
+      //   this.proTableData = resultes
+      // })
+    },
+    async searchProduct(start) {
+      if (start == 0) {
+        this.start = 0
+      }
+      var category = []
+      var params = {
+        order: '-updatedAt',
+        skip: this.start,
+        limit: this.length,
+        count: 1,
         where: {
-          'data.key': 'category'
+          devType: { $ne: "report" }
         }
       }
-      const res = await queryDict(parsms)
-      console.log("res", res)
+      if (this.formInline.productname != '') {
+        params.where.name = this.formInline.productname
+      }
+      const { results, count } = await queryProduct(params)
+      results.map((k, i) => {
+        if (k.category != '' && k.category) {
+          category.push(k.category)
+        }
+      })
+      this.getDict(results, category)
+      this.total = count
+      this.getRoles().then(data => {
+        this.allApps = data.results
+      }).catch(error => {
+        returnLogin(error)
+      })
     },
-    searchProduct(start) {
-      // alert(
-      //   "this.$route.query.project", this.$route.query.project
-      // )
+    searchProduct1(start) {
       if (start == 0) {
         this.start = 0
       }
       var category = []
       if (this.$route.query.project) {
         this.projectid = this.$route.query.project
-        this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-        // var Project = Parse.Object.extend('Project')
-        // var project = new Parse.Query(Project)
-        // project.get(this.projectid).then(response => {
-        //   this.projectName = response.attributes.title
-        //   this.form.relationApp = response.attributes.title
-        //   this.getRoles().then(data => {
-        //     this.allApps = data
-        //     this.selectApp(response.attributes.title)
-        //   }).catch(error => {
-        //     returnLogin(error)
-        //   })
+        var Project = Parse.Object.extend('Project')
+        var project = new Parse.Query(Project)
+        project.get(this.projectid).then(response => {
+          this.projectName = response.attributes.title
+          this.form.relationApp = response.attributes.title
+          this.getRoles().then(data => {
+            this.allApps = data
+            this.selectApp(response.attributes.title)
+          }).catch(error => {
+            returnLogin(error)
+          })
 
-        //   var relation = response.relation('product')
-        //   var query = relation.query()
-        //   if (this.formInline.productname != '') {
-        //     query.matches('name', this.formInline.productname, 'i')
-        //   }
-        //   query.ascending('-updatedAt')
-        //   query.skip(this.start)
-        //   query.limit(this.length)
-        //   query.count().then(count => {
-        //     this.total = count
-        //     query.find().then(resultes => {
-        //       if (resultes) {
-        //         resultes.map(items => {
-        //           if (
-        //             items.attributes.category != '' &&
-        //             items.attributes.category
-        //           ) {
-        //             category.push(items.attributes.category)
-        //           }
-        //         })
-        //         this.getDict(resultes, category)
-        //       }
-        //     })
-        //   })
-        // })
+          var relation = response.relation('product')
+          var query = relation.query()
+          if (this.formInline.productname != '') {
+            query.matches('name', this.formInline.productname, 'i')
+          }
+          query.ascending('-updatedAt')
+          query.skip(this.start)
+          query.limit(this.length)
+          query.count().then(count => {
+            this.total = count
+            query.find().then(resultes => {
+              if (resultes) {
+                resultes.map(items => {
+                  if (
+                    items.attributes.category != '' &&
+                    items.attributes.category
+                  ) {
+                    category.push(items.attributes.category)
+                  }
+                })
+                this.getDict(resultes, category)
+              }
+            })
+          })
+        })
       } else {
+        var Product = Parse.Object.extend('Product')
+        var product = new Parse.Query(Product)
+        if (this.formInline.productname != '') {
+          product.matches('name', this.formInline.productname, 'i')
+        }
         this.getRoles().then(data => {
           this.allApps = data
         }).catch(error => {
           returnLogin(error)
         })
-        // product.ascending('-updatedAt')
-        // product.skip(this.start)
-        // product.limit(this.length)
-        // product.notEqualTo('devType', 'report')
-        const params = {
-          keys: 'count(*)',
-          order: '-updatedAt',
-          skip: this.start,
-          limit: this.length,
-          $ne: {
-            'devType': 'report'
-          },
-          where: {}
-        }
-        if (this.formInline.productname != '') {
-          params.where.name = this.formInline.productname
-        }
-        this.$query_object('Product', params).then(res => {
-          if (res.count > 0) {
-            this.total = res.count
-            res.results.map(items => {
-              if (
-                items.category != '' &&
-                    items.category
-              ) {
-                category.push(items.category)
+        product.ascending('-updatedAt')
+        product.skip(this.start)
+        product.limit(this.length)
+        product.notEqualTo('devType', 'report')
+        product.count().then(
+          count => {
+            this.total = count
+            product.find().then(resultes => {
+              if (resultes) {
+                resultes.map(items => {
+                  if (
+                    items.attributes.category != '' &&
+                    items.attributes.category
+                  ) {
+                    category.push(items.attributes.category)
+                  }
+                })
+                this.getDict(resultes, category)
               }
             })
-            this.getDict(res.results, category)
+          },
+          error => {
+            returnLogin(error)
           }
-        })
+        )
       }
     },
     handleClose() {
@@ -722,49 +779,41 @@ export default {
       this.form.relationApp = ''
       this.dialogFormVisible = true
       this.productid = row.objectId
-      this.getIndustryParent(row.category, this.categoryList)
-      this.form.desc = row.desc
-      this.form.name = row.name
-      this.form.nodeType = row.nodeType
-      this.form.netType = row.netType
-      this.form.devType = row.devType
-      this.form.productSecret = row.productSecret
-      this.changeNode(row.nodeType, 0)
-      if (row.icon) {
-        this.imageUrl = row.icon
+      this.getIndustryParent(row.attributes.category, this.categoryList)
+      this.form.desc = row.attributes.desc
+      this.form.name = row.attributes.name
+      this.form.nodeType = row.attributes.nodeType
+      this.form.netType = row.attributes.netType
+      this.form.devType = row.attributes.devType
+      this.form.productSecret = row.attributes.productSecret
+      this.changeNode(row.attributes.nodeType, 0)
+      if (row.attributes.icon) {
+        this.imageUrl = row.attributes.icon
       }
-      for (var key in row.ACL.permissionsById) {
+      for (var key in row.attributes.ACL.permissionsById) {
         this.form.relationApp = key ? key.substr(5) : ''
       }
       this.selectApp(this.form.relationApp)
     },
     // 查询样品
-    Industry() {
+    async Industry() {
       this.categoryList = []
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.equalTo('data.key', 'category')
-      // datas.limit(1000)
-      // datas.find().then(
-      //   response => {
-      //     if (response) {
-      //       response.map(items => {
-      //         var obj = {}
-      //         obj.value = items.attributes.type
-      //         obj.label = items.attributes.data.CategoryName
-      //         obj.id = items.attributes.data.Id
-      //         obj.parentid = items.attributes.data.SuperId
-      //         this.categoryList.push(obj)
-      //       })
-      //       // this.searchProduct();
-      //       this.categoryListOptions = this.treeData(this.categoryList)
-      //     }
-      //   },
-      //   error => {
-      //     returnLogin(error)
-      //   }
-      // )
+      const parsms = {
+        limit: 1000,
+        where: {
+          'data.key': 'category'
+        }
+      }
+      const { results } = await queryDict(parsms)
+      results.map(items => {
+        var obj = {}
+        obj.value = items.type
+        obj.label = items.data.CategoryName
+        obj.id = items.data.Id
+        obj.parentid = items.data.SuperId
+        this.categoryList.push(obj)
+      })
+      this.categoryListOptions = this.treeData(this.categoryList)
     },
     // distinct(a, b) {
     //     let arr = a.concat(b);
@@ -777,131 +826,130 @@ export default {
     // },
 
     submitForm(formName) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var objectId = Parse.User.current().id
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     var ranNum = Math.ceil(Math.random() * 25)
-      //     var productSecret = Base64.encode(
-      //       String.fromCharCode(65 + ranNum) +
-      //         Math.ceil(Math.random() * 10000000) +
-      //         Number(new Date())
-      //     )
-      //     var Product = Parse.Object.extend('Product')
-      //     var product = new Product()
-      //     var acl = new Parse.ACL()
-      //     if (this.productid == '') {
-      //       // 新增产品
-      //       var Product1 = Parse.Object.extend('Product')
-      //       var product1 = new Parse.Query(Product1)
-      //       product1.equalTo('name', this.form.name)
-      //       product1.count().then(count => {
-      //         if (count != 0) {
-      //           this.$message('产品名称已存在')
-      //           return false
-      //         } else {
-      //           product.set('productSecret', productSecret)
-      //           this.$store.state.project.projectRole.map(item => {
-      //             acl.setRoleReadAccess(item, true)
-      //             acl.setRoleWriteAccess(item, true)
-      //           })
+      var objectId = Parse.User.current().id
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          var ranNum = Math.ceil(Math.random() * 25)
+          var productSecret = Base64.encode(
+            String.fromCharCode(65 + ranNum) +
+              Math.ceil(Math.random() * 10000000) +
+              Number(new Date())
+          )
+          var Product = Parse.Object.extend('Product')
+          var product = new Product()
+          var acl = new Parse.ACL()
+          if (this.productid == '') {
+            // 新增产品
+            var Product1 = Parse.Object.extend('Product')
+            var product1 = new Parse.Query(Product1)
+            product1.equalTo('name', this.form.name)
+            product1.count().then(count => {
+              if (count != 0) {
+                this.$message('产品名称已存在')
+                return false
+              } else {
+                product.set('productSecret', productSecret)
+                this.$store.state.project.projectRole.map(item => {
+                  acl.setRoleReadAccess(item, true)
+                  acl.setRoleWriteAccess(item, true)
+                })
 
-      //           product.set('ACL', acl)
-      //           product.set('nodeType', this.form.nodeType)
-      //           product.set('netType', this.form.netType)
-      //           product.set('dynamicReg', false)
-      //           product.set(
-      //             'category',
-      //             this.form.category[this.form.category.length - 1]
-      //           ),
-      //           product.set('icon', this.imageUrl)
-      //           product.set('name', this.form.name)
-      //           product.set('devType', this.form.devType)
-      //           product.set('desc', this.form.desc)
-      //           product.set('topics', [])
-      //           product.save().then(
-      //             res => {
-      //               if (res) {
-      //                 this.projectid = this.$route.query.project
-      //                 var Project = Parse.Object.extend('Project')
-      //                 var project = new Parse.Query(Project)
-      //                 var Product2 = Parse.Object.extend('Product')
-      //                 var product2 = new Product2()
-      //                 project.get(this.projectid).then(response => {
-      //                   var relation = response.relation('product')
-      //                   product2.set('objectId', res.id)
-      //                   relation.add(product2)
-      //                   response.save().then(resultes => {
-      //                     if (resultes) {
-      //                       this.$message({
-      //                         type: 'success',
-      //                         message: `创建成功,请完成产品配置`
-      //                       })
-      //                       this.dialogFormVisible = false
-      //                       this.$refs['ruleForm'].resetFields()
+                product.set('ACL', acl)
+                product.set('nodeType', this.form.nodeType)
+                product.set('netType', this.form.netType)
+                product.set('dynamicReg', false)
+                product.set(
+                  'category',
+                  this.form.category[this.form.category.length - 1]
+                ),
+                product.set('icon', this.imageUrl)
+                product.set('name', this.form.name)
+                product.set('devType', this.form.devType)
+                product.set('desc', this.form.desc)
+                product.set('topics', [])
+                product.save().then(
+                  res => {
+                    if (res) {
+                      this.projectid = this.$route.query.project
+                      var Project = Parse.Object.extend('Project')
+                      var project = new Parse.Query(Project)
+                      var Product2 = Parse.Object.extend('Product')
+                      var product2 = new Product2()
+                      project.get(this.projectid).then(response => {
+                        var relation = response.relation('product')
+                        product2.set('objectId', res.id)
+                        relation.add(product2)
+                        response.save().then(resultes => {
+                          if (resultes) {
+                            this.$message({
+                              type: 'success',
+                              message: `创建成功,请完成产品配置`
+                            })
+                            this.dialogFormVisible = false
+                            this.$refs['ruleForm'].resetFields()
 
-      //                       this.resetProductForm()
-      //                       this.searchProduct()
-      //                     }
-      //                   })
-      //                 })
-      //               }
-      //             },
-      //             error => {
-      //               returnLogin(error)
-      //             }
-      //           )
-      //         }
-      //       })
-      //     } else {
-      //       product.id = this.productid
-      //       product.set('productSecret', this.form.productSecret)
-      //       /*    this.form.roles.map(item => {
-      //         acl.setRoleReadAccess(item, true);
-      //         acl.setRoleWriteAccess(item, true);
-      //       });
+                            this.resetProductForm()
+                            this.searchProduct()
+                          }
+                        })
+                      })
+                    }
+                  },
+                  error => {
+                    returnLogin(error)
+                  }
+                )
+              }
+            })
+          } else {
+            product.id = this.productid
+            product.set('productSecret', this.form.productSecret)
+            /*    this.form.roles.map(item => {
+              acl.setRoleReadAccess(item, true);
+              acl.setRoleWriteAccess(item, true);
+            });
 
-      //      this.$store.state.project.projectRole.map(item=>{
-      //              acl.setRoleReadAccess(item, true);
-      //              acl.setRoleWriteAccess(item, true);
-      //           })
-      //       product.set("ACL", acl);
-      //       */
-      //       product.set('nodeType', this.form.nodeType)
-      //       product.set('netType', this.form.netType)
-      //       product.set('dynamicReg', false)
-      //       product.set(
-      //         'category',
-      //         this.form.category[this.form.category.length - 1]
-      //       ),
-      //       product.set('icon', this.imageUrl)
-      //       product.set('name', this.form.name)
-      //       product.set('devType', this.form.devType)
-      //       product.set('desc', this.form.desc)
-      //       product.set('topics', [])
-      //       product.save().then(
-      //         res => {
-      //           if (res) {
-      //             this.$message({
-      //               type: 'success',
-      //               message: `编辑成功`
-      //             })
-      //             this.dialogFormVisible = false
-      //             this.$refs['ruleForm'].resetFields()
-      //             this.searchProduct()
-      //             this.productid = ''
-      //           }
-      //         },
-      //         error => {
-      //           returnLogin(error)
-      //         }
-      //       )
-      //     }
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
+           this.$store.state.project.projectRole.map(item=>{
+                   acl.setRoleReadAccess(item, true);
+                   acl.setRoleWriteAccess(item, true);
+                })
+            product.set("ACL", acl);
+            */
+            product.set('nodeType', this.form.nodeType)
+            product.set('netType', this.form.netType)
+            product.set('dynamicReg', false)
+            product.set(
+              'category',
+              this.form.category[this.form.category.length - 1]
+            ),
+            product.set('icon', this.imageUrl)
+            product.set('name', this.form.name)
+            product.set('devType', this.form.devType)
+            product.set('desc', this.form.desc)
+            product.set('topics', [])
+            product.save().then(
+              res => {
+                if (res) {
+                  this.$message({
+                    type: 'success',
+                    message: `编辑成功`
+                  })
+                  this.dialogFormVisible = false
+                  this.$refs['ruleForm'].resetFields()
+                  this.searchProduct()
+                  this.productid = ''
+                }
+              },
+              error => {
+                returnLogin(error)
+              }
+            )
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     resetProductForm() {
       this.form = {
@@ -935,22 +983,45 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(scope) {
-      this.$deleteDevice(scope.row.objectId).then(response => {
-        if (!response.error) {
-          this.initQuery('删除成功', 'success')
-          scope._self.$refs[`popover-${scope.$index}`].doClose();
-          this.getDevices();
-        } else {
-          scope._self.$refs[`popover-${scope.$index}`].doClose();
-          this.initQuery('删除失败', 'error')
+      const params = {
+        keys: 'count(*)',
+        skip: 0,
+        limit: 1,
+        where: {
+          "product": scope.row.objectId
         }
-      })
-    },
-    initQuery(msg, type) {
-      this.$message({
-        type: type || "info",
-        message: msg
-      })
+      }
+      queryDevice(params)
+        .then(results => {
+          // console.log(results, "jkjjjj")
+          if (results.count > 0) {
+            this.$message('请先删除该产品下设备')
+            return
+          } else {
+            getProduct(scope.row.objectId).then(results => {
+              console.log(results)
+              delProduct(scope.row.objectId).then(
+                response => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功'
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.searchProduct()
+                  }
+                }
+              ).catch(e => {
+                console.log("delProduct ", e.error)
+              })
+            }
+            ).catch(e => {
+              console.log("getProduct ", e.error)
+            })
+          }
+        }).catch(e => {
+          console.log("queryDevice ", e.error)
+        })
     },
     productSizeChange(val) {
       this.length = val

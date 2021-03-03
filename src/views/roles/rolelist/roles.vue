@@ -15,7 +15,7 @@
               <span
                 :class="{ selected: data.objectId == curDepartmentId }"
                 @click="handleNodeClick(data)"
-                >{{ node.label }}</span
+              >{{ node.label }}</span
               >
               <span>
                 <i
@@ -43,7 +43,7 @@
               icon="el-icon-search"
               style="margin-left:20px;"
               @click="getRolesList(0)"
-              >{{ $t("developer.search") }}</el-button
+            >{{ $t("developer.search") }}</el-button
             >
             <!-- icon="el-icon-plus" -->
             <!--           <el-button type="primary" size="mini" @click="add">
@@ -52,8 +52,11 @@
               }}
             </el-button>-->
             <!-- icon="el-icon-search" -->
-            <el-button type="primary" size="mini" @click="getRolesList()"
-              >所有角色</el-button
+            <el-button
+              type="primary"
+              size="mini"
+              @click="getRolesList()"
+            >所有角色</el-button
             >
           </div>
           <div class="tableroles" style="margin-top:20px">
@@ -105,13 +108,13 @@
                       <el-dropdown-item
                         icon="el-icon-document"
                         @click.native="exportRoletemp(scope.row)"
-                        >保存模板</el-dropdown-item
+                      >保存模板</el-dropdown-item
                       >
                       <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
                         icon="el-icon-delete"
                         @click.native="handleDelete(scope.row)"
-                        >删除</el-dropdown-item
+                      >删除</el-dropdown-item
                       >
                       <!-- <el-dropdown-item @click.native="taskDetail(scope.row.objectId,scope.row.test_bed.id)">详情</el-dropdown-item> -->
                     </el-dropdown-menu>

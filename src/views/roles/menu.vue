@@ -196,8 +196,7 @@
 </template>
 
 <script>
-import treeTable from "@/components/TreeTable";
-import data from "./data";
+import treeTable from "@/components/TreeTable";;
 import { utc2beijing } from "@/utils";
 import { queryMenu } from "@/api/Menu/index";
 export default {
