@@ -63,8 +63,8 @@
                   <el-option
                     v-for="item in applicationList"
                     :key="item.id"
-                    :label="host + item.attributes.desc"
-                    :value="item.attributes.desc"
+                    :label="host + item.desc"
+                    :value="item.desc"
                   />
                 </el-select>
               </el-form-item>
@@ -646,7 +646,7 @@ export default {
       } else {
         params.dashboard = ""
       }
-      this.$axiosWen.post("iotapi/classes/Project" + this.argu.objectId, params).then(res => {
+      this.$axiosWen.put("iotapi/classes/Project/" + this.argu.objectId, params).then(res => {
         if (res) {
           this.$message({
             message: '修改成功！',

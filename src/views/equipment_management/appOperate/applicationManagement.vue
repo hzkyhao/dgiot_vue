@@ -85,7 +85,10 @@
 </template>
 
 <script>
-import { setUpLictool } from '@/api/License/index'
+import { queryDevice } from "@/api/Device/index";
+import { delProduct, getProduct, queryProduct, putProduct, postProduct } from "@/api/Product";
+import { utc2beijing } from '@/utils'
+import { setUpLictool, getProject, handleZero, uploadLicense } from '@/api/License/index'
 export default {
   data() {
     return {
@@ -135,6 +138,38 @@ export default {
       if (this.name) {
         where.title = this.name
       }
+      getProject({
+        limit: this.page.pageSize,
+        skip: this.page.currentPage,
+        keys: 'count(*)',
+        where
+      }).then(res => {
+        const r = res.results
+        this.label = `我的应用(${res.count})`
+        this.description = `获取${r.length}条数据`
+        this.page.total = res.count
+        for (let i = 0; i < r.length; i++) {
+          const obj = {}
+          obj.name = r[i].title
+          obj.objectId = r[i].objectId
+          obj.productIdentifier = r[i].productIdentifier
+          obj.scale = handleZero(r[i].scale)
+          obj.creation_time = utc2beijing(r[i].createdAt)
+          obj.end_time = utc2beijing(r[i].updatedAt)
+          obj.category = r[i].category
+          obj.secret = r[i].secret
+          obj.logo = r[i].logo
+          obj.title = r[i].title
+          obj.userUnit = r[i].userUnit
+          obj.dashboard = r[i].dashboard
+          obj.background = r[i].background
+          obj.acl = r[i].ACL
+          obj.desc = r[i].desc
+          obj.copyright = r[i].copyright
+
+          this.tableData.push(obj)
+        }
+      })
     },
     handleSizeChange(val) {
       this.page.pageSize = val
@@ -209,42 +244,49 @@ export default {
         }
       })
     },
-    // 删除应用
+
     makeSure(scope) {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // // 可以在这里执行删除数据的回调操作.......删除操作.....
-      // var Project = Parse.Object.extend('Project')
-      // var project = new Project()
-      // project.id = scope.row.objectId
-      // var relation = project.relation('product')
-      // var query = relation.query()
-      // query.find().then(response => {
-      //   if (response.length > 0) {
-      //     this.$message('请先将应用下的产品删除')
-      //     scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //   } else {
-      //     project.destroy().then(
-      //       response => {
-      //         if (response) {
-      //           this.$message({
-      //             type: 'success',
-      //             message: '删除成功'
-      //           })
-      //           scope._self.$refs[`popover-${scope.$index}`].doClose()
-      //           this.getAppMange()
-      //         }
-      //       },
-      //       error => {
-      //         this.$message({
-      //           type: 'error',
-      //           message: error.message
-      //         })
-      //         //   })
-      //       }
-      //     )
-      //   }
-      // })
+      const params = {
+        keys: 'count(*)',
+        skip: 0,
+        limit: 1,
+        where: {
+          "product": scope.row.objectId
+        }
+      }
+      queryDevice(params)
+        .then(results => {
+          // console.log(results, "jkjjjj")
+          if (results.count > 0) {
+            this.$message('请先删除该产品下设备')
+            return
+          } else {
+            getProduct(scope.row.objectId).then(results => {
+              console.log(results)
+              delProduct(scope.row.objectId).then(
+                response => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功'
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.getAppMange()
+                  }
+                }
+              ).catch(e => {
+                console.log("delProduct ", e.error)
+              })
+            }
+            ).catch(e => {
+              console.log("getProduct ", e.error)
+            })
+          }
+        }).catch(e => {
+          console.log("queryDevice ", e.error)
+        })
     },
+
     Gotoproduct(scope) {
       var projectRoles = []
       for (var key in scope.row.acl) {

@@ -209,6 +209,13 @@ export const constantRouterMap = [
         meta: { title: "新增应用", icon: "department" }
       },
       {
+        path: "/roles/projectManagement",
+        name: "工程管理",
+        component: () =>
+          import("@/views/equipment_management/appOperate/applicationManagement"),
+        meta: { title: "工程管理", icon: "project" }
+      },
+      {
         path: "/roles/appmanage",
         name: "插件管理",
         component: () => import("@/views/systemmanage/appmarage"),
