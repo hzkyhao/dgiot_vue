@@ -390,14 +390,6 @@ export default {
     },
     onApplicationchange(val) {},
     getProductList(relAppid) {
-      // this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Parse.Query(Product)
-      // product.find().then(response => {
-      //   if (response) {
-      //     this.productlist = response
-      //   }
-      // })
       this.$query_object('Product', {}).then(res => {
         if (res.results) {
           this.productlist = res.results
@@ -418,70 +410,57 @@ export default {
       this.argu = this.$route.query
       this.content.title = this.argu.title
       this.actionType = this.argu.actionType
+      this.$axiosWen.get("iotapi/classes/App", { params: { limit: 100, where: {}}}).then(res => {
+        console.log(res)
+        this.applicationList = res.results
 
-      this.getApplication()
-        .then(response => {
-          this.applicationList = response
+        // 从工程管理列表,的修改按钮 跳转过来的
+        if (this.actionType == 'update') {
+          this.form.name = this.argu.name
+          this.form.scale = Number(handleZero(this.argu.scale))
+          this.form.secret = this.argu.secret
+          this.form.productIdentifier = this.argu.productIdentifier
+          this.content.objectId = this.argu.objectId
+          this.form.department = this.argu.userUnit
+          this.form.desc = this.argu.desc
+          this.form.copyright = this.argu.copyright
 
-          // 从工程管理列表,的修改按钮 跳转过来的
-          if (this.actionType == 'update') {
-            this.form.name = this.argu.name
-            this.form.scale = Number(handleZero(this.argu.scale))
-            this.form.secret = this.argu.secret
-            this.form.productIdentifier = this.argu.productIdentifier
-            this.content.objectId = this.argu.objectId
-            this.form.department = this.argu.userUnit
-            this.form.desc = this.argu.desc
-            this.form.copyright = this.argu.copyright
-
-            if (this.argu.category) {
-              this.form.category = this.argu.category.split('/')
-            }
-            if (this.argu.dashboard) {
-              this.form.dashboard = this.argu.dashboard.substr(7)
-            } else {
-              this.form.dashboard = ''
-            }
-
-            if (this.argu.logo != '') {
-              this.form.img = this.argu.logo
-              this.form.fileList.push({
-                name: 'logo.png',
-                url: this.argu.logo
-              })
-            }
-            if (this.argu.background != '') {
-              this.form.img1 = this.argu.background
-              this.form.fileList1.push({
-                name: 'background.png',
-                url: this.argu.background
-              })
-            }
-
-            this.form.relationApp = this.argu.name
-          } else {
-            // 从应用管理的应用部署跳转过来的
-            this.relationAppObjectId = this.$route.query.appObjectId
-
-            this.form.relationApp = this.$route.query.name
-            this.form.productIdentifier = this.$route.query.desc
-            this.form.name = this.$route.query.desc
-
-            /*         var App = Parse.Object.extend("App");
-            var app = new Parse.Query(App);
-            app.get(appid).then(resultes => {
-              if (resultes) {
-                // this.form.relationApp = resultes.id
-                this.form.relationApp = resultes.attributes.name;
-                this.form.productIdentifier = resultes.attributes.desc;
-                this.form.name = resultes.attributes.desc;
-              }
-            }); */
+          if (this.argu.category) {
+            this.form.category = this.argu.category.split('/')
           }
-        })
-        .catch(error => {
-          returnLogin(error)
-        })
+          if (this.argu.dashboard) {
+            this.form.dashboard = this.argu.dashboard.substr(7)
+          } else {
+            this.form.dashboard = ''
+          }
+
+          if (this.argu.logo != '') {
+            this.form.img = this.argu.logo
+            this.form.fileList.push({
+              name: 'logo.png',
+              url: this.argu.logo
+            })
+          }
+          if (this.argu.background != '') {
+            this.form.img1 = this.argu.background
+            this.form.fileList1.push({
+              name: 'background.png',
+              url: this.argu.background
+            })
+          }
+
+          this.form.relationApp = this.argu.name
+        } else {
+          // 从应用管理的应用部署跳转过来的
+          this.relationAppObjectId = this.$route.query.appObjectId
+
+          this.form.relationApp = this.$route.query.name
+          this.form.productIdentifier = this.$route.query.desc
+          this.form.name = this.$route.query.desc
+        }
+      }).catch(e => {
+        console.log(e)
+      })
     },
     // 返回
     handleClickBack() {
@@ -555,48 +534,38 @@ export default {
       if (!this.isSubmit()) {
         return
       }
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Project = Parse.Object.extend('Project')
-      // var project = new Project()
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Product()
-      // var acl = new Parse.ACL()
-
-      // acl.setRoleReadAccess(this.form.relationApp, true)
-      // acl.setRoleWriteAccess(this.form.relationApp, true)
-
-      // project.set('ACL', acl)
-      // // var relation = project.relation("product");
-      // // this.form.product.map(item => {
-      // //   product.set("objectId", item);
-      // //   relation.add(product);
-      // // });
-      // project.set('title', this.form.name)
-      // project.set('category', this.form.category.join('/'))
-      // project.set('scale', this.form.scale)
-      // project.set('productIdentifier', this.form.productIdentifier)
-      // project.set('copyright', this.form.copyright)
-      // project.set('desc', this.form.desc)
-      // project.set('logo', this.form.img)
-      // project.set('background', this.form.img1)
-      // project.set('userUnit', this.form.department)
-      // if (this.form.dashboard != '') {
-      //   project.set('dashboard', 'http://' + this.form.dashboard)
-      // } else {
-      //   project.set('dashboard', '')
-      // }
-      // project.save().then(resultes => {
-      //   if (resultes) {
-      //     var sourceId = this.relationAppObjectId
-      //     var destId = resultes.id
-
-      //     // 添加关联
-      //     this.addRelation(destId, sourceId)
-      //   }
-      // }).catch(error => {
-      //   // Maybe it's title重复
-      //   this.$message(JSON.stringify(error))
-      // })
+      const aclKey = 'role' + ':' + this.form.relationApp
+      var setAcl = {}
+      setAcl[aclKey] = {
+        read: true,
+        write: true
+      }
+      var params = {
+        ACL: setAcl,
+        title: this.form.name,
+        category: this.form.category.join('/'),
+        scale: this.form.scale,
+        productIdentifier: this.form.productIdentifier,
+        copyright: this.form.copyright,
+        desc: this.form.desc,
+        logo: this.form.img,
+        background: this.form.img1,
+        userUnit: this.form.department,
+        dashboard: ''
+      }
+      if (this.form.dashboard != '') {
+        params.dashboard = 'http://' + this.form.dashboard
+      } else {
+        params.dashboard = ""
+      }
+      this.$axiosWen.post("iotapi/classes/Project", params).then(res => {
+        if (res.objectId) {
+          this.addRelation(res.objectId, this.relationAppObjectId)
+        }
+      }).catch(e => {
+        console.log(e)
+        this.$message(JSON.stringify(e))
+      })
     },
     addRelation(destObjectId, sourceObjectId) {
       /*       this.$axiosWen
@@ -628,7 +597,7 @@ export default {
             objectId:sourceObjectId,
           }   */
 
-      this.$axiosWen.post('/relation', {
+      this.$axiosWen.post('iotapi/relation', {
         destClass: 'Project',
         destId: destObjectId,
         destField: 'app',
@@ -647,85 +616,48 @@ export default {
           this.$message(error)
           console.log('addRelation', error)
         })
-
-      /*
-        this.$axiosWen.post("/approle",{
-          appid:'YqtGTfll9w',
-          desc:'ds',
-          secret:'RDc4MjQ1NzYxNTg5NDU3ODMyNzUx'
-         } )
-        .then((response) => {
-
-          console.log('approle response',response);
-
-        })
- */
-
-      // 通过objectId来查询
-      /*        var App = Parse.Object.extend("App");
-        var appQuery = new Parse.Query(App);
-        var app = new App()
-
-        app.id = relTableRowByObjectId
-
-        appQuery.equalTo("app", app)
-
-        // 构建project对象
-        var Project = new Parse.Object("Project");
-
-        // 为book对象关联作者
-        var relation = Project.relation("app");
-        relation.add(authorOne);
- */
     },
     // 修改
     handleClickUpdate() {
       if (!this.isSubmit()) {
         return
       }
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Project = Parse.Object.extend('Project')
-      // var project = new Project()
-      // project.id = this.argu.objectId
-
-      // var Product = Parse.Object.extend('Product')
-      // var product = new Product()
-      // var acl = new Parse.ACL()
-
-      // acl.setRoleReadAccess(this.form.relationApp, true)
-      // acl.setRoleWriteAccess(this.form.relationApp, true)
-
-      // project.set('ACL', acl)
-      // // var relation = project.relation("product");
-      // // this.form.product.map(item => {
-      // //   product.set("objectId", item);
-      // //   relation.add(product);
-      // // });
-      // project.set('title', this.form.name)
-      // project.set('category', this.form.category.join('/'))
-      // project.set('scale', this.form.scale)
-      // project.set('productIdentifier', this.form.productIdentifier)
-      // project.set('copyright', this.form.copyright)
-      // project.set('desc', this.form.desc)
-      // project.set('logo', this.form.img)
-
-      // project.set('background', this.form.img1)
-      // project.set('userUnit', this.form.department)
-      // // project.set('user',user)
-      // if (this.form.dashboard != '') {
-      //   project.set('dashboard', 'http://' + this.form.dashboard)
-      // } else {
-      //   project.set('dashboard', '')
-      // }
-      // project.save().then(resultes => {
-      //   if (resultes) {
-      //     this.$message({
-      //       message: '修改成功！',
-      //       type: 'success'
-      //     })
-      //     this.$router.push({ path: '/roles/projectManagement' })
-      //   }
-      // })
+      const aclKey = 'role' + ':' + this.form.relationApp
+      var setAcl = {}
+      setAcl[aclKey] = {
+        read: true,
+        write: true
+      }
+      var params = {
+        ACL: setAcl,
+        title: this.form.name,
+        category: this.form.category.join('/'),
+        scale: this.form.scale,
+        productIdentifier: this.form.productIdentifier,
+        copyright: this.form.copyright,
+        desc: this.form.desc,
+        logo: this.form.img,
+        background: this.form.img1,
+        userUnit: this.form.department,
+        dashboard: ''
+      }
+      if (this.form.dashboard != '') {
+        params.dashboard = 'http://' + this.form.dashboard
+      } else {
+        params.dashboard = ""
+      }
+      this.$axiosWen.post("iotapi/classes/Project" + this.argu.objectId, params).then(res => {
+        if (res) {
+          this.$message({
+            message: '修改成功！',
+            type: 'success'
+          })
+          this.$router.push({ path: '/roles/projectManagement' })
+        }
+      }).catch(e => {
+        console.log(e)
+        this.$message(JSON.stringify(e))
+      })
     },
     handleNodeClick(data) {
       this.showTree = !this.showTree
@@ -734,54 +666,26 @@ export default {
     // 获取行业信息
     Industry() {
       this.$axiosWen.get('iotapi/roletree').then(res => {
-        console.log(res)
+        console.log(res, 'Industry')
         this.allApps = res.results
       }).catch(e => {
         console.log(e)
       }),
       this.form.options = []
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // var Dict = Parse.Object.extend('Dict')
-      // var datas = new Parse.Query(Dict)
-      // datas.equalTo('data.key', 'category')
-      // datas.limit(1000)
-      // datas.find().then(
-      //   response => {
-      //     if (response) {
-      //       response.map(items => {
-      //         var obj = {}
-      //         obj.value = items.attributes.data.CategoryName
-      //         obj.label = items.attributes.data.CategoryName
-      //         obj.id = items.attributes.data.Id
-      //         obj.parentid = items.attributes.data.SuperId
-      //         this.form.options.push(obj)
-      //       })
-      //     }
-      //   },
-      //   error => {
-      //     this.$message(error.message)
-      //   }
-      // )
-    },
-    // 获取应用列表
-    getApplication() {
-      this.$message('Parse 写法需改为axios写法,修改后请删除以下注释')
-      // return new Promise((resolve, reject) => {
-      //   var App = Parse.Object.extend('App')
-      //   var query = new Parse.Query(App)
-      //   var _this = this
-      //   query.limit(100)
-      //   query.find().then(
-      //     response => {
-      //       if (response) {
-      //         resolve(response)
-      //       }
-      //     },
-      //     error => {
-      //       reject(error)
-      //     }
-      //   )
-      // })
+      this.$axiosWen.get('iotapi/classes/Dict', { params: { limit: 1000, where: { 'data.key': 'category' }}}).then(res => {
+        console.log(res.results, 'response')
+        const response = res.results
+        response.map(items => {
+          var obj = {}
+          obj.value = items.data.CategoryName
+          obj.label = items.data.CategoryName
+          obj.id = items.data.Id
+          obj.parentid = items.data.SuperId
+          this.form.options.push(obj)
+        })
+      }).catch(e => {
+        this.$message(e.message)
+      })
     },
     open12() {
       this.Notification = this.$notify({
