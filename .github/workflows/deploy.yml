@@ -4,25 +4,6 @@ on:
   push:
 
 jobs:
-  github:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [12.x]
-
-    steps:
-      - uses: actions/checkout@v2 # 检出你在当前github工作空间的项目
-      - name: Use Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: "12"
-      - name: Use yarn
-        run: npm install -g yarn
-      - name: install
-        run: yarn
-      - name: Build
-        run: yarn build
-
   Cloudbase:
     runs-on: ubuntu-20.04
 
