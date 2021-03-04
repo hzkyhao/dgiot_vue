@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-03 17:30:51
- * @LastEditTime: 2021-03-04 17:34:57
+ * @LastEditTime: 2021-03-04 17:47:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \platform\src\utils\request.js
@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 axios.defaults.withCredentials = true;
 let serviceBaseUrl = process.env.BASE_API
 const { host } = window.location
+console.log("host request", host)
 if (host == 'dgiotvue-2gc5b4y325ad531a-1253666439.tcloudbaseapp.com') {
   serviceBaseUrl = 'http://dev.iotn2n.com/'
 }

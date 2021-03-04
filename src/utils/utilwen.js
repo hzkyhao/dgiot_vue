@@ -2,17 +2,22 @@ import axios from "axios";
 import qs from "qs";
 import { Message } from "element-ui";
 import Cookies from "js-cookie";
-import { query_object, get_object, del_object, update_object, create_object,query_object_header } from "@/api/shuwa_parse"
+import { query_object, get_object, del_object, update_object, create_object, query_object_header } from "@/api/shuwa_parse"
 
-import { getBatchNumer, postDict, getIndustry, delDict, putDict, createBatchNumer} from "@/api/Dict/index"
-import { queryDevice, postDevice, putDevice, delDevice, getDevice} from "@/api/Device/index"
-import { queryProduct} from "@/api/Product/index"
+import { getBatchNumer, postDict, getIndustry, delDict, putDict } from "@/api/Dict/index"
+import { queryDevice, postDevice, putDevice, delDevice, getDevice } from "@/api/Device/index"
+import { queryProduct } from "@/api/Product/index"
 
-
+let serviceBaseUrl = process.env.BASE_API
 axios.defaults.withCredentials = true;
+const { host } = window.location
+console.log("host serviceWen", host)
+if (host == 'dgiotvue-2gc5b4y325ad531a-1253666439.tcloudbaseapp.com') {
+  serviceBaseUrl = 'http://dev.iotn2n.com/'
+}
 const serviceWen = axios.create({
-  baseURL: process.env.BASE_API,
-  timeout: 8000
+  baseURL: serviceBaseUrl,
+  timeout: 60000
 });
 
 // request拦截器
