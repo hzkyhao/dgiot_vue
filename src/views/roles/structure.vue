@@ -214,12 +214,12 @@
                         @click="handleDetele(scope.row)"
                       >{{ $t("developer.delete") }}</el-button
                       >
-                      <el-button
+                      <!-- <el-button
                         size="mini"
                         type="primary"
                         @click="editorrole(scope.row.objectId)"
                       >{{ $t("user.assignroles") }}</el-button
-                      >
+                      > -->
                     </template>
                   </el-table-column>
 
@@ -250,7 +250,8 @@
         <el-table
           ref="multipleTable"
           :data="rolelist"
-          height="60%"
+          height="500px"
+          size="mini"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
@@ -498,9 +499,10 @@ export default {
       )
       const result = req.results;
       this.rolelist = result;
+      console.log("result", req.results)
       if (result.length) {
-        this.roleacl = true;
         result.map((roleitem, index) => {
+          console.log(roleitem.objectId, roleitem,this.objectId == roleitem.objectId)
           if (this.objectId == roleitem.objectId) {
             this.$refs.multipleTable.toggleRowSelection(
               this.rolelist[index],
@@ -509,9 +511,12 @@ export default {
             this.userrolelist.push(roleitem.objectId);
           }
         });
+        console.log(this.userrolelist)
+        this.roleacl = true;
       }
     },
     seleItem(arr1, arr2, arr3) {
+      console.log("arr1, arr2, arr3", arr1, arr2, arr3)
       arr1.map(items => {
         if (!arr2.includes(items)) {
           arr3.push(items);
@@ -528,6 +533,7 @@ export default {
     userRolereset(disroles) {
       Promise.all([
         disroles.map(nowitems => {
+          console.log(nowitems)
           this.testroles(nowitems);
         })
       ]).then(data => {
