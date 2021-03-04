@@ -1,14 +1,23 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-03 17:30:51
+ * @LastEditTime: 2021-03-04 17:34:57
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \platform\src\utils\request.js
+ */
 import axios from "axios";
 import { Message } from "element-ui";
-import store from "../store";
-import { getToken } from "@/utils/auth";
-import { promised } from "q";
 import Cookies from "js-cookie";
 // 创建axios实例
 axios.defaults.withCredentials = true;
-
+let serviceBaseUrl = process.env.BASE_API
+const { host } = window.location
+if (host == 'dgiotvue-2gc5b4y325ad531a-1253666439.tcloudbaseapp.com') {
+  serviceBaseUrl = 'http://dev.iotn2n.com/'
+}
 const service = axios.create({
-  baseURL: process.env.BASE_API,
+  baseURL: serviceBaseUrl,
   timeout: 60000
 });
 
