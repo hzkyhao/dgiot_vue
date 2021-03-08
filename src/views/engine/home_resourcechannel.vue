@@ -126,7 +126,7 @@
         <el-form-item label="通道类型" prop="region">
           <el-select
             v-model="addchannel.region"
-            :disabled="resourceid!=''"
+            disabled
             placeholder="通道类型"
             @change="removeauto"
           >
@@ -137,15 +137,25 @@
               :value="item.cType"
             />
           </el-select>
-          <el-row :gutter="24">
+          <el-row
+            :gutter="24"
+            style=" width: 100%;
+            height:500px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            line-height: 30px;
+            text-align: center;">
             <el-col v-for="(item,index) in channelregion" :span="8" :key="index" style="margin: 20px 0;cursor: pointer">
-              <el-card :shadow ="selectregion.cType == item.cType?'always':'hover'" size="mini" class="box-card" @click="removeauto(item)">
+              <el-card :shadow ="addchannel.region == item.cType?'always':'hover'" :style="{'color':(addchannel.region == item.cType?'#00bad0':'#c0c4cc')}" size="mini" class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.title.zh }}</span>
-                  <el-button style="float: right; padding: 3px 0" type="text">{{ selectregion.cType == item.cType?'已选择':'选择' }}</el-button>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="setCard(item.cType)">{{ addchannel.region == item.cType?'已选择':'选择' }}</el-button>
                 </div>
                 <div class="text item">
-                  <el-tag>{{ item.cType }}</el-tag>
+                  <el-row :gutter="24">
+                    <el-col :span="12"><img src="https://imgs.iotku.com/2020/2/21/23efecea9bfdbbf8a132089e251fc6e7.png" class="image" style="width: 50px;height: 50px"></el-col>
+                    <el-col :span="12"><el-tag>{{ item.cType }}</el-tag></el-col>
+                  </el-row>
                 </div>
               </el-card>
             </el-col>
@@ -557,7 +567,11 @@ export default {
       }
       return arr.sort(this.arrSort)
     },
+    setCard(item) {
+      this.removeauto(item)
+    },
     removeauto(val) {
+      console.log("this.addchannel.region", this.addchannel.region)
       var obj = {}
       var obj1 = {
         roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
@@ -569,6 +583,7 @@ export default {
       if (this.resourceid == '') {
         this.channelregion.map(item => {
           if (item.cType == val) {
+            this.$forceUpdate()
             this.selectregion = item
             console.log(this.selectregion)
             this.arrlist = this.orderObject(this.selectregion.params)
@@ -598,6 +613,7 @@ export default {
           if (item.cType == val) {
             this.selectregion = item
             console.log(this.selectregion)
+            this.$forceUpdate()
             this.arrlist = this.orderObject(this.selectregion.params)
             this.arrlist.map(item => {
               for (var key in this.channelrow.config) {
@@ -628,9 +644,9 @@ export default {
           obj.applicationtText = key ? key.substr(5) : ''
         }
       }
-
       this.addchannel = obj
       this.addchannel.region = val
+      console.log("this.addchannel.region", this.addchannel.region)
       this.addrules = obj1
     },
     editorChannel(row) {
