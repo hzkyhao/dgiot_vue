@@ -119,8 +119,8 @@
       :visible.sync="channelForm"
       :close-on-click-modal="false"
       :before-close="handleClose"
-      width="40%"
-      top="0"
+      width="50%"
+      top="10"
     >
       <el-form ref="addchannel" :model="addchannel" :rules="addrules" label-width="120px">
         <el-form-item label="通道类型" prop="region">
@@ -137,6 +137,19 @@
               :value="item.cType"
             />
           </el-select>
+          <el-row :gutter="24">
+            <el-col v-for="(item,index) in channelregion" :span="8" :key="index" style="margin: 20px 0;cursor: pointer">
+              <el-card :shadow ="selectregion.cType == item.cType?'always':'hover'" size="mini" class="box-card" @click="removeauto(item)">
+                <div slot="header" class="clearfix">
+                  <span>{{ item.title.zh }}</span>
+                  <el-button style="float: right; padding: 3px 0" type="text">{{ selectregion.cType == item.cType?'已选择':'选择' }}</el-button>
+                </div>
+                <div class="text item">
+                  <el-tag>{{ item.cType }}</el-tag>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item :label="$t('developer.channelname')" prop="name">
           <el-input
@@ -547,6 +560,7 @@ export default {
     removeauto(val) {
       var obj = {}
       var obj1 = {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
           { required: true, message: '请选择服务类型', trigger: 'change' }
@@ -556,6 +570,7 @@ export default {
         this.channelregion.map(item => {
           if (item.cType == val) {
             this.selectregion = item
+            console.log(this.selectregion)
             this.arrlist = this.orderObject(this.selectregion.params)
             this.arrlist.map(item => {
               if (item.default) {
@@ -582,6 +597,7 @@ export default {
         this.channelregion.map(item => {
           if (item.cType == val) {
             this.selectregion = item
+            console.log(this.selectregion)
             this.arrlist = this.orderObject(this.selectregion.params)
             this.arrlist.map(item => {
               for (var key in this.channelrow.config) {
