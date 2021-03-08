@@ -37,18 +37,19 @@
               <el-form-item label="词典名称" prop="name">
               <el-input v-model="dictForm.name" /> </el-form-item
             ></el-col>
+
             <div v-for="(item, i) in dictForm.tempconfig" :key="i">
               <el-col :span="12">
                 <el-form-item
-                  v-if="item.title.zh"
-                  :title="item.title.zh"
-                  :label="item.title.zh"
+                  v-if="item.name"
+                  :title="item.name"
+                  :label="item.value"
                 >
                 <el-input v-model="item.default" /> </el-form-item
               ></el-col>
             </div>
             <el-col :span="12">
-              <el-form-item label="所属应用" prop="roles">
+              <el-form-item label="所属应用">
                 <el-input
                   v-model="dictForm.applicationtText"
                   placeholder="请选择所属应用"
@@ -628,9 +629,10 @@
     </el-tabs>
   </div>
 </template>
-
+setInterval(() => {
+document.getElementsByClassName('QuestionInvited-deletingButton')[0].click()
+}, 1000);
 <script>
-// import { utc2beijing, timestampToTime } from '@/utils/index'
 import { queryDict, postDict, delDict, putDict } from "@/api/Direct/index.js";
 import { resourceTypes } from "@/api/Rules";
 import vueJsonEditor from "vue-json-editor";
@@ -640,7 +642,7 @@ export default {
   data() {
     return {
       rules: {
-        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
+        rolesObj: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         type: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
         name: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
         nameEncrypt: [
@@ -892,13 +894,18 @@ export default {
       this.tempObjectId = config[0].objectId;
       // this.dictForm.tempconfig = config[0].data.params;
 
-      // const data = {}
-      config[0].data.params.forEach(item =>{
-        const key = item.name
-        this.dictForm.tempconfig[key] = item.default
+      var data = [{ name: '', value: '' }].concat(new Array(config[0].data.params.length).fill({ name: '', value: '' }));
+      console.log(data, 'data', config[0].data.params.length)
+      config[0].data.params.forEach((item, index) => {
+        console.log(item, index)
+        console.log(config[0].data.params[index].name)
+        // arrAy.value = data.params[index].default
+        data[index].name = config[0].data.params[index].name
+        data[index].value = config[0].data.params[index].default || ''
+        console.log(data, 'data')
       })
-
-      console.log(this.dictForm.tempconfig);
+      this.$forceUpdate()
+      this.dictForm.tempconfig = data
     },
     submitFormTempDict() {
       this.edit_dict_temp_dialog = false;
@@ -963,7 +970,6 @@ export default {
             this.addDict_temp(this.dictTempForm);
           }
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
@@ -1084,7 +1090,7 @@ export default {
     },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) {
+        if (valid && this.dictForm.applicationtText) {
           console.log("this.dictForm ", this.dictForm)
 
           if (this.editDictId) {
@@ -1093,7 +1099,7 @@ export default {
             this.addDict(this.dictForm);
           }
         } else {
-          console.log("error submit!!");
+          this.$message("请选择所属应用");
           return false;
         }
       });
