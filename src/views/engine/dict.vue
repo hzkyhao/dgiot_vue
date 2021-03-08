@@ -43,9 +43,9 @@
                 <el-form-item
                   v-if="item.name"
                   :title="item.name"
-                  :label="item.value"
+                  :label="item.name"
                 >
-                <el-input v-model="item.default" /> </el-form-item
+                <el-input v-model="item.value" /> </el-form-item
               ></el-col>
             </div>
             <el-col :span="12">
@@ -460,6 +460,16 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="elpagination" style="margin-top:20px;text-align: center">
+          <el-pagination
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="length1"
+            :total="total1"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="channelSizeChange1"
+            @current-change="channelCurrentChange1"
+          />
+        </div>
       </el-tab-pane>
       <el-tab-pane label="词典管理" name="词典管理">
         <el-select
@@ -585,9 +595,10 @@
               {{ scope.row.data.type }}
             </template>
           </el-table-column>
+
           <template v-for="(item,index) in dialogtempconfig">
-            <el-table-column :label="dialogtempconfig[index].title.zh" :key="index" >
-              <template slot-scope="scope">{{ scope.row.data.tempconfig[index].default }} </template>
+            <el-table-column :label="dialogtempconfig[index].name" :key="index" >
+              <template slot-scope="scope">{{ scope.row.data.tempconfig[index].value }} </template>
             </el-table-column>
           </template>
           <el-table-column label="指令操作" >
@@ -625,6 +636,16 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="elpagination" style="margin-top:20px;text-align: center">
+          <el-pagination
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size="length"
+            :total="total"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="channelSizeChange"
+            @current-change="channelCurrentChange"
+          />
+        </div>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -691,6 +712,14 @@ export default {
         children: "children",
         label: "label"
       },
+      count: 0,
+      start: 0,
+      total: 0,
+      length: 10,
+      count1: 0,
+      start1: 0,
+      total1: 0,
+      length1: 10,
       isALL: true,
       filterObj: [],
       tempObjectId: "",
@@ -860,6 +889,7 @@ export default {
         });
         if (this.filterObj.length > 0) {
           this.dialogtempconfig = this.filterObj[0].data.tempconfig
+          console.log(this.dialogtempconfig)
         }
         // console.log("this.filterObj",this.filterObj)
       }
@@ -1217,28 +1247,49 @@ export default {
     },
     async getDictData() {
       const parsms = {
-        limit: 1000,
+        order: "-createdAt",
+        keys: 'count(*)',
+        limit: this.length,
+        skip: this.start,
         where: {
           type: "dict_template"
         }
       };
-      const { results } = await queryDict(parsms);
+      const { results, count } = await queryDict(parsms);
+      this.total1 = count
       this.dictRecordOpt = []
       this.dictRecord = results;
       this.dictRecordOpt.push({ data: { name: "ALL" }}, ...results);
       // console.log('aa', this.dictRecord);
     },
+    channelSizeChange1(val) {
+      this.length1 = val
+      this.getDictData()
+    },
+    channelSizeChange(val) {
+      this.length = val
+      this.getDictRecord()
+    },
+    channelCurrentChange1(val) {
+      this.start1 = (val - 1) * this.length1
+      this.getDictData()
+    },
+    channelCurrentChange(val) {
+      this.start = (val - 1) * this.length
+      this.getDictRecord()
+    },
     async getDictRecord() {
       const parsms = {
-        limit: 1000,
-        keys: 'count(*)',
         order: "-createdAt",
+        keys: 'count(*)',
+        limit: this.length,
+        skip: this.start,
         where: {
           "data.key": "dict"
         }
       };
-      const { results } = await queryDict(parsms);
-
+      const { results, count } = await queryDict(parsms);
+      this.total = count
       this.dictData = results;
     }
   } // 如果页面有keep-alive缓存功能，这个函数会触发
