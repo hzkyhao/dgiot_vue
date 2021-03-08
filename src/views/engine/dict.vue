@@ -640,6 +640,7 @@ export default {
   data() {
     return {
       rules: {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         type: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
         name: [{ required: true, message: "请输入词典类型", trigger: "blur" }],
         nameEncrypt: [

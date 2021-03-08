@@ -299,6 +299,7 @@ export default {
       },
       applicationList: [],
       addrules: {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
           { required: true, message: '请选择服务类型', trigger: 'change' }
@@ -553,6 +554,7 @@ export default {
       var arr = []
       var obj = {}
       var obj1 = {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
           { required: true, message: '请选择服务类型', trigger: 'change' }

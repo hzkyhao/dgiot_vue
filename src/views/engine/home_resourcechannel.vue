@@ -289,7 +289,6 @@ export default {
       channelForm: false,
       channelupdated: '新增',
       activeName: 'first',
-      channelId: '',
       channelformsearch: {
         name: ''
       },
@@ -301,6 +300,7 @@ export default {
       },
       applicationList: [],
       addrules: {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
           { required: true, message: '请选择服务类型', trigger: 'change' }
@@ -427,7 +427,7 @@ export default {
     },
     addchannelForm(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) {
+        if (valid && this.addchannel.applicationtText) {
           var obj = {}
           for (var key in this.addchannel) {
             obj[key] = this.addchannel[key]
@@ -449,9 +449,9 @@ export default {
             desc: this.addchannel.desc
           }
           this.addchannelaxios(data)
+        } else {
+          this.$message("有必填项未填")
         }
-      }, error => {
-        returnLogin(error)
       })
     },
     async addchannelaxios(data) {
@@ -532,6 +532,7 @@ export default {
       var arr = []
       var obj = {}
       var obj1 = {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入通道名称', trigger: 'blur' }],
         region: [
           { required: true, message: '请选择服务类型', trigger: 'change' }

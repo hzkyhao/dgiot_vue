@@ -352,6 +352,7 @@ export default {
         url: ''
       },
       rules: {
+        roles: [{ required: true, message: '请选择所属应用', trigger: 'blur' }],
         name: [{ required: true, message: '请输入产品', trigger: 'blur' }],
         devType: [
           {
