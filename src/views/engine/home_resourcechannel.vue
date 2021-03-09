@@ -140,7 +140,7 @@
           <el-row
             :gutter="24"
             style=" width: 100%;
-            height:500px;
+            max-height:500px;
             overflow-x: hidden;
             overflow-y: scroll;
             line-height: 30px;
@@ -149,7 +149,7 @@
               <el-card :shadow ="addchannel.region == item.cType?'always':'hover'" :style="{'color':(addchannel.region == item.cType?'#00bad0':'#c0c4cc')}" size="mini" class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.title.zh }}</span>
-                  <el-button style="float: right; padding: 3px 0" type="text" @click="setCard(item.cType)">{{ addchannel.region == item.cType?'已选择':'选择' }}</el-button>
+                  <el-button :disabled="resourceid!=''" :type="addchannel.region == item.cType?'success':'primary'" size="mini" style="float: right" @click="setCard(item.cType)">{{ addchannel.region == item.cType?'已选择':'选择' }}</el-button>
                 </div>
                 <div class="text item">
                   <el-row :gutter="24">

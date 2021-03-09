@@ -123,14 +123,14 @@
         :visible.sync="channelForm"
         :close-on-click-modal="false"
         :before-close="handleClose"
-        width="40%"
+        width="50%"
         top="0"
       >
         <el-form ref="addchannel" :model="addchannel" :rules="addrules" label-width="120px">
           <el-form-item label="通道类型" prop="region">
             <el-select
               v-model="addchannel.region"
-              :disabled="resourceid!=''"
+              disabled
               placeholder="通道类型"
               @change="removeauto"
             >
@@ -141,6 +141,29 @@
                 :value="item.cType"
               />
             </el-select>
+            <el-row
+              :gutter="24"
+              style=" width: 100%;
+            height:500px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            line-height: 30px;
+            text-align: center;">
+              <el-col v-for="(item,index) in channelregion" :span="8" :key="index" style="margin: 20px 0;cursor: pointer">
+                <el-card :shadow ="addchannel.region == item.cType?'always':'hover'" :style="{'color':(addchannel.region == item.cType?'#00bad0':'#c0c4cc')}" size="mini" class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>{{ item.title.zh }}</span>
+                    <el-button :disabled="resourceid!=''" :type="addchannel.region == item.cType?'success':'primary'" size="mini" style="float: right" @click="setCard(item.cType)">{{ addchannel.region == item.cType?'已选择':'选择' }}</el-button>
+                  </div>
+                  <div class="text item">
+                    <el-row :gutter="24">
+                      <el-col :span="12"><img src="https://imgs.iotku.com/2020/2/21/23efecea9bfdbbf8a132089e251fc6e7.png" class="image" style="width: 50px;height: 50px"></el-col>
+                      <el-col :span="12"><el-tag>{{ item.cType }}</el-tag></el-col>
+                    </el-row>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
           </el-form-item>
           <el-form-item :label="$t('developer.channelname')" prop="name">
             <el-input
@@ -336,6 +359,9 @@ export default {
     this.getApplication()
   },
   methods: {
+    setCard(item) {
+      this.removeauto(item)
+    },
     inputChange(val) {
       console.log(val)
     },
